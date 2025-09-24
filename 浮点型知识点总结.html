@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++浮点型知识点学习</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #007bff;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .history-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .history-item h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f8ff;
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0d6efd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 C++ 浮点型数据类型学习</h1>
+            <p class="subtitle">—— 探索小数的奥秘 | 程老师主讲</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'history')">📜 历史起源</button>
+            <button class="tab" onclick="openTab(event, 'types')">📊 数据类型</button>
+            <button class="tab" onclick="openTab(event, 'syntax')">💻 语法实践</button>
+            <button class="tab" onclick="openTab(event, 'practice')">📄 代码示例</button>
+        </div>
+
+        <!-- 历史起源 -->
+        <div id="history" class="content active">
+            <h2>中国古代小数的发展</h2>
+            <div class="history-item">
+                <h3>刘徽与《九章算术注》</h3>
+                <p>魏晋时期的数学家刘徽最早提出“<span class="highlight">微数</span>”概念，即现代的小数。他写道：“微数无名者以为分子，其一退以十为母，其再退以百为母”。</p>
+            </div>
+            <div class="history-item">
+                <h3>祖冲之与圆周率</h3>
+                <p>南北朝数学家祖冲之将圆周率 π 精确到 <span class="highlight">3.1415926 ~ 3.1415927</span> 之间，领先世界近千年！</p>
+            </div>
+            <div class="history-item">
+                <h3>古代小数单位</h3>
+                <p>中国曾用“分、釐、毫、丝、忽、微、纤”表示小数，每级为前一级的十分之一。</p>
+                <p>例如：3.1416 读作“<span class="highlight">三又一分四釐一毫六丝</span>”。</p>
+            </div>
+        </div>
+
+        <!-- 数据类型 -->
+        <div id="types" class="content">
+            <h2>C++ 中的浮点型数据类型</h2>
+            <table>
+                <tr>
+                    <th>数据类型</th>
+                    <th>定义标识符</th>
+                    <th>数值范围</th>
+                </tr>
+                <tr>
+                    <td>单精度实型</td>
+                    <td><code>float</code></td>
+                    <td>-3.4E+38 ~ 3.4E+38</td>
+                </tr>
+                <tr>
+                    <td>双精度实型</td>
+                    <td><code>double</code></td>
+                    <td>-1.7E+308 ~ 1.7E+308</td>
+                </tr>
+                <tr>
+                    <td>长双精度实型</td>
+                    <td><code>long double</code></td>
+                    <td>-3.4E+4932 ~ 3.4E+4932</td>
+                </tr>
+            </table>
+            <p><strong>提示：</strong>编程中推荐使用 <code>double</code>，精度更高更安全。</p>
+        </div>
+
+        <!-- 语法实践 -->
+        <div id="syntax" class="content">
+            <h2>常量定义与小数保留</h2>
+            <h3>✅ 定义常量（如 π）</h3>
+            <div class="code">
+                const double <span class="highlight">PI</span> = 3.1415926;<br>
+                <span class="comment">// 常量名通常大写，值不可修改</span>
+            </div>
+
+            <h3>✅ 保留小数位数（需包含头文件）</h3>
+            <div class="code">
+                #include &lt;iomanip&gt;<br>
+                cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; value;
+            </div>
+
+            <div class="example">
+                <strong>示例：</strong> 计算圆面积并保留2位小数
+                <div class="code">
+                    double r = 1.5;<br>
+                    cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; PI * r * r;<br>
+                    <span class="comment">// 输出：7.06（四舍五入）</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 代码示例 -->
+        <div id="practice" class="content">
+            <h2>📄 典型C++代码示例</h2>
+
+            <div class="example">
+                <h3>1. 保留12位小数输出</h3>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;iomanip&gt;<br>
+                    using namespace std;<br><br>
+
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double x;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; x;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; fixed &lt;&lt; setprecision(12) &lt;&lt; x;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p><strong>输入：</strong>3.1415926535897932</p>
+                <p><strong>输出：</strong>3.141592653590</p>
+            </div>
+
+            <div class="example">
+                <h3>2. 买卡片（打折计算）</h3>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;iomanip&gt;<br>
+                    using namespace std;<br><br>
+
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double n, m;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n &gt;&gt; m;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double change = n - m * 0.8;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; change;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p><strong>输入：</strong>100 50</p>
+                <p><strong>输出：</strong>60.00</p>
+            </div>
+
+            <div class="example">
+                <h3>3. 计算总分和平均分</h3>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;iomanip&gt;<br>
+                    using namespace std;<br><br>
+
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int x, y, z;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; x &gt;&gt; y &gt;&gt; z;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int sum = x + y + z;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double avg = (double)sum / 3;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; sum &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; fixed &lt;&lt; setprecision(1) &lt;&lt; avg &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p><strong>输入：</strong>100 95 91</p>
+                <p><strong>输出：</strong></p>
+                <p>286</p>
+                <p>95.3</p>
+            </div>
+
+            <div class="example">
+                <h3>4. 买水果（总价计算）</h3>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;iomanip&gt;<br>
+                    using namespace std;<br><br>
+
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double x, y, z;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; x &gt;&gt; y &gt;&gt; z;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double total = x * 8.5 + y * 5.6 + z * 6.2;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; fixed &lt;&lt; setprecision(1) &lt;&lt; total;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p><strong>输入：</strong>1.2 5.5 3.9</p>
+                <p><strong>输出：</strong>65.2</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 程老师 | 学习浮点型数据的奇妙世界</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>
+
+
