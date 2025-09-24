@@ -183,19 +183,7 @@
     <!-- === 基础级别 === -->
     <section class="level-section">
       <h2 class="level-title">🔹 基础级别</h2>
-      <div class="topic-grid">
-        <div class="topic-card">
-          <h3>1. 基础语法</h3>
-          <button class="toggle-btn" onclick="toggleDetails('basics')">展开详情</button>
-          <div class="details" id="basics">
-            <p><strong>内容：</strong>变量、数据类型、输入输出、运算符、流程控制（if/for/while）。</p>
-            <p>掌握 C++ 的基本语法结构，为后续学习打下坚实基础。</p>
-          </div>
-          <div class="action-links">
-            <a href="basics.html" target="_blank">知识点总结</a>
-            <a href="exercises-basics.html" target="_blank">练习</a>
-          </div>
-        </div>
+    
 
         <div class="topic-card">
           <h3>2. 浮点数</h3>
@@ -205,23 +193,11 @@
           </div>
           <div class="action-links">
             <a href="./l1/浮点型知识点总结.html" target="_blank">知识点总结</a>
-            <a href="exercises-functions.html" target="_blank">练习</a>
+            <a href="http://8.130.178.205/problem.php?id=1003" target="_blank">练习</a>
           </div>
         </div>
 
-        <div class="topic-card">
-          <h3>3. 数组与字符串</h3>
-          <button class="toggle-btn" onclick="toggleDetails('arrays')">展开详情</button>
-          <div class="details" id="arrays">
-            <p><strong>内容：</strong>一维/多维数组、C 风格字符串、std::string 类、常用操作。</p>
-            <p>掌握数据集合的存储与操作方式。</p>
-          </div>
-          <div class="action-links">
-            <a href="arrays-strings.html" target="_blank">知识点总结</a>
-            <a href="exercises-arrays.html" target="_blank">练习</a>
-          </div>
-        </div>
-      </div>
+        
     </section>
 
     <!-- === 进阶级别 === -->
@@ -229,44 +205,18 @@
       <h2 class="level-title">🔸 进阶级别</h2>
       <div class="topic-grid">
         <div class="topic-card">
-          <h3>4. 指针与引用</h3>
+          <h3>自定义函数</h3>
           <button class="toggle-btn" onclick="toggleDetails('pointers')">展开详情</button>
           <div class="details" id="pointers">
-            <p><strong>内容：</strong>指针概念、内存地址、指针运算、引用、指针与数组关系。</p>
-            <p>C++ 的核心难点之一，理解内存操作的关键。</p>
+            <p><strong>内容：</strong>自定义函数是封装特定功能的代码块，通过定义返回值类型、函数名和参数实现代码复用与模块化编程。</p>
           </div>
           <div class="action-links">
-            <a href="pointers-references.html" target="_blank">知识点总结</a>
-            <a href="exercises-pointers.html" target="_blank">练习</a>
+            <a href="./l2/自定义函数.html" target="_blank">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1240" target="_blank">练习</a>
           </div>
         </div>
 
-        <div class="topic-card">
-          <h3>5. 结构体与类</h3>
-          <button class="toggle-btn" onclick="toggleDetails('classes')">展开详情</button>
-          <div class="details" id="classes">
-            <p><strong>内容：</strong>struct、class、成员变量/函数、构造函数、析构函数、this 指针。</p>
-            <p>面向对象编程（OOP）的起点。</p>
-          </div>
-          <div class="action-links">
-            <a href="classes-objects.html" target="_blank">知识点总结</a>
-            <a href="exercises-classes.html" target="_blank">练习</a>
-          </div>
-        </div>
-
-        <div class="topic-card">
-          <h3>6. 继承与多态</h3>
-          <button class="toggle-btn" onclick="toggleDetails('inheritance')">展开详情</button>
-          <div class="details" id="inheritance">
-            <p><strong>内容：</strong>继承、虚函数、纯虚函数、抽象类、动态绑定。</p>
-            <p>深入理解面向对象的三大特性。</p>
-          </div>
-          <div class="action-links">
-            <a href="inheritance-polymorphism.html" target="_blank">知识点总结</a>
-            <a href="exercises-inheritance.html" target="_blank">练习</a>
-          </div>
-        </div>
-      </div>
+        
     </section>
 
     <!-- === 高级别 === -->
@@ -286,45 +236,7 @@
           </div>
         </div>
 
-        <div class="topic-card">
-          <h3>8. STL 标准库</h3>
-          <button class="toggle-btn" onclick="toggleDetails('stl')">展开详情</button>
-          <div class="details" id="stl">
-            <p><strong>内容：</strong>vector、list、map、set、algorithm、迭代器。</p>
-            <p>掌握 C++ 最强大的工具库。</p>
-          </div>
-          <div class="action-links">
-            <a href="stl.html" target="_blank">知识点总结</a>
-            <a href="exercises-stl.html" target="_blank">练习</a>
-          </div>
-        </div>
-
-        <div class="topic-card">
-          <h3>9. 智能指针</h3>
-          <button class="toggle-btn" onclick="toggleDetails('smart-ptrs')">展开详情</button>
-          <div class="details" id="smart-ptrs">
-            <p><strong>内容：</strong>unique_ptr、shared_ptr、weak_ptr、RAII、内存泄漏防护。</p>
-            <p>现代 C++ 内存管理的核心。</p>
-          </div>
-          <div class="action-links">
-            <a href="smart-pointers.html" target="_blank">知识点总结</a>
-            <a href="exercises-smart.html" target="_blank">练习</a>
-          </div>
-        </div>
-
-        <div class="topic-card">
-          <h3>10. 移动语义</h3>
-          <button class="toggle-btn" onclick="toggleDetails('move')">展开详情</button>
-          <div class="details" id="move">
-            <p><strong>内容：</strong>右值引用、std::move、完美转发、移动构造函数。</p>
-            <p>理解现代 C++ 性能优化的关键机制。</p>
-          </div>
-          <div class="action-links">
-            <a href="move-semantics.html" target="_blank">知识点总结</a>
-            <a href="exercises-move.html" target="_blank">练习</a>
-          </div>
-        </div>
-      </div>
+        
     </section>
   </div>
 
