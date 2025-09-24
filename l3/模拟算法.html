@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++模拟算法学习</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #007bff;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f8ff;
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0d6efd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 C++ 模拟算法学习</h1>
+            <p class="subtitle">—— 忠实复现规则，按步求解 | 程老师主讲</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">🧠 核心概念</button>
+            <button class="tab" onclick="openTab(event, 'features')">📊 算法特征</button>
+            <button class="tab" onclick="openTab(event, 'examples')">🔍 典型例题</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🛠️ 实战应用</button>
+        </div>
+
+        <!-- 核心概念 -->
+        <div id="concept" class="content active">
+            <h2>什么是模拟算法？</h2>
+            <div class="concept-item">
+                <h3>定义</h3>
+                <p>模拟算法是一种根据题目描述的规则，<strong>一步一步忠实复现</strong>整个过程的解题方法。</p>
+            </div>
+            <div class="concept-item">
+                <h3>核心思想</h3>
+                <p>不需要高深技巧，只需“照着题目说的做”，像搭乐高一样，按说明书一步步执行。</p>
+            </div>
+            <div class="concept-item">
+                <h3>适用场景</h3>
+                <p>题目描述了一个明确的过程或规则，要求计算结果或状态，如游戏规则、时间计算、范围判断等。</p>
+            </div>
+        </div>
+
+        <!-- 算法特征 -->
+        <div id="features" class="content">
+            <h2>模拟算法的关键特征</h2>
+            <table>
+                <tr>
+                    <th>特征</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td><strong>输入 (Input)</strong></td>
+                    <td>题目给定的初始数据，如人数、数量、范围等</td>
+                </tr>
+                <tr>
+                    <td><strong>处理 (Process)</strong></td>
+                    <td>严格按照题目规则进行模拟计算或状态变化</td>
+                </tr>
+                <tr>
+                    <td><strong>输出 (Output)</strong></td>
+                    <td>模拟结束后得到的结果，如编号、数值、范围等</td>
+                </tr>
+                <tr>
+                    <td><strong>明确性</strong></td>
+                    <td>每一步操作都有清晰的定义和规则</td>
+                </tr>
+                <tr>
+                    <td><strong>有限性</strong></td>
+                    <td>模拟过程在有限步内结束</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 典型例题 -->
+        <div id="examples" class="content">
+            <h2>经典题目解析</h2>
+
+            <div class="example">
+                <h3>1. 吃粽子（轮次模拟）</h3>
+                <p>n个首领轮流吃粽子，第i轮每人吃i个，吃到最后一个的获胜。</p>
+                <p><strong>输入：</strong>3 13</p>
+                <p><strong>输出：</strong>2</p>
+                <p><strong>思路：</strong>按轮次模拟，计算每轮消耗的粽子总数，直到剩余粽子不足一轮。</p>
+            </div>
+
+            <div class="example">
+                <h3>2. 寻找幸运数（范围交集）</h3>
+                <p>找出所有同学提供范围的交集，即最小确定范围。</p>
+                <p><strong>输入：</strong><br>2<br>3 10<br>0 7</p>
+                <p><strong>输出：</strong>3 7</p>
+                <p><strong>思路：</strong>交集左边界取最大值，右边界取最小值。</p>
+            </div>
+
+            <div class="example">
+                <h3>3. 分南瓜（奇偶判断）</h3>
+                <p>判断一个数能否分成两个奇数之和。</p>
+                <p><strong>输入：</strong>6 8 7</p>
+                <p><strong>输出：</strong>1 1 0</p>
+                <p><strong>规律：</strong>一个数能分成两个奇数当且仅当它为<strong>大于2的偶数</strong>。</p>
+            </div>
+        </div>
+
+        <!-- 实战应用 -->
+        <div id="practice" class="content">
+            <h2>🎯 模拟算法实战代码</h2>
+
+            <div class="example">
+                <h3>吃粽子问题 C++ 实现</h3>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br><br>
+
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n, k;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n &gt;&gt; k;<br><br>
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;int round = 1; // 当前轮次<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (true) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int eatThisRound = round * n; // 本轮总共要吃的粽子数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (k &lt;= eatThisRound) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 最后一个粽子在本轮被吃完<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt;= n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (k &lt;= round) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; i &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k -= round;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k -= eatThisRound; // 减去本轮吃的粽子<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;round++; // 进入下一轮<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>幸运数范围 C++ 实现</h3>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;algorithm&gt;<br>
+                    using namespace std;<br><br>
+
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n, L, R;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; L &gt;&gt; R; // 第一个范围<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int low = L, high = R;<br><br>
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; L &gt;&gt; R;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;low = max(low, L);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;high = min(high, R);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; low &lt;&lt; " " &lt;&lt; high &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 程老师 | 掌握模拟算法的编程思维</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>
