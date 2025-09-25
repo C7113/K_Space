@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 起步：从零开始学编程</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #007bff;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f8ff;
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0d6efd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 C++ 起步：从零开始学编程</h1>
+            <p class="subtitle">—— 掌握基础结构与输出 | 程老师主讲</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🧠 课程导论</button>
+            <button class="tab" onclick="openTab(event, 'structure')">🧱 程序结构</button>
+            <button class="tab" onclick="openTab(event, 'io')">🖨️ 输入输出</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🎮 项目实践</button>
+        </div>
+
+        <!-- 课程导论 -->
+        <div id="intro" class="content active">
+            <h2>计算机语言与C++简介</h2>
+            <div class="concept-item">
+                <h3>什么是计算机语言？</h3>
+                <p>计算机语言是人与计算机之间传递信息的媒介，用于编写指令让计算机执行任务。</p>
+            </div>
+            <div class="concept-item">
+                <h3>语言分类</h3>
+                <ul>
+                    <li><strong>低级语言</strong>：机器语言（01代码）、汇编语言（接近硬件）</li>
+                    <li><strong>高级语言</strong>：C、C++、Python、Java（更接近人类语言）</li>
+                    <li><strong>专用语言</strong>：SQL（数据库）、HTML（网页）、脚本语言</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>C++ 的特点</h3>
+                <p>C++ 是 C 语言的继承者，既能进行过程化编程，也支持面向对象编程（继承、多态），适用范围广，从系统开发到游戏编程均有应用。</p>
+            </div>
+            <div class="concept-item">
+                <h3>集成开发环境 (IDE)</h3>
+                <p>编写C++程序需要使用IDE（如Code::Blocks、Dev-C++、Visual Studio），它集成了代码编辑、编译、调试等功能。</p>
+            </div>
+        </div>
+
+        <!-- 程序结构 -->
+        <div id="structure" class="content">
+            <h2>C++ 程序的基本结构</h2>
+            <table>
+                <tr>
+                    <th>代码行</th>
+                    <th>作用说明</th>
+                </tr>
+                <tr>
+                    <td><code>#include&lt;iostream&gt;</code></td>
+                    <td>引入输入输出流头文件，使用 <code>cout</code> 和 <code>cin</code> 必需</td>
+                </tr>
+                <tr>
+                    <td><code>using namespace std;</code></td>
+                    <td>使用 std 命名空间，避免每次写 <code>std::cout</code></td>
+                </tr>
+                <tr>
+                    <td><code>int main()</code></td>
+                    <td>主函数，程序的入口，从这里开始执行</td>
+                </tr>
+                <tr>
+                    <td><code>{ ... }</code></td>
+                    <td>大括号定义函数体或代码块的范围</td>
+                </tr>
+                <tr>
+                    <td><code>return 0;</code></td>
+                    <td>表示程序正常结束，返回操作系统</td>
+                </tr>
+            </table>
+
+            <div class="example">
+                <h3>“Hello, World!” 程序解析</h3>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main()    <span class="comment">// 程序从这里开始</span><br>
+                    {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Hello, World!"; <span class="comment">// 输出文本</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0; <span class="comment">// 结束程序</span><br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 输入输出 -->
+        <div id="io" class="content">
+            <h2>输出流与换行控制</h2>
+            <div class="concept-item">
+                <h3>cout 输出</h3>
+                <p><code>cout</code> 是 C++ 中用于屏幕输出的对象，属于 <code>iostream</code> 库，使用 <code>&lt;&lt;</code> 流插入运算符。</p>
+                <div class="code">
+                    cout &lt;&lt; "要输出的内容";
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>换行符 endl</h3>
+                <p><code>endl</code> 是一个控制符，用于输出换行并刷新输出缓冲区。</p>
+                <div class="code">
+                    cout &lt;&lt; "第一行" &lt;&lt; endl;<br>
+                    cout &lt;&lt; "第二行";<br>
+                    <span class="comment">// 输出：</span><br>
+                    <span class="comment">// 第一行</span><br>
+                    <span class="comment">// 第二行</span>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>头文件与命名空间</h3>
+                <p><strong>头文件</strong>（如 <code>iostream</code>）包含函数声明和定义，通过 <code>#include</code> 引入。</p>
+                <p><strong>命名空间</strong>（如 <code>std</code>）用于避免命名冲突，多个库中同名函数可通过 <code>std::</code> 区分。</p>
+            </div>
+        </div>
+
+        <!-- 项目实践 -->
+        <div id="practice" class="content">
+            <h2>🎯 项目实战：输出古诗与图形</h2>
+
+            <div class="example">
+                <h3>项目1：输出《送元二使安西》</h3>
+                <p>使用 <code>cout</code> 和 <code>endl</code> 逐行输出古诗。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "送元二使安西" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "渭城朝雨浥轻尘" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "客舍青青柳色新" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "劝君更尽一杯酒" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "西出阳关无故人" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目2：绘制10x18字符图形</h3>
+                <p>根据规律绘制如下图形（以5x7为例）：</p>
+                <pre>
+ABCDEFG
+BABCDEF
+CBABCDE
+DCBABCD
+EDCBABC
+                </pre>
+                <p><strong>规律</strong>：每行首字符递增，后续字符为前一行的左移。</p>
+                <p>可使用循环和字符运算实现10x18的更大图形。</p>
+            </div>
+
+            <div class="example">
+                <h3>项目3：打印圣诞树</h3>
+                <p>使用星号 <code>*</code> 和空格组合，通过循环打印一个简单的圣诞树。</p>
+                <div class="code">
+                    // 提示：使用循环控制每行星号数量和位置
+                    for (int i = 1; i &lt;= 5; i++) {
+                        // 打印空格
+                        // 打印星号
+                        // 换行
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 程老师 | 打好编程基础，迈向更高阶学习</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

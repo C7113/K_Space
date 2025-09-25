@@ -183,7 +183,30 @@
     <!-- === 基础级别 === -->
     <section class="level-section">
       <h2 class="level-title">🔹 基础级别</h2>
-    
+       <div class="topic-grid">
+        <div class="topic-card">
+          <h3>C++入门</h3>
+          <button class="toggle-btn" onclick="toggleDetails('l1')">展开详情</button>
+          <div class="details" id="l1">
+            <p><strong>内容：</strong>C++程序由头文件、命名空间、主函数和输出语句构成，通过#include引入库，using namespace std;使用标准命名空间，int main()作为程序入口，cout配合<<实现屏幕输出，endl用于换行。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l1/C++起始.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1000" target="_self">练习</a>
+          </div>
+        </div>
+
+        <div class="topic-card">
+          <h3>变量与数据结构</h3>
+          <button class="toggle-btn" onclick="toggleDetails('l2')">展开详情</button>
+          <div class="details" id="l2">
+            <p><strong>内容：</strong>讲解了C++中的变量概念、命名规则、基本数据类型（int、double等）、基本运算符以及使用cin进行输入的方法，并通过多个计算实例巩固了知识点。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l1/变量与数据类型.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1001" target="_self">练习</a>
+          </div>
+        </div>
 
         <div class="topic-card">
           <h3>浮点数</h3>
@@ -196,6 +219,7 @@
             <a href="http://8.130.178.205/problem.php?id=1003" target="_self">练习</a>
           </div>
         </div>
+       </div> 
 
         
     </section>

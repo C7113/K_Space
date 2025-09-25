@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 变量与数据类型</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #007bff;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f8ff;
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0d6efd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📦 C++ 变量与数据类型</h1>
+            <p class="subtitle">—— 掌握数据存储与运算基础 | 程老师主讲</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'variables')">📦 变量概念</button>
+            <button class="tab" onclick="openTab(event, 'types')">🔢 数据类型</button>
+            <button class="tab" onclick="openTab(event, 'input')">⌨️ 输入操作</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 项目实践</button>
+        </div>
+
+        <!-- 变量概念 -->
+        <div id="variables" class="content active">
+            <h2>什么是变量？</h2>
+            <div class="concept-item">
+                <h3>定义</h3>
+                <p>变量是计算机内存中的一块命名存储区域，用于存放可变的数据（如数字、文本），可通过变量名访问和修改其值。</p>
+            </div>
+            <div class="concept-item">
+                <h3>变量命名规则</h3>
+                <ul>
+                    <li>只能由 <strong>字母</strong>、<strong>数字</strong>、<strong>下划线</strong> (_) 组成</li>
+                    <li>必须以 <strong>字母</strong> 或 <strong>下划线</strong> 开头</li>
+                    <li>不能使用 <strong>C++关键字</strong>（如 <code>int</code>, <code>cout</code>, <code>return</code>）</li>
+                    <li><strong>区分大小写</strong>（如 <code>age</code> 和 <code>Age</code> 是不同变量）</li>
+                </ul>
+                <p><strong>正确示例：</strong> <code>age</code>, <code>_score</code>, <code>num1</code></p>
+                <p><strong>错误示例：</strong> <code>1age</code>（数字开头）, <code>cout</code>（关键字）, <code>&name</code>（含非法字符）</p>
+            </div>
+            <div class="concept-item">
+                <h3>变量的定义与赋值</h3>
+                <p>语法：<code>数据类型 变量名 = 初始值;</code></p>
+                <div class="code">
+                    int age = 13;        <span class="comment">// 定义整型变量age并赋值13</span><br>
+                    double price = 19.9; <span class="comment">// 定义双精度浮点型变量price</span><br>
+                    char grade = 'A';    <span class="comment">// 定义字符型变量grade</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据类型 -->
+        <div id="types" class="content">
+            <h2>基本数据类型与运算</h2>
+            <table>
+                <tr>
+                    <th>类型</th>
+                    <th>关键字</th>
+                    <th>说明</th>
+                    <th>示例</th>
+                </tr>
+                <tr>
+                    <td>整型</td>
+                    <td><code>int</code></td>
+                    <td>存储整数（如年龄、数量）</td>
+                    <td><code>int count = 10;</code></td>
+                </tr>
+                <tr>
+                    <td>双精度浮点型</td>
+                    <td><code>double</code></td>
+                    <td>存储小数，精度高</td>
+                    <td><code>double price = 9.99;</code></td>
+                </tr>
+                <tr>
+                    <td>单精度浮点型</td>
+                    <td><code>float</code></td>
+                    <td>存储小数，精度较低</td>
+                    <td><code>float rate = 0.5f;</code></td>
+                </tr>
+                <tr>
+                    <td>字符型</td>
+                    <td><code>char</code></td>
+                    <td>存储单个字符</td>
+                    <td><code>char grade = 'A';</code></td>
+                </tr>
+                <tr>
+                    <td>布尔型</td>
+                    <td><code>bool</code></td>
+                    <td>存储真（true）或假（false）</td>
+                    <td><code>bool isPass = true;</code></td>
+                </tr>
+            </table>
+
+            <div class="concept-item">
+                <h3>基本运算法则</h3>
+                <p>C++支持常见的数学运算：</p>
+                <ul>
+                    <li><code>+</code>：加法</li>
+                    <li><code>-</code>：减法</li>
+                    <li><code>*</code>：乘法</li>
+                    <li><code>/</code>：除法（整数除法会截断小数）</li>
+                    <li><code>%</code>：取模（求余数）</li>
+                </ul>
+                <div class="code">
+                    int a = 5, b = 12, c = 8;<br>
+                    int result = (a + b) * c; <span class="comment">// 计算 (5+12)*8 = 136</span><br>
+                    cout &lt;&lt; "结果是：" &lt;&lt; result &lt;&lt; endl;
+                </div>
+            </div>
+        </div>
+
+        <!-- 输入操作 -->
+        <div id="input" class="content">
+            <h2>从键盘获取输入</h2>
+            <div class="concept-item">
+                <h3>cin 输入流</h3>
+                <p><code>cin</code> 是 C++ 中用于从键盘读取输入的对象，使用 <code>&gt;&gt;</code> 流提取运算符。</p>
+                <div class="code">
+                    int age;<br>
+                    cout &lt;&lt; "请输入你的年龄：";<br>
+                    cin &gt;&gt; age; <span class="comment">// 程序暂停，等待用户输入并回车</span><br>
+                    cout &lt;&lt; "你输入的年龄是：" &lt;&lt; age &lt;&lt; endl;
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>连续输入</h3>
+                <p>可以一次读取多个变量的值，用空格或回车分隔。</p>
+                <div class="code">
+                    int n, a, x;<br>
+                    cin &gt;&gt; n &gt;&gt; a &gt;&gt; x; <span class="comment">// 输入：12 2 3</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目实践 -->
+        <div id="practice" class="content">
+            <h2>🎯 项目实战：应用与计算</h2>
+
+            <div class="example">
+                <h3>项目1：计算天安门广场面积</h3>
+                <p>已知广场长880米，宽500米，计算面积。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int length = 880, width = 500;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int area = length * width;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; area &lt;&lt; endl; <span class="comment">// 输出：440000</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目2：米老鼠背糖果</h3>
+                <p>总糖果n颗，一次背a颗，背了x次，求剩余糖果。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n, a, x;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n &gt;&gt; a &gt;&gt; x;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int remaining = n - a * x;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; remaining &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目3：小明买书找零</h3>
+                <p>小明有n元，书原价m元，打8折，求剩余钱数。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double n, m;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n &gt;&gt; m;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double cost = m * 0.8;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double change = n - cost;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; change &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 程老师 | 掌握变量与数据，打好编程基石</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>
