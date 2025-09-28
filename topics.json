@@ -1,0 +1,65 @@
+[
+  {
+    "section": "基础级别",
+    "cards": [
+      {
+        "title": "C++基础入门",
+        "details": "C++程序由头文件、命名空间、主函数和输出语句构成，通过#include引入库，using namespace std;使用标准命名空间，int main()作为程序入口，cout配合<<实现屏幕输出，endl用于换行。",
+        "summaryUrl": "./l1/C++起始.html",
+        "practiceUrl": "http://8.130.178.205/problem.php?id=1000"
+      },
+      {
+        "title": "变量与数据结构",
+        "details": "讲解了C++中的变量概念、命名规则、基本数据类型（int、double等）、基本运算符以及使用cin进行输入的方法，并通过多个计算实例巩固了知识点。",
+        "summaryUrl": "./l1/变量与数据类型.html",
+        "practiceUrl": "http://8.130.178.205/problem.php?id=1001"
+      },
+      {
+        "title": "浮点数",
+        "details": "浮点数是计算机中用于表示带小数部分的数值类型，常用double声明并可通过setprecision()控制小数位数。",
+        "summaryUrl": "./l1/浮点型知识点总结.html",
+        "practiceUrl": "http://8.130.178.205/problem.php?id=1003"
+      },
+      {
+        "title": "算数运算符",
+        "details": "算数运算符用于进行数学运算，包括加法、减法、乘法和除法等，常用的算数运算符有+、-、*、/。",
+        "summaryUrl": "./l1/算数运算.html",
+        "practiceUrl": "http://8.130.178.205/problem.php?id=1003"
+      }
+    ]
+  },
+  {
+    "section": "进阶级别",
+    "cards": [
+      {
+        "title": "自定义函数",
+        "details": "自定义函数是封装特定功能的代码块，通过定义返回值类型、函数名和参数实现代码复用与模块化编程。",
+        "summaryUrl": "./l2/自定义函数.html",
+        "practiceUrl": "http://8.130.178.205/problem.php?id=1240"
+      },
+      {
+        "title": "函数返回值",
+        "details": "函数返回值是函数执行完毕后返回给调用者的结果，通过return语句指定返回值类型和值。",
+        "summaryUrl": "./l2/函数返回值.html",
+        "practiceUrl": "http://8.130.178.205/problem.php?id=1240"
+      }
+    ]
+  },
+  {
+    "section": "高级级别",
+    "cards": [
+      {
+        "title": "模拟算法",
+        "details": "模拟算法是通过忠实复现题目规则、按步骤推演过程来解决问题的编程方法。",
+        "summaryUrl": "./l3/模拟算法.html",
+        "practiceUrl": "exercises-templates.html"
+      },
+      {
+        "title": "哈希算法原理",
+        "details": "哈希算法是一种将输入数据映射为固定长度输出的算法，常用在数据存储和检索中。",
+        "summaryUrl": "./l3/哈希算法原理.html",
+        "practiceUrl": "exercises-hashing.html"
+      }
+    ]
+  }
+]
