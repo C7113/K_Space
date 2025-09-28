@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>主页内容管理</title>
+  <style>
+    body { font-family: 'Segoe UI',sans-serif; background: #f8f9fa; color: #222; }
+    h2 { color: #0d6efd; }
+    .section-block { background: #fff; border:1px solid #dee2e6; border-radius:8px; margin:2rem 0; padding:1rem; }
+    .card-list { margin: 1rem 0; }
+    .card-item { border:1px solid #eee; border-radius:6px; margin-bottom:1rem; padding:0.8rem; background:#f6f8fa; }
+    .card-item b { color:#0d6efd; }
+    .card-item .actions { margin-top:0.5rem; }
+    .card-item button { margin-right:0.5rem; }
+    form { margin:1.5rem 0; background:#e9ecef; padding:1rem; border-radius:8px; }
+    label { display:block; margin:0.5rem 0 0.2rem; }
+    input, textarea, select { width:100%; margin-bottom:0.8rem; padding:0.4rem; border-radius:4px; border:1px solid #ccc; }
+    button[type=submit] { background:#0d6efd; color:#fff; border:none; padding:0.6rem 1.2rem; border-radius:5px; cursor:pointer; }
+    button[type=submit]:hover { background:#0b5ed7; }
+  </style>
+</head>
+<body>
+  <h1>主页内容管理</h1>
+  <form id="addForm">
+    <h2>添加新卡片</h2>
+    <label>所属板块</label>
+    <select name="section" required>
+      <option value="基础级别">基础级别</option>
+      <option value="进阶级别">进阶级别</option>
+      <option value="高级级别">高级级别</option>
+    </select>
+    <label>标题</label>
+    <input name="title" required>
+    <label>详情内容</label>
+    <textarea name="details" required></textarea>
+    <label>知识点总结链接</label>
+    <input name="summaryUrl" required>
+    <label>练习链接</label>
+    <input name="practiceUrl" required>
+    <button type="submit">添加</button>
+  </form>
+  <div id="manageList"></div>
+  <script>
+    // 读取本地 topics.json
+    async function loadData() {
+      const resp = await fetch('topics.json?_=' + Date.now());
+      return await resp.json();
+    }
+    // 保存到本地 topics.json（仅本地测试有效，生产需后端支持）
+    async function saveData(data) {
+      // 浏览器无法直接写文件，实际部署需后端API。这里只做演示：
+      alert('请将下方JSON手动保存到 topics.json 文件：\n' + JSON.stringify(data, null, 2));
+    }
+    // 渲染管理区
+    async function renderManage() {
+      const data = await loadData();
+      const list = document.getElementById('manageList');
+      list.innerHTML = '';
+      data.forEach((sec, si) => {
+        const secDiv = document.createElement('div');
+        secDiv.className = 'section-block';
+        secDiv.innerHTML = `<h2>${sec.section}</h2>`;
+        const cardList = document.createElement('div');
+        cardList.className = 'card-list';
+        sec.cards.forEach((card, ci) => {
+          const cardDiv = document.createElement('div');
+          cardDiv.className = 'card-item';
+          cardDiv.innerHTML = `
+            <b>${card.title}</b><br>
+            <span>${card.details}</span><br>
+            <a href='${card.summaryUrl}' target='_blank'>知识点总结</a> |
+            <a href='${card.practiceUrl}' target='_blank'>练习</a>
+            <div class='actions'>
+              <button onclick="editCard(${si},${ci})">编辑</button>
+              <button onclick="deleteCard(${si},${ci})">删除</button>
+            </div>
+          `;
+          cardList.appendChild(cardDiv);
+        });
+        secDiv.appendChild(cardList);
+        list.appendChild(secDiv);
+      });
+    }
+    // 添加卡片
+    document.getElementById('addForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = await loadData();
+      const secIdx = data.findIndex(s => s.section === form.section.value);
+      data[secIdx].cards.push({
+        title: form.title.value,
+        details: form.details.value,
+        summaryUrl: form.summaryUrl.value,
+        practiceUrl: form.practiceUrl.value
+      });
+      await saveData(data);
+      renderManage();
+      form.reset();
+    };
+    // 删除卡片
+    window.deleteCard = async function(secIdx, cardIdx) {
+      const data = await loadData();
+      if(confirm('确定要删除该卡片吗？')){
+        data[secIdx].cards.splice(cardIdx, 1);
+        await saveData(data);
+        renderManage();
+      }
+    };
+    // 编辑卡片（弹窗简单实现）
+    window.editCard = async function(secIdx, cardIdx) {
+      const data = await loadData();
+      const card = data[secIdx].cards[cardIdx];
+      const title = prompt('标题', card.title);
+      if(title===null) return;
+      const details = prompt('详情', card.details);
+      if(details===null) return;
+      const summaryUrl = prompt('知识点总结链接', card.summaryUrl);
+      if(summaryUrl===null) return;
+      const practiceUrl = prompt('练习链接', card.practiceUrl);
+      if(practiceUrl===null) return;
+      data[secIdx].cards[cardIdx] = {title, details, summaryUrl, practiceUrl};
+      await saveData(data);
+      renderManage();
+    };
+    // 首次渲染
+    renderManage();
+  </script>
+</body>
+</html>

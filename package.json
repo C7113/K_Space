@@ -1,0 +1,25 @@
+{
+  "name": "k_space",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/C7113/K_Space.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/C7113/K_Space/issues"
+  },
+  "homepage": "https://github.com/C7113/K_Space#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "simple-git": "^3.28.0"
+  }
+}
