@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 哈希算法原理</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #007bff;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f8ff;
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0d6efd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .hash-table {
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 C++ 哈希算法原理</h1>
+            <p class="subtitle">—— 从数组查找 O(n) 到哈希查找 O(1) | 程老师主讲</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🚀 课程引入</button>
+            <button class="tab" onclick="openTab(event, 'structure')">🏗️ 数据结构</button>
+            <button class="tab" onclick="openTab(event, 'operations')">🔧 核心操作</button>
+            <button class="tab" onclick="openTab(event, 'conflict')">⚠️ 冲突处理</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🎮 完整实践</button>
+        </div>
+
+        <!-- 课程引入 -->
+        <div id="intro" class="content active">
+            <h2>为什么需要哈希表？</h2>
+            <div class="concept-item">
+                <h3>传统数组查找的瓶颈</h3>
+                <p>在数组中查找特定元素（如学生姓名）需要遍历，时间复杂度为 <strong>O(n)</strong>，数据量大时效率低下。</p>
+                <div class="code">
+                    for(int i = 0; i < 1000; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if(students[i] == "李四") {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; scores[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>哈希核心思想：键值对映射</h3>
+                <p>通过<strong>哈希函数</strong>将“键”（如姓名）直接映射到存储位置，实现接近 <strong>O(1)</strong> 的查找速度。</p>
+                <p>理想用法：<code>hashTable["李四"] → 直接获取成绩</code></p>
+            </div>
+        </div>
+
+        <!-- 数据结构 -->
+        <div id="structure" class="content">
+            <h2>哈希表数据结构设计</h2>
+            <div class="concept-item">
+                <h3>节点结构体</h3>
+                <p>每个节点存储键、值和指向下一个节点的指针（用于处理冲突）。</p>
+                <div class="code">
+                    struct StudentNode {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string name;        <span class="comment">// 键 (Key)</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int score;          <span class="comment">// 值 (Value)</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;StudentNode* next;  <span class="comment">// 链表指针</span><br>
+                    };
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>哈希表全局变量</h3>
+                <p>使用指针数组作为哈希表的底层存储。</p>
+                <div class="code">
+                    const int TABLE_SIZE = 20;<br>
+                    StudentNode* hashTable[TABLE_SIZE]; <span class="comment">// 指针数组</span>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>哈希函数设计</h3>
+                <p>将字符串键转换为数组索引。</p>
+                <div class="code">
+                    int hashFunction(string name) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int sum = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for(int i = 0; i < name.length(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += (int)name[i]; <span class="comment">// 累加ASCII码</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return sum % TABLE_SIZE; <span class="comment">// 取模确保在范围内</span><br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 核心操作 -->
+        <div id="operations" class="content">
+            <h2>哈希表核心操作</h2>
+            <div class="example">
+                <h3>初始化</h3>
+                <div class="code">
+                    void initHashTable() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for(int i = 0; i < TABLE_SIZE; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hashTable[i] = nullptr;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "哈希表初始化完成！大小：" &lt;&lt; TABLE_SIZE &lt;&lt; endl;<br>
+                    }
+                </div>
+            </div>
+            <div class="example">
+                <h3>插入</h3>
+                <div class="code">
+                    void insertStudent(string name, int score) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int index = hashFunction(name);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;StudentNode* newNode = new StudentNode;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;newNode->name = name;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;newNode->score = score;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;newNode->next = hashTable[index];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;hashTable[index] = newNode;<br>
+                    }
+                </div>
+            </div>
+            <div class="example">
+                <h3>查找</h3>
+                <div class="code">
+                    int searchStudent(string name) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int index = hashFunction(name);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;StudentNode* current = hashTable[index];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while(current != nullptr) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(current->name == name) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return current->score;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;current = current->next;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return -1; <span class="comment">// 未找到</span><br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 冲突处理 -->
+        <div id="conflict" class="content">
+            <h2>哈希冲突与解决</h2>
+            <div class="concept-item">
+                <h3>什么是哈希冲突？</h3>
+                <p>不同的键通过哈希函数计算后得到相同的索引值。</p>
+                <p>例如：<code>hash("abc") = (97+98+99)%20 = 14</code></p>
+                <p>例如：<code>hash("cba") = (99+98+97)%20 = 14</code></p>
+                <p>两者都映射到索引 14！</p>
+            </div>
+            <div class="concept-item">
+                <h3>解决方法：链地址法</h3>
+                <p>在每个哈希表索引位置维护一个<strong>链表</strong>，所有冲突的元素都链接在该链表上。</p>
+                <p>查找时，先通过哈希函数定位到链表头，再遍历链表进行匹配。</p>
+            </div>
+        </div>
+
+        <!-- 完整实践 -->
+        <div id="practice" class="content">
+            <h2>🎯 完整程序与测试</h2>
+            <div class="example">
+                <h3>完整程序框架</h3>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;string&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 数据结构定义<br>
+                    struct StudentNode { ... };<br>
+                    const int TABLE_SIZE = 20;<br>
+                    StudentNode* hashTable[TABLE_SIZE];<br>
+                    <br>
+                    // 函数声明<br>
+                    void initHashTable();<br>
+                    int hashFunction(string name);<br>
+                    void insertStudent(string name, int score);<br>
+                    int searchStudent(string name);<br>
+                    void displayHashTable();<br>
+                    void cleanupHashTable(); // 内存清理<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;initHashTable();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;insertStudent("张三", 95);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;insertStudent("李四", 88);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;insertStudent("王五", 92);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;searchStudent("张三");<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;displayHashTable();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cleanupHashTable();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            <div class="example">
+                <h3>内存管理：防止泄漏</h3>
+                <p>使用 <code>new</code> 分配的内存必须手动释放。</p>
+                <div class="code">
+                    void cleanupHashTable() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for(int i = 0; i < TABLE_SIZE; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StudentNode* current = hashTable[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while(current != nullptr) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StudentNode* temp = current;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;current = current->next;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete temp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hashTable[i] = nullptr;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "哈希表清理完成！" &lt;&lt; endl;<br>
+                    }
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>性能对比</h3>
+                <table>
+                    <tr>
+                        <th>查找方式</th>
+                        <th>平均时间复杂度</th>
+                        <th>最坏情况</th>
+                    </tr>
+                    <tr>
+                        <td>数组遍历</td>
+                        <td>O(n)</td>
+                        <td>O(n)</td>
+                    </tr>
+                    <tr>
+                        <td>哈希表</td>
+                        <td>O(1)</td>
+                        <td>O(n)</td>
+                    </tr>
+                </table>
+                <p><strong>性能关键</strong>：哈希函数质量、表大小（负载因子）、冲突解决策略。</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 程老师 | 掌握哈希算法，实现高效查找</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

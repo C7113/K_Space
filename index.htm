@@ -92,6 +92,25 @@
       display: grid;
       gap: 1.5rem;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      position: relative;
+    }
+
+    .topic-card.hide {
+      display: none;
+    }
+
+    .expand-btn {
+      grid-column: 1 / -1;
+      margin: 0.5rem auto 0 auto;
+      padding: 0.5rem 1.2rem;
+      background: #6c757d;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: block;
+      width: fit-content;
     }
 
     .topic-card {
@@ -213,8 +232,8 @@
 
         <div class="topic-card">
           <h3>浮点数</h3>
-          <button class="toggle-btn" onclick="toggleDetails('functions')">展开详情</button>
-          <div class="details" id="functions">
+          <button class="toggle-btn" onclick="toggleDetails('l3')">展开详情</button>
+          <div class="details" id="l3">
             <p><strong>内容：</strong>浮点数是计算机中用于表示带小数部分的数值类型，常用double声明并可通过setprecision()控制小数位数。</p>
           </div>
           <div class="action-links">
@@ -222,9 +241,20 @@
             <a href="http://8.130.178.205/problem.php?id=1003" target="_self">练习</a>
           </div>
         </div>
-       </div> 
-
-        
+      <!-- 其余topic-card已隐藏，点击展开按钮显示 -->
+      <div class="topic-card hide">
+        <h3>算数运算符</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l4')">展开详情</button>
+        <div class="details" id="l4">
+          <p><strong>内容：</strong>算数运算符用于进行数学运算，包括加法、减法、乘法和除法等，常用的算数运算符有+、-、*、/。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/算数运算.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1003" target="_self">练习</a>
+        </div>
+      </div>
+      <button class="expand-btn" onclick="toggleGridExpand(this)">展开更多</button>
+      </div>
     </section>
 
     <!-- === 进阶级别 === -->
@@ -233,8 +263,8 @@
       <div class="topic-grid">
         <div class="topic-card">
           <h3>自定义函数</h3>
-          <button class="toggle-btn" onclick="toggleDetails('pointers')">展开详情</button>
-          <div class="details" id="pointers">
+          <button class="toggle-btn" onclick="toggleDetails('p1')">展开详情</button>
+          <div class="details" id="p1">
             <p><strong>内容：</strong>自定义函数是封装特定功能的代码块，通过定义返回值类型、函数名和参数实现代码复用与模块化编程。</p>
           </div>
           <div class="action-links">
@@ -242,8 +272,18 @@
             <a href="http://8.130.178.205/problem.php?id=1240" target="_self">练习</a>
           </div>
         </div>
-
-        
+        <div class="topic-card">
+          <h3>函数返回值</h3>
+          <button class="toggle-btn" onclick="toggleDetails('p2')">展开详情</button>
+          <div class="details" id="p2">
+            <p><strong>内容：</strong>函数返回值是函数执行完毕后返回给调用者的结果，通过return语句指定返回值类型和值。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l2/函数返回值.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1240" target="_self">练习</a>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- === 高级别 === -->
@@ -261,9 +301,20 @@
             <a href="exercises-templates.html" target="_self">练习</a>
           </div>
         </div>
-
+        <div class="topic-card">
+          <h3>哈希算法原理</h3>
+          <button class="toggle-btn" onclick="toggleDetails('hashing')">展开详情</button>
+          <div class="details" id="hashing">
+            <p><strong>内容：</strong>哈希算法是一种将输入数据映射为固定长度输出的算法，常用在数据存储和检索中。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l3/哈希算法原理.html" target="_self">知识点总结</a>
+            <a href="exercises-hashing.html" target="_self">练习</a>
+          </div>
+        </div>
       </div>
-    </section>
+      <!-- 高级级别只有2个topic-card，无需隐藏 -->
+    </section>  
   </div>
 
   <footer>
@@ -272,6 +323,51 @@
   </footer>
 
   <script>
+    // 展开/收起topic-grid中被隐藏的topic-card
+    // 统一为所有topic-grid设置展开/收起功能，且页面加载时自动处理
+    function toggleGridExpand(btn) {
+      const grid = btn.parentElement;
+      const cards = grid.querySelectorAll('.topic-card');
+      const isExpand = btn.textContent.includes('收起');
+      if(isExpand) {
+        cards.forEach(function(card, idx) {
+          if(idx > 2) card.classList.add('hide');
+          else card.classList.remove('hide');
+        });
+        btn.textContent = '展开更多';
+      } else {
+        cards.forEach(function(card) { card.classList.remove('hide'); });
+        btn.textContent = '收起';
+      }
+    }
+
+    // 页面加载时为所有topic-grid自动隐藏多余卡片并添加按钮
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.topic-grid').forEach(function(grid) {
+        const cards = grid.querySelectorAll('.topic-card');
+        let hasHidden = false;
+        cards.forEach(function(card, idx) {
+          if(idx > 2) {
+            card.classList.add('hide');
+            hasHidden = true;
+          } else {
+            card.classList.remove('hide');
+          }
+        });
+        const existBtn = grid.querySelector('.expand-btn');
+        if (cards.length > 3) {
+          if (!existBtn) {
+            const btn = document.createElement('button');
+            btn.className = 'expand-btn';
+            btn.textContent = '展开更多';
+            btn.onclick = function() { toggleGridExpand(this); };
+            grid.appendChild(btn);
+          }
+        } else if (existBtn) {
+          existBtn.remove(); // 如果卡片数减少到3个及以下，移除按钮
+        }
+      });
+    });
     // ✅ 暗色模式切换
     const themeToggle = document.getElementById('themeToggle');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

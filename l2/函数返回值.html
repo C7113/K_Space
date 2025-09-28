@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 函数进阶</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #007bff;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f8ff;
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0d6efd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧩 C++ 函数进阶</h1>
+            <p class="subtitle">—— 掌握自定义函数的设计与应用 | 程老师主讲</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🚀 课程引入</button>
+            <button class="tab" onclick="openTab(event, 'function')">🔧 函数定义</button>
+            <button class="tab" onclick="openTab(event, 'design')">📐 函数设计</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🎮 项目实践</button>
+        </div>
+
+        <!-- 课程引入 -->
+        <div id="intro" class="content active">
+            <h2>为什么要使用函数？</h2>
+            <div class="concept-item">
+                <h3>代码复用与模块化</h3>
+                <p>函数是将一段完成特定任务的代码封装起来，使其可以被多次调用，避免重复编写相同代码，提高程序的可读性和可维护性。</p>
+            </div>
+            <div class="concept-item">
+                <h3>有返回值 vs 无返回值</h3>
+                <p>函数可以分为两类：</p>
+                <ul>
+                    <li><strong>有返回值函数</strong>：执行后返回一个结果，如同自动贩卖机投入硬币后吐出饮料。</li>
+                    <li><strong>无返回值函数（void）</strong>：执行一系列操作但不返回结果，如打印信息。</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>素数判断示例</h3>
+                <p>通过函数封装素数判断逻辑，便于在不同场景中复用。</p>
+                <div class="code">
+                    bool isPrime(int num) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (num < 2) return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 2; i * i <= num; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (num % i == 0) return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 函数定义 -->
+        <div id="function" class="content">
+            <h2>函数的定义、声明与调用</h2>
+            <div class="concept-item">
+                <h3>函数定义语法</h3>
+                <p>返回类型 函数名(参数列表) { 函数体 }</p>
+                <div class="code">
+                    // 示例：返回两个数中的较大值<br>
+                    int getMax(int a, int b) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return a > b ? a : b;<br>
+                    }
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>函数声明</h3>
+                <p>在调用函数前，需先声明其存在（通常在main函数前或头文件中）。</p>
+                <div class="code">
+                    int getMax(int a, int b); // 函数声明
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>函数调用</h3>
+                <p>在main函数或其他函数中通过函数名和实参调用。</p>
+                <div class="code">
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int result = getMax(4, 5);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; result &lt;&lt; endl; // 输出 5<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 函数设计 -->
+        <div id="design" class="content">
+            <h2>函数设计原则</h2>
+            <div class="concept-item">
+                <h3>单一职责</h3>
+                <p>一个函数只完成一个明确的任务，如“计算总分”、“判断素数”等。</p>
+            </div>
+            <div class="concept-item">
+                <h3>参数与返回值设计</h3>
+                <p>合理设计输入（参数）和输出（返回值），使函数接口清晰。</p>
+            </div>
+        </div>
+
+        <!-- 项目实践 -->
+        <div id="practice" class="content">
+            <h2>🎯 项目实战：函数应用</h2>
+
+            <div class="example">
+                <h3>项目1：篮球比赛得分计算</h3>
+                <p>计算球员总得分：罚球x次(1分)，两分球y次(2分)，三分球z次(3分)。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int calculateScore(int x, int y, int z) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return x * 1 + y * 2 + z * 3;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int x, y, z;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; x &gt;&gt; y &gt;&gt; z;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; calculateScore(x, y, z) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目2：游戏金币计算</h3>
+                <p>根据任务难度(1/2/3)计算金币(100/200/300)，累加总金币。</p>
+                <div class="code">
+                    int getCoins(int level) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (level == 1) return 100;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (level == 2) return 200;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (level == 3) return 300;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n, total = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i < n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int level; cin &gt;&gt; level;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;total += getCoins(level);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; total &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目3：游戏角色属性提升</h3>
+                <p>根据任务等级("low"/"mid"/"high")提升生命、攻击、防御属性。</p>
+                <div class="code">
+                    void updateStats(int& hp, int& atk, int& def, string level) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (level == "low") {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hp += 10; atk += 5; def += 3;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else if (level == "mid") {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hp += 20; atk += 10; def += 6;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else if (level == "high") {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hp += 30; atk += 15; def += 9;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int hp, atk, def, n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; hp &gt;&gt; atk &gt;&gt; def &gt;&gt; n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i < n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string level; cin &gt;&gt; level;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updateStats(hp, atk, def, level);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; hp &lt;&lt; " " &lt;&lt; atk &lt;&lt; " " &lt;&lt; def &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目4：素数回文个数</h3>
+                <p>求11到n之间既是素数又是回文数的个数。</p>
+                <div class="code">
+                    bool isPrime(int num) { /* 如上 */ }<br>
+                    <br>
+                    bool isPalindrome(int num) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int original = num, reversed = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (num > 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reversed = reversed * 10 + num % 10;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num /= 10;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return original == reversed;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n, count = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 11; i <= n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isPrime(i) && isPalindrome(i)) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; count &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 程老师 | 掌握函数，构建模块化程序</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

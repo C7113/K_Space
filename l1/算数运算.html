@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 算术运算与应用</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #007bff;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f8ff;
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0d6efd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧮 C++ 算术运算与应用</h1>
+            <p class="subtitle">—— 掌握除法、模运算与实际项目 | 程老师主讲</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🚀 课程引入</button>
+            <button class="tab" onclick="openTab(event, 'division')">➗ 除法运算</button>
+            <button class="tab" onclick="openTab(event, 'modulus')">🔁 模运算</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🎮 项目实践</button>
+        </div>
+
+        <!-- 课程引入 -->
+        <div id="intro" class="content active">
+            <h2>算术运算与计算机原理</h2>
+            <div class="concept-item">
+                <h3>第一台电子计算机 ENIAC</h3>
+                <p>1943年，为满足二战期间弹道计算的迫切需求，美国研发了第一台通用电子计算机ENIAC。它使用约18,000个真空管，重达27吨，每秒可进行5000次加法或400次乘法运算，标志着计算新时代的开启。</p>
+            </div>
+            <div class="concept-item">
+                <h3>算术逻辑单元 (ALU)</h3>
+                <p>计算机的中央处理器（CPU）中有一个核心组件叫<strong>算术逻辑单元（ALU）</strong>，它负责执行所有的算术运算（加、减、乘、除）和逻辑运算，是计算机进行计算的“大脑”。</p>
+            </div>
+            <div class="concept-item">
+                <h3>四则运算回顾</h3>
+                <p>C++ 支持基本的四则运算符：<code>+</code>（加）、<code>-</code>（减）、<code>*</code>（乘）、<code>/</code>（除）、<code>%</code>（模/取余）。</p>
+            </div>
+        </div>
+
+        <!-- 除法运算 -->
+        <div id="division" class="content">
+            <h2>除法运算详解</h2>
+            <div class="concept-item">
+                <h3>整数除法</h3>
+                <p>当两个整数相除时，结果会<strong>截断小数部分</strong>，只保留整数商。</p>
+                <div class="code">
+                    int a = 5;<br>
+                    int b = 2;<br>
+                    int result = a / b; <span class="comment">// 结果为 2，不是 2.5</span>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>浮点数除法</h3>
+                <p>当至少有一个操作数是浮点数（<code>float</code> 或 <code>double</code>）时，结果会保留小数。</p>
+                <div class="code">
+                    double a = 5.0;<br>
+                    double b = 2.0;<br>
+                    double result = a / b; <span class="comment">// 结果为 2.5</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模运算 -->
+        <div id="modulus" class="content">
+            <h2>模运算（取余）</h2>
+            <div class="concept-item">
+                <h3>什么是模运算？</h3>
+                <p>模运算使用 <code>%</code> 运算符，用于计算两个数相除后的<strong>余数</strong>。数学上表示为 a mod b。</p>
+                <div class="code">
+                    int a = 10;<br>
+                    int b = 3;<br>
+                    int remainder = a % b; <span class="comment">// 结果为 1，因为 10 ÷ 3 = 3 余 1</span>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>模运算的应用</h3>
+                <p>模运算在编程中用途广泛，例如：</p>
+                <ul>
+                    <li>判断奇偶数：<code>if (n % 2 == 0)</code> 表示偶数</li>
+                    <li>判断是否整除：<code>if (n % k == 0)</code></li>
+                    <li>循环取值、密码学、进制转换等</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 项目实践 -->
+        <div id="practice" class="content">
+            <h2>🎯 项目实战：应用与计算</h2>
+
+            <div class="example">
+                <h3>项目1：带余除法</h3>
+                <p>输入被除数和除数，输出整数商和余数。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int dividend, divisor;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; dividend &gt;&gt; divisor;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int quotient = dividend / divisor; <span class="comment">// 整数商</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int remainder = dividend % divisor; <span class="comment">// 余数</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; quotient &lt;&lt; " " &lt;&lt; remainder &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目2：人民币支付找零</h3>
+                <p>给定金额，计算100、50、20、10、5、1元钞票各需多少张（优先使用大面额）。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int money;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; money;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; money / 100 &lt;&lt; " "; money %= 100;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; money / 50 &lt;&lt; " "; money %= 50;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; money / 20 &lt;&lt; " "; money %= 20;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; money / 10 &lt;&lt; " "; money %= 10;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; money / 5 &lt;&lt; " "; money %= 5;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; money &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目3：两位数/三位数求和</h3>
+                <p>输入一个两位或三位数，求各位数字之和。</p>
+                <div class="code">
+                    // 两位数示例：12 -> 1+2=3<br>
+                    int n; cin &gt;&gt; n;<br>
+                    int sum = n / 10 + n % 10;<br>
+                    cout &lt;&lt; sum &lt;&lt; endl;<br>
+                    <br>
+                    // 三位数示例：235 -> 2+3+5=10<br>
+                    int n; cin &gt;&gt; n;<br>
+                    int sum = n / 100 + (n / 10) % 10 + n % 10;<br>
+                    cout &lt;&lt; sum &lt;&lt; endl;
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目4：倒序输出两位数</h3>
+                <p>输入68，输出86。</p>
+                <div class="code">
+                    int n; cin &gt;&gt; n;<br>
+                    int reversed = (n % 10) * 10 + n / 10;<br>
+                    cout &lt;&lt; reversed &lt;&lt; endl;
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目5：计算球体体积</h3>
+                <p>公式：V = (4/3) * π * r³，取 π=3.14，结果保留两位小数。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;iomanip&gt; <span class="comment">// 用于设置小数精度</span><br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double r;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; r;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double pi = 3.14;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double volume = (4.0 / 3.0) * pi * r * r * r;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; volume &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 程老师 | 掌握算术运算，解决实际问题</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>
