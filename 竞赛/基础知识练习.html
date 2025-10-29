@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>“鲁班杯”C++编程挑战赛</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .code-example {
+            margin: 15px 0;
+            padding: 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .code-example pre {
+            margin: 0;
+            padding: 15px;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 5px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        .code-example code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        .header-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+        .student-info {
+            flex: 1;
+            min-width: 300px;
+            padding: 15px;
+        }
+        .exam-controls {
+            flex: 0 0 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        .timer-container {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #fff4e3;
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #timer {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #e74c3c;
+            font-family: 'Courier New', monospace;
+        }
+        .timer-label {
+            font-size: 1rem;
+            color: #e67e22;
+            margin-top: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 12px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            margin: 5px;
+            width: 100%;
+        }
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #219653;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .questions-container {
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .question-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        .question-number {
+            background: #3498db;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .options {
+            margin-left: 35px;
+        }
+        .option {
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+        }
+        input[type="radio"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        label {
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .section-title {
+            background: #2c3e50;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 25px 0 15px 0;
+            font-size: 1.2rem;
+        }
+        .submit-container {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+            background: #f8f9fa;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: modalFade 0.3s;
+        }
+        @keyframes modalFade {
+            from {opacity: 0; transform: translateY(-50px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        .modal h2 {
+            color: #27ae60;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        .score {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 20px 0;
+        }
+        .close-btn {
+            padding: 12px 25px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        .close-btn:hover {
+            background: #2980b9;
+        }
+        .progress-container {
+            width: 100%;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .progress-bar {
+            height: 10px;
+            background: #3498db;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .exam-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        @media (max-width: 768px) {
+            .info-section {
+                flex-direction: column;
+            }
+            .student-info, .exam-controls {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            .timer-container {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>“鲁班杯”C++编程挑战赛</h1>
+            <p class="header-subtitle">C++赛项 - 共50题，满分100分</p>
+        </header>
+        
+        <div class="info-section">
+            <div class="student-info">
+                <h3><i class="fas fa-user-graduate"></i> 考生信息</h3>
+                <input type="text" id="studentName" placeholder="请输入您的姓名">
+                <button id="startExamBtn" class="btn btn-primary">开始考试</button>
+            </div>
+            
+            <div class="exam-controls">
+                <div class="timer-container">
+                    <div id="timer">60:00</div>
+                    <div class="timer-label">剩余时间</div>
+                </div>
+                <button id="submitBtn" class="btn btn-success" disabled>提交试卷</button>
+            </div>
+        </div>
+        
+        <div class="questions-container" id="questionsContainer" style="display: none;">
+            <div class="exam-info">
+                <div>总分: 100分</div>
+                <div>已完成: <span id="answeredCount">0</span>/50题</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <div class="section-title">一、选择题（共35题，每题2分，共70分）</div>
+            
+            <!-- 选择题部分 -->
+            <div class="question" id="q1">
+                <div class="question-title">
+                    <span class="question-number">1</span>
+                    <span>以下不属于计算机输入设备的有（ ）。</span>
+                </div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q1" value="A" id="q1a"> <label for="q1a">A、键盘</label></div>
+                    <div class="option"><input type="radio" name="q1" value="B" id="q1b"> <label for="q1b">B、音箱</label></div>
+                    <div class="option"><input type="radio" name="q1" value="C" id="q1c"> <label for="q1c">C、鼠标</label></div>
+                    <div class="option"><input type="radio" name="q1" value="D" id="q1d"> <label for="q1d">D、传感器</label></div>
+                </div>
+            </div>
+            
+            <div class="question" id="q2">
+                <div class="question-title">
+                    <span class="question-number">2</span>
+                    <span>ChatGPT 是 OpenAI 研发的聊天机器人程序，它能通过理解和学习人类的语言来进行对话，还能根据聊天的上下文进行互动，完成很多工作。请你猜猜看，下面任务中，ChatGPT 不能完成的是（ ）。</span>
+                </div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q2" value="A" id="q2a"> <label for="q2a">A、改邮件</label></div>
+                    <div class="option"><input type="radio" name="q2" value="B" id="q2b"> <label for="q2b">B、编剧本</label></div>
+                    <div class="option"><input type="radio" name="q2" value="C" id="q2c"> <label for="q2c">C、擦地板</label></div>
+                    <div class="option"><input type="radio" name="q2" value="D" id="q2d"> <label for="q2d">D、写代码</label></div>
+                </div>
+            </div>
+            
+            <div class="question" id="q3">
+                <div class="question-title">
+                    <span class="question-number">3</span>
+                    <span>常量 7.0 的数据类型是（ ）。</span>
+                </div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q3" value="A" id="q3a"> <label for="q3a">A、double</label></div>
+                    <div class="option"><input type="radio" name="q3" value="B" id="q3b"> <label for="q3b">B、float</label></div>
+                    <div class="option"><input type="radio" name="q3" value="C" id="q3c"> <label for="q3c">C、void</label></div>
+                    <div class="option"><input type="radio" name="q3" value="D" id="q3d"> <label for="q3d">D、int</label></div>
+                </div>
+            </div>
+            
+            <div class="question" id="q4">
+                <div class="question-title">
+                    <span class="question-number">4</span>
+                    <span>下列关于 C++语言的叙述，不正确的是（ ）。</span>
+                </div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q4" value="A" id="q4a"> <label for="q4a">A、变量定义时可以不初始化</label></div>
+                    <div class="option"><input type="radio" name="q4" value="B" id="q4b"> <label for="q4b">B、变量被赋值之后的类型不变</label></div>
+                    <div class="option"><input type="radio" name="q4" value="C" id="q4c"> <label for="q4c">C、变量没有定义也能够使用</label></div>
+                    <div class="option"><input type="radio" name="q4" value="D" id="q4d"> <label for="q4d">D、变量名必须是合法的标识符</label></div>
+                </div>
+            </div>
+            
+            <div class="question" id="q5">
+                <div class="question-title">
+                    <span class="question-number">5</span>
+                    <span>以下不可以作为 C++标识符的是（ ）。</span>
+                </div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q5" value="A" id="q5a"> <label for="q5a">A、x321</label></div>
+                    <div class="option"><input type="radio" name="q5" value="B" id="q5b"> <label for="q5b">B、0x321</label></div>
+                    <div class="option"><input type="radio" name="q5" value="C" id="q5c"> <label for="q5c">C、x321_</label></div>
+                    <div class="option"><input type="radio" name="q5" value="D" id="q5d"> <label for="q5d">D、_x321</label></div>
+                </div>
+            </div>
+            
+            <div class="question" id="q6">
+                <div class="question-title">
+                    <span class="question-number">6</span>
+                    <span>以下哪个不是 C++语言的关键字？</span>
+                </div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q6" value="A" id="q6a"> <label for="q6a">A、int</label></div>
+                    <div class="option"><input type="radio" name="q6" value="B" id="q6b"> <label for="q6b">B、for</label></div>
+                    <div class="option"><input type="radio" name="q6" value="C" id="q6c"> <label for="q6c">C、do</label></div>
+                    <div class="option"><input type="radio" name="q6" value="D" id="q6d"> <label for="q6d">D、cout</label></div>
+                </div>
+            </div>
+            
+            <div class="question" id="q7">
+                <div class="question-title">
+                    <span class="question-number">7</span>
+                    <span>如果用两个 int 类型的变量 a 和 b 分别表达长方形的长和宽，则下列哪个表达式不能用来计算长方形的周长？</span>
+                </div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q7" value="A" id="q7a"> <label for="q7a">A、a + b * 2</label></div>
+                    <div class="option"><input type="radio" name="q7" value="B" id="q7b"> <label for="q7b">B、2 * a + 2 * b</label></div>
+                    <div class="option"><input type="radio" name="q7" value="C" id="q7c"> <label for="q7c">C、a + b + a + b</label></div>
+                    <div class="option"><input type="radio" name="q7" value="D" id="q7d"> <label for="q7d">D、b + a * 2 + b</label></div>
+                </div>
+            </div>
+            
+            <div class="question" id="q8">
+                <div class="question-title">
+                    <span class="question-number">8</span>
+                    <span>已知整型变量 a 的初始值为4，执行完语句"a = a + a * a;"后，a的值为（ ）。</span>
+                </div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q8" value="A" id="q8a"> <label for="q8a">A、20</label></div>
+                    <div class="option"><input type="radio" name="q8" value="B" id="q8b"> <label for="q8b">B、8</label></div>
+                    <div class="option"><input type="radio" name="q8" value="C" id="q8c"> <label for="q8c">C、32</label></div>
+                    <div class="option"><input type="radio" name="q8" value="D" id="q8d"> <label for="q8d">D、64</label></div>
+                </div>
+            </div>
+            
+            <div class="question" id="q9">
+                <div class="question-title">
+                    <span class="question-number">9</span>
+                    <span>给定一个三位数 n，要求把十位上的数字赋值给整型变量x，可以使用下列哪种方法？（ ）</span>
+                </div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q9" value="A" id="q9a"> <label for="q9a">A、int x = n / 100;</label></div>
+                    <div class="option"><input type="radio" name="q9" value="B" id="q9b"> <label for="q9b">B、int x = n % 100 / 10;</label></div>
+                    <div class="option"><input type="radio" name="q9" value="C" id="q9c"> <label for="q9c">C、int x = n / 10;</label></div>
+                    <div class="option"><input type="radio" name="q9" value="D" id="q9d"> <label for="q9d">D、int x = n % 10;</label></div>
+                </div>
+            </div>
+            
+            <div class="question" id="q10">
+                <div class="question-title">
+                    <span class="question-number">10</span>
+                    <span>执行以下代码，输出的结果是（ ）。</span>
+                </div>
+                <div class="code-example">
+                    <pre><code>double a = 1.5;
+int b = 3;
+cout << (int)a * b;</code></pre>
+                </div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q10" value="A" id="q10a"> <label for="q10a">A、3</label></div>
+                    <div class="option"><input type="radio" name="q10" value="B" id="q10b"> <label for="q10b">B、4</label></div>
+                    <div class="option"><input type="radio" name="q10" value="C" id="q10c"> <label for="q10c">C、5</label></div>
+                    <div class="option"><input type="radio" name="q10" value="D" id="q10d"> <label for="q10d">D、6</label></div>
+                </div>
+            </div>
+            <!-- 第11题 -->
+<div class="question" id="q11">
+    <div class="question-title">
+        <span class="question-number">11</span>
+        <span>以下逻辑表达式中，运算结果和其他项不相同的是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q11" value="A" id="q11a"> <label for="q11a">A、true && false</label></div>
+        <div class="option"><input type="radio" name="q11" value="B" id="q11b"> <label for="q11b">B、true || false</label></div>
+        <div class="option"><input type="radio" name="q11" value="C" id="q11c"> <label for="q11c">C、false && false</label></div>
+        <div class="option"><input type="radio" name="q11" value="D" id="q11d"> <label for="q11d">D、!true</label></div>
+    </div>
+</div>
+
+<!-- 第12题 -->
+<div class="question" id="q12">
+    <div class="question-title">
+        <span class="question-number">12</span>
+        <span>假定 int a = 2, b = 3, c = 5;以下表达式中，运算结果和其他项不相同的是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q12" value="A" id="q12a"> <label for="q12a">A、a <= c && b <= c</label></div>
+        <div class="option"><input type="radio" name="q12" value="B" id="q12b"> <label for="q12b">B、b % a == c % a</label></div>
+        <div class="option"><input type="radio" name="q12" value="C" id="q12c"> <label for="q12c">C、b > a || a > c</label></div>
+        <div class="option"><input type="radio" name="q12" value="D" id="q12d"> <label for="q12d">D、!(a < b)</label></div>
+    </div>
+</div>
+
+<!-- 第13题 -->
+<div class="question" id="q13">
+    <div class="question-title">
+        <span class="question-number">13</span>
+        <span>执行以下程序，输出的结果是（ ）。</span>
+    </div>
+    <div class="code-example">
+        <pre><code>int a = 23, b = 53, c = 4;
+int d = a % 10;
+int e = b % 10;
+if (d < e) c += d;
+else if (d > e) c -= d;
+else c += c;
+cout << c << endl;</code></pre>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q13" value="A" id="q13a"> <label for="q13a">A、6</label></div>
+        <div class="option"><input type="radio" name="q13" value="B" id="q13b"> <label for="q13b">B、2</label></div>
+        <div class="option"><input type="radio" name="q13" value="C" id="q13c"> <label for="q13c">C、8</label></div>
+        <div class="option"><input type="radio" name="q13" value="D" id="q13d"> <label for="q13d">D、4</label></div>
+    </div>
+</div>
+
+<!-- 第14题 -->
+<div class="question" id="q14">
+    <div class="question-title">
+        <span class="question-number">14</span>
+        <span>已知a为正奇数，下面条件判断不成立的是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q14" value="A" id="q14a"> <label for="q14a">A、if(a % 2 != 0)</label></div>
+        <div class="option"><input type="radio" name="q14" value="B" id="q14b"> <label for="q14b">B、if(a % 2 == 0)</label></div>
+        <div class="option"><input type="radio" name="q14" value="C" id="q14c"> <label for="q14c">C、if(a % 2)</label></div>
+        <div class="option"><input type="radio" name="q14" value="D" id="q14d"> <label for="q14d">D、if(a - a / 2 * 2)</label></div>
+    </div>
+</div>
+
+<!-- 第15题 -->
+<div class="question" id="q15">
+    <div class="question-title">
+        <span class="question-number">15</span>
+        <span>已知int a = 1, b = 2, c = 5;下面表达式，结果为假的是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q15" value="A" id="q15a"> <label for="q15a">A、!(a > b) && b <= c</label></div>
+        <div class="option"><input type="radio" name="q15" value="B" id="q15b"> <label for="q15b">B、a == b || a < c</label></div>
+        <div class="option"><input type="radio" name="q15" value="C" id="q15c"> <label for="q15c">C、a * b > c || a + b > c</label></div>
+        <div class="option"><input type="radio" name="q15" value="D" id="q15d"> <label for="q15d">D、!(a < b) || a != c</label></div>
+    </div>
+</div>
+
+<!-- 第16题 -->
+<div class="question" id="q16">
+    <div class="question-title">
+        <span class="question-number">16</span>
+        <span>当a为正整数时，执行以下代码，输出不可能是( )。</span>
+    </div>
+    <div class="code-example">
+        <pre><code>if (a % 2 == 0) cout << 1;
+if (a % 2 != 0) cout << 2;
+if (a % 3 == 0) cout << 3;
+if (a % 4 == 0) cout << 4;</code></pre>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q16" value="A" id="q16a"> <label for="q16a">A、134</label></div>
+        <div class="option"><input type="radio" name="q16" value="B" id="q16b"> <label for="q16b">B、13</label></div>
+        <div class="option"><input type="radio" name="q16" value="C" id="q16c"> <label for="q16c">C、24</label></div>
+        <div class="option"><input type="radio" name="q16" value="D" id="q16d"> <label for="q16d">D、14</label></div>
+    </div>
+</div>
+
+<!-- 第17题 -->
+<div class="question" id="q17">
+    <div class="question-title">
+        <span class="question-number">17</span>
+        <span>关于switch语句，以下说法错误的是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q17" value="A" id="q17a"> <label for="q17a">A、各case和default子句顺序不影响结果（含break）</label></div>
+        <div class="option"><input type="radio" name="q17" value="B" id="q17b"> <label for="q17b">B、default后面的break语句可以省略</label></div>
+        <div class="option"><input type="radio" name="q17" value="C" id="q17c"> <label for="q17c">C、case后面必须是常量或常量表达式</label></div>
+        <div class="option"><input type="radio" name="q17" value="D" id="q17d"> <label for="q17d">D、case冒号后必须至少有一条语句</label></div>
+    </div>
+</div>
+
+<!-- 第18题 -->
+<div class="question" id="q18">
+    <div class="question-title">
+        <span class="question-number">18</span>
+        <span>执行以下代码后的结果是（ ）。</span>
+    </div>
+    <div class="code-example">
+        <pre><code>int grade = 80;
+switch (grade / 10) {
+case 10: case 9: cout << "A"; break;
+case 8: case 7: cout << "B"; break;
+case 6: cout << "C"; break;
+default: cout << "D";
+}</code></pre>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q18" value="A" id="q18a"> <label for="q18a">A、A</label></div>
+        <div class="option"><input type="radio" name="q18" value="B" id="q18b"> <label for="q18b">B、B</label></div>
+        <div class="option"><input type="radio" name="q18" value="C" id="q18c"> <label for="q18c">C、C</label></div>
+        <div class="option"><input type="radio" name="q18" value="D" id="q18d"> <label for="q18d">D、D</label></div>
+    </div>
+</div>
+
+<!-- 第19题 -->
+<div class="question" id="q19">
+    <div class="question-title">
+        <span class="question-number">19</span>
+        <span>执行以下程序，输出结果是（ ）。</span>
+    </div>
+    <div class="code-example">
+        <pre><code>int a = 4, b = 3;
+if (--a > b++) cout << a + b;
+else cout << a * b;</code></pre>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q19" value="A" id="q19a"> <label for="q19a">A、6</label></div>
+        <div class="option"><input type="radio" name="q19" value="B" id="q19b"> <label for="q19b">B、7</label></div>
+        <div class="option"><input type="radio" name="q19" value="C" id="q19c"> <label for="q19c">C、9</label></div>
+        <div class="option"><input type="radio" name="q19" value="D" id="q19d"> <label for="q19d">D、12</label></div>
+    </div>
+</div>
+
+<!-- 第20题 -->
+<div class="question" id="q20">
+    <div class="question-title">
+        <span class="question-number">20</span>
+        <span>以下for语句中，循环次数和其它项不同的是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q20" value="A" id="q20a"> <label for="q20a">A、for (int i = 1; i <= 6; ++i)</label></div>
+        <div class="option"><input type="radio" name="q20" value="B" id="q20b"> <label for="q20b">B、for (int i = 6; i < 0; --i)</label></div>
+        <div class="option"><input type="radio" name="q20" value="C" id="q20c"> <label for="q20c">C、for (int i = 6; i > 0; i-=1)</label></div>
+        <div class="option"><input type="radio" name="q20" value="D" id="q20d"> <label for="q20d">D、for (int i = 0; i <= 10; i+=2)</label></div>
+    </div>
+</div>
+
+<!-- 第21题 -->
+<div class="question" id="q21">
+    <div class="question-title">
+        <span class="question-number">21</span>
+        <span>执行以下程序，输出结果是( )。</span>
+    </div>
+    <div class="code-example">
+        <pre><code>int n = 1, sum = 0;
+while (n < 10) {
+  if (n % 2 != 0) sum += n;
+  ++n;
+}
+cout << sum;</code></pre>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q21" value="A" id="q21a"> <label for="q21a">A、20</label></div>
+        <div class="option"><input type="radio" name="q21" value="B" id="q21b"> <label for="q21b">B、25</label></div>
+        <div class="option"><input type="radio" name="q21" value="C" id="q21c"> <label for="q21c">C、30</label></div>
+        <div class="option"><input type="radio" name="q21" value="D" id="q21d"> <label for="q21d">D、55</label></div>
+    </div>
+</div>
+
+<!-- 第22题 -->
+<div class="question" id="q22">
+    <div class="question-title">
+        <span class="question-number">22</span>
+        <span>整数12，8的最小公倍数是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q22" value="A" id="q22a"> <label for="q22a">A、4</label></div>
+        <div class="option"><input type="radio" name="q22" value="B" id="q22b"> <label for="q22b">B、16</label></div>
+        <div class="option"><input type="radio" name="q22" value="C" id="q22c"> <label for="q22c">C、24</label></div>
+        <div class="option"><input type="radio" name="q22" value="D" id="q22d"> <label for="q22d">D、48</label></div>
+    </div>
+</div>
+
+<!-- 第23题 -->
+<div class="question" id="q23">
+    <div class="question-title">
+        <span class="question-number">23</span>
+        <span>执行以下程序，输出结果中"*"的数量是( )。</span>
+    </div>
+    <div class="code-example">
+        <pre><code>int n = 3, m = 4;
+for (int i = 1; i <= n; i++)
+  for (int j = 0; j < m; ++j)
+    cout << "*";</code></pre>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q23" value="A" id="q23a"> <label for="q23a">A、4</label></div>
+        <div class="option"><input type="radio" name="q23" value="B" id="q23b"> <label for="q23b">B、5</label></div>
+        <div class="option"><input type="radio" name="q23" value="C" id="q23c"> <label for="q23c">C、12</label></div>
+        <div class="option"><input type="radio" name="q23" value="D" id="q23d"> <label for="q23d">D、16</label></div>
+    </div>
+</div>
+
+<!-- 第24题 -->
+<div class="question" id="q24">
+    <div class="question-title">
+        <span class="question-number">24</span>
+        <span>执行以下程序后的输出结果是( )。</span>
+    </div>
+    <div class="code-example">
+        <pre><code>int n = 12, m = 5, k = 0;
+for (int i = 1; i <= n; i++) {
+  if (i % m == 0) continue;
+  k += 1;
+}
+cout << k;</code></pre>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q24" value="A" id="q24a"> <label for="q24a">A、1</label></div>
+        <div class="option"><input type="radio" name="q24" value="B" id="q24b"> <label for="q24b">B、5</label></div>
+        <div class="option"><input type="radio" name="q24" value="C" id="q24c"> <label for="q24c">C、10</label></div>
+        <div class="option"><input type="radio" name="q24" value="D" id="q24d"> <label for="q24d">D、12</label></div>
+    </div>
+</div>
+
+<!-- 第25题 -->
+<div class="question" id="q25">
+    <div class="question-title">
+        <span class="question-number">25</span>
+        <span>执行以下代码，输出结果是( )。</span>
+    </div>
+    <div class="code-example">
+        <pre><code>int k = 0;
+for (int i = 1; i <= 10; i++) {
+  if (i % 2 == 0) k += 2;
+  else k--;
+  if (i % 7 == 0) break;
+}
+cout << k;</code></pre>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q25" value="A" id="q25a"> <label for="q25a">A、0</label></div>
+        <div class="option"><input type="radio" name="q25" value="B" id="q25b"> <label for="q25b">B、1</label></div>
+        <div class="option"><input type="radio" name="q25" value="C" id="q25c"> <label for="q25c">C、2</label></div>
+        <div class="option"><input type="radio" name="q25" value="D" id="q25d"> <label for="q25d">D、3</label></div>
+    </div>
+</div>
+
+<!-- 第26题 -->
+<div class="question" id="q26">
+    <div class="question-title">
+        <span class="question-number">26</span>
+        <span>执行以下代码，输出几列"*"？（ ）</span>
+    </div>
+    <div class="code-example">
+        <pre><code>for(int i = 0; i < 4; i++) {
+  for(int j = 0; j < 5; j++)
+    cout << "*";
+  cout << endl;
+}</code></pre>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q26" value="A" id="q26a"> <label for="q26a">A、4</label></div>
+        <div class="option"><input type="radio" name="q26" value="B" id="q26b"> <label for="q26b">B、5</label></div>
+        <div class="option"><input type="radio" name="q26" value="C" id="q26c"> <label for="q26c">C、6</label></div>
+        <div class="option"><input type="radio" name="q26" value="D" id="q26d"> <label for="q26d">D、7</label></div>
+    </div>
+</div>
+
+<!-- 第27题 -->
+<div class="question" id="q27">
+    <div class="question-title">
+        <span class="question-number">27</span>
+        <span>运行以下代码，输出结果是（ ）。</span>
+    </div>
+    <div class="code-example">
+        <pre><code>int n = 5;
+for(int i = 1; i <= n; i++) {
+  for(int j = 1; j <= n; j++) {
+    cout << (j + i + 3) % n + 1 << ' ';
+  }
+  cout << endl;
+}</code></pre>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q27" value="A" id="q27a"> <label for="q27a">A、<br>1 <br>2 3 <br> 3 4 5 <br> 4 5 1 2 <br> 5 1 2 3 4</label></div>
+        <div class="option"><input type="radio" name="q27" value="B" id="q27b"> <label for="q27b">B、<br>2 3 4 5 1 <br> 3 4 5 1 2 <br> 4 5 1 2 3 <br> 5 1 2 3 4 <br> 1 2 3 4 5</label></div>
+        <div class="option"><input type="radio" name="q27" value="C" id="q27c"> <label for="q27c">C、<br>2 <br> 3 4 <br> 4 5 1 <br> 5 1 2 3 <br> 1 2 3 4 5</label></div>
+        <div class="option"><input type="radio" name="q27" value="D" id="q27d"> <label for="q27d">D、<br>1 2 3 4 5 <br> 2 3 4 5 1 <br> 3 4 5 1 2 <br> 4 5 1 2 3 <br> 5 1 2 3 4</label></div>
+    </div>
+</div>
+
+<!-- 第28题 -->
+<div class="question" id="q28">
+    <div class="question-title">
+        <span class="question-number">28</span>
+        <span>关于一维数组，以下说法正确的是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q28" value="A" id="q28a"> <label for="q28a">A、数组长度可动态扩充</label></div>
+        <div class="option"><input type="radio" name="q28" value="B" id="q28b"> <label for="q28b">B、元素类型可以不同</label></div>
+        <div class="option"><input type="radio" name="q28" value="C" id="q28c"> <label for="q28c">C、最后一个元素下标是-1</label></div>
+        <div class="option"><input type="radio" name="q28" value="D" id="q28d"> <label for="q28d">D、数组在内存中连续存放</label></div>
+    </div>
+</div>
+
+<!-- 第29题 -->
+<div class="question" id="q29">
+    <div class="question-title">
+        <span class="question-number">29</span>
+        <span>定义了一维数组int a[10]，在一行中输出这个数组的正确方法是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q29" value="A" id="q29a"> <label for="q29a">A、for(i=0;i<10;i++) cout << a[i] << " " << endl;</label></div>
+        <div class="option"><input type="radio" name="q29" value="B" id="q29b"> <label for="q29b">B、for(i=0;i<10;i++) cout << a[i] << " ";</label></div>
+        <div class="option"><input type="radio" name="q29" value="C" id="q29c"> <label for="q29c">C、for(i=1;i<=10;i++) cout << a(i) << endl;</label></div>
+        <div class="option"><input type="radio" name="q29" value="D" id="q29d"> <label for="q29d">D、for(i=0;i<=10;i++) cout << a[i] << ' ';</label></div>
+    </div>
+</div>
+
+<!-- 第30题 -->
+<div class="question" id="q30">
+    <div class="question-title">
+        <span class="question-number">30</span>
+        <span>数组元素在内存中按顺序存放，它们的存储地址是连续的。数组a的第一个元素a[0]的地址是A，每个元素的长度是2，则第五个元素a[4]的地址是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q30" value="A" id="q30a"> <label for="q30a">A、A + 10</label></div>
+        <div class="option"><input type="radio" name="q30" value="B" id="q30b"> <label for="q30b">B、A + 8</label></div>
+        <div class="option"><input type="radio" name="q30" value="C" id="q30c"> <label for="q30c">C、A</label></div>
+        <div class="option"><input type="radio" name="q30" value="D" id="q30d"> <label for="q30d">D、A + 9</label></div>
+    </div>
+</div>
+
+<!-- 第31题 -->
+<div class="question" id="q31">
+    <div class="question-title">
+        <span class="question-number">31</span>
+        <span>有两个int型变量a和b，假定代码已包含了必要的头文件，交换a和b的正确方法是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q31" value="A" id="q31a"> <label for="q31a">A、a = b; b = a;</label></div>
+        <div class="option"><input type="radio" name="q31" value="B" id="q31b"> <label for="q31b">B、swap(a, b);</label></div>
+        <div class="option"><input type="radio" name="q31" value="C" id="q31c"> <label for="q31c">C、a, b = b, a;</label></div>
+        <div class="option"><input type="radio" name="q31" value="D" id="q31d"> <label for="q31d">D、int tmp = b; b = a; a = b;</label></div>
+    </div>
+</div>
+
+<!-- 第32题 -->
+<div class="question" id="q32">
+    <div class="question-title">
+        <span class="question-number">32</span>
+        <span>对于二维数组： int a[5][10]; 要输入数组的数据，下列选项中正确的是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q32" value="A" id="q32a"> <label for="q32a">A、for(i=0;i<5;i++) for(j=0;j<10;j++) cin >> a[i][j] >> endl;</label></div>
+        <div class="option"><input type="radio" name="q32" value="B" id="q32b"> <label for="q32b">B、for(i=0;i<5;i++) for(j=0;j<10;j++) cin >> a[i][j];</label></div>
+        <div class="option"><input type="radio" name="q32" value="C" id="q32c"> <label for="q32c">C、for(i=0;i<=5;i++) for(j=0;j<=10;j++) cin >> a[i][j];</label></div>
+        <div class="option"><input type="radio" name="q32" value="D" id="q32d"> <label for="q32d">D、for(i=0;i<10;i++) for(j=0;j<5;j++) cin >> a[i][j];</label></div>
+    </div>
+</div>
+
+<!-- 第33题 -->
+<div class="question" id="q33">
+    <div class="question-title">
+        <span class="question-number">33</span>
+        <span>下列说法正确的是（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q33" value="A" id="q33a"> <label for="q33a">A、调用有参函数时，不能使用表达式作为参数</label></div>
+        <div class="option"><input type="radio" name="q33" value="B" id="q33b"> <label for="q33b">B、定义有参函数时，参数只能是同一种类型</label></div>
+        <div class="option"><input type="radio" name="q33" value="C" id="q33c"> <label for="q33c">C、C++函数可以同时返回多个返回值</label></div>
+        <div class="option"><input type="radio" name="q33" value="D" id="q33d"> <label for="q33d">D、包含有多个函数的程序在运行时，首先会执行主函数main()</label></div>
+    </div>
+</div>
+
+<!-- 第34题 -->
+<div class="question" id="q34">
+    <div class="question-title">
+        <span class="question-number">34</span>
+        <span>用冒泡排序算法对数列 5, 6, 2, 4, 3, 1, 7进行从小到大排序，每一趟都把未排序元素中最大的放到未排序位置的最后面，第二趟排序后的状态为（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q34" value="A" id="q34a"> <label for="q34a">A、5 2 4 3 1 6 7</label></div>
+        <div class="option"><input type="radio" name="q34" value="B" id="q34b"> <label for="q34b">B、2 3 1 4 5 6 7</label></div>
+        <div class="option"><input type="radio" name="q34" value="C" id="q34c"> <label for="q34c">C、2 1 3 4 5 6 7</label></div>
+        <div class="option"><input type="radio" name="q34" value="D" id="q34d"> <label for="q34d">D、2 4 3 1 5 6 7</label></div>
+    </div>
+</div>
+
+<!-- 第35题 -->
+<div class="question" id="q35">
+    <div class="question-title">
+        <span class="question-number">35</span>
+        <span>已定义：char a[4] = "ABC", b[4] = "123"; 以下哪个选项的代码正确实现了字符串a和b的拼接（即输出ABC123）（ ）。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q35" value="A" id="q35a"> <label for="q35a">A、strcpy(a, b); cout << a;</label></div>
+        <div class="option"><input type="radio" name="q35" value="B" id="q35b"> <label for="q35b">B、char c[4] = ""; strcpy(c, a); strcpy(c, b); cout << a;</label></div>
+        <div class="option"><input type="radio" name="q35" value="C" id="q35c"> <label for="q35c">C、a += b; cout << a;</label></div>
+        <div class="option"><input type="radio" name="q35" value="D" id="q35d"> <label for="q35d">D、char d[8] = ""; strcat(d, a); strcat(d, b); cout << d;</label></div>
+    </div>
+</div>
+            <!-- 更多选择题... -->
+            
+            <div class="section-title">二、判断题（共15题，每题2分，共30分）</div>
+            
+            <!-- 判断题第1题 -->
+<div class="question" id="q36">
+    <div class="question-title">
+        <span class="question-number">36</span>
+        <span>在C++中，每个语句都必须以分号（;）结束。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q36" value="A" id="q36a"> <label for="q36a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q36" value="B" id="q36b"> <label for="q36b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第2题 -->
+<div class="question" id="q37">
+    <div class="question-title">
+        <span class="question-number">37</span>
+        <span>cout << "Hello World"; 这条语句在C++中用于从键盘获取输入。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q37" value="A" id="q37a"> <label for="q37a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q37" value="B" id="q37b"> <label for="q37b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第3题 -->
+<div class="question" id="q38">
+    <div class="question-title">
+        <span class="question-number">38</span>
+        <span>C++中的变量必须先声明其数据类型，然后才能使用。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q38" value="A" id="q38a"> <label for="q38a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q38" value="B" id="q38b"> <label for="q38b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第4题 -->
+<div class="question" id="q39">
+    <div class="question-title">
+        <span class="question-number">39</span>
+        <span>int x = 10 / 4; 执行后，变量 x 的值是 2.5。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q39" value="A" id="q39a"> <label for="q39a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q39" value="B" id="q39b"> <label for="q39b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第5题 -->
+<div class="question" id="q40">
+    <div class="question-title">
+        <span class="question-number">40</span>
+        <span>= 是关系运算符，用于判断两个值是否相等。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q40" value="A" id="q40a"> <label for="q40a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q40" value="B" id="q40b"> <label for="q40b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第6题 -->
+<div class="question" id="q41">
+    <div class="question-title">
+        <span class="question-number">41</span>
+        <span>if 语句的条件表达式必须用圆括号 () 括起来。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q41" value="A" id="q41a"> <label for="q41a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q41" value="B" id="q41b"> <label for="q41b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第7题 -->
+<div class="question" id="q42">
+    <div class="question-title">
+        <span class="question-number">42</span>
+        <span>for (int i = 0; i < 5; i++) 这个循环的循环体将会被执行 exactly 5 次。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q42" value="A" id="q42a"> <label for="q42a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q42" value="B" id="q42b"> <label for="q42b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第8题 -->
+<div class="question" id="q43">
+    <div class="question-title">
+        <span class="question-number">43</span>
+        <span>语句 int arr[5]; 创建了一个包含5个元素的数组，这5个元素的索引分别是 1, 2, 3, 4, 5。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q43" value="A" id="q43a"> <label for="q43a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q43" value="B" id="q43b"> <label for="q43b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第9题 -->
+<div class="question" id="q44">
+    <div class="question-title">
+        <span class="question-number">44</span>
+        <span>在C++中，字符串 "A" 和字符 'A' 是完全相同的数据。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q44" value="A" id="q44a"> <label for="q44a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q44" value="B" id="q44b"> <label for="q44b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第10题 -->
+<div class="question" id="q45">
+    <div class="question-title">
+        <span class="question-number">45</span>
+        <span>使用 #include <cstring> 后，可以用 str1 = str2; 来将字符串 str2 的内容复制给字符数组 str1。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q45" value="A" id="q45a"> <label for="q45a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q45" value="B" id="q45b"> <label for="q45b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第11题 -->
+<div class="question" id="q46">
+    <div class="question-title">
+        <span class="question-number">46</span>
+        <span>一个二维数组 int matrix[2][3]; 在内存中是按行连续存储的。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q46" value="A" id="q46a"> <label for="q46a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q46" value="B" id="q46b"> <label for="q46b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第12题 -->
+<div class="question" id="q47">
+    <div class="question-title">
+        <span class="question-number">47</span>
+        <span>一个C++程序必须有一个且只能有一个 main() 函数。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q47" value="A" id="q47a"> <label for="q47a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q47" value="B" id="q47b"> <label for="q47b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第13题 -->
+<div class="question" id="q48">
+    <div class="question-title">
+        <span class="question-number">48</span>
+        <span>函数的返回值类型不能是 void。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q48" value="A" id="q48a"> <label for="q48a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q48" value="B" id="q48b"> <label for="q48b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第14题 -->
+<div class="question" id="q49">
+    <div class="question-title">
+        <span class="question-number">49</span>
+        <span>在函数调用时，实参（Actual Argument）和形参（Formal Parameter）的个数、顺序和类型必须一致。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q49" value="A" id="q49a"> <label for="q49a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q49" value="B" id="q49b"> <label for="q49b">B、错误</label></div>
+    </div>
+</div>
+
+<!-- 判断题第15题 -->
+<div class="question" id="q50">
+    <div class="question-title">
+        <span class="question-number">50</span>
+        <span>在C++中，所有传递给函数的参数都是按值传递（Pass by Value）的。</span>
+    </div>
+    <div class="options">
+        <div class="option"><input type="radio" name="q50" value="A" id="q50a"> <label for="q50a">A、正确</label></div>
+        <div class="option"><input type="radio" name="q50" value="B" id="q50b"> <label for="q50b">B、错误</label></div>
+    </div>
+</div>
+            
+            <!-- 更多判断题... -->
+           
+        </div>
+        
+        <div class="submit-container">
+            <button id="finalSubmitBtn" class="btn btn-success" disabled>提交试卷</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <h2><i class="fas fa-trophy"></i> 考试结果</h2>
+            <p>考生姓名：<strong id="resultName"></strong></p>
+            <div class="score" id="finalScore">0</div>
+            <p>总分：100分</p>
+            <p id="resultMessage"></p>
+            <button class="close-btn" id="closeModal">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        // 初始化变量
+        let totalSeconds = 60 * 60; // 60分钟
+        let examStarted = false;
+        const timerElement = document.getElementById('timer');
+        const startExamBtn = document.getElementById('startExamBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const finalSubmitBtn = document.getElementById('finalSubmitBtn');
+        const studentNameInput = document.getElementById('studentName');
+        const questionsContainer = document.getElementById('questionsContainer');
+        const progressBar = document.getElementById('progressBar');
+        const answeredCountElement = document.getElementById('answeredCount');
+        let timerInterval;
+
+        // 正确答案（根据题目文档）
+        const correctAnswers = {
+            q1: 'B',
+            q2: 'C',
+            q3: 'A',
+            q4: 'C',
+            q5: 'B',
+            q6: 'D',
+            q7: 'A',
+            q8: 'A',
+            q9: 'B',
+            q10: 'A',
+           q11: 'B',
+            q12: 'D',
+            q13: 'B',
+            q14: 'B',
+            q15: 'D',
+            q16: 'B',
+            q17: 'D',
+            q18: 'B',
+            q19: 'C',
+            q20: 'B',
+            q21: 'B',
+            q22: 'C',
+            q23: 'C',
+            q24: 'C',
+            q25: 'C',
+            q26: 'A',
+            q27: 'B',
+            q28: 'D',
+            q29: 'B',
+            q30: 'B',
+            q31: 'B',
+            q32: 'B',
+            q33: 'D',
+            q34: 'A',
+            q35: 'D',
+            q36: 'A',
+            q37: 'B',
+            q38: 'A',
+            q39: 'B',
+            q40: 'B',
+            q41: 'A',
+            q42: 'A',
+            q43: 'B',
+            q44: 'B',
+            q45: 'B',
+            q46: 'A',
+            q47: 'A',
+            q48: 'B',
+            q49: 'A',
+            q50: 'B'
+        };
+
+        // 开始考试功能
+        startExamBtn.addEventListener('click', function() {
+            const studentName = studentNameInput.value.trim();
+            if (!studentName) {
+                alert('请输入您的姓名后再开始考试');
+                return;
+            }
+            
+            examStarted = true;
+            startExamBtn.disabled = true;
+            studentNameInput.disabled = true;
+            submitBtn.disabled = false;
+            finalSubmitBtn.disabled = false;
+            questionsContainer.style.display = 'block';
+            
+            // 滚动到试题区域
+            questionsContainer.scrollIntoView({ behavior: 'smooth' });
+            
+            // 开始计时
+            startTimer();
+        });
+
+        // 计时器功能
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(function() {
+                totalSeconds--;
+                updateTimerDisplay();
+                
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    submitExam();
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // 时间不足10分钟时改变颜色
+            if (minutes < 10) {
+                timerElement.style.color = '#e74c3c';
+            }
+        }
+
+        // 更新进度
+        function updateProgress() {
+            const totalQuestions = 50; // 总题数
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            
+            progressBar.style.width = `${progress}%`;
+            answeredCountElement.textContent = answeredQuestions;
+        }
+
+        // 为所有选项添加事件监听器
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', updateProgress);
+        });
+
+        // 计算得分
+        function calculateScore() {
+            let score = 0;
+            
+            // 检查所有选择题和判断题
+            for (let i = 1; i <= 50; i++) {
+                const questionName = `q${i}`;
+                const selectedAnswer = document.querySelector(`input[name="${questionName}"]:checked`);
+                
+                if (selectedAnswer && selectedAnswer.value === correctAnswers[questionName]) {
+                    score += 2; // 每题2分
+                }
+            }
+            
+            return score;
+        }
+
+        // 提交考试功能
+        function submitExam() {
+            if (!examStarted) return;
+            
+            // 计算得分
+            const score = calculateScore();
+            
+            // 显示考生姓名和分数
+            document.getElementById('resultName').textContent = studentNameInput.value || "未知考生";
+            document.getElementById('finalScore').textContent = score;
+            
+            // 根据分数生成评语
+            const resultMessage = document.getElementById('resultMessage');
+            if (score >= 90) {
+                resultMessage.textContent = "恭喜您！您的C++知识非常扎实！";
+            } else if (score >= 70) {
+                resultMessage.textContent = "做得不错！您的C++知识掌握良好！";
+            } else if (score >= 60) {
+                resultMessage.textContent = "及格了！还需要更多的练习来巩固C++知识！";
+            } else {
+                resultMessage.textContent = "需要更多努力！建议多练习C++基础知识！";
+            }
+            
+            // 显示结果模态框
+            document.getElementById('resultModal').style.display = 'flex';
+            
+            // 禁用所有输入
+            const allInputs = document.querySelectorAll('input, textarea, button');
+            allInputs.forEach(input => {
+                input.disabled = true;
+            });
+            
+            // 停止计时器
+            clearInterval(timerInterval);
+        }
+
+        // 绑定提交按钮事件
+        submitBtn.addEventListener('click', submitExam);
+        finalSubmitBtn.addEventListener('click', submitExam);
+        
+        // 关闭模态框
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('resultModal').style.display = 'none';
+        });
+
+        // 初始化进度条
+        updateProgress();
+         document.addEventListener("keydown", function (e) {
+ 		console.log(e.key);
+        if (e.key == "F12") {
+          e.preventDefault(); // 如果按下键F12,阻止事件
+        }
+    });
+
+    </script>
+    
+</body>
+</html>

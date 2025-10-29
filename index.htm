@@ -95,6 +95,20 @@
       position: relative;
     }
 
+    /* 专门用于竞赛区：横向排列，支持横向滚动，卡片固定最小宽度 */
+    #contestGrid {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding: 0.5rem 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #contestGrid .topic-card {
+      flex: 0 0 300px; /* 每个卡片固定宽度，防止被压缩 */
+      min-width: 260px;
+    }
+
     .topic-card.hide {
       display: none;
     }
@@ -155,11 +169,15 @@
 
     .action-links {
       margin-top: 1.2rem;
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
     .action-links a {
       display: inline-block;
-      margin-right: 0.8rem;
+      margin: 0;
       padding: 0.5rem 1rem;
       background: var(--accent);
       color: white;
@@ -266,6 +284,31 @@
         </div>
       </div>
 
+      <div class="topic-card hide">
+        <h3>字符类型</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l5')">展开详情</button>
+        <div class="details" id="l5">
+          <p><strong>内容：</strong>字符类型用于表示单个字符，通常使用char类型。C++中的字符类型支持ASCII码和Unicode编码，能够处理多种语言的字符。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/字符类型.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1309" target="_self">练习</a>
+        </div>
+      </div>
+
+      <div class="topic-card hide">
+        <h3>格式化输出</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l5')">展开详情</button>
+        <div class="details" id="l5">
+          <p><strong>内容：</strong>格式化输出用于控制输出内容的显示格式，常用的有设置宽度、对齐方式、精度等。C++中可以使用iomanip库中的函数实现格式化输出。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/格式化输入输出.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1193" target="_self">练习</a>
+        </div>
+      </div>
+
+
       <button class="expand-btn" onclick="toggleGridExpand(this)">展开更多</button>
       </div>
     </section>
@@ -328,6 +371,23 @@
       </div>
       <!-- 高级级别只有2个topic-card，无需隐藏 -->
     </section>  
+
+    <!-- === 竞赛题目（手动维护） === -->
+    <!-- 将下面的 .topic-card 复制到 #contestGrid 内来手动添加竞赛链接 -->
+    <section class="level-section" id="contest-area">
+      <h2 class="level-title">🏆 竞赛题目</h2>
+      <div class="topic-grid" id="contestGrid">
+        <div class="topic-card">
+          <h3>鲁班杯竞赛</h3>
+          <p class="details" style="display:block;"><strong>说明：</strong>竞赛题目与知识点汇总（示例）</p>
+          <div class="action-links">
+            <a href="./竞赛/基础知识练习.html" target="_self">基础知识练习</a>
+            <a href="./竞赛/竞赛题目知识点总结.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    
   </div>
 
   <footer>

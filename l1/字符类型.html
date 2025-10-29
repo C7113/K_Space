@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 字符类型</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #007bff;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f8ff;
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0d6efd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .ascii-table {
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔤 C++ 字符类型</h1>
+            <p class="subtitle">—— 从ASCII码到字符处理 | 程老师主讲</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🚀 课程引入</button>
+            <button class="tab" onclick="openTab(event, 'char')">🔤 字符类型基础</button>
+            <button class="tab" onclick="openTab(event, 'convert')">↔️ 类型转换</button>
+            <button class="tab" onclick="openTab(event, 'projects')">🎮 项目实践</button>
+            <button class="tab" onclick="openTab(event, 'crypto')">🔐 加密与延伸</button>
+        </div>
+
+        <!-- 课程引入 -->
+        <div id="intro" class="content active">
+            <h2>计算机如何处理文字？</h2>
+            <div class="concept-item">
+                <h3>计算机底层处理</h3>
+                <p>计算机基于<strong>二进制</strong>（0和1）处理所有数据。使用二进制的原因：</p>
+                <ul>
+                    <li><strong>电路简单</strong>：用“开”(1)和“关”(0)表示状态</li>
+                    <li><strong>可靠性高</strong>：抗干扰能力强</li>
+                    <li><strong>逻辑运算基础</strong>：支持AND、OR、NOT等操作</li>
+                    <li><strong>标准化</strong>：统一的硬件和软件基础</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>ASCII码的诞生</h3>
+                <p>20世纪60年代，为解决不同厂商编码混乱问题，美国国家标准协会（ANSI）制定了<strong>ASCII码</strong>（美国信息交换标准代码）。</p>
+                <p>ASCII码定义了128个字符（0-127），包括：</p>
+                <ul>
+                    <li>大写/小写字母 A-Z, a-z</li>
+                    <li>数字 0-9</li>
+                    <li>标点符号 !, ?, ., 等</li>
+                    <li>控制字符（如换行符 \n）</li>
+                </ul>
+                <p>ASCII码成为编程和计算机文化的基石。</p>
+            </div>
+        </div>
+
+        <!-- 字符类型基础 -->
+        <div id="char" class="content">
+            <h2>char 数据类型</h2>
+            <div class="concept-item">
+                <h3>基本概念</h3>
+                <p><code>char</code> 是C++中用于存储单个字符的基本数据类型，通常占用<strong>1个字节</strong>内存。</p>
+                <div class="code">
+                    char c1 = 'A'; // 存储大写字母A<br>
+                    char c2 = 'a'; // 存储小写字母a<br>
+                    char c3 = '5'; // 存储字符'5'，不是数字5<br>
+                    char c4 = ' '; // 存储空格
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>转义字符</h3>
+                <p>用于表示不可打印或具有特殊意义的字符。</p>
+                <table>
+                    <tr>
+                        <th>转义字符</th>
+                        <th>含义</th>
+                    </tr>
+                    <tr>
+                        <td>\n</td>
+                        <td>换行符</td>
+                    </tr>
+                    <tr>
+                        <td>\t</td>
+                        <td>制表符</td>
+                    </tr>
+                    <tr>
+                        <td>\\</td>
+                        <td>反斜杠</td>
+                    </tr>
+                    <tr>
+                        <td>\'</td>
+                        <td>单引号</td>
+                    </tr>
+                    <tr>
+                        <td>\"</td>
+                        <td>双引号</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="example">
+                <h3>ASCII码表（部分）</h3>
+                <table class="ascii-table">
+                    <tr><th>字符</th><th>ASCII码</th></tr>
+                    <tr><td>'0'</td><td>48</td></tr>
+                    <tr><td>'1'</td><td>49</td></tr>
+                    <tr><td>'9'</td><td>57</td></tr>
+                    <tr><td>'A'</td><td>65</td></tr>
+                    <tr><td>'B'</td><td>66</td></tr>
+                    <tr><td>'Z'</td><td>90</td></tr>
+                    <tr><td>'a'</td><td>97</td></tr>
+                    <tr><td>'b'</td><td>98</td></tr>
+                    <tr><td>'z'</td><td>122</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 类型转换 -->
+        <div id="convert" class="content">
+            <h2>字符与整数的转换</h2>
+            <div class="example">
+                <h3>字符转整数（获取ASCII码）</h3>
+                <p>将 <code>char</code> 类型的值赋给 <code>int</code> 变量，得到其对应的ASCII码值。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;char c;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; c;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;n = c;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; n &lt;&lt; endl; // 输出ASCII码<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p>输入 'A'，输出 65。</p>
+            </div>
+            <div class="example">
+                <h3>整数转字符</h3>
+                <p>将整数赋给 <code>char</code> 变量，得到其对应的ASCII字符。</p>
+                <div class="code">
+                    int n;<br>
+                    char c;<br>
+                    cin &gt;&gt; n;<br>
+                    c = n;<br>
+                    cout &lt;&lt; c &lt;&lt; endl;
+                </div>
+                <p>输入 97，输出 'a'。</p>
+            </div>
+        </div>
+
+        <!-- 项目实践 -->
+        <div id="projects" class="content">
+            <h2>🎯 项目实战</h2>
+
+            <div class="example">
+                <h3>项目1：等腰字符三角形</h3>
+                <p>用给定字符构造底边5字符、高3字符的等腰三角形。</p>
+                <div class="code">
+                    输入：*<br>
+                    输出：<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;*<br>
+                    &nbsp;&nbsp;* * *<br>
+                    * * * * *
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目2：字符菱形</h3>
+                <p>构造对角线长5字符的倾斜菱形。</p>
+                <div class="code">
+                    输入：*<br>
+                    输出：<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;*<br>
+                    &nbsp;&nbsp;&nbsp;* *<br>
+                    &nbsp;&nbsp;* * *<br>
+                    &nbsp;* * * *<br>
+                    * * * * *<br>
+                    &nbsp;* * * *<br>
+                    &nbsp;&nbsp;* * *<br>
+                    &nbsp;&nbsp;&nbsp;* *<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;*
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目3：大小写转换</h3>
+                <p>利用ASCII码差值（'a' - 'A' = 32）进行转换。</p>
+                <div class="code">
+                    // 小写转大写<br>
+                    char c;<br>
+                    cin &gt;&gt; c;<br>
+                    cout &lt;&lt; (char)(c - 32) &lt;&lt; endl;<br>
+                    <br>
+                    // 大写转小写<br>
+                    cout &lt;&lt; (char)(c + 32) &lt;&lt; endl;
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目4：字母后继</h3>
+                <p>输出字母的下一个字母，z后回到a，Z后回到A。</p>
+                <div class="code">
+                    char c;<br>
+                    cin &gt;&gt; c;<br>
+                    if(c == 'z') cout &lt;&lt; 'a';<br>
+                    else if(c == 'Z') cout &lt;&lt; 'A';<br>
+                    else cout &lt;&lt; (char)(c + 1);
+                </div>
+            </div>
+        </div>
+
+        <!-- 加密与延伸 -->
+        <div id="crypto" class="content">
+            <h2>🔐 加密算法：凯撒密码</h2>
+            <div class="concept-item">
+                <h3>凯撒密码原理</h3>
+                <p>古罗马凯撒将军发明的加密方法，将每个字母在字母表中向前或向后移动固定位数。</p>
+                <p>例如：每个字母后移4位，'A'→'E', 'B'→'F', ..., 'X'→'B', 'Y'→'C', 'Z'→'D'。</p>
+            </div>
+            <div class="example">
+                <h3>项目：China加密</h3>
+                <p>将 "China" 每个字母后移4位，得到 "Glmre"。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;char c1='C', c2='h', c3='i', c4='n', c5='a';<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;c1 += 4; c2 += 4; c3 += 4; c4 += 4; c5 += 4;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; c1 &lt;&lt; c2 &lt;&lt; c3 &lt;&lt; c4 &lt;&lt; c5 &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>密码学的基石</h3>
+                <p>虽然凯撒密码现在容易被破解，但它是密码学的鼻祖，为现代加密技术奠定了基础。它体现了“替换加密”的核心思想。</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 程老师 | 掌握字符处理，开启编程世界</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>
