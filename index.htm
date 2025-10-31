@@ -6,23 +6,180 @@
   <title>C++ 知识导航</title>
   <style>
     :root {
-      --bg: #f8f9fa;
-      --text: #212529;
-      --accent: #0d6efd;
-      --card-bg: #fff;
-      --border: #dee2e6;
-      --header-bg: #e9ecef;
-      --section-bg: #f1f3f5;
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --accent: #2563eb;
+      --accent-light: #3b82f6;
+      --card-bg: #ffffff;
+      --border: #e5e7eb;
+      --header-bg: #f8fafc;
+      --section-bg: #f9fafb;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.04);
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --spacing: 1rem;
+      --max-width: 64rem;
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     [data-theme="dark"] {
-      --bg: #121212;
-      --text: #e9ecef;
-      --accent: #0d6efd;
-      --card-bg: #1e1e1e;
-      --border: #495057;
-      --header-bg: #2d2d2f;
-      --section-bg: #1a1a1a;
+      --bg: #0f172a;
+      --text: #e2e8f0;
+      --accent: #3b82f6;
+      --accent-light: #60a5fa;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --header-bg: #1e293b;
+      --section-bg: #1e293b;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.2);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.15);
+      --gradient-1: #3b82f6;
+      --gradient-2: #8b5cf6;
+      --gradient-3: #6366f1;
+    }
+
+    /* 动态背景相关样式 */
+    @keyframes gradient-float {
+      0%, 100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+      }
+      33% {
+        transform: translate(3%, 3%) rotate(120deg) scale(1.1);
+      }
+      66% {
+        transform: translate(-3%, -3%) rotate(240deg) scale(0.9);
+      }
+    }
+
+    @keyframes grid-float {
+      0% { background-position: 0 0; }
+      100% { background-position: 50px 50px; }
+    }
+
+    .animated-background {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .particles {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.6;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--accent-light);
+      box-shadow: 0 0 12px var(--accent-light);
+      border-radius: 50%;
+      opacity: 0;
+      animation: particle-float 6s ease-in-out infinite;
+      filter: blur(0.5px);
+    }
+
+    /* 创建一些不同大小和颜色的粒子 */
+    .particle:nth-child(3n) {
+      width: 8px;
+      height: 8px;
+      background: #60a5fa;
+    }
+
+    .particle:nth-child(3n+1) {
+      width: 4px;
+      height: 4px;
+      background: #93c5fd;
+    }
+
+    .particle:nth-child(1) { left: 5%; top: 15%; animation-delay: 0s; }
+    .particle:nth-child(2) { left: 15%; top: 35%; animation-delay: -1s; }
+    .particle:nth-child(3) { left: 25%; top: 55%; animation-delay: -2s; }
+    .particle:nth-child(4) { left: 35%; top: 75%; animation-delay: -3s; }
+    .particle:nth-child(5) { left: 45%; top: 25%; animation-delay: -4s; }
+    .particle:nth-child(6) { left: 55%; top: 45%; animation-delay: -5s; }
+    .particle:nth-child(7) { left: 65%; top: 65%; animation-delay: -1.5s; }
+    .particle:nth-child(8) { left: 75%; top: 35%; animation-delay: -2.5s; }
+    .particle:nth-child(9) { left: 85%; top: 55%; animation-delay: -3.5s; }
+    .particle:nth-child(10) { left: 95%; top: 25%; animation-delay: -4.5s; }
+    .particle:nth-child(11) { left: 12%; top: 85%; animation-delay: -0.5s; }
+    .particle:nth-child(12) { left: 28%; top: 15%; animation-delay: -1.8s; }
+    .particle:nth-child(13) { left: 42%; top: 65%; animation-delay: -2.7s; }
+    .particle:nth-child(14) { left: 58%; top: 85%; animation-delay: -3.2s; }
+    .particle:nth-child(15) { left: 72%; top: 15%; animation-delay: -4.1s; }
+    .particle:nth-child(16) { left: 88%; top: 75%; animation-delay: -4.8s; }
+    .particle:nth-child(17) { left: 22%; top: 45%; animation-delay: -2.2s; }
+    .particle:nth-child(18) { left: 48%; top: 85%; animation-delay: -3.7s; }
+    .particle:nth-child(19) { left: 68%; top: 35%; animation-delay: -1.3s; }
+    .particle:nth-child(20) { left: 82%; top: 65%; animation-delay: -4.4s; }
+
+    @keyframes particle-float {
+      0% {
+        transform: translateY(0) scale(1) rotate(0deg);
+        opacity: 0;
+      }
+      25% {
+        opacity: 0.8;
+      }
+      50% {
+        transform: translateY(-120px) scale(1.2) rotate(180deg);
+        opacity: 0.6;
+      }
+      75% {
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(-240px) scale(0.8) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .gradient-blob {
+      position: absolute;
+      width: 50vmax;
+      height: 50vmax;
+      border-radius: 50vmax;
+      background: var(--accent);
+      opacity: 0.05;
+      filter: blur(100px);
+      animation: gradient-float 20s infinite;
+      mix-blend-mode: multiply;
+      will-change: transform;
+    }
+
+    .gradient-blob:nth-of-type(1) {
+      background: var(--gradient-1);
+      top: -25%;
+      right: -15%;
+    }
+
+    .gradient-blob:nth-of-type(2) {
+      background: var(--gradient-2);
+      bottom: -25%;
+      left: -15%;
+      animation-delay: -10s;
+    }
+
+    .grid-pattern {
+      position: absolute;
+      inset: -100%;
+      background-image: 
+        linear-gradient(var(--border) 1.5px, transparent 1.5px),
+        linear-gradient(90deg, var(--border) 1.5px, transparent 1.5px);
+      background-size: 50px 50px;
+      opacity: 0.02;
+      transform: perspective(1000px) rotateX(60deg);
+      animation: grid-float 20s linear infinite;
     }
 
     * {
@@ -34,32 +191,173 @@
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.7;
-      transition: background-color 0.3s, color 0.3s;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      transition: all var(--transition);
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 90% 10%, var(--accent) 0%, transparent 60%);
+      opacity: 0.03;
+      z-index: -1;
+      transition: opacity var(--transition);
+    }
+
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 var(--spacing);
+    }
+
+    @keyframes float {
+      from { transform: rotate(0deg) translate(2%, 2%); }
+      to { transform: rotate(360deg) translate(-2%, -2%); }
     }
 
     header {
-      background-color: var(--header-bg);
-      padding: 2rem;
+      background: var(--header-bg);
+      padding: calc(var(--spacing) * 2) var(--spacing);
       text-align: center;
       border-bottom: 1px solid var(--border);
+      position: relative;
+      margin-bottom: calc(var(--spacing) * 2);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--accent),
+        transparent
+      );
+    }
+
+    .header-content {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      padding: 0.5rem 0;
     }
 
     header h1 {
       font-size: 2.2rem;
-      color: var(--accent);
+      color: var(--text);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    header h1 .icon {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    header h1:hover .icon {
+      transform: rotate(15deg) scale(1.1);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .badge {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    header .icon {
+      display: inline-block;
+      font-size: 2.8rem;
+      margin-right: 0.3rem;
     }
 
     header p {
       font-size: 1.1rem;
-      margin-top: 0.5rem;
+      margin-top: 0.25rem;
+      color: var(--text);
+      font-weight: 500;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .path-arrow {
+      color: var(--accent);
+      font-weight: 600;
+      padding: 0.15rem 0.6rem;
+      border-radius: 16px;
+      background: rgba(52, 152, 219, 0.1);
+      transition: all var(--transition);
+      font-size: 0.95rem;
+    }
+
+    .path-arrow:hover {
+      background: rgba(52, 152, 219, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .arrow {
+      color: var(--accent);
+      opacity: 0.6;
+      font-weight: bold;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(3px); }
     }
 
     .container {
       max-width: 1000px;
       margin: 2rem auto;
       padding: 0 1rem;
+    }
+
+    /* 统一各个级别的section样式 */
+    .level-section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 4rem auto;
+      max-width: var(--max-width);
+      padding: 0 var(--spacing);
+    }
+
+    .level-section:first-child {
+      margin-top: 2rem;
+    }
+
+    .level-section:last-child {
+      margin-bottom: 2rem;
     }
 
     .theme-toggle {
@@ -77,36 +375,96 @@
 
     .level-section {
       margin: 3rem 0;
+      width: 100%;
+    }
+
+    /* 每个级别的grid容器居中 */
+    .topic-grid {
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .level-title {
       font-size: 1.8rem;
-      color: var(--accent);
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--accent);
+      color: var(--text);
+      margin-bottom: 2rem;
+      padding-bottom: 0.8rem;
+      position: relative;
       display: inline-block;
+      font-weight: 600;
+      text-align: left;
+      margin-left: 0;
+    }
+
+    .level-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 120px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      border-radius: 3px;
     }
 
     .topic-grid {
       display: grid;
-      gap: 1.5rem;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       position: relative;
+      margin-top: 1.5rem;
+      max-width: 1200px;
     }
 
-    /* 专门用于竞赛区：横向排列，支持横向滚动，卡片固定最小宽度 */
+    /* 为不同级别设置不同的布局 */
+    #beginnerGrid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #intermediateGrid {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    #advancedGrid {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .topic-grid:has(.topic-card:hover) .topic-card:not(:hover) {
+      opacity: 0.75;
+      transform: scale(0.98);
+    }
+
+    /* 竞赛区特殊样式 */
     #contestGrid {
-      display: flex;
-      gap: 1rem;
-      overflow-x: auto;
-      padding: 0.5rem 0;
-      -webkit-overflow-scrolling: touch;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      padding: 0;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     #contestGrid .topic-card {
-      flex: 0 0 300px; /* 每个卡片固定宽度，防止被压缩 */
-      min-width: 260px;
+      scroll-snap-align: start;
+      margin: 0;
+    }
+
+    #contestGrid::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    #contestGrid::-webkit-scrollbar-track {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    #contestGrid::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 4px;
     }
 
     .topic-card.hide {
@@ -131,40 +489,148 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1.5rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-      transition: transform 0.3s, box-shadow 0.3s;
+      padding: 1.25rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+    }
+
+    .topic-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
     .topic-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+      border-color: var(--accent-light);
+      transform: translateY(-4px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .topic-card:hover::before {
+      opacity: 1;
+    }
+
+    .topic-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom right,
+        transparent 50%,
+        rgba(var(--accent-rgb), 0.03)
+      );
+      z-index: 0;
+      pointer-events: none;
     }
 
     .topic-card h3 {
       font-size: 1.3rem;
       color: var(--accent);
       margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .topic-card h3::before {
+      content: '📚';
+      font-size: 1.2rem;
+      opacity: 0.8;
+      transform: translateY(-1px);
+    }
+
+    .topic-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, transparent 50%, var(--accent) 51%);
+      opacity: 0.03;
+      border-radius: 0 0 16px 0;
+      transition: opacity var(--transition);
+    }
+
+    .topic-card:hover::after {
+      opacity: 0.06;
     }
 
     .toggle-btn {
-      background: #6c757d;
-      color: white;
-      border: none;
-      padding: 0.4rem 0.8rem;
-      border-radius: 4px;
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
+      font-weight: 500;
       margin-bottom: 1rem;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .toggle-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background: var(--accent);
+      z-index: -1;
+      transition: width var(--transition);
+    }
+
+    .toggle-btn:hover {
+      color: white;
+    }
+
+    .toggle-btn:hover::before {
+      width: 100%;
     }
 
     .details {
-      background: rgba(108, 117, 125, 0.1);
-      padding: 1rem;
-      border-radius: 6px;
-      border-left: 3px solid #6c757d;
+      background: linear-gradient(to right, var(--section-bg), transparent);
+      padding: 1.2rem;
+      border-radius: 12px;
+      border-left: 4px solid var(--accent);
       font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 1rem 0;
       display: none;
+      transform-origin: top;
+      transition: all var(--transition);
+      opacity: 0;
+    }
+
+    .details[style*="display: block"] {
+      opacity: 1;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
     .action-links {
@@ -198,24 +664,205 @@
       opacity: 0.7;
       font-size: 0.95rem;
       border-top: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
     }
 
-    @media (max-width: 600px) {
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 1px;
+      background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent), 
+        transparent
+      );
+    }
+
+    /* 新增的精美动画效果 */
+    .hover-lift {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hover-lift:hover {
+      transform: translateY(-4px);
+    }
+
+    .hover-glow {
+      transition: all 0.3s ease;
+    }
+
+    .hover-glow:hover {
+      box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25em 0.6em;
+      font-size: 0.75em;
+      font-weight: 600;
+      line-height: 1;
+      color: white;
+      background-color: var(--accent);
+      border-radius: 10rem;
+      margin-left: 0.5rem;
+    }
+
+    .shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shimmer::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+      );
+      transform: rotate(30deg);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      from { transform: translateX(-100%) rotate(30deg); }
+      to { transform: translateX(100%) rotate(30deg); }
+    }
+
+    @media (max-width: 768px) {
       .topic-grid {
         grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+      
+      header {
+        padding: 2rem 1rem;
+      }
+      
+      header h1 {
+        font-size: 2rem;
+      }
+      
+      .level-title {
+        font-size: 1.6rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .topic-card {
+        padding: 1.25rem;
+      }
+      
+      .container {
+        padding: 0 1rem;
+        margin: 1.5rem auto;
+      }
+      
+      .button-container {
+        padding: 0 1rem;
+      }
+      
+      .theme-toggle {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+      
+      header p {
+        font-size: 1rem;
+      }
+      
+      .level-title {
+        font-size: 1.4rem;
+      }
+      
+      .topic-card {
+        padding: 1rem;
+      }
+      
+      .action-links {
+        flex-direction: column;
+      }
+      
+      .action-links a {
+        width: 100%;
+        text-align: center;
       }
     }
   </style>
 </head>
 <body>
+  <div class="animated-background">
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+    <div class="grid-pattern"></div>
+  </div>
   <header>
-    <h1>📘 C++ 知识导航</h1>
-    <p>系统学习 C++ 编程语言 | 基础 → 进阶 → 高级</p>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        C++ 知识导航
+        <span class="badge">2025</span>
+      </h1>
+      <p>系统学习 C++ 编程语言 | <span class="path-arrow">基础</span> <span class="arrow">→</span> <span class="path-arrow">进阶</span> <span class="arrow">→</span> <span class="path-arrow">高级</span></p>
+    </div>
   </header>
 
   <!-- 按钮组放在header下方，间距更近 -->
-  <div class="button-container" style="display:flex;justify-content:center;align-items:center;gap:0.2rem;margin:1.2rem auto 0.6rem auto;max-width:300px;">
-    <button class="theme-toggle" id="themeToggle">🌙 切换暗色模式</button>
+  <div class="button-container" style="display:flex;justify-content:center;align-items:center;gap:0.2rem;margin:0.8rem auto 0.4rem auto;max-width:300px;">
+    <body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  <button class="theme-toggle" id="themeToggle">🌙 切换暗色模式</button>
     <button class="theme-toggle" onclick="window.location.href='http://8.130.178.205/'">鲁班创客OJ</button>
   </div>
   <div class="container">
@@ -223,7 +870,7 @@
     <!-- === 基础级别 === -->
     <section class="level-section">
       <h2 class="level-title">🥉 基础级别</h2>
-       <div class="topic-grid">
+       <div class="topic-grid" id="beginnerGrid">
         <div class="topic-card">
           <h3>C++入门</h3>
           <button class="toggle-btn" onclick="toggleDetails('l1')">展开详情</button>
@@ -316,7 +963,7 @@
     <!-- === 进阶级别 === -->
     <section class="level-section">
       <h2 class="level-title">🥈 进阶级别</h2>
-      <div class="topic-grid">
+      <div class="topic-grid" id="intermediateGrid">
         <div class="topic-card">
           <h3>自定义函数</h3>
           <button class="toggle-btn" onclick="toggleDetails('p1')">展开详情</button>
@@ -345,7 +992,7 @@
     <!-- === 高级别 === -->
     <section class="level-section">
       <h2 class="level-title">🥇 高级级别</h2>
-      <div class="topic-grid">
+      <div class="topic-grid" id="advancedGrid">
         <div class="topic-card">
           <h3>模拟算法</h3>
           <button class="toggle-btn" onclick="toggleDetails('templates')">展开详情</button>
@@ -473,6 +1120,28 @@
         btn.textContent = '收起详情';
       }
     }
+    
+    // 添加随机移动效果到粒子
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+        
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+        
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+        
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
   </script>
 </body>
 </html>
