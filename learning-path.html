@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>C++ 学习路径</title>
+  <link rel="stylesheet" href="./styles/base.css">
+  <link rel="stylesheet" href="./styles/animations.css">
+  <link rel="stylesheet" href="./styles/components.css">
+  <style>
+    .path-hero { padding: 2rem 1rem; text-align: center; }
+    .path-columns { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; margin-top: 1rem; }
+    .path-main { min-height: 60vh; }
+    .toc { position: sticky; top: 1rem; align-self: start; }
+    .search-box { display:flex; gap:0.6rem; align-items:center; }
+    #searchInput { flex:1; padding:0.5rem; border-radius:6px; border:1px solid var(--border); }
+    
+    /* 卡片链接样式 */
+    .topic-card-wrapper {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s;
+    }
+    .topic-card-wrapper:hover {
+      transform: translateY(-2px);
+    }
+    .topic-card.interactive {
+      cursor: pointer;
+      position: relative;
+      padding-bottom: 2.5rem;
+    }
+    .topic-card.interactive:hover {
+      border-color: var(--primary);
+    }
+    .card-status {
+      position: absolute;
+      bottom: 0.8rem;
+      right: 1rem;
+      font-size: 0.9rem;
+    }
+    .status-text {
+      color: var(--primary);
+    }
+    .status-text.pending {
+      color: var(--secondary);
+    }
+    .title-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+    .tags {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: var(--bg-light);
+      color: var(--text-light);
+    }
+    
+    @media (max-width: 900px) { .path-columns { grid-template-columns: 1fr; } .toc { position: static; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>学习路径 — C++ 系统学习</h1>
+      <p>在此页面你可以看到推荐的学习路线、每一步的目标与资源链接。内容由 <code>data/learning-path.json</code> 管理，后续编辑可直接修改该文件。</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <section class="path-hero">
+      <div style="display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap">
+        <button class="toggle-btn" onclick="window.location.href='index.htm'">返回导航首页</button>
+        <button class="toggle-btn" onclick="window.location.href='http://8.130.178.205/'">进入 OJ 刷题</button>
+      </div>
+    </section>
+
+    <div class="path-columns">
+      <main class="path-main">
+        <div class="topic-card">
+          <div class="search-box">
+            <input id="searchInput" placeholder="搜索知识点或关键词（示例：哈希、函数）">
+            <button class="toggle-btn" onclick="location.reload()">重置</button>
+          </div>
+        </div>
+
+        <div id="content"><!-- 数据渲染到此 --></div>
+      </main>
+
+      <aside class="toc">
+        <div class="topic-card">
+          <h3>学习目录</h3>
+          <nav id="toc-list"><!-- TOC 渲染 --></nav>
+          <hr>
+          <h4>快速链接</h4>
+          <nav>
+            <a href="./l1/C++起始.html">C++ 起始</a>
+            <a href="./l2/自定义函数.html">自定义函数</a>
+            <a href="./l3/模拟算法.html">模拟算法</a>
+          </nav>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 学习路径</p>
+  </footer>
+
+  <script src="./scripts/learning-path.js"></script>
+</body>
+</html>

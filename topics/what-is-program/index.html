@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>什么是程序 - C++ 基础知识</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <link rel="stylesheet" href="../../styles/topic.css">
+</head>
+<body>
+    <div class="topic-header">
+        <h1>什么是程序</h1>
+        <p>了解程序的本质与基本概念，开启你的编程之旅</p>
+    </div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="topic-card">
+                <div class="progress-indicator">
+                    <div class="progress-step">学习路径</div>
+                    <div class="progress-step">编程启蒙</div>
+                    <div class="progress-step">什么是程序</div>
+                </div>
+
+                <h2>程序的定义</h2>
+                <p>程序是按照一定顺序执行的指令集合。它就像是一个详细的操作手册，告诉计算机应该如何一步一步地完成特定的任务。</p>
+
+                <div class="example-block">
+                    <h4>🎂 生活中的例子：制作蛋糕</h4>
+                    <p>做蛋糕的菜谱就像一个程序，它包含了明确的步骤：</p>
+                    <ol>
+                        <li>👨‍🍳 准备面粉、鸡蛋、牛奶等原料</li>
+                        <li>🥣 按照比例混合原料</li>
+                        <li>🔥 放入预热好的烤箱</li>
+                        <li>⏲️ 设定温度和时间</li>
+                        <li>⌛ 等待烘焙完成</li>
+                    </ol>
+                    <div class="note-block">
+                        <p>关键点：每一个步骤都是<span class="highlight">明确的指令</span>，按顺序执行就能得到期望的结果。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <h2>程序的特点</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h4>🔄 顺序性</h4>
+                        <p>指令按特定顺序执行</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>📝 明确性</h4>
+                        <p>每个指令都必须清晰、明确</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🔁 可重复性</h4>
+                        <p>相同的输入会得到相同的输出</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>⚡ 自动性</h4>
+                        <p>一旦开始运行，程序会自动执行直到完成</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <h2>程序的基本组成部分</h2>
+                <div class="diagram-container">
+                    <img src="program-flow.png" alt="程序流程图" onerror="this.style.display='none'">
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <h4>📥 输入</h4>
+                            <p>程序需要处理的数据</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>⚙️ 处理</h4>
+                            <p>对输入数据进行运算和操作</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>📤 输出</h4>
+                            <p>处理后的结果</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>💾 存储</h4>
+                            <p>临时或永久保存数据</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>🎮 控制</h4>
+                            <p>决定程序执行的流程</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <h2>简单的 C++ 程序示例</h2>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    // 声明变量
+    int num1, num2;
+    
+    // 输入
+    cout << "请输入两个数字：";
+    cin >> num1 >> num2;
+    
+    // 处理
+    int sum = num1 + num2;
+    
+    // 输出
+    cout << "两个数字的和是：" << sum << endl;
+    
+    return 0;
+}</code></pre>
+                </div>
+                <div class="note-block">
+                    <p>这个简单的程序展示了：</p>
+                    <ul>
+                        <li>📥 <span class="highlight">输入</span>：从用户获取两个数字</li>
+                        <li>⚙️ <span class="highlight">处理</span>：计算两个数字的和</li>
+                        <li>📤 <span class="highlight">输出</span>：显示计算结果</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <h2>动手实践</h2>
+                <div class="practice-block">
+                    <h3>🎯 练习任务</h3>
+                    <p>尝试编写一个简单的程序，完成以下功能：</p>
+                    <ol>
+                        <li>接收用户输入的姓名</li>
+                        <li>向用户显示个性化的问候信息</li>
+                    </ol>
+                    <div class="note-block">
+                        <p>提示：使用 <code>string</code> 类型存储姓名，使用 <code>cout</code> 输出问候。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <h2>总结</h2>
+                <p>程序是解决问题的工具，它将复杂的问题分解成简单的、有序的步骤。通过学习编程，我们不仅学会了如何告诉计算机做事，更重要的是学会了如何系统地思考和解决问题。</p>
+                <div class="note-block">
+                    <p><strong>📚 下一步建议：</strong></p>
+                    <ul>
+                        <li>学习 C++ 的基本语法</li>
+                        <li>了解变量和数据类型</li>
+                        <li>练习编写简单的程序</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">
+                    ← 返回学习路径
+                </button>
+                <button class="toggle-btn" onclick="window.location.href='../variables/index.html'">
+                    下一节：变量与数据类型 →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 C++ 学习路径</p>
+    </footer>
+</body>
+</html>
