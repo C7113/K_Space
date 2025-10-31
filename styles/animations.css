@@ -1,0 +1,103 @@
+/* 动画与动态背景 */
+@keyframes gradient-float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  33% { transform: translate(3%, 3%) rotate(120deg) scale(1.1); }
+  66% { transform: translate(-3%, -3%) rotate(240deg) scale(0.9); }
+}
+
+@keyframes grid-float { 0% { background-position: 0 0; } 100% { background-position: 50px 50px; } }
+
+.animated-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.6;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--accent-light);
+  box-shadow: 0 0 12px var(--accent-light);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particle-float 6s ease-in-out infinite;
+  filter: blur(0.5px);
+}
+
+.particle:nth-child(3n) { width: 8px; height: 8px; background: #60a5fa; }
+.particle:nth-child(3n+1) { width: 4px; height: 4px; background: #93c5fd; }
+
+/* 粒子位置 */
+.particle:nth-child(1) { left: 5%; top: 15%; animation-delay: 0s; }
+.particle:nth-child(2) { left: 15%; top: 35%; animation-delay: -1s; }
+.particle:nth-child(3) { left: 25%; top: 55%; animation-delay: -2s; }
+.particle:nth-child(4) { left: 35%; top: 75%; animation-delay: -3s; }
+.particle:nth-child(5) { left: 45%; top: 25%; animation-delay: -4s; }
+.particle:nth-child(6) { left: 55%; top: 45%; animation-delay: -5s; }
+.particle:nth-child(7) { left: 65%; top: 65%; animation-delay: -1.5s; }
+.particle:nth-child(8) { left: 75%; top: 35%; animation-delay: -2.5s; }
+.particle:nth-child(9) { left: 85%; top: 55%; animation-delay: -3.5s; }
+.particle:nth-child(10) { left: 95%; top: 25%; animation-delay: -4.5s; }
+.particle:nth-child(11) { left: 12%; top: 85%; animation-delay: -0.5s; }
+.particle:nth-child(12) { left: 28%; top: 15%; animation-delay: -1.8s; }
+.particle:nth-child(13) { left: 42%; top: 65%; animation-delay: -2.7s; }
+.particle:nth-child(14) { left: 58%; top: 85%; animation-delay: -3.2s; }
+.particle:nth-child(15) { left: 72%; top: 15%; animation-delay: -4.1s; }
+.particle:nth-child(16) { left: 88%; top: 75%; animation-delay: -4.8s; }
+.particle:nth-child(17) { left: 22%; top: 45%; animation-delay: -2.2s; }
+.particle:nth-child(18) { left: 48%; top: 85%; animation-delay: -3.7s; }
+.particle:nth-child(19) { left: 68%; top: 35%; animation-delay: -1.3s; }
+.particle:nth-child(20) { left: 82%; top: 65%; animation-delay: -4.4s; }
+
+@keyframes particle-float {
+  0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0; }
+  25% { opacity: 0.8; }
+  50% { transform: translateY(-120px) scale(1.2) rotate(180deg); opacity: 0.6; }
+  75% { opacity: 0.7; }
+  100% { transform: translateY(-240px) scale(0.8) rotate(360deg); opacity: 0; }
+}
+
+.gradient-blob {
+  position: absolute;
+  width: 50vmax;
+  height: 50vmax;
+  border-radius: 50vmax;
+  background: var(--accent);
+  opacity: 0.05;
+  filter: blur(100px);
+  animation: gradient-float 20s infinite;
+  mix-blend-mode: multiply;
+  will-change: transform;
+}
+
+.gradient-blob:nth-of-type(1) { background: var(--gradient-1); top: -25%; right: -15%; }
+.gradient-blob:nth-of-type(2) { background: var(--gradient-2); bottom: -25%; left: -15%; animation-delay: -10s; }
+
+.grid-pattern {
+  position: absolute;
+  inset: -100%;
+  background-image: linear-gradient(var(--border) 1.5px, transparent 1.5px), linear-gradient(90deg, var(--border) 1.5px, transparent 1.5px);
+  background-size: 50px 50px;
+  opacity: 0.02;
+  transform: perspective(1000px) rotateX(60deg);
+  animation: grid-float 20s linear infinite;
+}
+
+/* 轻量粒子/背景动画（pulse/shimmer/slideDown 等也属于动画文件） */
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes bounce { 0%,100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
+@keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+@keyframes shimmer { from { transform: translateX(-100%) rotate(30deg); } to { transform: translateX(100%) rotate(30deg); } }
