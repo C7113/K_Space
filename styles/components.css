@@ -82,7 +82,47 @@ header p { font-size: 1.1rem; margin-top: 0.25rem; color: var(--text); font-weig
 
 .action-links { margin-top: 1.2rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
 .action-links a { display: inline-block; margin: 0; padding: 0.5rem 1rem; background: var(--accent); color: white; text-decoration: none; border-radius: 5px; font-size: 0.9rem; }
-.action-links a:hover { background: #0b5ed7; }
+.action-links a:hover {
+  background: #0b5ed7; /* 背景色变化 */
+  transform: translateY(-2px); /* 轻微上移效果 */
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3); /* 添加阴影效果 */
+}
+
+/* 在文件末尾添加以下代码 */
+/* 修复基础级别按钮无法点击的问题 */
+#beginnerGrid .action-links {
+  position: relative;
+  z-index: 10;
+}
+
+#beginnerGrid .action-links a {
+  display: inline-block;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  position: relative;
+  z-index: 20;
+  border: none !important;
+  outline: none !important;
+  pointer-events: auto !important;
+}
+
+#beginnerGrid .action-links a:hover {
+  background: #0b5ed7 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3) !important;
+}
+
+/* 确保卡片不会覆盖按钮 */
+#beginnerGrid .topic-card {
+  overflow: visible !important;
+}
 
 footer { text-align: center; padding: 2.5rem 1rem; margin-top: 4rem; color: var(--text); opacity: 0.7; font-size: 0.95rem; border-top: 1px solid var(--border); position: relative; overflow: hidden; }
 footer::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 200px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }

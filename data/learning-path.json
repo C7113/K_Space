@@ -22,7 +22,7 @@
           "id": "how-computer-works",
           "title": "计算机如何工作？",
           "desc": "输入->处理->输出(IPO模型)，算法概念，用流程图描述问题",
-          "link": "#",
+          "link": "/topics/how-computer-works/index.html",
           "tags": ["启蒙", "思维"]
         },
         {

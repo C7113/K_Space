@@ -84,8 +84,9 @@
           </div>
           <div class="action-links">
             <a href="./l1/变量与数据类型.html" target="_self">知识点总结</a>
-            <a href="http://8.130.178.205/problem.php?id=1001" target="_self">练习</a>
-          </div>
+            <!-- 确保基础级别按钮的链接格式如下（应该已经是这样了） -->
+            <a href="http://8.130.178.205/problem.php?id=1001" target="_self" rel="noopener noreferrer">练习</a>
+            </div>
         </div>
 
         <div class="topic-card">
@@ -332,6 +333,27 @@
         const translateY = Math.sin(angle) * force;
         
         particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+    // 在现有的<script>标签内添加以下代码（在文件末尾的script部分）
+    document.addEventListener('DOMContentLoaded', function() {
+      // 为基础级别按钮添加额外的点击事件处理
+      const beginnerButtons = document.querySelectorAll('#beginnerGrid .action-links a');
+      beginnerButtons.forEach(button => {
+        // 确保按钮可点击
+        button.style.pointerEvents = 'auto';
+        button.style.cursor = 'pointer';
+        
+        // 添加额外的点击事件处理
+        button.addEventListener('click', function(e) {
+          // 检查href属性是否存在且有效
+          if (this.href && this.href !== '#') {
+            // 如果点击事件被阻止了，我们手动跳转
+            setTimeout(() => {
+              window.location.href = this.href;
+            }, 100);
+          }
+        });
       });
     });
   </script>

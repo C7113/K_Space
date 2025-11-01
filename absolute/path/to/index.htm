@@ -1,0 +1,113 @@
+// 修改前的代码
+// 添加随机移动效果到粒子
+/*
+document.addEventListener('mousemove', function(e) {
+  const particles = document.querySelectorAll('.particle');
+  const mouseX = e.clientX;
+  const mouseY = e.clientY;
+  
+  particles.forEach(particle => {
+    const rect = particle.getBoundingClientRect();
+    const particleX = rect.left + rect.width / 2;
+    const particleY = rect.top + rect.height / 2;
+    
+    const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+    const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+    const force = Math.min(500 / (distance * distance), 15);
+    
+    const translateX = Math.cos(angle) * force;
+    const translateY = Math.sin(angle) * force;
+    
+    particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+  });
+});
+*/
+
+// 修改后的代码 - 添加节流函数
+function throttle(func, limit) {
+  let inThrottle;
+  return function() {
+    const args = arguments;
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
+// 使用节流优化鼠标移动效果
+let lastMouseX, lastMouseY;
+let animationFrameId;
+
+function updateParticles(e) {
+  // 取消上一帧未执行的动画
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+  }
+  
+  animationFrameId = requestAnimationFrame(() => {
+    // 缓存鼠标位置
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+    
+    const particles = document.querySelectorAll('.particle');
+    
+    particles.forEach(particle => {
+      const rect = particle.getBoundingClientRect();
+      const particleX = rect.left + rect.width / 2;
+      const particleY = rect.top + rect.height / 2;
+      
+      const angle = Math.atan2(lastMouseY - particleY, lastMouseX - particleX);
+      const distance = Math.hypot(lastMouseX - particleX, lastMouseY - particleY);
+      const force = Math.min(500 / (distance * distance), 15);
+      
+      const translateX = Math.cos(angle) * force;
+      const translateY = Math.sin(angle) * force;
+      
+      particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+    });
+  });
+}
+
+// 应用节流，限制为每16ms最多执行一次（约60fps）
+const throttledParticleUpdate = throttle(updateParticles, 16);
+
+// 只在鼠标移动时应用效果，添加性能开关
+let particleEffectsEnabled = true;
+
+document.addEventListener('mousemove', function(e) {
+  if (particleEffectsEnabled) {
+    throttledParticleUpdate(e);
+  }
+});
+
+// 添加性能监控，在帧率过低时自动禁用粒子效果
+let frameCount = 0;
+let lastTime = performance.now();
+
+function monitorPerformance() {
+  const currentTime = performance.now();
+  const elapsedTime = currentTime - lastTime;
+  frameCount++;
+  
+  if (elapsedTime >= 1000) { // 每秒计算一次FPS
+    const fps = Math.round((frameCount * 1000) / elapsedTime);
+    
+    // 如果FPS低于30，自动禁用粒子效果
+    if (fps < 30) {
+      particleEffectsEnabled = false;
+    } else {
+      particleEffectsEnabled = true;
+    }
+    
+    frameCount = 0;
+    lastTime = currentTime;
+  }
+  
+  requestAnimationFrame(monitorPerformance);
+}
+
+// 启动性能监控
+monitorPerformance();
