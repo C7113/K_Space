@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>C++ 变量与数据类型</title>
-    <link rel="stylesheet" href="../styles/base.css">
-    <link rel="stylesheet" href="../styles/animations.css">
-    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
     <style>
         body {
             font-family: 'Microsoft YaHei', sans-serif;
@@ -184,10 +184,10 @@
     <div class="container">
         <header>
             <h1>📦 C++ 变量与数据类型</h1>
-            <p class="subtitle">—— 掌握数据存储与运算基础 | 程老师主讲</p>
+            <p class="subtitle">—— 掌握数据存储与运算基础</p>
         </header>
 
-        <a href="../index.htm" class="return-link">🔙 返回知识导航首页</a>
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
 
         <div class="tab-container">
             <button class="tab active" onclick="openTab(event, 'variables')">📦 变量概念</button>
@@ -365,7 +365,7 @@
         </div>
 
         <footer>
-            <p>© 2025 C++课程 | 程老师 | 掌握变量与数据，打好编程基石</p>
+            <p>© 2025 C++课程 | 掌握变量与数据，打好编程基石</p>
         </footer>
     </div>
 
@@ -384,20 +384,6 @@
             evt.currentTarget.className += " active";
             document.getElementById(tabName).className += " active";
         }
-        
-        // 添加暗色模式切换功能
-        document.addEventListener('DOMContentLoaded', function() {
-            const returnLink = document.querySelector('.return-link');
-            returnLink.addEventListener('click', function() {
-                // 保持主题设置
-                const isDark = document.body.getAttribute('data-theme') === 'dark';
-                if (isDark) {
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    localStorage.setItem('theme', 'light');
-                }
-            });
-        });
     </script>
 </body>
 </html>

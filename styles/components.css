@@ -72,10 +72,51 @@ header p { font-size: 1.1rem; margin-top: 0.25rem; color: var(--text); font-weig
 .topic-card h3 { font-size: 1.3rem; color: var(--accent); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; position: relative; }
 .topic-card h3::before { content: '📚'; font-size: 1.2rem; opacity: 0.8; transform: translateY(-1px); }
 
-.toggle-btn { background: transparent; color: var(--accent); border: 2px solid var(--accent); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 500; margin-bottom: 1rem; transition: all var(--transition); position: relative; overflow: hidden; z-index: 1; }
-.toggle-btn::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 100%; background: var(--accent); z-index: -1; transition: width var(--transition); }
-.toggle-btn:hover { color: white; }
-.toggle-btn:hover::before { width: 100%; }
+.toggle-btn { 
+  background: transparent; 
+  color: var(--accent); 
+  border: 2px solid var(--accent); 
+  padding: 0.6rem 1.2rem; 
+  border-radius: 8px; 
+  cursor: pointer; 
+  font-size: 0.95rem; 
+  font-weight: 500; 
+  transition: all var(--transition); 
+  position: relative; 
+  overflow: hidden; 
+  z-index: 1; 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px; /* 确保按钮足够大，便于点击 */
+}
+
+.toggle-btn::before { 
+  content: ''; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 0; 
+  height: 100%; 
+  background: var(--accent); 
+  z-index: -1; 
+  transition: width var(--transition); 
+}
+
+.toggle-btn:hover { 
+  color: white; 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.toggle-btn:hover::before { 
+  width: 100%; 
+}
+
+/* 顶部导航按钮特殊样式 */
+.button-container .toggle-btn {
+  margin: 0 0.25rem;
+}
 
 .details { background: linear-gradient(to right, var(--section-bg), transparent); padding: 1.2rem; border-radius: 12px; border-left: 4px solid var(--accent); font-size: 0.95rem; line-height: 1.6; margin: 1rem 0; display: none; transform-origin: top; transition: all var(--transition); opacity: 0; }
 .details[style*="display: block"] { opacity: 1; animation: slideDown 0.3s ease-out; }
@@ -165,9 +206,10 @@ footer::before { content: ''; position: absolute; top: 0; left: 50%; transform: 
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.2rem;
-  margin: 0.8rem auto 0.4rem auto;
-  max-width: 300px;
+  gap: 0.5rem;
+  margin: 1rem auto;
+  padding: 0 var(--spacing);
+  flex-wrap: wrap;
 }
 
 /* 通过添加 .show 类来控制 details 的显示（替代内联 style="display:block"） */

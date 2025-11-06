@@ -43,21 +43,21 @@
           "id": "variables",
           "title": "变量与数据类型",
           "desc": "变量概念、核心数据类型(int/double/char/bool)、常量、命名规则",
-          "link": "#",
+          "link": "./topics/variables-datatypes/index.html",
           "tags": ["基础", "重点"]
         },
         {
           "id": "operators",
           "title": "运算符与表达式",
           "desc": "算术运算符、关系运算符、逻辑运算符、运算符优先级",
-          "link": "#",
+          "link": "./topics/operators-expressions/index.html",
           "tags": ["基础", "重点"]
         },
         {
           "id": "io-basics",
           "title": "输入与输出",
           "desc": "cout输出、cin输入、多个输入输出处理",
-          "link": "#",
+          "link": "./topics/io-basics/index.html",
           "tags": ["基础", "实践"]
         }
       ]
@@ -120,7 +120,7 @@
           "id": "string-ops",
           "title": "字符串处理",
           "desc": "string类型、常用操作、字符数组对比",
-          "link": "#",
+          "link": "./topics/string-ops/index.html",
           "tags": ["基础", "重点"]
         },
         {

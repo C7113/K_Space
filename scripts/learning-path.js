@@ -1,4 +1,4 @@
-﻿// learning-path.js - 从 data/learning-path.json 加载并渲染学习路径
+﻿﻿﻿// learning-path.js - 从 data/learning-path.json 加载并渲染学习路径
 async function loadLearningPath() {
   try {
     const res = await fetch("./data/learning-path.json");
@@ -99,6 +99,8 @@ function createItemCard(item) {
 
   const p = document.createElement("p");
   p.textContent = item.desc || "";
+  p.style.lineHeight = "1.6";
+  p.style.marginBottom = "1rem";
   el.appendChild(p);
 
   const status = document.createElement("div");
@@ -138,6 +140,13 @@ function renderLearningPath(data) {
       desc.className = "details";
       desc.style.display = "block";
       desc.textContent = section.description;
+      desc.style.background = "linear-gradient(to right, var(--section-bg), transparent)";
+      desc.style.padding = "1.2rem";
+      desc.style.borderRadius = "12px";
+      desc.style.borderLeft = "4px solid var(--accent)";
+      desc.style.fontSize = "0.95rem";
+      desc.style.lineHeight = "1.6";
+      desc.style.margin = "1rem 0";
       sec.appendChild(desc);
     }
 
@@ -161,6 +170,12 @@ function renderLearningPath(data) {
     a.textContent = section.title;
     a.style.display = "block";
     a.style.marginBottom = "0.4rem";
+    a.style.padding = "0.25rem 0.5rem";
+    a.style.borderRadius = "4px";
+    a.style.transition = "all var(--transition)";
+    a.addEventListener("hover", function() {
+      this.style.background = "var(--section-bg)";
+    });
     toc.appendChild(a);
   });
 }

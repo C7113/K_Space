@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 输入与输出</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>⌨️ C++ 输入与输出</h1>
+            <p class="subtitle">—— 掌握C++中的基本输入输出操作</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'cout')">🖨️ 输出操作</button>
+            <button class="tab" onclick="openTab(event, 'cin')">⌨️ 输入操作</button>
+            <button class="tab" onclick="openTab(event, 'format')">📐 格式化输出</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践应用</button>
+        </div>
+
+        <!-- 输出操作 -->
+        <div id="cout" class="content active">
+            <h2>输出操作</h2>
+            <div class="concept-item">
+                <h3>cout对象</h3>
+                <p><code>cout</code>是C++中用于标准输出的对象，通常将数据显示到控制台屏幕上。</p>
+                
+                <h4>基本输出语法</h4>
+                <p>使用<code>&lt;&lt;</code>流插入运算符将数据发送到输出流：</p>
+                <div class="code">
+                    cout &lt;&lt; 数据;<br>
+                    cout &lt;&lt; 数据1 &lt;&lt; 数据2 &lt;&lt; 数据3;
+                </div>
+                
+                <h4>输出操作的特点</h4>
+                <ul>
+                    <li><strong>连续输出</strong>：可以连续使用多个<code>&lt;&lt;</code>运算符输出多个数据</li>
+                    <li><strong>自动类型识别</strong>：<code>cout</code>能自动识别不同数据类型的输出格式</li>
+                    <li><strong>链式操作</strong>：<code>&lt;&lt;</code>运算符返回<code>cout</code>对象本身，支持链式操作</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>基本输出示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int age = 15;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;double height = 1.75;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char grade = 'A';<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string name = "小明";<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 基本输出</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Hello World!" &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 输出多个数据</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "姓名: " &lt;&lt; name &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "年龄: " &lt;&lt; age &lt;&lt; "岁" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "身高: " &lt;&lt; height &lt;&lt; "米" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "成绩: " &lt;&lt; grade &lt;&lt; "等" &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 链式输出</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "姓名: " &lt;&lt; name &lt;&lt; ", 年龄: " &lt;&lt; age &lt;&lt; "岁" &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>endl与换行符</h3>
+                <p>在输出时，我们经常需要换行操作：</p>
+                
+                <h4>endl操作符</h4>
+                <ul>
+                    <li><strong>功能</strong>：输出换行符并刷新输出缓冲区</li>
+                    <li><strong>使用</strong>：<code>cout &lt;&lt; "内容" &lt;&lt; endl;</code></li>
+                </ul>
+                
+                <h4>换行符'\n'</h4>
+                <ul>
+                    <li><strong>功能</strong>：仅输出换行符，不刷新缓冲区</li>
+                    <li><strong>使用</strong>：<code>cout &lt;&lt; "内容\n";</code></li>
+                </ul>
+                
+                <div class="example">
+                    <h4>换行操作示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 使用endl换行</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第一行" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第二行" &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 使用\n换行</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第三行\n";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第四行\n";<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 连续换行</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第五行" &lt;&lt; endl &lt;&lt; endl;  <span class="comment">// 输出一行空行</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第六行\n\n";  <span class="comment">// 输出一行空行</span><br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 输入操作 -->
+        <div id="cin" class="content">
+            <h2>输入操作</h2>
+            <div class="concept-item">
+                <h3>cin对象</h3>
+                <p><code>cin</code>是C++中用于标准输入的对象，通常从键盘读取用户输入的数据。</p>
+                
+                <h4>基本输入语法</h4>
+                <p>使用<code>&gt;&gt;</code>流提取运算符从输入流中读取数据：</p>
+                <div class="code">
+                    cin &gt;&gt; 变量;<br>
+                    cin &gt;&gt; 变量1 &gt;&gt; 变量2 &gt;&gt; 变量3;
+                </div>
+                
+                <h4>输入操作的特点</h4>
+                <ul>
+                    <li><strong>连续输入</strong>：可以连续使用多个<code>&gt;&gt;</code>运算符读取多个数据</li>
+                    <li><strong>空白符分隔</strong>：输入数据之间需要用空格、制表符或回车符分隔</li>
+                    <li><strong>类型安全</strong>：<code>cin</code>会根据变量类型自动解析输入数据</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>基本输入示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int age;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;double height;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char grade;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string name;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 提示用户输入</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入您的年龄: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; age;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入您的身高: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; height;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入您的成绩等级: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; grade;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 输出输入的结果</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "您输入的信息如下:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "年龄: " &lt;&lt; age &lt;&lt; "岁" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "身高: " &lt;&lt; height &lt;&lt; "米" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "成绩: " &lt;&lt; grade &lt;&lt; "等" &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>getline函数</h3>
+                <p>对于字符串输入，特别是包含空格的字符串，可以使用<code>getline</code>函数：</p>
+                
+                <h4>getline语法</h4>
+                <div class="code">
+                    getline(cin, 字符串变量);<br>
+                    getline(cin, 字符串变量, 分隔符);
+                </div>
+                
+                <h4>getline的特点</h4>
+                <ul>
+                    <li><strong>整行读取</strong>：可以读取包含空格的整行文本</li>
+                    <li><strong>自定义分隔符</strong>：可以指定除换行符外的其他字符作为分隔符</li>
+                    <li><strong>适用类型</strong>：主要用于<code>string</code>类型</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>getline使用示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;string&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string fullName;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string sentence;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入您的全名: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;getline(cin, fullName);  <span class="comment">// 可以读取包含空格的姓名</span><br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入一句话: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;getline(cin, sentence);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "您的全名是: " &lt;&lt; fullName &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "您输入的话是: " &lt;&lt; sentence &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>C风格输入输出函数</h3>
+                <p>除了C++风格的cin/cout，C++也支持C语言的printf/scanf函数：</p>
+                
+                <h4>printf函数</h4>
+                <p><code>printf</code>函数用于格式化输出，需要包含<code>&lt;cstdio&gt;</code>头文件：</p>
+                <div class="code">
+                    printf(格式字符串, 参数1, 参数2, ...);
+                </div>
+                
+                <h4>常用格式说明符</h4>
+                <table>
+                    <tr>
+                        <th>格式说明符</th>
+                        <th>对应数据类型</th>
+                        <th>示例</th>
+                    </tr>
+                    <tr>
+                        <td>%d 或 %i</td>
+                        <td>int（整数）</td>
+                        <td>printf("%d", 123);</td>
+                    </tr>
+                    <tr>
+                        <td>%f</td>
+                        <td>float（单精度浮点数）</td>
+                        <td>printf("%f", 3.14f);</td>
+                    </tr>
+                    <tr>
+                        <td>%lf</td>
+                        <td>double（双精度浮点数）</td>
+                        <td>printf("%lf", 3.14159);</td>
+                    </tr>
+                    <tr>
+                        <td>%c</td>
+                        <td>char（字符）</td>
+                        <td>printf("%c", 'A');</td>
+                    </tr>
+                    <tr>
+                        <td>%s</td>
+                        <td>char[]（字符串）</td>
+                        <td>printf("%s", "Hello");</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>printf使用示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;cstdio&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int age = 15;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;double height = 1.75;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char grade = 'A';<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char name[] = "小明";<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 基本格式化输出</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("姓名: %s\n", name);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("年龄: %d岁\n", age);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("身高: %.2lf米\n", height);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("成绩: %c等\n", grade);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 格式控制</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("右对齐:%6d\n", 123);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("左对齐:%-6d\n", 123);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("补零:%06d\n", 123);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("保留2位小数: %.2f\n", 3.14159);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>scanf函数</h3>
+                <p><code>scanf</code>函数用于格式化输入，同样需要包含<code>&lt;cstdio&gt;</code>头文件：</p>
+                <div class="code">
+                    scanf(格式字符串, 地址1, 地址2, ...);
+                </div>
+                
+                <h4>scanf的特点</h4>
+                <ul>
+                    <li>需要传递变量的地址（使用&取地址符）</li>
+                    <li>按照格式说明符解析输入数据</li>
+                    <li>以空白字符（空格、制表符、换行符）作为分隔符</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>scanf使用示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;cstdio&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int age;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;double height;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char grade;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char name[50];<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 提示用户输入</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("请输入姓名: ");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;scanf("%s", name);  <span class="comment">// 注意：字符串不需要&</span><br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("请输入年龄: ");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;scanf("%d", &age);  <span class="comment">// 注意：需要使用&取地址</span><br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("请输入身高: ");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;scanf("%lf", &height);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("请输入成绩等级: ");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;scanf(" %c", &grade);  <span class="comment">// 注意：前面加空格跳过换行符</span><br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 输出结果</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("\n您输入的信息如下:\n");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("姓名: %s\n", name);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("年龄: %d岁\n", age);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("身高: %.2lf米\n", height);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("成绩: %c等\n", grade);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>C风格与C++风格对比</h3>
+                <p>两种输入输出方式各有优缺点：</p>
+                
+                <h4>C++风格（cin/cout）</h4>
+                <ul>
+                    <li><strong>优点</strong>：类型安全、易于使用、支持重载、可扩展</li>
+                    <li><strong>缺点</strong>：性能略低、格式化功能较弱</li>
+                </ul>
+                
+                <h4>C风格（scanf/printf）</h4>
+                <ul>
+                    <li><strong>优点</strong>：性能高、格式化功能强大、控制精确</li>
+                    <li><strong>缺点</strong>：类型不安全、容易出错、不支持自定义类型</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>两种风格对比示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;cstdio&gt;<br>
+                        #include &lt;iomanip&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int number = 42;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;double pi = 3.14159;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// C++风格输出</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "C++风格: " &lt;&lt; number &lt;&lt; " " <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; pi &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// C风格输出</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printf("C风格: %d %.2lf\n", number, pi);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 格式化输出 -->
+        <div id="format" class="content">
+            <h2>格式化输出</h2>
+            <div class="concept-item">
+                <h3>iomanip头文件</h3>
+                <p>通过包含<code>&lt;iomanip&gt;</code>头文件，可以使用更多格式化输出功能：</p>
+                
+                <h4>常用格式化操作符</h4>
+                <table>
+                    <tr>
+                        <th>操作符</th>
+                        <th>功能</th>
+                        <th>示例</th>
+                    </tr>
+                    <tr>
+                        <td>setw(n)</td>
+                        <td>设置输出宽度为n个字符</td>
+                        <td>cout &lt;&lt; setw(10) &lt;&lt; 25;</td>
+                    </tr>
+                    <tr>
+                        <td>setfill(c)</td>
+                        <td>设置填充字符为c</td>
+                        <td>cout &lt;&lt; setfill('0') &lt;&lt; setw(5) &lt;&lt; 25;</td>
+                    </tr>
+                    <tr>
+                        <td>setprecision(n)</td>
+                        <td>设置浮点数精度为n位</td>
+                        <td>cout &lt;&lt; setprecision(3) &lt;&lt; 3.14159;</td>
+                    </tr>
+                    <tr>
+                        <td>fixed</td>
+                        <td>固定小数点表示法</td>
+                        <td>cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; 3.14159;</td>
+                    </tr>
+                    <tr>
+                        <td>left/right</td>
+                        <td>左对齐/右对齐</td>
+                        <td>cout &lt;&lt; left &lt;&lt; setw(10) &lt;&lt; "文本";</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>格式化输出示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;iomanip&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int number = 42;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;double pi = 3.14159265;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string text = "C++";<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 设置宽度和填充字符</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "默认: " &lt;&lt; number &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "宽度为10: " &lt;&lt; setw(10) &lt;&lt; number &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "用0填充: " &lt;&lt; setfill('0') &lt;&lt; setw(10) &lt;&lt; number &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "恢复默认填充: " &lt;&lt; setfill(' ') &lt;&lt; setw(10) &lt;&lt; number &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 浮点数格式化</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "默认pi: " &lt;&lt; pi &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "保留3位小数: " &lt;&lt; setprecision(3) &lt;&lt; pi &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "固定小数点: " &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; pi &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 对齐方式</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "右对齐: " &lt;&lt; right &lt;&lt; setw(10) &lt;&lt; text &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "左对齐: " &lt;&lt; left &lt;&lt; setw(10) &lt;&lt; text &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "居中对齐: " &lt;&lt; right &lt;&lt; setw(7) &lt;&lt; text &lt;&lt; left &lt;&lt; setw(3) &lt;&lt; "" &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>格式化输入</h3>
+                <p>输入也可以通过一些方式实现格式化：</p>
+                
+                <h4>跳过特定字符</h4>
+                <p>在输入时可以跳过特定字符：</p>
+                <div class="code">
+                    cin &gt;&gt; number1 &gt;&gt; ws &gt;&gt; number2;  <span class="comment">// 跳过空白字符</span><br>
+                    cin &gt;&gt; number1 &gt;&gt; "," &gt;&gt; number2;  <span class="comment">// 跳过逗号</span>
+                </div>
+                
+                <div class="example">
+                    <h4>格式化输入示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int a, b;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char comma;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入两个用逗号分隔的数字 (例如: 10,20): ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; a &gt;&gt; comma &gt;&gt; b;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第一个数字: " &lt;&lt; a &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第二个数字: " &lt;&lt; b &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践应用 -->
+        <div id="practice" class="content">
+            <h2>实践应用</h2>
+            
+            <div class="example">
+                <h3>示例1：个人信息录入系统</h3>
+                <p>创建一个简单的个人信息录入程序：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;string&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string name;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int age;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double height, weight;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "=== 个人信息录入系统 ===" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入您的姓名: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;getline(cin, name);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入您的年龄: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; age;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入您的身高(米): ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; height;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入您的体重(公斤): ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; weight;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n=== 录入完成 ===" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "姓名: " &lt;&lt; name &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "年龄: " &lt;&lt; age &lt;&lt; " 岁" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "身高: " &lt;&lt; height &lt;&lt; " 米" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "体重: " &lt;&lt; weight &lt;&lt; " 公斤" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>示例2：简单计算器</h3>
+                <p>使用输入输出实现一个简单的计算器：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double num1, num2;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;char operation;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "=== 简单计算器 ===" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入第一个数字: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; num1;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入运算符 (+, -, *, /): ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; operation;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入第二个数字: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; num2;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n计算结果: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 使用if语句判断运算符类型</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (operation == '+') {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; num1 &lt;&lt; " + " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; (num1 + num2) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else if (operation == '-') {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; num1 &lt;&lt; " - " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; (num1 - num2) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else if (operation == '*') {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; num1 &lt;&lt; " * " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; (num1 * num2) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else if (operation == '/') {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (num2 != 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; num1 &lt;&lt; " / " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; (num1 / num2) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "错误：除数不能为零！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "错误：不支持的运算符！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>示例3：成绩统计表</h3>
+                <p>使用格式化输出创建一个成绩统计表：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;iomanip&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "===============================" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "        学生成绩统计表        " &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "===============================" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 设置列标题</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; left &lt;&lt; setw(10) &lt;&lt; "姓名" <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; right &lt;&lt; setw(8) &lt;&lt; "语文" <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; setw(8) &lt;&lt; "数学" <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; setw(8) &lt;&lt; "英语" <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; setw(8) &lt;&lt; "平均分" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "-------------------------------" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 输出学生数据</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; left &lt;&lt; setw(10) &lt;&lt; "小明" <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; right &lt;&lt; setw(8) &lt;&lt; 85 <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; setw(8) &lt;&lt; 92 <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; setw(8) &lt;&lt; 78 <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; setw(8) &lt;&lt; fixed &lt;&lt; setprecision(1) &lt;&lt; (85+92+78)/3.0 &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; left &lt;&lt; setw(10) &lt;&lt; "小红" <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; right &lt;&lt; setw(8) &lt;&lt; 90 <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; setw(8) &lt;&lt; 88 <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; setw(8) &lt;&lt; 95 <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; setw(8) &lt;&lt; fixed &lt;&lt; setprecision(1) &lt;&lt; (90+88+95)/3.0 &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; left &lt;&lt; setw(10) &lt;&lt; "小刚" <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; right &lt;&lt; setw(8) &lt;&lt; 78 <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; setw(8) &lt;&lt; 85 <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; setw(8) &lt;&lt; 82 <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; setw(8) &lt;&lt; fixed &lt;&lt; setprecision(1) &lt;&lt; (78+85+82)/3.0 &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "===============================" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握输入输出，实现程序与用户的交互</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>
