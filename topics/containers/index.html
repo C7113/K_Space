@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 常用容器</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🧰 C++ 常用容器</h1>
+            <p class="subtitle">—— STL容器详解</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">🔢 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'vector')">🧮 vector</button>
+            <button class="tab" onclick="openTab(event, 'stack')">📚 stack</button>
+            <button class="tab" onclick="openTab(event, 'queue')">📋 queue</button>
+            <button class="tab" onclick="openTab(event, 'priority_queue')">📊 priority_queue</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践练习</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>STL容器基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是容器</h3>
+                <p>容器是用来存储和管理数据的对象，STL提供了多种不同特性的容器以满足不同的需求。</p>
+                
+                <h4>容器的分类</h4>
+                <ul>
+                    <li><strong>顺序容器</strong>：元素按线性顺序排列
+                        <ul>
+                            <li>vector：动态数组</li>
+                            <li>list：双向链表</li>
+                            <li>deque：双端队列</li>
+                        </ul>
+                    </li>
+                    <li><strong>关联容器</strong>：通过键值对存储数据
+                        <ul>
+                            <li>set：集合</li>
+                            <li>map：映射</li>
+                            <li>multiset：多重集合</li>
+                            <li>multimap：多重映射</li>
+                        </ul>
+                    </li>
+                    <li><strong>容器适配器</strong>：基于其他容器实现特定接口
+                        <ul>
+                            <li>stack：栈</li>
+                            <li>queue：队列</li>
+                            <li>priority_queue：优先队列</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>常用容器对比</h3>
+                <p>不同容器有各自的特点和适用场景：</p>
+                
+                <table>
+                    <tr>
+                        <th>容器</th>
+                        <th>底层实现</th>
+                        <th>插入/删除位置</th>
+                        <th>访问方式</th>
+                        <th>特点</th>
+                    </tr>
+                    <tr>
+                        <td>vector</td>
+                        <td>动态数组</td>
+                        <td>尾部高效</td>
+                        <td>随机访问</td>
+                        <td>内存连续，支持下标访问</td>
+                    </tr>
+                    <tr>
+                        <td>stack</td>
+                        <td>默认deque</td>
+                        <td>顶部</td>
+                        <td>LIFO</td>
+                        <td>后进先出</td>
+                    </tr>
+                    <tr>
+                        <td>queue</td>
+                        <td>默认deque</td>
+                        <td>尾部插入，首部删除</td>
+                        <td>FIFO</td>
+                        <td>先进先出</td>
+                    </tr>
+                    <tr>
+                        <td>priority_queue</td>
+                        <td>默认vector</td>
+                        <td>顶部</td>
+                        <td>优先级最高元素</td>
+                        <td>自动排序</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="concept-item">
+                <h3>容器的使用准备</h3>
+                <p>使用STL容器需要包含相应的头文件：</p>
+                
+                <table>
+                    <tr>
+                        <th>容器</th>
+                        <th>头文件</th>
+                        <th>使用示例</th>
+                    </tr>
+                    <tr>
+                        <td>vector</td>
+                        <td>&lt;vector&gt;</td>
+                        <td>#include &lt;vector&gt;</td>
+                    </tr>
+                    <tr>
+                        <td>stack</td>
+                        <td>&lt;stack&gt;</td>
+                        <td>#include &lt;stack&gt;</td>
+                    </tr>
+                    <tr>
+                        <td>queue</td>
+                        <td>&lt;queue&gt;</td>
+                        <td>#include &lt;queue&gt;</td>
+                    </tr>
+                    <tr>
+                        <td>priority_queue</td>
+                        <td>&lt;queue&gt;</td>
+                        <td>#include &lt;queue&gt;</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- vector -->
+        <div id="vector" class="content">
+            <h2>vector（动态数组）</h2>
+            
+            <div class="concept-item">
+                <h3>vector的特点</h3>
+                <p>vector是STL中最常用的容器之一，它是一个能够动态增长的数组：</p>
+                <ul>
+                    <li>内存连续存储</li>
+                    <li>支持随机访问（通过下标）</li>
+                    <li>在尾部插入和删除元素效率高</li>
+                    <li>在中间插入或删除元素效率较低</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>vector的基本操作</h3>
+                
+                <div class="example">
+                    <h4>创建和初始化vector</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建空的vector<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; v1;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建指定大小的vector，默认值为0<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; v2(5);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建指定大小和初始值的vector<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; v3(5, 100);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 通过初始化列表创建vector<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; v4 = {1, 2, 3, 4, 5};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 通过另一个vector创建<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; v5(v4);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>vector的常用操作</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {1, 2, 3, 4, 5};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 添加元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vec.push_back(6);&nbsp;&nbsp;// 在尾部添加元素<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 访问元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第一个元素: " &lt;&lt; vec[0] &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最后一个元素: " &lt;&lt; vec.back() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 获取容器信息<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "元素个数: " &lt;&lt; vec.size() &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "是否为空: " &lt;&lt; (vec.empty() ? "是" : "否") &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 修改元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vec[0] = 10;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 删除元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vec.pop_back();&nbsp;&nbsp;// 删除最后一个元素<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 遍历vector<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "所有元素: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; vec.size(); i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; vec[i] &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用迭代器遍历<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "使用迭代器: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (vector&lt;int&gt;::iterator it = vec.begin(); it != vec.end(); ++it) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; *it &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- stack -->
+        <div id="stack" class="content">
+            <h2>stack（栈）</h2>
+            
+            <div class="concept-item">
+                <h3>stack的特点</h3>
+                <p>stack是一种容器适配器，它实现了栈的数据结构：</p>
+                <ul>
+                    <li>后进先出（LIFO）的数据结构</li>
+                    <li>只能访问栈顶元素</li>
+                    <li>只能在栈顶插入或删除元素</li>
+                    <li>默认基于deque实现</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>stack的基本操作</h3>
+                
+                <div class="example">
+                    <h4>stack的基本使用</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;stack&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建stack<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stack&lt;int&gt; stk;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 判断是否为空<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (stk.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "栈为空" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 入栈操作<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stk.push(10);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stk.push(20);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stk.push(30);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 获取栈的大小<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "栈的大小: " &lt;&lt; stk.size() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 访问栈顶元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "栈顶元素: " &lt;&lt; stk.top() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 出栈操作<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stk.pop();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "出栈后栈顶元素: " &lt;&lt; stk.top() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 清空栈<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (!stk.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "弹出: " &lt;&lt; stk.top() &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stk.pop();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>stack应用示例：括号匹配检查</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;stack&gt;<br>
+                        #include &lt;string&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        bool isBalanced(const string& expr) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stack&lt;char&gt; s;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (char c : expr) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (c == '(' || c == '[' || c == '{') {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 遇到开括号，入栈<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s.push(c);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (c == ')' || c == ']' || c == '}') {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 遇到闭括号<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (s.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 栈为空，不匹配<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char top = s.top();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s.pop();<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 检查括号是否匹配<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ((c == ')' && top != '(') ||<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(c == ']' && top != '[') ||<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(c == '}' && top != '{')) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 检查栈是否为空<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return s.empty();<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string expr1 = "{[()()]}";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string expr2 = "{[()]}";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string expr3 = "{[()])";<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; expr1 &lt;&lt; " 是否匹配: " &lt;&lt; (isBalanced(expr1) ? "是" : "否") &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; expr2 &lt;&lt; " 是否匹配: " &lt;&lt; (isBalanced(expr2) ? "是" : "否") &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; expr3 &lt;&lt; " 是否匹配: " &lt;&lt; (isBalanced(expr3) ? "是" : "否") &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- queue -->
+        <div id="queue" class="content">
+            <h2>queue（队列）</h2>
+            
+            <div class="concept-item">
+                <h3>queue的特点</h3>
+                <p>queue是一种容器适配器，它实现了队列的数据结构：</p>
+                <ul>
+                    <li>先进先出（FIFO）的数据结构</li>
+                    <li>只能访问队首和队尾元素</li>
+                    <li>在队尾插入元素，在队首删除元素</li>
+                    <li>默认基于deque实现</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>queue的基本操作</h3>
+                
+                <div class="example">
+                    <h4>queue的基本使用</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;queue&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建queue<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;queue&lt;int&gt; q;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 判断是否为空<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (q.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "队列为空" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 入队操作<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;q.push(10);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;q.push(20);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;q.push(30);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 获取队列的大小<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "队列的大小: " &lt;&lt; q.size() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 访问队首和队尾元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "队首元素: " &lt;&lt; q.front() &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "队尾元素: " &lt;&lt; q.back() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 出队操作<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;q.pop();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "出队后队首元素: " &lt;&lt; q.front() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 清空队列<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (!q.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "出队: " &lt;&lt; q.front() &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.pop();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>queue应用示例：任务调度</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;queue&gt;<br>
+                        #include &lt;string&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 模拟任务队列<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;queue&lt;string&gt; tasks;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 添加任务<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;tasks.push("任务1: 打开文件");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;tasks.push("任务2: 读取数据");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;tasks.push("任务3: 处理数据");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;tasks.push("任务4: 保存结果");<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 执行任务<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "开始执行任务..." &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (!tasks.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "正在执行: " &lt;&lt; tasks.front() &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 模拟任务执行时间<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// ...<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tasks.pop();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "所有任务执行完毕!" &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- priority_queue -->
+        <div id="priority_queue" class="content">
+            <h2>priority_queue（优先队列）</h2>
+            
+            <div class="concept-item">
+                <h3>priority_queue的特点</h3>
+                <p>priority_queue是一种容器适配器，它实现了优先队列的数据结构：</p>
+                <ul>
+                    <li>元素按优先级排序</li>
+                    <li>默认情况下，最大的元素优先级最高</li>
+                    <li>只能访问优先级最高的元素</li>
+                    <li>默认基于vector实现，使用堆算法维护顺序</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>priority_queue的基本操作</h3>
+                
+                <div class="example">
+                    <h4>priority_queue的基本使用</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;queue&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建priority_queue（默认大顶堆）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;priority_queue&lt;int&gt; pq;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 判断是否为空<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (pq.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "优先队列为空" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 插入元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;pq.push(30);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;pq.push(10);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;pq.push(50);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;pq.push(20);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;pq.push(40);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 获取优先队列的大小<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "优先队列的大小: " &lt;&lt; pq.size() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 访问优先级最高的元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "优先级最高的元素: " &lt;&lt; pq.top() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 删除优先级最高的元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;pq.pop();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "删除后优先级最高的元素: " &lt;&lt; pq.top() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 输出所有元素（按优先级顺序）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "按优先级输出: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (!pq.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; pq.top() &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pq.pop();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>创建小顶堆</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;queue&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建小顶堆<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt; &gt; min_pq;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 插入元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;min_pq.push(30);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;min_pq.push(10);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;min_pq.push(50);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;min_pq.push(20);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;min_pq.push(40);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 输出所有元素（按优先级顺序）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "按优先级输出（小顶堆）: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (!min_pq.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; min_pq.top() &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min_pq.pop();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>priority_queue应用示例：任务调度（按优先级）</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;queue&gt;<br>
+                        #include &lt;string&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 定义任务结构<br>
+                        struct Task {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int priority;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string name;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 重载小于运算符，实现按优先级排序<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;bool operator&lt;(const Task& other) const {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return priority &lt; other.priority;&nbsp;&nbsp;// 优先级高的先执行<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        };<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建任务优先队列<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;priority_queue&lt;Task&gt; task_queue;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 添加任务<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;task_queue.push({1, "普通任务1"});<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;task_queue.push({3, "紧急任务1"});<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;task_queue.push({2, "重要任务1"});<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;task_queue.push({5, "紧急任务2"});<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;task_queue.push({1, "普通任务2"});<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 执行任务<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "按优先级执行任务:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (!task_queue.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Task current = task_queue.top();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "执行 [" &lt;&lt; current.name &lt;&lt; "] 优先级: " &lt;&lt; current.priority &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;task_queue.pop();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践练习 -->
+        <div id="practice" class="content">
+            <h2>实践练习</h2>
+            
+            <div class="example">
+                <h3>练习1：使用vector管理学生成绩</h3>
+                <p>编写程序使用vector存储和管理学生成绩：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 创建存储学生成绩的vector<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; scores;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输入成绩<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n, score;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入学生人数: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入学生成绩: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; score;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scores.push_back(score);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出所有成绩<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "学生成绩: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; scores.size(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; scores[i] &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算平均分<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int sum = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; scores.size(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += scores[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double average = (double)sum / scores.size();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "平均分: " &lt;&lt; average &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 查找最高分和最低分<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int max_score = scores[0], min_score = scores[0];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; scores.size(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (scores[i] &gt; max_score) max_score = scores[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (scores[i] &lt; min_score) min_score = scores[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最高分: " &lt;&lt; max_score &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最低分: " &lt;&lt; min_score &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：使用stack实现表达式求值</h3>
+                <p>使用两个stack分别存储操作数和运算符，实现简单表达式求值：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;stack&gt;<br>
+                    #include &lt;string&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 简化版本，仅处理个位数的加减乘除运算<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string expression = "3+5*2";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;stack&lt;int&gt; numbers;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;stack&lt;char&gt; operators;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 解析表达式<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; expression.length(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char c = expression[i];<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isdigit(c)) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 数字直接入栈<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers.push(c - '0');<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 运算符处理<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!operators.empty() && <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(c == '+' || c == '-') && <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(operators.top() == '*' || operators.top() == '/')) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 如果当前运算符优先级低于栈顶运算符，先计算栈顶运算<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char op = operators.top();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;operators.pop();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int b = numbers.top();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers.pop();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int a = numbers.top();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers.pop();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (op == '*') numbers.push(a * b);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (op == '/') numbers.push(a / b);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;operators.push(c);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 处理剩余运算<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (!operators.empty()) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char op = operators.top();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;operators.pop();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int b = numbers.top();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers.pop();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int a = numbers.top();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers.pop();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (op == '+') numbers.push(a + b);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (op == '-') numbers.push(a - b);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (op == '*') numbers.push(a * b);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (op == '/') numbers.push(a / b);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出结果<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; expression &lt;&lt; " = " &lt;&lt; numbers.top() &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习3：使用queue模拟银行排队系统</h3>
+                <p>使用queue模拟银行客户排队办理业务的过程：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;queue&gt;<br>
+                    #include &lt;string&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 创建客户队列<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;queue&lt;string&gt; customers;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 模拟客户到来<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;customers.push("张三");<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;customers.push("李四");<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;customers.push("王五");<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;customers.push("赵六");<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;customers.push("钱七");<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 模拟办理业务<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int window_number = 1;&nbsp;&nbsp;// 窗口号<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "银行开始营业..." &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (!customers.empty()) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string customer = customers.front();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "窗口" &lt;&lt; window_number &lt;&lt; "正在为 [" &lt;&lt; customer &lt;&lt; "] 办理业务" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 模拟办理业务时间<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// ...<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "[" &lt;&lt; customer &lt;&lt; "] 办理完毕，离开银行" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;customers.pop();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 切换到下一个窗口<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;window_number = window_number % 3 + 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "所有客户办理完毕，银行暂停营业" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习4：使用priority_queue实现成绩排名</h3>
+                <p>使用priority_queue对学生按成绩进行排名：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;queue&gt;<br>
+                    #include &lt;string&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 定义学生结构<br>
+                    struct Student {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string name;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int score;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 重载小于运算符，实现按成绩排序<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bool operator&lt;(const Student& other) const {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return score &lt; other.score;&nbsp;&nbsp;// 分数高的优先级高<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    };<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 创建学生优先队列<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;priority_queue&lt;Student&gt; students;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 添加学生信息<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;students.push({"张三", 85});<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;students.push({"李四", 92});<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;students.push({"王五", 78});<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;students.push({"赵六", 96});<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;students.push({"钱七", 88});<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 按排名输出<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "学生成绩排名:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int rank = 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (!students.empty()) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student s = students.top();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第" &lt;&lt; rank &lt;&lt; "名: " &lt;&lt; s.name &lt;&lt; " 分数: " &lt;&lt; s.score &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;students.pop();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rank++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握STL容器，提高编程效率</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

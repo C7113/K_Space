@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>编程环境初体验 - C++ 知识导航</title>
+  <link rel="stylesheet" href="../../styles/base.css">
+  <link rel="stylesheet" href="../../styles/animations.css">
+  <link rel="stylesheet" href="../../styles/components.css">
+  <link rel="stylesheet" href="../../styles/topic.css">
+  <style>
+    .environment-setup {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .step-counter {
+      counter-reset: step-counter;
+    }
+    
+    .step-counter .topic-card {
+      counter-increment: step-counter;
+      position: relative;
+    }
+    
+    .step-counter .topic-card::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: -15px;
+      top: -15px;
+      background: var(--accent);
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    
+    .download-link {
+      display: inline-block;
+      margin: 1rem 0;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+    
+    .download-link:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    
+    .code-example {
+      background: var(--section-bg);
+      border-left: 4px solid var(--accent);
+      padding: 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+      font-family: monospace;
+      overflow-x: auto;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    
+    .verification-steps {
+      margin: 2rem 0;
+      padding-left: 1rem;
+    }
+    
+    .verification-steps li {
+      margin-bottom: 1rem;
+      position: relative;
+      padding-left: 1.5rem;
+    }
+    
+    .verification-steps li::before {
+      content: "✓";
+      color: var(--accent);
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+    
+    @media (max-width: 768px) {
+      .environment-setup {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">💻</span>
+        编程环境初体验
+        <span class="badge">入门第一步</span>
+      </h1>
+      <p>认识编程工具 | <span class="path-arrow">安装</span> <span class="arrow">→</span> <span class="path-arrow">配置</span> <span class="arrow">→</span> <span class="path-arrow">运行</span></p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+    <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">返回学习路径</button>
+    <button class="toggle-btn" onclick="window.location.href='../../index.htm'">回到首页</button>
+  </div>
+
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="../../index.htm">首页</a> → 
+      <a href="../../learning-path.html">学习路径</a> → 
+      编程环境初体验
+    </nav>
+
+    <section class="topic-section">
+      <h2 class="level-title">什么是编程环境？</h2>
+      <div class="topic-card">
+        <p>编程环境是编写、运行和调试程序所需的所有工具的集合。就像做饭需要厨房、厨具和食材一样，编程也需要专门的"工作台"。</p>
+        <p>一个完整的编程环境通常包括：</p>
+        <ul class="verification-steps">
+          <li><strong>文本编辑器：</strong>用于编写代码的工具</li>
+          <li><strong>编译器：</strong>将代码转换为计算机能理解的指令</li>
+          <li><strong>运行环境：</strong>执行程序的平台</li>
+          <li><strong>调试工具：</strong>帮助发现和修复代码中的错误</li>
+        </ul>
+        <p>对于C++初学者，我们推荐使用集成开发环境（IDE），它将所有这些工具整合在一个程序中，便于使用。</p>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2 class="level-title">选择合适的开发工具</h2>
+      <div class="environment-setup">
+        <div class="topic-card step-counter">
+          <h3>Dev-C++</h3>
+          <p>适合初学者的轻量级集成开发环境(IDE)，界面简洁，易于上手。</p>
+          <a href="https://sourceforge.net/projects/orwelldevcpp/" target="_blank" class="download-link">📥 下载 Dev-C++</a>
+          <p><strong>优点：</strong></p>
+          <ul>
+            <li>体积小巧，安装简单</li>
+            <li>界面直观，适合初学者</li>
+            <li>内置编译器，即装即用</li>
+          </ul>
+        </div>
+        
+        <div class="topic-card step-counter">
+          <h3>Code::Blocks</h3>
+          <p>开源免费的跨平台IDE，功能丰富，支持多种编译器。</p>
+          <a href="http://www.codeblocks.org/downloads/26" target="_blank" class="download-link">📥 下载 Code::Blocks</a>
+          <p><strong>优点：</strong></p>
+          <ul>
+            <li>完全免费且开源</li>
+            <li>支持多种编译器</li>
+            <li>插件扩展功能强大</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2 class="level-title">安装与配置</h2>
+      
+      <div class="topic-card">
+        <h3>安装 Dev-C++ 步骤</h3>
+        <ol class="verification-steps">
+          <li>点击上面的下载链接，下载最新版本的 Dev-C++ 安装包</li>
+          <li>双击下载好的安装文件（通常是 exe 文件）</li>
+          <li>在安装向导中选择语言为"简体中文"</li>
+          <li>仔细阅读许可协议，点击"我接受"</li>
+          <li>选择安装路径（建议使用默认路径）</li>
+          <li>选择要安装的组件（建议全部勾选）</li>
+          <li>点击"安装"按钮开始安装</li>
+          <li>等待安装完成后，点击"完成"退出安装向导</li>
+        </ol>
+      </div>
+      
+      <div class="topic-card">
+        <h3>首次启动配置</h3>
+        <ol class="verification-steps">
+          <li>双击桌面上的 Dev-C++ 图标启动程序</li>
+          <li>第一次启动时会询问编译器路径，请确认路径正确或点击"是"让程序自动查找</li>
+          <li>选择界面主题（推荐初学者使用浅色主题）</li>
+          <li>进入主界面后，点击"工具" -> "编译器选项"</li>
+          <li>在"常规"选项卡中，确保选择了"TDM-GCC 4.9.2 64-bit Release"或其他GCC编译器</li>
+          <li>点击"确定"保存设置</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2 class="level-title">编写第一个程序</h2>
+      
+      <div class="topic-card">
+        <h3>Hello World 程序</h3>
+        <p>按照以下步骤创建并运行你的第一个 C++ 程序：</p>
+        <ol class="verification-steps">
+          <li>打开 Dev-C++</li>
+          <li>点击"文件" -> "新建" -> "源代码"</li>
+          <li>在编辑区输入以下代码：</li>
+        </ol>
+        
+        <div class="code-example">
+<pre><span style="color: #0066cc">#include</span> <span style="color: #990000">&lt;iostream&gt;</span>
+<span style="color: #0066cc">using</span> <span style="color: #0066cc">namespace</span> <span style="color: #009900">std</span><span style="color: #990000">;</span>
+
+<span style="color: #0066cc">int</span> <span style="color: #990000">main()</span> <span style="color: #990000">{</span>
+    <span style="color: #009900">cout</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #ff0000">"Hello, World! 我的第一个C++程序!"</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #009900">endl</span><span style="color: #990000">;</span>
+    <span style="color: #0066cc">return</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+<span style="color: #990000">}</span></pre>
+        </div>
+        
+        <ol class="verification-steps" start="4">
+          <li>点击"文件" -> "另存为"，将文件命名为 hello.cpp，注意后缀必须是 .cpp</li>
+          <li>按 F11 或点击"编译运行"按钮</li>
+          <li>如果一切正常，下方控制台窗口会显示：<br>
+            <code>Hello, World! 我的第一个C++程序!</code>
+          </li>
+        </ol>
+        
+        <p>恭喜你！你已经成功配置了 C++ 编程环境，并运行了第一个程序！</p>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2 class="level-title">常见问题解决</h2>
+      
+      <div class="topic-card">
+        <h3>可能遇到的问题</h3>
+        <p>初次编写代码可能会遇到一些常见错误：</p>
+        <ul class="verification-steps">
+          <li><strong>找不到编译器：</strong>检查安装时是否选择了正确的编译器，可以在"工具"->"编译器选项"中重新设置</li>
+          <li><strong>中文乱码：</strong>在"工具"->"编译器选项"->"程序选项"中设置编码为 UTF-8</li>
+          <li><strong>语法错误：</strong>仔细检查代码拼写，特别是括号是否匹配，分号是否遗漏</li>
+          <li><strong>运行闪退：</strong>在 main 函数最后 return 0; 前添加 system("pause"); 或 getchar();</li>
+        </ul>
+      </div>
+      
+      <div class="topic-card">
+        <h3>快捷键提高效率</h3>
+        <p>掌握这些快捷键可以让你编程更高效：</p>
+        <ul class="verification-steps">
+          <li><strong>F11：</strong>编译并运行程序</li>
+          <li><strong>Ctrl+N：</strong>新建源代码文件</li>
+          <li><strong>Ctrl+S：</strong>保存文件</li>
+          <li><strong>Ctrl+Z：</strong>撤销操作</li>
+          <li><strong>Ctrl+F：</strong>查找文本</li>
+          <li><strong>Ctrl+R：</strong>替换文本</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2 class="level-title">下一步做什么？</h2>
+      
+      <div class="topic-grid">
+        <div class="topic-card">
+          <h3>📘 学习基础知识</h3>
+          <p>继续学习路径中的<a href="../what-is-program/index.html">什么是程序</a>和<a href="../variables-datatypes/index.html">变量与数据类型</a></p>
+        </div>
+        
+        <div class="topic-card">
+          <h3>📝 在线练习</h3>
+          <p>访问<a href="http://8.130.178.205/" target="_blank">鲁班创客OJ</a>在线练习编程题目</p>
+        </div>
+        
+        <div class="topic-card">
+          <h3>❓ 寻求帮助</h3>
+          <p>如果在配置过程中遇到任何问题，可以随时联系程老师获取帮助</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+    <p>提示：耐心按照步骤操作，你会很快完成环境配置！</p>
+  </footer>
+
+  <script>
+    // 暗色模式切换
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+    
+    // 添加随机移动效果到粒子
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+        
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+        
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+        
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+    
+    // 初始化页面导航
+    document.addEventListener('DOMContentLoaded', function() {
+        // 当前页面路径（相对于topics目录）
+        const currentPagePath = './first-experience/index.html';
+        initTopicNavigation(currentPagePath);
+    });
+  </script>
+    
+  <script src="../../scripts/topic-nav.js"></script>
+</body>
+</html>

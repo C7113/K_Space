@@ -20,11 +20,21 @@
       display: block;
       text-decoration: none;
       color: inherit;
-      transition: all var(--transition);
+      transition: all 0.3s ease;
+      position: relative;
     }
     .topic-card-wrapper:hover {
       transform: translateY(-4px);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    .topic-card-wrapper:hover .topic-card.interactive::before {
+      opacity: 1;
+    }
+    .topic-card-wrapper:hover .topic-card.interactive::after {
+      opacity: 0.06;
+    }
+    .topic-card-wrapper:hover .topic-card.interactive {
+      border-color: var(--accent-light);
     }
     .topic-card.interactive {
       cursor: pointer;
@@ -35,6 +45,10 @@
       padding: 1.25rem;
       background: var(--card-bg);
       transition: all 0.3s ease;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
     .topic-card.interactive::before {
       content: '';
@@ -47,17 +61,24 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-    .topic-card.interactive:hover {
-      border-color: var(--accent-light);
-    }
-    .topic-card.interactive:hover::before {
-      opacity: 1;
+    .topic-card.interactive::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, transparent 50%, var(--accent) 51%);
+      opacity: 0.03;
+      border-radius: 0 0 16px 0;
+      transition: opacity 0.3s ease;
     }
     .card-status {
       position: absolute;
       bottom: 0.8rem;
       right: 1rem;
       font-size: 0.9rem;
+      margin-top: auto;
     }
     .status-text {
       color: var(--accent);
@@ -72,6 +93,7 @@
       align-items: flex-start;
       margin-bottom: 0.875rem;
       gap: 0.5rem;
+      flex: 1;
     }
     .title-wrapper h3 {
       font-size: 1.3rem;
@@ -81,6 +103,7 @@
       align-items: center;
       gap: 0.5rem;
       position: relative;
+      flex: 1;
     }
     .title-wrapper h3::before {
       content: '📚';
@@ -119,7 +142,7 @@
 
   <div class="container">
     <section class="path-hero">
-      <div style="display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap">
+      <div class="button-container">
         <button class="toggle-btn" onclick="window.location.href='index.htm'">返回导航首页</button>
         <button class="toggle-btn" onclick="window.location.href='http://8.130.178.205/'">进入 OJ 刷题</button>
       </div>

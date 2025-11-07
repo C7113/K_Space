@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 搜索算法</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🔍 C++ 搜索算法</h1>
+            <p class="subtitle">—— 深度优先搜索与广度优先搜索</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">🔢 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'dfs')">🧮 深度优先搜索</button>
+            <button class="tab" onclick="openTab(event, 'bfs')">🧮 广度优先搜索</button>
+            <button class="tab" onclick="openTab(event, 'applications')">🧮 应用场景</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践练习</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>搜索算法基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是搜索算法</h3>
+                <p>搜索算法是一种在问题空间中寻找解的方法。在计算机科学中，许多问题都可以形式化为在图或树结构中寻找满足特定条件的节点。搜索算法通过系统地遍历这些结构来找到解决方案。</p>
+                
+                <h4>搜索算法的特点</h4>
+                <ul>
+                    <li><strong>系统性</strong>：按照一定的策略遍历搜索空间</li>
+                    <li><strong>完备性</strong>：在有限搜索空间中一定能找到解（如果解存在）</li>
+                    <li><strong>最优性</strong>：能够找到最优解（对于某些算法）</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>搜索算法的分类</h3>
+                <p>搜索算法可以按照不同的标准进行分类：</p>
+                <table>
+                    <tr>
+                        <th>分类标准</th>
+                        <th>类型</th>
+                        <th>特点</th>
+                    </tr>
+                    <tr>
+                        <td>搜索方向</td>
+                        <td>深度优先搜索(DFS)</td>
+                        <td>优先探索深度，回溯时再探索其他分支</td>
+                    </tr>
+                    <tr>
+                        <td>搜索方向</td>
+                        <td>广度优先搜索(BFS)</td>
+                        <td>逐层探索，先探索完当前层再进入下一层</td>
+                    </tr>
+                    <tr>
+                        <td>信息利用</td>
+                        <td>盲目搜索</td>
+                        <td>不利用问题领域的特定信息</td>
+                    </tr>
+                    <tr>
+                        <td>信息利用</td>
+                        <td>启发式搜索</td>
+                        <td>利用问题领域的特定信息指导搜索</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="concept-item">
+                <h3>图和树的表示</h3>
+                <p>搜索算法通常在图或树结构上进行，常见的表示方法有：</p>
+                <ul>
+                    <li><strong>邻接矩阵</strong>：使用二维数组表示节点间的连接关系</li>
+                    <li><strong>邻接表</strong>：使用链表或动态数组表示每个节点的邻居</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 深度优先搜索 -->
+        <div id="dfs" class="content">
+            <h2>深度优先搜索(DFS)</h2>
+            
+            <div class="concept-item">
+                <h3>DFS基本思想</h3>
+                <p>深度优先搜索（Depth-First Search）是一种用于遍历或搜索树或图的算法。它沿着树的深度尽可能远地搜索树的分支，当节点v的所在边都已被探寻过，搜索将回溯到发现节点v的那条边的起始节点。</p>
+                
+                <h4>DFS的特点</h4>
+                <ul>
+                    <li><strong>深入优先</strong>：优先探索当前节点的子节点</li>
+                    <li><strong>回溯机制</strong>：当无法继续深入时，回溯到上一节点</li>
+                    <li><strong>实现方式</strong>：通常使用递归或栈实现</li>
+                    <li><strong>空间复杂度</strong>：O(h)，h为树的高度</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>DFS实现</h3>
+                
+                <div class="example">
+                    <h4>递归实现</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        const int MAX_N = 100;<br>
+                        vector&lt;int&gt; adj[MAX_N];&nbsp;&nbsp;// 邻接表<br>
+                        bool visited[MAX_N];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 访问标记数组<br>
+                        <br>
+                        // DFS递归实现<br>
+                        void dfs(int u) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 标记当前节点为已访问<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;visited[u] = true;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; u &lt;&lt; " ";&nbsp;&nbsp;// 处理当前节点<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 递归访问所有未访问的邻居节点<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int v : adj[u]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!visited[v]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dfs(v);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 初始化访问数组<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;memset(visited, false, sizeof(visited));<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 构建图（示例）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;adj[0].push_back(1);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;adj[0].push_back(2);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;adj[1].push_back(3);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;adj[1].push_back(4);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 从节点0开始DFS<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "DFS遍历结果: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;dfs(0);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>栈实现</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;stack&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        const int MAX_N = 100;<br>
+                        vector&lt;int&gt; adj[MAX_N];&nbsp;&nbsp;// 邻接表<br>
+                        bool visited[MAX_N];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 访问标记数组<br>
+                        <br>
+                        // DFS栈实现<br>
+                        void dfs_stack(int start) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stack&lt;int&gt; s;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;s.push(start);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (!s.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int u = s.top();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s.pop();<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!visited[u]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited[u] = true;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; u &lt;&lt; " ";&nbsp;&nbsp;// 处理当前节点<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 将邻居节点压入栈中<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int v : adj[u]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!visited[v]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s.push(v);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 广度优先搜索 -->
+        <div id="bfs" class="content">
+            <h2>广度优先搜索(BFS)</h2>
+            
+            <div class="concept-item">
+                <h3>BFS基本思想</h3>
+                <p>广度优先搜索（Breadth-First Search）是一种图形搜索算法，它从根节点开始，沿着树的宽度遍历树的节点，并在遍历完同一层的所有节点后，再遍历下一层的节点。</p>
+                
+                <h4>BFS的特点</h4>
+                <ul>
+                    <li><strong>层次遍历</strong>：按层级顺序遍历节点</li>
+                    <li><strong>最短路径</strong>：在无权图中能找到从起点到终点的最短路径</li>
+                    <li><strong>实现方式</strong>：通常使用队列实现</li>
+                    <li><strong>空间复杂度</strong>：O(w)，w为树的最大宽度</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>BFS实现</h3>
+                
+                <div class="example">
+                    <h4>队列实现</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;queue&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        const int MAX_N = 100;<br>
+                        vector&lt;int&gt; adj[MAX_N];&nbsp;&nbsp;// 邻接表<br>
+                        bool visited[MAX_N];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 访问标记数组<br>
+                        <br>
+                        // BFS实现<br>
+                        void bfs(int start) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;queue&lt;int&gt; q;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;q.push(start);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;visited[start] = true;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (!q.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int u = q.front();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.pop();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; u &lt;&lt; " ";&nbsp;&nbsp;// 处理当前节点<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 将未访问的邻居节点加入队列<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int v : adj[u]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!visited[v]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited[v] = true;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(v);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 初始化访问数组<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;memset(visited, false, sizeof(visited));<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 构建图（示例）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;adj[0].push_back(1);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;adj[0].push_back(2);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;adj[1].push_back(3);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;adj[1].push_back(4);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 从节点0开始BFS<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "BFS遍历结果: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;bfs(0);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>DFS与BFS的比较</h3>
+                <table>
+                    <tr>
+                        <th>比较维度</th>
+                        <th>DFS</th>
+                        <th>BFS</th>
+                    </tr>
+                    <tr>
+                        <td>数据结构</td>
+                        <td>栈（递归或显式）</td>
+                        <td>队列</td>
+                    </tr>
+                    <tr>
+                        <td>空间复杂度</td>
+                        <td>O(h)，h为树的高度</td>
+                        <td>O(w)，w为树的最大宽度</td>
+                    </tr>
+                    <tr>
+                        <td>时间复杂度</td>
+                        <td>O(V+E)</td>
+                        <td>O(V+E)</td>
+                    </tr>
+                    <tr>
+                        <td>找到的解</td>
+                        <td>任意解</td>
+                        <td>最短路径解</td>
+                    </tr>
+                    <tr>
+                        <td>适用场景</td>
+                        <td>路径存在性、拓扑排序</td>
+                        <td>最短路径、层次遍历</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 应用场景 -->
+        <div id="applications" class="content">
+            <h2>搜索算法的应用场景</h2>
+            
+            <div class="concept-item">
+                <h3>连通性问题</h3>
+                <p>判断图中两点是否连通，或者计算连通分量的数量：</p>
+                
+                <div class="example">
+                    <h4>计算连通分量</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        const int MAX_N = 100;<br>
+                        vector&lt;int&gt; adj[MAX_N];<br>
+                        bool visited[MAX_N];<br>
+                        <br>
+                        void dfs(int u) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;visited[u] = true;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int v : adj[u]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!visited[v]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dfs(v);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }<br>
+                        <br>
+                        int countComponents(int n) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;memset(visited, false, sizeof(visited));<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int components = 0;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!visited[i]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dfs(i);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;components++;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return components;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>路径查找问题</h3>
+                <p>在迷宫中寻找从起点到终点的路径：</p>
+                
+                <div class="example">
+                    <h4>迷宫求解</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;queue&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        const int MAX_N = 100;<br>
+                        int maze[MAX_N][MAX_N];&nbsp;&nbsp;// 0表示可通行，1表示障碍<br>
+                        bool visited[MAX_N][MAX_N];<br>
+                        int dx[] = {0, 0, 1, -1};&nbsp;&nbsp;// 方向数组：右、左、下、上<br>
+                        int dy[] = {1, -1, 0, 0};<br>
+                        <br>
+                        struct Point {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int x, y;<br>
+                        };<br>
+                        <br>
+                        // BFS求解迷宫最短路径<br>
+                        int bfs_maze(int n, int m, Point start, Point end) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (maze[start.x][start.y] == 1 || maze[end.x][end.y] == 1)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return -1;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;queue&lt;Point&gt; q;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;queue&lt;int&gt; dist;&nbsp;&nbsp;// 记录距离<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;q.push(start);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;dist.push(0);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;visited[start.x][start.y] = true;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (!q.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Point cur = q.front(); q.pop();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int d = dist.front(); dist.pop();<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (cur.x == end.x && cur.y == end.y)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return d;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 探索四个方向<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 4; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int nx = cur.x + dx[i];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int ny = cur.y + dy[i];<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (nx &gt;= 0 && nx &lt; n && ny &gt;= 0 && ny &lt; m &&<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;!visited[nx][ny] && maze[nx][ny] == 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited[nx][ny] = true;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push({nx, ny});<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist.push(d + 1);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return -1;&nbsp;&nbsp;// 无法到达终点<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>拓扑排序</h3>
+                <p>对有向无环图(DAG)的节点进行排序，使得对于每一条有向边(u, v)，u在排序中都出现在v之前：</p>
+                
+                <div class="example">
+                    <h4>拓扑排序实现</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;queue&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 使用BFS实现拓扑排序（Kahn算法）<br>
+                        vector&lt;int&gt; topologicalSort(int n, vector&lt;vector&lt;int&gt;&gt;& edges) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;int&gt;&gt; adj(n);&nbsp;&nbsp;// 邻接表<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; inDegree(n, 0);&nbsp;&nbsp;// 入度数组<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 构建图和入度数组<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (auto& edge : edges) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adj[edge[0]].push_back(edge[1]);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inDegree[edge[1]]++;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 将入度为0的节点加入队列<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;queue&lt;int&gt; q;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (inDegree[i] == 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(i);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; result;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (!q.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int u = q.front();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.pop();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result.push_back(u);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 移除节点u及其相关的边<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int v : adj[u]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (--inDegree[v] == 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(v);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 检查是否存在环<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (result.size() != n) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 存在环，无法进行拓扑排序<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return {};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return result;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践练习 -->
+        <div id="practice" class="content">
+            <h2>实践练习</h2>
+            
+            <div class="example">
+                <h3>练习1：岛屿数量</h3>
+                <p>给定一个由 '1'（陆地）和 '0'（水）组成的二维网格，计算网格中岛屿的数量。岛屿总是被水包围，并且每座岛屿只能由水平方向和/或竖直方向上相邻的陆地连接形成。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // DFS解法<br>
+                    void dfs(vector&lt;vector&lt;char&gt;&gt;& grid, int i, int j) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 边界检查和条件检查<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (i &lt; 0 || i &gt;= grid.size() || j &lt; 0 || j &gt;= grid[0].size() || grid[i][j] != '1')<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 标记当前陆地为已访问<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;grid[i][j] = '0';<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 递归访问四个方向的相邻陆地<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;dfs(grid, i + 1, j);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;dfs(grid, i - 1, j);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;dfs(grid, i, j + 1);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;dfs(grid, i, j - 1);<br>
+                    }<br>
+                    <br>
+                    int numIslands(vector&lt;vector&lt;char&gt;&gt;& grid) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (grid.empty() || grid[0].empty()) return 0;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int count = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int rows = grid.size();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int cols = grid[0].size();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 遍历网格中的每个位置<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; rows; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; cols; j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 如果发现未访问的陆地<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (grid[i][j] == '1') {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 通过DFS标记整个岛屿<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dfs(grid, i, j);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 岛屿数量加1<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return count;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;char&gt;&gt; grid = {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'1','1','1','1','0'},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'1','1','0','1','0'},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'1','1','0','0','0'},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'0','0','0','0','0'}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "岛屿数量: " &lt;&lt; numIslands(grid) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：二叉树的层序遍历</h3>
+                <p>给定一个二叉树，返回其节点值的层序遍历。（即逐层地，从左到右访问所有节点）</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;queue&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    struct TreeNode {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int val;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TreeNode *left;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TreeNode *right;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TreeNode(int x) : val(x), left(NULL), right(NULL) {}<br>
+                    };<br>
+                    <br>
+                    vector&lt;vector&lt;int&gt;&gt; levelOrder(TreeNode* root) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;int&gt;&gt; result;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (!root) return result;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;queue&lt;TreeNode*&gt; q;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;q.push(root);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (!q.empty()) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int levelSize = q.size();&nbsp;&nbsp;// 当前层的节点数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; currentLevel;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 处理当前层的所有节点<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; levelSize; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TreeNode* node = q.front();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.pop();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currentLevel.push_back(node-&gt;val);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 将下一层的节点加入队列<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (node-&gt;left) q.push(node-&gt;left);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (node-&gt;right) q.push(node-&gt;right);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 将当前层的结果加入最终结果<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result.push_back(currentLevel);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return result;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 构建测试二叉树<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;\<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;9&nbsp;&nbsp;&nbsp;20<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;\<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15&nbsp;&nbsp;7<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TreeNode* root = new TreeNode(3);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;root-&gt;left = new TreeNode(9);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;root-&gt;right = new TreeNode(20);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;root-&gt;right-&gt;left = new TreeNode(15);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;root-&gt;right-&gt;right = new TreeNode(7);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;int&gt;&gt; result = levelOrder(root);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "层序遍历结果: " &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (const auto& level : result) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int val : level) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; val &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习3：N皇后问题</h3>
+                <p>研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    class Solution {<br>
+                    private:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;string&gt;&gt; solutions;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;string&gt; board;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n;<br>
+                    <br>
+                    public:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 检查在(row, col)位置放置皇后是否合法<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bool isValid(int row, int col) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 检查列是否有皇后<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; row; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (board[i][col] == 'Q')<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 检查左上对角线是否有皇后<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = row - 1, j = col - 1; i &gt;= 0 && j &gt;= 0; i--, j--) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (board[i][j] == 'Q')<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 检查右上对角线是否有皇后<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = row - 1, j = col + 1; i &gt;= 0 && j &lt; n; i--, j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (board[i][j] == 'Q')<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// DFS回溯求解N皇后问题<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;void solve(int row) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (row == n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 找到一个解<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;solutions.push_back(board);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 在当前行的每一列尝试放置皇后<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int col = 0; col &lt; n; col++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isValid(row, col)) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 放置皇后<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;board[row][col] = 'Q';<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 递归处理下一行<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;solve(row + 1);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 回溯，移除皇后<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;board[row][col] = '.';<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;string&gt;&gt; solveNQueens(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this-&gt;n = n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;solutions.clear();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;board = vector&lt;string&gt;(n, string(n, '.'));<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;solve(0);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return solutions;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    };<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Solution solution;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n = 4;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;string&gt;&gt; results = solution.solveNQueens(n);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; n &lt;&lt; "皇后问题的解法数量: " &lt;&lt; results.size() &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; results.size(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "解法 " &lt;&lt; (i + 1) &lt;&lt; ":" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (const string& row : results[i]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; row &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握搜索算法，遍历问题空间</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

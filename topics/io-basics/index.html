@@ -193,13 +193,28 @@
         <div class="grid-pattern"></div>
     </div>
     
-    <div class="container">
-        <header>
-            <h1>⌨️ C++ 输入与输出</h1>
-            <p class="subtitle">—— 掌握C++中的基本输入输出操作</p>
-        </header>
+    <div class="button-container">
+        <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+        <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">返回学习路径</button>
+        <button class="toggle-btn" onclick="window.location.href='../../index.htm'">回到首页</button>
+    </div>
 
-        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+    <div class="topic-header shimmer">
+        <h1 class="hover-lift" style="text-align: center;">
+            <span class="icon">⌨️</span>
+            C++ 输入与输出
+            <span class="badge">基础语法</span>
+        </h1>
+        <p style="text-align: center;">掌握C++中的基本输入输出操作</p>
+    </div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <nav class="breadcrumb">
+                <a href="../../index.htm">首页</a> → 
+                <a href="../../learning-path.html">学习路径</a> → 
+                输入与输出
+            </nav>
 
         <div class="tab-container">
             <button class="tab active" onclick="openTab(event, 'cout')">🖨️ 输出操作</button>
@@ -239,7 +254,7 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;int age = 15;<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;double height = 1.75;<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;char grade = 'A';<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;string name = "小明";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char name[] = "小明";<br>
                         <br>
                         &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 基本输出</span><br>
                         &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Hello World!" &lt;&lt; endl;<br>
@@ -332,7 +347,7 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;int age;<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;double height;<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;char grade;<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;string name;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char name[50];<br>
                         <br>
                         &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 提示用户输入</span><br>
                         &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入您的年龄: ";<br>
@@ -687,17 +702,16 @@
                 <p>创建一个简单的个人信息录入程序：</p>
                 <div class="code">
                     #include &lt;iostream&gt;<br>
-                    #include &lt;string&gt;<br>
                     using namespace std;<br>
                     <br>
                     int main() {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;string name;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;char name[50];<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;int age;<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;double height, weight;<br>
                     <br>
                     &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "=== 个人信息录入系统 ===" &lt;&lt; endl;<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入您的姓名: ";<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;getline(cin, name);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin.getline(name, 50);<br>
                     <br>
                     &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入您的年龄: ";<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; age;<br>
@@ -812,10 +826,14 @@
             </div>
         </div>
 
-        <footer>
-            <p>© 2025 C++课程 | 掌握输入输出，实现程序与用户的交互</p>
-        </footer>
+        <div class="nav-buttons">
+            <!-- 导航按钮将由topic-nav.js动态生成 -->
+        </div>
     </div>
+
+    <footer>
+        <p>© 2025 C++课程 | 掌握输入输出，实现程序与用户的交互</p>
+    </footer>
 
     <script>
         function openTab(evt, tabName) {
@@ -832,6 +850,57 @@
             evt.currentTarget.className += " active";
             document.getElementById(tabName).className += " active";
         }
+
+        // 暗色模式切换
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (prefersDark) {
+            document.body.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '☀️ 切换亮色模式';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 切换暗色模式';
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ 切换亮色模式';
+            }
+        });
+        
+        // 添加随机移动效果到粒子
+        document.addEventListener('mousemove', function(e) {
+            const particles = document.querySelectorAll('.particle');
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            particles.forEach(particle => {
+                const rect = particle.getBoundingClientRect();
+                const particleX = rect.left + rect.width / 2;
+                const particleY = rect.top + rect.height / 2;
+                
+                const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+                const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+                const force = Math.min(500 / (distance * distance), 15);
+                
+                const translateX = Math.cos(angle) * force;
+                const translateY = Math.sin(angle) * force;
+                
+                particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+            });
+        });
+        
+        // 初始化页面导航
+        document.addEventListener('DOMContentLoaded', function() {
+            // 当前页面路径（相对于topics目录）
+            const currentPagePath = './io-basics/index.html';
+            initTopicNavigation(currentPagePath);
+        });
     </script>
+    
+    <script src="../../scripts/topic-nav.js"></script>
 </body>
 </html>

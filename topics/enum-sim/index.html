@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 枚举与模拟</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🧮 C++ 枚举与模拟</h1>
+            <p class="subtitle">—— 暴力破解与过程模拟</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">🔢 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'enum')">🧮 枚举算法</button>
+            <button class="tab" onclick="openTab(event, 'sim')">🎮 模拟算法</button>
+            <button class="tab" onclick="openTab(event, 'examples')">🧮 应用示例</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践练习</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>枚举与模拟基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是枚举算法</h3>
+                <p>枚举算法（也称为穷举算法）是一种通过逐一尝试所有可能的情况来解决问题的方法。它基于问题域的有限性和规律性，通过系统地列举所有可能的候选答案，并逐一验证这些答案是否符合问题的约束条件，最终找到正确的解。</p>
+                
+                <h4>枚举算法的特点</h4>
+                <ul>
+                    <li><strong>全面性</strong>：能够遍历所有可能的情况</li>
+                    <li><strong>直观性</strong>：思路清晰，易于理解和实现</li>
+                    <li><strong>通用性</strong>：适用于许多问题类型</li>
+                    <li><strong>效率问题</strong>：在可能情况较多时，效率较低</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>什么是模拟算法</h3>
+                <p>模拟算法是通过计算机程序来模拟现实世界或抽象问题中的过程和行为，以解决问题的方法。它不是一种特定的算法，而是一种解决问题的思路，通常按照题目描述的过程一步一步实现。</p>
+                
+                <h4>模拟算法的特点</h4>
+                <ul>
+                    <li><strong>忠实性</strong>：严格按照题目要求进行模拟</li>
+                    <li><strong>直观性</strong>：代码逻辑与题目描述一致</li>
+                    <li><strong>实现复杂</strong>：代码量通常较大，细节较多</li>
+                    <li><strong>调试困难</strong>：需要仔细处理各种边界情况</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>枚举与模拟的应用场景</h3>
+                <p>枚举与模拟是编程竞赛和实际开发中常用的基础算法思想：</p>
+                
+                <table>
+                    <tr>
+                        <th>应用场景</th>
+                        <th>典型问题</th>
+                        <th>解决方法</th>
+                    </tr>
+                    <tr>
+                        <td>密码破解</td>
+                        <td>暴力破解密码</td>
+                        <td>枚举所有可能的密码组合</td>
+                    </tr>
+                    <tr>
+                        <td>数学问题</td>
+                        <td>寻找满足条件的数字</td>
+                        <td>枚举数字并验证条件</td>
+                    </tr>
+                    <tr>
+                        <td>游戏开发</td>
+                        <td>棋类游戏、角色移动</td>
+                        <td>模拟游戏规则和过程</td>
+                    </tr>
+                    <tr>
+                        <td>系统仿真</td>
+                        <td>排队系统、生产流程</td>
+                        <td>模拟实际运行过程</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 枚举算法 -->
+        <div id="enum" class="content">
+            <h2>枚举算法</h2>
+            
+            <div class="concept-item">
+                <h3>枚举算法的基本思路</h3>
+                <p>枚举算法的核心是确定枚举对象、枚举范围和判断条件：</p>
+                <ol>
+                    <li><strong>确定枚举对象</strong>：明确要枚举的是什么，是数字、状态还是其他对象</li>
+                    <li><strong>确定枚举范围</strong>：确定枚举的起始和结束条件</li>
+                    <li><strong>确定判断条件</strong>：明确什么样的枚举结果是问题的解</li>
+                </ol>
+                
+                <div class="example">
+                    <h4>基本枚举框架</h4>
+                    <div class="code">
+                        // 枚举算法的基本框架<br>
+                        for (枚举范围) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (满足条件) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 处理满足条件的情况<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>枚举算法的优化</h3>
+                <p>虽然枚举算法思路简单，但可以通过以下方式优化：</p>
+                <ul>
+                    <li><strong>缩小枚举范围</strong>：通过数学分析减少不必要的枚举</li>
+                    <li><strong>剪枝</strong>：在枚举过程中提前终止不可能产生解的分支</li>
+                    <li><strong>优化判断条件</strong>：提高判断条件的执行效率</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 模拟算法 -->
+        <div id="sim" class="content">
+            <h2>模拟算法</h2>
+            
+            <div class="concept-item">
+                <h3>模拟算法的基本思路</h3>
+                <p>模拟算法的关键是准确理解题目要求，并按照要求一步步实现：</p>
+                <ol>
+                    <li><strong>仔细阅读题目</strong>：理解每一个细节和约束条件</li>
+                    <li><strong>设计数据结构</strong>：选择合适的数据结构表示状态</li>
+                    <li><strong>逐步实现过程</strong>：按照题目描述的过程编写代码</li>
+                    <li><strong>处理边界情况</strong>：考虑各种特殊情况和边界条件</li>
+                </ol>
+            </div>
+            
+            <div class="concept-item">
+                <h3>模拟算法的注意事项</h3>
+                <p>在实现模拟算法时需要注意以下几点：</p>
+                <ul>
+                    <li><strong>代码可读性</strong>：模拟算法通常代码较长，需要保持良好的结构</li>
+                    <li><strong>变量命名</strong>：使用有意义的变量名，便于理解和调试</li>
+                    <li><strong>注释说明</strong>：添加必要的注释解释复杂的逻辑</li>
+                    <li><strong>测试验证</strong>：使用多种测试用例验证程序正确性</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 应用示例 -->
+        <div id="examples" class="content">
+            <h2>应用示例</h2>
+            
+            <div class="example">
+                <h3>示例1：枚举质数</h3>
+                <p>找出100以内的所有质数：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 判断一个数是否为质数<br>
+                    bool isPrime(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 1) return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n == 2) return true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n % 2 == 0) return false;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 只需要检查到sqrt(n)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 3; i * i &lt;= n; i += 2) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (n % i == 0) return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "100以内的质数有: ";<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 枚举1到100的所有数字<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt;= 100; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isPrime(i)) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; i &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>示例2：水仙花数</h3>
+                <p>找出所有的水仙花数（一个三位数，其各位数字的立方和等于该数本身）：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 判断一个数是否为水仙花数<br>
+                    bool isNarcissistic(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int original = n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int sum = 0;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算各位数字的立方和<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (n &gt; 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int digit = n % 10;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += digit * digit * digit;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n /= 10;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return sum == original;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "所有的水仙花数有: ";<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 枚举所有的三位数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 100; i &lt;= 999; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isNarcissistic(i)) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; i &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>示例3：模拟密码验证</h3>
+                <p>模拟一个简单的密码验证过程：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;string&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string correctPassword = "123456";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int maxAttempts = 3;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int attempts = 0;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "欢迎使用密码验证系统" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 模拟密码验证过程<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (attempts &lt; maxAttempts) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string inputPassword;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入密码（剩余尝试次数: " &lt;&lt; (maxAttempts - attempts) &lt;&lt; "）: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; inputPassword;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 验证密码<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (inputPassword == correctPassword) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "密码正确，登录成功！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attempts++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (attempts &lt; maxAttempts) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "密码错误，请重新输入！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "密码错误次数过多，账户已被锁定！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>示例4：模拟简单计算器</h3>
+                <p>模拟一个简单的计算器操作过程：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double num1, num2, result;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;char operation;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "=== 简单计算器 ===" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入第一个数字: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; num1;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入运算符 (+, -, *, /): ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; operation;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入第二个数字: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; num2;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 模拟计算过程<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;switch (operation) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case '+':<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = num1 + num2;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case '-':<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = num1 - num2;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case '*':<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = num1 * num2;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case '/':<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (num2 != 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = num1 / num2;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "错误：除数不能为零！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "错误：不支持的运算符！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出结果<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "计算结果: " &lt;&lt; num1 &lt;&lt; " " &lt;&lt; operation &lt;&lt; " " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; result &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践练习 -->
+        <div id="practice" class="content">
+            <h2>实践练习</h2>
+            
+            <div class="example">
+                <h3>练习1：枚举完全数</h3>
+                <p>完全数是指一个数等于它的所有真因数（除了自身的因数）之和。例如6=1+2+3。请找出1000以内的所有完全数。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 判断一个数是否为完全数<br>
+                    bool isPerfect(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int sum = 0;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算所有真因数的和<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (n % i == 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += i;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return sum == n;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "1000以内的完全数有: ";<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 枚举1到1000的所有数字<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt;= 1000; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isPerfect(i)) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; i &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：模拟简单银行系统</h3>
+                <p>模拟一个简单的银行账户管理系统，支持存款、取款和查询余额操作：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double balance = 0.0;&nbsp;&nbsp;// 账户余额<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int choice;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "=== 简单银行系统 ===" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 模拟银行操作过程<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;do {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n请选择操作:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "1. 存款" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "2. 取款" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "3. 查询余额" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "4. 退出" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入选择 (1-4): ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; choice;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch (choice) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 1: {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 存款操作<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double amount;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入存款金额: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; amount;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (amount &gt; 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance += amount;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "存款成功！当前余额: " &lt;&lt; balance &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "存款金额必须大于0！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 2: {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 取款操作<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double amount;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入取款金额: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; amount;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (amount &gt; 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (amount &lt;= balance) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance -= amount;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "取款成功！当前余额: " &lt;&lt; balance &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "余额不足！当前余额: " &lt;&lt; balance &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "取款金额必须大于0！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 3:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 查询余额<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "当前余额: " &lt;&lt; balance &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 4:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 退出<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "感谢使用银行系统，再见！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "无效选择，请重新输入！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} while (choice != 4);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习3：模拟猜数字游戏</h3>
+                <p>模拟一个猜数字游戏，程序随机生成一个1-100之间的数字，用户尝试猜测：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;cstdlib&gt;<br>
+                    #include &lt;ctime&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 初始化随机数种子<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;srand(time(0));<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 生成1-100之间的随机数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int secretNumber = rand() % 100 + 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int guess;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int attempts = 0;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "=== 猜数字游戏 ===" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "我已经想好了一个1-100之间的数字，请你猜猜看！" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 模拟猜数字过程<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;do {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入你猜的数字: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; guess;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attempts++;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (guess &gt; secretNumber) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "太大了，请再试试！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (guess &lt; secretNumber) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "太小了，请再试试！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "恭喜你，猜对了！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "你总共猜了 " &lt;&lt; attempts &lt;&lt; " 次。" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} while (guess != secretNumber);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握枚举与模拟算法，解决实际问题</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

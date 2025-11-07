@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>计算机如何工作 - C++ 基础知识</title>
+    <title>知识点标题 - C++ 基础知识</title>
     <link rel="stylesheet" href="../../styles/base.css">
     <link rel="stylesheet" href="../../styles/animations.css">
     <link rel="stylesheet" href="../../styles/components.css">
@@ -222,62 +222,7 @@
             border-radius: 0 8px 8px 0;
         }
 
-        .ipo-steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .ipo-step {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ipo-step::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-light));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .ipo-step:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-color: var(--accent-light);
-        }
-
-        .ipo-step:hover::before {
-            opacity: 1;
-        }
-
-        .ipo-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-
-        .ipo-step h4 {
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-        }
-
         @media (max-width: 768px) {
-            .ipo-steps {
-                grid-template-columns: 1fr;
-            }
-
             .topic-header h1 {
                 font-size: 1.8rem;
             }
@@ -319,11 +264,11 @@
 
     <div class="topic-header shimmer">
         <h1 class="hover-lift">
-            <span class="icon">🖥️</span>
-            计算机如何工作？
-            <span class="badge">核心概念</span>
+            <span class="icon">📘</span>
+            知识点标题
+            <span class="badge">知识点类型</span>
         </h1>
-        <p>理解计算机的工作原理与IPO模型，掌握算法思维基础</p>
+        <p>知识点简短描述</p>
     </div>
 
     <div class="container">
@@ -331,56 +276,20 @@
             <nav class="breadcrumb">
                 <a href="../../index.htm">首页</a> → 
                 <a href="../../learning-path.html">学习路径</a> → 
-                计算机如何工作？
+                知识点标题
             </nav>
 
             <section class="topic-section">
                 <div class="topic-card">
-                    <h2>IPO模型：计算机的"工作三步曲"</h2>
-                    <p>
-                        计算机就像一个聪明的"助手"，它的工作方式非常清晰，可以分为三个基本步骤：
-                    </p>
-                    
-                    <!-- 三步骤IPO模型可视化 -->
-                    <div class="ipo-steps">
-                        <div class="ipo-step">
-                            <div class="ipo-icon">📥</div>
-                            <h4>Input（输入）</h4>
-                            <p>你给计算机提供信息（比如数字、名字、选择）</p>
-                        </div>
-                        <div class="ipo-step">
-                            <div class="ipo-icon">⚙️</div>
-                            <h4>Process（处理）</h4>
-                            <p>计算机根据你写的程序，对这些信息进行计算、判断或操作</p>
-                        </div>
-                        <div class="ipo-step">
-                            <div class="ipo-icon">📤</div>
-                            <h4>Output（输出）</h4>
-                            <p>计算机把处理结果告诉你（比如显示在屏幕上）</p>
-                        </div>
-                    </div>
-                    
-                    <p>
-                        这个过程叫做 <strong>IPO模型</strong>，是所有程序的基础。
-                    </p>
+                    <h2>知识点标题</h2>
+                    <p>知识点内容描述</p>
                     
                     <div class="concept-card">
-                        <h3>生活中的IPO模型</h3>
+                        <h3>核心概念</h3>
                         <ul class="feature-list">
-                            <li><strong>做果汁：</strong>
-                                <ul>
-                                    <li><strong>输入：</strong>水果、水、糖</li>
-                                    <li><strong>处理：</strong>用榨汁机搅拌</li>
-                                    <li><strong>输出：</strong>一杯果汁</li>
-                                </ul>
-                            </li>
-                            <li><strong>考试：</strong>
-                                <ul>
-                                    <li><strong>输入：</strong>试卷和答题卡</li>
-                                    <li><strong>处理：</strong>老师批改</li>
-                                    <li><strong>输出：</strong>你的分数</li>
-                                </ul>
-                            </li>
+                            <li>概念1</li>
+                            <li>概念2</li>
+                            <li>概念3</li>
                         </ul>
                     </div>
                 </div>
@@ -388,96 +297,19 @@
 
             <section class="topic-section">
                 <div class="topic-card">
-                    <h2>算法：解决问题的"菜谱"</h2>
-                    <p>
-                        <strong>算法</strong> 就是解决问题的一系列<strong>明确、有序的步骤</strong>。就像做菜的菜谱一样，每一步都要写清楚，计算机才能照着做。
-                    </p>
-                    
-                    <div class="concept-card">
-                        <h3>算法的特点</h3>
-                        <ul class="feature-list">
-                            <li>算法必须是<strong>具体的</strong>（不能说"炒一下"，要说"炒30秒"）</li>
-                            <li>算法必须有<strong>开始和结束</strong></li>
-                            <li>同一个问题可以有不同的算法</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="concept-card">
-                        <h3>生活实例：如何从家走到学校？</h3>
-                        <ol class="feature-list">
-                            <li>走出家门</li>
-                            <li>向右走到路口</li>
-                            <li>看红绿灯，如果是绿灯，过马路</li>
-                            <li>直走200米，看到学校大门</li>
-                            <li>进入学校</li>
-                            <li>结束</li>
-                        </ol>
-                    </div>
-                </div>
-            </section>
-
-            <section class="topic-section">
-                <div class="topic-card">
-                    <h2>流程图：用图形画出算法</h2>
-                    <p>
-                        <strong>流程图</strong> 是用图形和箭头来表示算法的工具。它比文字更直观，能帮助我们理清思路。
-                    </p>
-                    
-                    <div class="concept-card">
-                        <h3>常用图形</h3>
-                        <ul class="feature-list">
-                            <li><strong>椭圆形：</strong>开始 / 结束</li>
-                            <li><strong>平行四边形：</strong>输入 / 输出</li>
-                            <li><strong>矩形：</strong>处理（计算、赋值）</li>
-                            <li><strong>菱形：</strong>判断（是/否）</li>
-                            <li><strong>箭头：</strong>流程方向</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="concept-card">
-                        <h3>判断奇偶数的流程图</h3>
-                        <img src="https://via.placeholder.com/800x400.png?text=判断奇偶数的流程图" alt="判断奇偶数的流程图" style="width: 100%; height: auto; border-radius: 8px; margin: 1rem 0;">
-                    </div>
-                </div>
-            </section>
-
-            <section class="topic-section">
-                <div class="topic-card">
-                    <h2>代码样例：用C++实现一个IPO程序</h2>
-                    <p>我们来写一个程序，判断一个数是奇数还是偶数。</p>
+                    <h2>代码示例</h2>
+                    <p>相关代码示例说明</p>
                     
                     <div class="code-block">
                         <div class="code-title">C++</div>
-                        <pre><code class="language-cpp">#include &lt;iostream&gt;
+                        <pre><code class="language-cpp">// 示例代码
+#include &lt;iostream&gt;
 using namespace std;
 
 int main() {
-    // ========== INPUT（输入）==========
-    int number;
-    cout &lt;&lt; "请输入一个整数：";
-    cin &gt;&gt; number;
-
-    // ========== PROCESS（处理）==========
-    // 判断是否为偶数：能被2整除就是偶数
-    if (number % 2 == 0) {
-        // ========== OUTPUT（输出）==========
-        cout &lt;&lt; number &lt;&lt; " 是偶数。" &lt;&lt; endl;
-    } else {
-        // ========== OUTPUT（输出）==========
-        cout &lt;&lt; number &lt;&lt; " 是奇数。" &lt;&lt; endl;
-    }
-
+    // 代码内容
     return 0;
 }</code></pre>
-                    </div>
-                    
-                    <div class="tip-box">
-                        <p><strong>代码解释：</strong></p>
-                        <ul class="feature-list">
-                            <li><code>cin &gt;&gt; number;</code> → <strong>输入</strong></li>
-                            <li><code>if (number % 2 == 0)</code> → <strong>处理</strong>（判断是否能被2整除）</li>
-                            <li><code>cout &lt;&lt; ...</code> → <strong>输出</strong></li>
-                        </ul>
                     </div>
                 </div>
             </section>
@@ -487,11 +319,10 @@ int main() {
                     <h2>动手实践</h2>
                     <div class="practice-block">
                         <h3>🎯 练习任务</h3>
-                        <p>编写一个程序，让用户输入一个整数，然后判断这个数是奇数还是偶数，并输出结果。</p>
+                        <p>练习任务描述</p>
                         <div class="tip-box">
-                            <p><strong>提示：</strong> 使用 <code>%</code> 操作符来判断一个数是否能被2整除。</p>
+                            <p><strong>提示：</strong> 练习提示信息</p>
                         </div>
-                        <p><strong>参考答案：</strong> 见上面的代码样例。</p>
                     </div>
                 </div>
             </section>
@@ -499,9 +330,6 @@ int main() {
             <div class="nav-buttons">
                 <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">
                     ← 返回学习路径
-                </button>
-                <button class="toggle-btn" onclick="window.location.href='../what-is-program/index.html'">
-                    上一节：什么是程序？ →
                 </button>
             </div>
         </div>
@@ -557,7 +385,7 @@ int main() {
         // 初始化页面导航
         document.addEventListener('DOMContentLoaded', function() {
             // 当前页面路径（相对于topics目录）
-            const currentPagePath = './how-computer-works/index.html';
+            const currentPagePath = './[topic-directory]/index.html';
             initTopicNavigation(currentPagePath);
         });
     </script>

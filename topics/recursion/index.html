@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 递归初步</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🌀 C++ 递归初步</h1>
+            <p class="subtitle">—— 函数调用自身解决问题</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">🔢 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'principle')">🧮 工作原理</button>
+            <button class="tab" onclick="openTab(event, 'condition')">⏹️ 终止条件</button>
+            <button class="tab" onclick="openTab(event, 'examples')">🧮 经典示例</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践练习</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>递归基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是递归</h3>
+                <p>递归是一种编程技术，指函数在执行过程中调用自身的方法。递归可以将复杂问题分解为规模更小的相同问题来解决。</p>
+                
+                <h4>递归的特点</h4>
+                <ul>
+                    <li><strong>自我调用</strong>：函数直接或间接调用自身</li>
+                    <li><strong>问题分解</strong>：将复杂问题分解为规模更小的同类问题</li>
+                    <li><strong>简洁性</strong>：用较少的代码解决复杂问题</li>
+                    <li><strong>直观性</strong>：某些问题用递归描述更自然、直观</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>递归示意图</h4>
+                    <div class="code">
+                        函数调用<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+                        +-----------------+<br>
+                        |&nbsp;&nbsp;&nbsp;函数体&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        |&nbsp;1. 基本情况处理&nbsp;|<br>
+                        |&nbsp;2. 递归调用自身&nbsp;|----+<br>
+                        |&nbsp;3. 返回结果&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|<br>
+                        +-----------------+&nbsp;&nbsp;&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        返回结果&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+-----------------+<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;函数体&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;1. 基本情况处理&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;2. 递归调用自身&nbsp;|----+<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;3. 返回结果&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+-----------------+&nbsp;&nbsp;&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;返回结果&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+-----------------+<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;函数体&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;1. 基本情况处理&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;2. 不再递归&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;3. 返回结果&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+-----------------+<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;返回最终结果
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>递归的重要性</h3>
+                <p>递归是程序设计中的重要思想，特别适用于解决具有递归结构的问题。</p>
+                
+                <h4>学习递归的意义</h4>
+                <ul>
+                    <li><strong>思维训练</strong>：培养分而治之的思维方式</li>
+                    <li><strong>问题简化</strong>：将复杂问题转化为简单问题</li>
+                    <li><strong>算法基础</strong>：为学习高级算法打下基础</li>
+                    <li><strong>数据结构</strong>：处理树、图等递归结构数据</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>递归与循环的比较</h3>
+                <p>递归和循环都可以解决重复执行的问题，但各有适用场景。</p>
+                
+                <h4>对比表格</h4>
+                <table>
+                    <tr>
+                        <th>比较项</th>
+                        <th>递归</th>
+                        <th>循环</th>
+                    </tr>
+                    <tr>
+                        <td>实现方式</td>
+                        <td>函数调用自身</td>
+                        <td>使用循环语句</td>
+                    </tr>
+                    <tr>
+                        <td>代码简洁性</td>
+                        <td>代码简洁，逻辑清晰</td>
+                        <td>代码可能较长</td>
+                    </tr>
+                    <tr>
+                        <td>内存消耗</td>
+                        <td>占用较多栈空间</td>
+                        <td>占用较少内存</td>
+                    </tr>
+                    <tr>
+                        <td>执行效率</td>
+                        <td>相对较慢</td>
+                        <td>相对较快</td>
+                    </tr>
+                    <tr>
+                        <td>适用场景</td>
+                        <td>问题具有递归结构</td>
+                        <td>重复执行相同操作</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 工作原理 -->
+        <div id="principle" class="content">
+            <h2>递归工作原理</h2>
+            
+            <div class="concept-item">
+                <h3>递归的两个要素</h3>
+                <p>每个递归函数都必须包含两个基本要素：基本情况和递归情况。</p>
+                
+                <h4>基本情况（Base Case）</h4>
+                <p>递归的终止条件，当满足这个条件时，递归不再继续，直接返回结果。</p>
+                
+                <h4>递归情况（Recursive Case）</h4>
+                <p>函数调用自身的部分，将问题规模减小，逐步接近基本情况。</p>
+                
+                <div class="example">
+                    <h4>递归执行过程</h4>
+                    <p>递归的执行过程可以分为两个阶段：</p>
+                    <ol>
+                        <li><strong>递推阶段</strong>：不断调用自身，问题规模逐渐减小</li>
+                        <li><strong>回溯阶段</strong>：从最内层开始逐层返回结果</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>栈与递归</h3>
+                <p>递归的实现依赖于系统栈，每次函数调用都会在栈中创建一个栈帧。</p>
+                
+                <div class="example">
+                    <h4>递归调用栈示意图</h4>
+                    <div class="code">
+                        栈顶<br>
+                        +-----------------+&nbsp;&lt;--&nbsp;main()<br>
+                        |&nbsp;&nbsp;&nbsp;&nbsp;main()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        +-----------------+<br>
+                        |&nbsp;&nbsp;&nbsp;factorial(5)&nbsp;&nbsp;|&nbsp;&lt;--&nbsp;调用factorial(5)<br>
+                        +-----------------+<br>
+                        |&nbsp;&nbsp;&nbsp;factorial(4)&nbsp;&nbsp;|&nbsp;&lt;--&nbsp;调用factorial(4)<br>
+                        +-----------------+<br>
+                        |&nbsp;&nbsp;&nbsp;factorial(3)&nbsp;&nbsp;|&nbsp;&lt;--&nbsp;调用factorial(3)<br>
+                        +-----------------+<br>
+                        |&nbsp;&nbsp;&nbsp;factorial(2)&nbsp;&nbsp;|&nbsp;&lt;--&nbsp;调用factorial(2)<br>
+                        +-----------------+<br>
+                        |&nbsp;&nbsp;&nbsp;factorial(1)&nbsp;&nbsp;|&nbsp;&lt;--&nbsp;调用factorial(1)<br>
+                        +-----------------+&nbsp;&lt;--&nbsp;达到基本情况<br>
+                        栈底
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 终止条件 -->
+        <div id="condition" class="content">
+            <h2>递归终止条件</h2>
+            
+            <div class="concept-item">
+                <h3>终止条件的重要性</h3>
+                <p>终止条件是递归函数正确运行的关键，没有正确的终止条件会导致无限递归。</p>
+                
+                <div class="example">
+                    <h4>没有终止条件的错误示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 错误的递归函数：缺少终止条件<br>
+                        void countDown(int n) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; n &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;countDown(n - 1);&nbsp;&nbsp;// 没有终止条件，会无限递归<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 这会导致栈溢出错误<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// countDown(5);&nbsp;&nbsp;// 不要运行这行代码<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>正确的终止条件</h3>
+                <p>正确的终止条件应该能够确保递归最终会停止。</p>
+                
+                <div class="example">
+                    <h4>有正确终止条件的示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 正确的递归函数：有明确的终止条件<br>
+                        void countDown(int n) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 终止条件<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "结束!" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 递归情况<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; n &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;countDown(n - 1);<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;countDown(5);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                    <p>输出结果：</p>
+                    <div class="code">
+                        5<br>
+                        4<br>
+                        3<br>
+                        2<br>
+                        1<br>
+                        结束!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 经典示例 -->
+        <div id="examples" class="content">
+            <h2>递归经典示例</h2>
+            
+            <div class="example">
+                <h3>示例1：计算阶乘</h3>
+                <p>使用递归计算一个数的阶乘（n! = n × (n-1)!）：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 递归计算阶乘<br>
+                    int factorial(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 终止条件<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 1) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 递归情况<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return n * factorial(n - 1);<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int number;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入一个非负整数: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; number;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (number &lt; 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "负数没有阶乘!" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; number &lt;&lt; "! = " &lt;&lt; factorial(number) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p>执行过程（以factorial(4)为例）：</p>
+                <div class="code">
+                    factorial(4) = 4 * factorial(3)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 4 * 3 * factorial(2)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 4 * 3 * 2 * factorial(1)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 4 * 3 * 2 * 1<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 24
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>示例2：斐波那契数列</h3>
+                <p>使用递归计算斐波那契数列的第n项：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 递归计算斐波那契数列<br>
+                    int fibonacci(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 终止条件<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 1) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 递归情况<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return fibonacci(n - 1) + fibonacci(n - 2);<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入要计算的斐波那契数列项数: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt; 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入非负整数!" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "斐波那契数列第 " &lt;&lt; n &lt;&lt; " 项是: " &lt;&lt; fibonacci(n) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p>斐波那契数列：0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...</p>
+            </div>
+            
+            <div class="example">
+                <h3>示例3：汉诺塔问题</h3>
+                <p>使用递归解决经典的汉诺塔问题：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 递归解决汉诺塔问题<br>
+                    void hanoi(int n, char from, char aux, char to) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 终止条件<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n == 1) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "将盘子从 " &lt;&lt; from &lt;&lt; " 移动到 " &lt;&lt; to &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 递归情况<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 1. 将前n-1个盘子从起始柱借助目标柱移动到辅助柱<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;hanoi(n - 1, from, to, aux);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 2. 将最大的盘子从起始柱移动到目标柱<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "将盘子从 " &lt;&lt; from &lt;&lt; " 移动到 " &lt;&lt; to &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 3. 将n-1个盘子从辅助柱借助起始柱移动到目标柱<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;hanoi(n - 1, aux, from, to);<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入汉诺塔的盘子数量: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入正整数!" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "移动步骤如下:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hanoi(n, 'A', 'B', 'C');<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践练习 -->
+        <div id="practice" class="content">
+            <h2>实践练习</h2>
+            
+            <div class="example">
+                <h3>练习1：计算幂次方</h3>
+                <p>编写递归函数计算x的n次方（x^n）：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 在此处添加代码<br>
+                    // 递归计算x的n次方<br>
+                    double power(double x, int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 终止条件<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n == 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 处理负指数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt; 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1 / power(x, -n);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 递归情况<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return x * power(x, n - 1);<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double x;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入底数x: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; x;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入指数n: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; x &lt;&lt; "的" &lt;&lt; n &lt;&lt; "次方 = " &lt;&lt; power(x, n) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：计算数组元素之和</h3>
+                <p>编写递归函数计算数组中所有元素的和：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 在此处添加代码<br>
+                    // 递归计算数组元素之和<br>
+                    int arraySum(int arr[], int size) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 终止条件<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (size &lt;= 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 递归情况<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return arr[size - 1] + arraySum(arr, size - 1);<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int arr[] = {1, 3, 5, 7, 9, 11};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int size = sizeof(arr) / sizeof(arr[0]);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "数组元素: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; size; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; arr[i] &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "数组元素之和: " &lt;&lt; arraySum(arr, size) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习3：字符串反转</h3>
+                <p>编写递归函数实现字符串反转：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;cstring&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 在此处添加代码<br>
+                    // 递归实现字符串反转<br>
+                    void reverseString(char str[], int start, int end) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 终止条件<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (start &gt;= end) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 交换首尾字符<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;char temp = str[start];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;str[start] = str[end];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;str[end] = temp;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 递归处理中间部分<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;reverseString(str, start + 1, end - 1);<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;char str[100];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入一个字符串: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin.getline(str, 100);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "原字符串: " &lt;&lt; str &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 调用递归函数反转字符串<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;reverseString(str, 0, strlen(str) - 1);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "反转后: " &lt;&lt; str &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握递归思想，解决复杂问题</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

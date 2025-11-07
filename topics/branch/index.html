@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>C++ 变量与数据类型</title>
+    <title>C++ 分支结构</title>
     <link rel="stylesheet" href="../../styles/base.css">
     <link rel="stylesheet" href="../../styles/animations.css">
     <link rel="stylesheet" href="../../styles/components.css">
@@ -298,6 +298,17 @@
             display: block;
         }
 
+        .flowchart {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .flowchart img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
         @media (max-width: 768px) {
             .topic-header h1 {
                 font-size: 1.8rem;
@@ -344,11 +355,11 @@
 
     <div class="topic-header shimmer">
         <h1 class="hover-lift">
-            <span class="icon">📦</span>
-            C++ 变量与数据类型
-            <span class="badge">基础语法</span>
+            <span class="icon">🔀</span>
+            C++ 分支结构
+            <span class="badge">控制流</span>
         </h1>
-        <p>掌握数据存储与运算基础</p>
+        <p>掌握条件判断，让程序根据不同情况执行不同操作</p>
     </div>
 
     <div class="container">
@@ -356,133 +367,181 @@
             <nav class="breadcrumb">
                 <a href="../../index.htm">首页</a> → 
                 <a href="../../learning-path.html">学习路径</a> → 
-                变量与数据类型
+                分支结构
             </nav>
 
             <div class="tab-container">
-                <button class="tab active" onclick="openTab(event, 'variables')">📦 变量概念</button>
-                <button class="tab" onclick="openTab(event, 'types')">🔢 数据类型</button>
-                <button class="tab" onclick="openTab(event, 'input')">⌨️ 输入操作</button>
+                <button class="tab active" onclick="openTab(event, 'if')">🔤 if语句</button>
+                <button class="tab" onclick="openTab(event, 'if-else')">🔤 if-else语句</button>
+                <button class="tab" onclick="openTab(event, 'switch')">🔤 switch语句</button>
                 <button class="tab" onclick="openTab(event, 'practice')">🧮 项目实践</button>
             </div>
 
-            <!-- 变量概念 -->
-            <div id="variables" class="content active">
+            <!-- if语句 -->
+            <div id="if" class="content active">
                 <div class="topic-card">
-                    <h2>什么是变量？</h2>
+                    <h2>if语句</h2>
                     <div class="concept-item">
-                        <h3>定义</h3>
-                        <p>变量是计算机内存中的一块命名存储区域，用于存放可变的数据（如数字、文本），可通过变量名访问和修改其值。</p>
+                        <h3>基本语法</h3>
+                        <p>if语句用于实现单分支选择结构，当条件为真时执行相应代码块：</p>
+                        <div class="code-block">
+                            <div class="code-title">语法</div>
+                            <pre><code class="language-cpp">if (条件表达式) {
+    // 条件为真时执行的语句
+}</code></pre>
+                        </div>
                     </div>
+
                     <div class="concept-item">
-                        <h3>变量命名规则</h3>
-                        <ul>
-                            <li>只能由 <strong>字母</strong>、<strong>数字</strong>、<strong>下划线</strong> (_) 组成</li>
-                            <li>必须以 <strong>字母</strong> 或 <strong>下划线</strong> 开头</li>
-                            <li>不能使用 <strong>C++关键字</strong>（如 <code>int</code>, <code>cout</code>, <code>return</code>）</li>
-                            <li><strong>区分大小写</strong>（如 <code>age</code> 和 <code>Age</code> 是不同变量）</li>
-                        </ul>
-                        <p><strong>正确示例：</strong> <code>age</code>, <code>_score</code>, <code>num1</code></p>
-                        <p><strong>错误示例：</strong> <code>1age</code>（数字开头）, <code>cout</code>（关键字）, <code>&name</code>（含非法字符）</p>
+                        <h3>执行流程</h3>
+                        <div class="flowchart">
+                            <p>条件为真 → 执行语句块 → 继续执行后续代码</p>
+                            <p>条件为假 → 跳过语句块 → 继续执行后续代码</p>
+                        </div>
                     </div>
+
                     <div class="concept-item">
-                        <h3>变量的定义与赋值</h3>
-                        <p>语法：<code>数据类型 变量名 = 初始值;</code></p>
+                        <h3>示例代码</h3>
                         <div class="code-block">
                             <div class="code-title">C++</div>
-                            <pre><code class="language-cpp">int age = 13;        // 定义整型变量age并赋值13
-double price = 19.9; // 定义双精度浮点型变量price
-char grade = 'A';    // 定义字符型变量grade</code></pre>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int age;
+    cout &lt;&lt; "请输入您的年龄: ";
+    cin &gt;&gt; age;
+    
+    if (age &gt;= 18) {
+        cout &lt;&lt; "您已成年，可以参加投票。" &lt;&lt; endl;
+    }
+    
+    cout &lt;&lt; "程序结束。" &lt;&lt; endl;
+    return 0;
+}</code></pre>
                         </div>
+                        <p>说明：只有当用户输入的年龄大于等于18时，才会输出"您已成年，可以参加投票。"</p>
                     </div>
                 </div>
             </div>
 
-            <!-- 数据类型 -->
-            <div id="types" class="content">
+            <!-- if-else语句 -->
+            <div id="if-else" class="content">
                 <div class="topic-card">
-                    <h2>基本数据类型与运算</h2>
-                    <table>
-                        <tr>
-                            <th>类型</th>
-                            <th>关键字</th>
-                            <th>说明</th>
-                            <th>示例</th>
-                        </tr>
-                        <tr>
-                            <td>整型</td>
-                            <td><code>int</code></td>
-                            <td>存储整数（如年龄、数量）</td>
-                            <td><code>int count = 10;</code></td>
-                        </tr>
-                        <tr>
-                            <td>双精度浮点型</td>
-                            <td><code>double</code></td>
-                            <td>存储小数，精度高</td>
-                            <td><code>double price = 9.99;</code></td>
-                        </tr>
-                        <tr>
-                            <td>单精度浮点型</td>
-                            <td><code>float</code></td>
-                            <td>存储小数，精度较低</td>
-                            <td><code>float rate = 0.5f;</code></td>
-                        </tr>
-                        <tr>
-                            <td>字符型</td>
-                            <td><code>char</code></td>
-                            <td>存储单个字符</td>
-                            <td><code>char grade = 'A';</code></td>
-                        </tr>
-                        <tr>
-                            <td>布尔型</td>
-                            <td><code>bool</code></td>
-                            <td>存储真（true）或假（false）</td>
-                            <td><code>bool isPass = true;</code></td>
-                        </tr>
-                    </table>
+                    <h2>if-else语句</h2>
+                    <div class="concept-item">
+                        <h3>基本语法</h3>
+                        <p>if-else语句用于实现双分支选择结构，根据条件的真假执行不同的代码块：</p>
+                        <div class="code-block">
+                            <div class="code-title">语法</div>
+                            <pre><code class="language-cpp">if (条件表达式) {
+    // 条件为真时执行的语句
+} else {
+    // 条件为假时执行的语句
+}</code></pre>
+                        </div>
+                    </div>
 
                     <div class="concept-item">
-                        <h3>基本运算法则</h3>
-                        <p>C++支持常见的数学运算：</p>
-                        <ul>
-                            <li><code>+</code>：加法</li>
-                            <li><code>-</code>：减法</li>
-                            <li><code>*</code>：乘法</li>
-                            <li><code>/</code>：除法（整数除法会截断小数）</li>
-                            <li><code>%</code>：取模（求余数）</li>
-                        </ul>
+                        <h3>执行流程</h3>
+                        <div class="flowchart">
+                            <p>条件为真 → 执行if语句块 → 继续执行后续代码</p>
+                            <p>条件为假 → 执行else语句块 → 继续执行后续代码</p>
+                        </div>
+                    </div>
+
+                    <div class="concept-item">
+                        <h3>示例代码</h3>
                         <div class="code-block">
                             <div class="code-title">C++</div>
-                            <pre><code class="language-cpp">int a = 5, b = 12, c = 8;
-int result = (a + b) * c; // 计算 (5+12)*8 = 136
-cout &lt;&lt; "结果是：" &lt;&lt; result &lt;&lt; endl;</code></pre>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int score;
+    cout &lt;&lt; "请输入考试成绩: ";
+    cin &gt;&gt; score;
+    
+    if (score &gt;= 60) {
+        cout &lt;&lt; "恭喜您，考试通过！" &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; "很遗憾，考试未通过。" &lt;&lt; endl;
+    }
+    
+    cout &lt;&lt; "程序结束。" &lt;&lt; endl;
+    return 0;
+}</code></pre>
                         </div>
+                        <p>说明：根据用户输入的成绩是否大于等于60，输出不同的结果。</p>
                     </div>
                 </div>
             </div>
 
-            <!-- 输入操作 -->
-            <div id="input" class="content">
+            <!-- switch语句 -->
+            <div id="switch" class="content">
                 <div class="topic-card">
-                    <h2>从键盘获取输入</h2>
+                    <h2>switch语句</h2>
                     <div class="concept-item">
-                        <h3>cin 输入流</h3>
-                        <p><code>cin</code> 是 C++ 中用于从键盘读取输入的对象，使用 <code>&gt;&gt;</code> 流提取运算符。</p>
+                        <h3>基本语法</h3>
+                        <p>switch语句用于实现多分支选择结构，根据变量的值执行不同的代码块：</p>
                         <div class="code-block">
-                            <div class="code-title">C++</div>
-                            <pre><code class="language-cpp">int age;
-cout &lt;&lt; "请输入你的年龄：";
-cin &gt;&gt; age; // 程序暂停，等待用户输入并回车
-cout &lt;&lt; "你输入的年龄是：" &lt;&lt; age &lt;&lt; endl;</code></pre>
+                            <div class="code-title">语法</div>
+                            <pre><code class="language-cpp">switch (表达式) {
+    case 常量1:
+        // 当表达式的值等于常量1时执行的语句
+        break;
+    case 常量2:
+        // 当表达式的值等于常量2时执行的语句
+        break;
+    ...
+    default:
+        // 当表达式的值不等于任何常量时执行的语句
+}</code></pre>
                         </div>
                     </div>
+
                     <div class="concept-item">
-                        <h3>连续输入</h3>
-                        <p>可以一次读取多个变量的值，用空格或回车分隔。</p>
+                        <h3>注意事项</h3>
+                        <ul>
+                            <li>switch语句中的表达式必须是整型或字符型</li>
+                            <li>每个case后面必须是一个常量</li>
+                            <li>每个case语句块通常以break语句结束，防止继续执行下面的语句</li>
+                            <li>default语句是可选的，当没有匹配的case时执行</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-item">
+                        <h3>示例代码</h3>
                         <div class="code-block">
                             <div class="code-title">C++</div>
-                            <pre><code class="language-cpp">int n, a, x;
-cin &gt;&gt; n &gt;&gt; a &gt;&gt; x; // 输入：12 2 3</code></pre>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int choice;
+    cout &lt;&lt; "请选择功能（1-查询，2-存款，3-取款，4-退出）: ";
+    cin &gt;&gt; choice;
+    
+    switch (choice) {
+        case 1:
+            cout &lt;&lt; "正在查询余额..." &lt;&lt; endl;
+            break;
+        case 2:
+            cout &lt;&lt; "正在存款..." &lt;&lt; endl;
+            break;
+        case 3:
+            cout &lt;&lt; "正在取款..." &lt;&lt; endl;
+            break;
+        case 4:
+            cout &lt;&lt; "正在退出系统..." &lt;&lt; endl;
+            break;
+        default:
+            cout &lt;&lt; "无效选择，请重新输入。" &lt;&lt; endl;
+    }
+    
+    cout &lt;&lt; "程序结束。" &lt;&lt; endl;
+    return 0;
+}</code></pre>
                         </div>
                     </div>
                 </div>
@@ -491,57 +550,92 @@ cin &gt;&gt; n &gt;&gt; a &gt;&gt; x; // 输入：12 2 3</code></pre>
             <!-- 项目实践 -->
             <div id="practice" class="content">
                 <div class="topic-card">
-                    <h2>🎯 项目实战：应用与计算</h2>
-
+                    <h2>🎯 项目实践</h2>
                     <div class="example">
-                        <h3>项目1：计算天安门广场面积</h3>
-                        <p>已知广场长880米，宽500米，计算面积。</p>
+                        <h3>项目：成绩等级判断系统</h3>
+                        <p>编写一个程序，根据用户输入的成绩判断并输出对应的等级：</p>
+                        <ul>
+                            <li>90-100分：优秀</li>
+                            <li>80-89分：良好</li>
+                            <li>70-79分：中等</li>
+                            <li>60-69分：及格</li>
+                            <li>0-59分：不及格</li>
+                        </ul>
                         <div class="code-block">
                             <div class="code-title">C++</div>
                             <pre><code class="language-cpp">#include &lt;iostream&gt;
 using namespace std;
 
 int main() {
-    int length = 880, width = 500;
-    int area = length * width;
-    cout &lt;&lt; area &lt;&lt; endl; // 输出：440000
+    int score;
+    cout &lt;&lt; "请输入成绩（0-100）: ";
+    cin &gt;&gt; score;
+    
+    if (score &gt;= 90 && score &lt;= 100) {
+        cout &lt;&lt; "等级：优秀" &lt;&lt; endl;
+    } else if (score &gt;= 80) {
+        cout &lt;&lt; "等级：良好" &lt;&lt; endl;
+    } else if (score &gt;= 70) {
+        cout &lt;&lt; "等级：中等" &lt;&lt; endl;
+    } else if (score &gt;= 60) {
+        cout &lt;&lt; "等级：及格" &lt;&lt; endl;
+    } else if (score &gt;= 0) {
+        cout &lt;&lt; "等级：不及格" &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; "输入的成绩无效！" &lt;&lt; endl;
+    }
+    
     return 0;
 }</code></pre>
                         </div>
                     </div>
 
                     <div class="example">
-                        <h3>项目2：米老鼠背糖果</h3>
-                        <p>总糖果n颗，一次背a颗，背了x次，求剩余糖果。</p>
+                        <h3>项目：简易计算器</h3>
+                        <p>编写一个简单的计算器程序，支持加、减、乘、除四种运算：</p>
                         <div class="code-block">
                             <div class="code-title">C++</div>
                             <pre><code class="language-cpp">#include &lt;iostream&gt;
 using namespace std;
 
 int main() {
-    int n, a, x;
-    cin &gt;&gt; n &gt;&gt; a &gt;&gt; x;
-    int remaining = n - a * x;
-    cout &lt;&lt; remaining &lt;&lt; endl;
-    return 0;
-}</code></pre>
-                        </div>
-                    </div>
-
-                    <div class="example">
-                        <h3>项目3：小明买书找零</h3>
-                        <p>小明有n元，书原价m元，打8折，求剩余钱数。</p>
-                        <div class="code-block">
-                            <div class="code-title">C++</div>
-                            <pre><code class="language-cpp">#include &lt;iostream&gt;
-using namespace std;
-
-int main() {
-    double n, m;
-    cin &gt;&gt; n &gt;&gt; m;
-    double cost = m * 0.8;
-    double change = n - cost;
-    cout &lt;&lt; change &lt;&lt; endl;
+    double num1, num2, result;
+    char operation;
+    
+    cout &lt;&lt; "请输入第一个数: ";
+    cin &gt;&gt; num1;
+    
+    cout &lt;&lt; "请输入运算符 (+, -, *, /): ";
+    cin &gt;&gt; operation;
+    
+    cout &lt;&lt; "请输入第二个数: ";
+    cin &gt;&gt; num2;
+    
+    switch (operation) {
+        case '+':
+            result = num1 + num2;
+            cout &lt;&lt; num1 &lt;&lt; " + " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; result &lt;&lt; endl;
+            break;
+        case '-':
+            result = num1 - num2;
+            cout &lt;&lt; num1 &lt;&lt; " - " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; result &lt;&lt; endl;
+            break;
+        case '*':
+            result = num1 * num2;
+            cout &lt;&lt; num1 &lt;&lt; " * " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; result &lt;&lt; endl;
+            break;
+        case '/':
+            if (num2 != 0) {
+                result = num1 / num2;
+                cout &lt;&lt; num1 &lt;&lt; " / " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; result &lt;&lt; endl;
+            } else {
+                cout &lt;&lt; "错误：除数不能为零！" &lt;&lt; endl;
+            }
+            break;
+        default:
+            cout &lt;&lt; "错误：不支持的运算符！" &lt;&lt; endl;
+    }
+    
     return 0;
 }</code></pre>
                         </div>
@@ -556,7 +650,7 @@ int main() {
     </div>
 
     <footer>
-        <p>© 2025 C++课程 | 掌握变量与数据，打好编程基石</p>
+        <p>© 2025 C++课程 | 掌握分支结构，实现条件判断逻辑</p>
     </footer>
 
     <script>
@@ -620,7 +714,7 @@ int main() {
         // 初始化页面导航
         document.addEventListener('DOMContentLoaded', function() {
             // 当前页面路径（相对于topics目录）
-            const currentPagePath = './variables-datatypes/index.html';
+            const currentPagePath = './branch/index.html';
             initTopicNavigation(currentPagePath);
         });
     </script>

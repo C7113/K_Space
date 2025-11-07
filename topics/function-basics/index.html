@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 函数基础</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🧩 C++ 函数基础</h1>
+            <p class="subtitle">—— 代码模块化与重用</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">🔢 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'definition')">📋 函数定义</button>
+            <button class="tab" onclick="openTab(event, 'parameters')">📥 参数传递</button>
+            <button class="tab" onclick="openTab(event, 'return')">📤 返回值</button>
+            <button class="tab" onclick="openTab(event, 'examples')">🧮 应用示例</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践练习</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>函数基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是函数</h3>
+                <p>函数是一段具有特定功能的、可重用的代码块，它接收输入（参数），执行特定操作，并可能返回结果。</p>
+                
+                <h4>函数的特点</h4>
+                <ul>
+                    <li><strong>模块化</strong>：将复杂问题分解为多个小问题</li>
+                    <li><strong>重用性</strong>：同一个函数可以在程序中多次调用</li>
+                    <li><strong>封装性</strong>：隐藏实现细节，只暴露接口</li>
+                    <li><strong>可维护性</strong>：便于代码调试和修改</li>
+                    <li><strong>可读性</strong>：使程序结构更清晰</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>函数示意图</h4>
+                    <div class="code">
+                        调用函数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+                        +-----------------+<br>
+                        |&nbsp;&nbsp;&nbsp;&nbsp;函数体&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        |&nbsp;1. 接收参数&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        |&nbsp;2. 执行操作&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        |&nbsp;3. 返回结果&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                        +-----------------+<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+                        返回结果
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>函数的重要性</h3>
+                <p>函数是程序设计中的核心概念，它使程序更加模块化和易于管理。</p>
+                
+                <h4>学习函数的意义</h4>
+                <ul>
+                    <li><strong>代码重用</strong>：避免重复编写相同代码</li>
+                    <li><strong>简化复杂问题</strong>：将大问题分解为小问题</li>
+                    <li><strong>团队协作</strong>：不同开发者可以独立开发不同函数</li>
+                    <li><strong>提高开发效率</strong>：减少代码量，提高编程效率</li>
+                    <li><strong>为后续学习打基础</strong>：递归、面向对象编程等都依赖于函数</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>函数的分类</h3>
+                <p>根据函数的来源，可以分为以下几类：</p>
+                
+                <h4>函数分类</h4>
+                <table>
+                    <tr>
+                        <th>分类</th>
+                        <th>说明</th>
+                        <th>示例</th>
+                    </tr>
+                    <tr>
+                        <td>标准库函数</td>
+                        <td>C++标准库提供的函数</td>
+                        <td>cout, cin, sqrt, strlen等</td>
+                    </tr>
+                    <tr>
+                        <td>自定义函数</td>
+                        <td>程序员自己编写的函数</td>
+                        <td>用户根据需求编写的函数</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 函数定义 -->
+        <div id="definition" class="content">
+            <h2>函数定义</h2>
+            
+            <div class="concept-item">
+                <h3>函数的定义格式</h3>
+                <p>在C++中，函数的定义包括返回类型、函数名、参数列表和函数体。</p>
+                
+                <div class="example">
+                    <h4>函数定义语法</h4>
+                    <div class="code">
+                        返回类型 函数名(参数列表) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 函数体<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 执行语句<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 返回值（如果需要）<br>
+                        }
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>无参无返回值函数</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 定义一个无参无返回值的函数<br>
+                        void sayHello() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Hello, World!" &lt;&lt; endl;<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 调用函数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;sayHello();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>函数的调用</h3>
+                <p>函数定义后需要通过函数调用来执行函数体中的代码。</p>
+                
+                <div class="example">
+                    <h4>函数调用示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 定义函数<br>
+                        void displayInfo() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "这是一个自定义函数" &lt;&lt; endl;<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "程序开始" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 调用函数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;displayInfo();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "程序结束" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>函数声明与定义</h3>
+                <p>在C++中，函数可以先声明后定义，这样可以在函数定义之前调用函数。</p>
+                
+                <div class="example">
+                    <h4>函数声明与定义分离</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 函数声明<br>
+                        void showMenu();<br>
+                        int add(int a, int b);<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 在函数定义之前调用<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;showMenu();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int result = add(10, 20);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "10 + 20 = " &lt;&lt; result &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }<br>
+                        <br>
+                        // 函数定义<br>
+                        void showMenu() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "======= 菜单 =======" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "1. 新建文件" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "2. 打开文件" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "3. 保存文件" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "===================" &lt;&lt; endl;<br>
+                        }<br>
+                        <br>
+                        int add(int a, int b) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return a + b;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 参数传递 -->
+        <div id="parameters" class="content">
+            <h2>参数传递</h2>
+            
+            <div class="concept-item">
+                <h3>函数参数</h3>
+                <p>函数参数是函数接收外部数据的方式，通过参数可以向函数传递数据。</p>
+                
+                <div class="example">
+                    <h4>带参数的函数</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 带参数的函数<br>
+                        void greet(string name, int age) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "你好, " &lt;&lt; name &lt;&lt; "!" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "你的年龄是 " &lt;&lt; age &lt;&lt; " 岁" &lt;&lt; endl;<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 调用带参数的函数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;greet("张三", 18);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;greet("李四", 20);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>参数的传递方式</h3>
+                <p>在C++中，参数传递主要有值传递和引用传递两种方式。</p>
+                
+                <h4>值传递</h4>
+                <div class="example">
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 值传递：函数内对参数的修改不会影响原变量<br>
+                        void changeValue(int x) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;x = 100;&nbsp;&nbsp;// 只改变形参x的值<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "函数内x的值: " &lt;&lt; x &lt;&lt; endl;<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int num = 10;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "调用函数前num的值: " &lt;&lt; num &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;changeValue(num);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "调用函数后num的值: " &lt;&lt; num &lt;&lt; endl;&nbsp;&nbsp;// num的值没有改变<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 返回值 -->
+        <div id="return" class="content">
+            <h2>函数返回值</h2>
+            
+            <div class="concept-item">
+                <h3>返回值的作用</h3>
+                <p>函数可以通过返回值将计算结果传递给调用者。</p>
+                
+                <div class="example">
+                    <h4>带返回值的函数</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 计算两个数的和<br>
+                        int add(int a, int b) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int sum = a + b;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return sum;&nbsp;&nbsp;// 返回计算结果<br>
+                        }<br>
+                        <br>
+                        // 找到两个数中的最大值<br>
+                        int findMax(int x, int y) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (x &gt; y) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return x;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return y;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int result1 = add(15, 25);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "15 + 25 = " &lt;&lt; result1 &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int result2 = findMax(30, 20);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "30和20中的最大值是: " &lt;&lt; result2 &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>void类型函数</h3>
+                <p>不需要返回值的函数可以声明为void类型。</p>
+                
+                <div class="example">
+                    <h4>void类型函数示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // void类型函数不返回值<br>
+                        void printLine() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "------------------------" &lt;&lt; endl;<br>
+                        }<br>
+                        <br>
+                        void printWelcome() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printLine();&nbsp;&nbsp;// 函数可以调用其他函数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "欢迎使用本程序!" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printLine();<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;printWelcome();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 应用示例 -->
+        <div id="examples" class="content">
+            <h2>函数应用示例</h2>
+            
+            <div class="example">
+                <h3>示例1：计算器函数</h3>
+                <p>使用函数实现简单的计算器功能：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 加法函数<br>
+                    double add(double a, double b) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return a + b;<br>
+                    }<br>
+                    <br>
+                    // 减法函数<br>
+                    double subtract(double a, double b) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return a - b;<br>
+                    }<br>
+                    <br>
+                    // 乘法函数<br>
+                    double multiply(double a, double b) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return a * b;<br>
+                    }<br>
+                    <br>
+                    // 除法函数<br>
+                    double divide(double a, double b) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (b != 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a / b;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "错误：除数不能为零!" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br>
+                    <br>
+                    // 显示菜单<br>
+                    void showMenu() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n======= 简单计算器 =======" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "1. 加法" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "2. 减法" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "3. 乘法" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "4. 除法" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "0. 退出" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请选择操作: ";<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int choice;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double num1, num2, result;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;do {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showMenu();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; choice;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (choice &gt;= 1 && choice &lt;= 4) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入两个数字: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; num1 &gt;&gt; num2;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch (choice) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 1:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = add(num1, num2);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "结果: " &lt;&lt; num1 &lt;&lt; " + " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; result &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 2:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = subtract(num1, num2);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "结果: " &lt;&lt; num1 &lt;&lt; " - " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; result &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 3:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = multiply(num1, num2);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "结果: " &lt;&lt; num1 &lt;&lt; " * " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; result &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 4:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = divide(num1, num2);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "结果: " &lt;&lt; num1 &lt;&lt; " / " &lt;&lt; num2 &lt;&lt; " = " &lt;&lt; result &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (choice != 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "无效选择，请重新输入!" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} while (choice != 0);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "感谢使用计算器!" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>示例2：数学计算函数</h3>
+                <p>使用函数计算几何图形的面积和周长：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 计算圆的面积<br>
+                    double circleArea(double radius) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 3.14159 * radius * radius;<br>
+                    }<br>
+                    <br>
+                    // 计算圆的周长<br>
+                    double circlePerimeter(double radius) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 2 * 3.14159 * radius;<br>
+                    }<br>
+                    <br>
+                    // 计算矩形的面积<br>
+                    double rectangleArea(double length, double width) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return length * width;<br>
+                    }<br>
+                    <br>
+                    // 计算矩形的周长<br>
+                    double rectanglePerimeter(double length, double width) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 2 * (length + width);<br>
+                    }<br>
+                    <br>
+                    // 计算三角形的面积（海伦公式）<br>
+                    double triangleArea(double a, double b, double c) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double s = (a + b + c) / 2;&nbsp;&nbsp;// 半周长<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return sqrt(s * (s - a) * (s - b) * (s - c));<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int choice;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "======= 几何图形计算 =======" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "1. 圆" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "2. 矩形" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "3. 三角形" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请选择图形: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; choice;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;switch (choice) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 1: {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double radius;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入圆的半径: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; radius;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "圆的面积: " &lt;&lt; circleArea(radius) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "圆的周长: " &lt;&lt; circlePerimeter(radius) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 2: {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double length, width;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入矩形的长和宽: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; length &gt;&gt; width;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "矩形的面积: " &lt;&lt; rectangleArea(length, width) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "矩形的周长: " &lt;&lt; rectanglePerimeter(length, width) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 3: {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double a, b, c;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入三角形的三边长: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "三角形的面积: " &lt;&lt; triangleArea(a, b, c) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "无效选择!" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践练习 -->
+        <div id="practice" class="content">
+            <h2>实践练习</h2>
+            
+            <div class="example">
+                <h3>练习1：判断质数函数</h3>
+                <p>编写一个函数判断一个数是否为质数：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 在此处添加代码<br>
+                    bool isPrime(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 1) return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 3) return true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n % 2 == 0 || n % 3 == 0) return false;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 5; i * i &lt;= n; i += 6) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (n % i == 0 || n % (i + 2) == 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int number;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入一个正整数: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; number;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (isPrime(number)) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; number &lt;&lt; " 是质数" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; number &lt;&lt; " 不是质数" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：最大公约数和最小公倍数函数</h3>
+                <p>编写函数计算两个数的最大公约数和最小公倍数：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 在此处添加代码<br>
+                    // 使用辗转相除法计算最大公约数<br>
+                    int gcd(int a, int b) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (b != 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int temp = b;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b = a % b;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a = temp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return a;<br>
+                    }<br>
+                    <br>
+                    // 计算最小公倍数<br>
+                    int lcm(int a, int b) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return (a * b) / gcd(a, b);<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int num1, num2;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入两个正整数: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; num1 &gt;&gt; num2;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最大公约数: " &lt;&lt; gcd(num1, num2) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最小公倍数: " &lt;&lt; lcm(num1, num2) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习3：数字反转函数</h3>
+                <p>编写函数将一个整数的各位数字反转：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 在此处添加代码<br>
+                    int reverseNumber(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int reversed = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (n != 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reversed = reversed * 10 + n % 10;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n /= 10;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return reversed;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int number;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入一个整数: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; number;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "反转后的数字: " &lt;&lt; reverseNumber(number) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握函数基础，实现代码模块化</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

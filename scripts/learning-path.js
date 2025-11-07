@@ -1,4 +1,4 @@
-﻿﻿﻿// learning-path.js - 从 data/learning-path.json 加载并渲染学习路径
+﻿﻿﻿﻿// learning-path.js - 从 data/learning-path.json 加载并渲染学习路径
 async function loadLearningPath() {
   try {
     const res = await fetch("./data/learning-path.json");
@@ -101,6 +101,7 @@ function createItemCard(item) {
   p.textContent = item.desc || "";
   p.style.lineHeight = "1.6";
   p.style.marginBottom = "1rem";
+  p.style.flex = "1";
   el.appendChild(p);
 
   const status = document.createElement("div");

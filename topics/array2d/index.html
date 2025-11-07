@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 二维数组</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🔢 C++ 二维数组</h1>
+            <p class="subtitle">—— 处理表格和矩阵数据</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">🔢 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'definition')">📋 定义与初始化</button>
+            <button class="tab" onclick="openTab(event, 'traverse')">🔄 数组遍历</button>
+            <button class="tab" onclick="openTab(event, 'matrix')">🧮 矩阵操作</button>
+            <button class="tab" onclick="openTab(event, 'examples')">🧮 应用示例</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践练习</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>二维数组基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是二维数组</h3>
+                <p>二维数组可以看作是一个表格或矩阵，它由行和列组成，每个元素通过两个下标（行下标和列下标）来定位。</p>
+                
+                <h4>二维数组的特点</h4>
+                <ul>
+                    <li><strong>表格结构</strong>：以行和列的形式组织数据</li>
+                    <li><strong>双重索引</strong>：通过行索引和列索引访问元素</li>
+                    <li><strong>内存连续</strong>：在内存中按行优先顺序连续存储</li>
+                    <li><strong>同质性</strong>：所有元素必须是相同的数据类型</li>
+                    <li><strong>固定大小</strong>：定义后行列数固定不变</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>二维数组示意图</h4>
+                    <div class="code">
+                        数组名: matrix[3][4]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;列0&nbsp;&nbsp;列1&nbsp;&nbsp;列2&nbsp;&nbsp;列3<br>
+                        行0&nbsp;&nbsp;[10]&nbsp;[20]&nbsp;[30]&nbsp;[40]<br>
+                        行1&nbsp;&nbsp;[50]&nbsp;[60]&nbsp;[70]&nbsp;[80]<br>
+                        行2&nbsp;&nbsp;[90]&nbsp;[100][110][120]<br>
+                        <br>
+                        访问方式: matrix[行索引][列索引]<br>
+                        例如: matrix[1][2] = 70
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>二维数组的重要性</h3>
+                <p>二维数组是处理表格数据、矩阵运算和图像处理等任务的基础工具。</p>
+                
+                <h4>学习二维数组的意义</h4>
+                <ul>
+                    <li><strong>处理表格数据</strong>：能够高效处理行列结构的数据</li>
+                    <li><strong>矩阵运算</strong>：为数学计算和算法实现提供基础</li>
+                    <li><strong>游戏开发</strong>：用于表示游戏地图、棋盘等</li>
+                    <li><strong>图像处理</strong>：用于表示像素数据</li>
+                    <li><strong>为后续学习打基础</strong>：多维数据处理、算法设计等都依赖于二维数组</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>二维数组与一维数组的关系</h3>
+                <p>二维数组本质上是由多个一维数组组成的，可以看作是"数组的数组"。</p>
+                
+                <h4>内存存储方式</h4>
+                <table>
+                    <tr>
+                        <th>存储方式</th>
+                        <th>说明</th>
+                        <th>示例</th>
+                    </tr>
+                    <tr>
+                        <td>行优先存储</td>
+                        <td>按行顺序连续存储</td>
+                        <td>matrix[0][0], matrix[0][1], ..., matrix[1][0], matrix[1][1], ...</td>
+                    </tr>
+                    <tr>
+                        <td>列优先存储</td>
+                        <td>按列顺序连续存储</td>
+                        <td>某些语言采用（如Fortran）</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 定义与初始化 -->
+        <div id="definition" class="content">
+            <h2>二维数组定义与初始化</h2>
+            
+            <div class="concept-item">
+                <h3>二维数组的定义</h3>
+                <p>在C++中，二维数组的定义需要指定数据类型、数组名和两个维度的大小。</p>
+                
+                <div class="example">
+                    <h4>二维数组定义语法</h4>
+                    <div class="code">
+                        数据类型 数组名[行数][列数];
+                    </div>
+                    
+                    <h4>二维数组定义示例</h4>
+                    <div class="code">
+                        int matrix[3][4];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 定义3行4列的整型数组<br>
+                        double scores[5][3];&nbsp;&nbsp;&nbsp;&nbsp;// 定义5行3列的双精度浮点数数组<br>
+                        char grid[10][10];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 定义10行10列的字符数组
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>二维数组的初始化</h3>
+                <p>二维数组可以在定义时进行初始化，也可以在定义后逐个赋值。</p>
+                
+                <div class="example">
+                    <h4>完全初始化</h4>
+                    <div class="code">
+                        // 方法1: 按行初始化<br>
+                        int matrix[2][3] = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{1, 2, 3},&nbsp;&nbsp;// 第一行<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{4, 5, 6}&nbsp;&nbsp;&nbsp;// 第二行<br>
+                        };<br>
+                        <br>
+                        // 方法2: 一维方式初始化<br>
+                        int matrix2[2][3] = {1, 2, 3, 4, 5, 6};
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>部分初始化</h4>
+                    <div class="code">
+                        // 部分元素初始化，其余元素自动初始化为0<br>
+                        int matrix[3][3] = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{1, 2},&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 第一行只有前两个元素初始化<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{4, 5, 6}&nbsp;&nbsp;&nbsp;&nbsp;// 第二行全部初始化<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 第三行自动初始化为0<br>
+                        };<br>
+                        <br>
+                        // 所有元素初始化为0<br>
+                        int matrix2[3][4] = {0};
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>定义后赋值</h4>
+                    <div class="code">
+                        int matrix[2][3];<br>
+                        <br>
+                        // 逐个元素赋值<br>
+                        matrix[0][0] = 1;&nbsp;&nbsp;matrix[0][1] = 2;&nbsp;&nbsp;matrix[0][2] = 3;<br>
+                        matrix[1][0] = 4;&nbsp;&nbsp;matrix[1][1] = 5;&nbsp;&nbsp;matrix[1][2] = 6;<br>
+                        <br>
+                        // 使用循环赋值<br>
+                        int value = 1;<br>
+                        for (int i = 0; i < 2; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j < 3; j++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matrix[i][j] = value++;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数组遍历 -->
+        <div id="traverse" class="content">
+            <h2>二维数组遍历</h2>
+            
+            <div class="concept-item">
+                <h3>使用嵌套循环遍历二维数组</h3>
+                <p>遍历二维数组通常使用嵌套循环，外层循环控制行，内层循环控制列。</p>
+                
+                <div class="example">
+                    <h4>按行优先遍历</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int matrix[3][4] = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{1, 2, 3, 4},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{5, 6, 7, 8},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{9, 10, 11, 12}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 按行优先遍历<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "按行优先遍历:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 3; i++) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 外层循环控制行<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 4; j++) {&nbsp;&nbsp;// 内层循环控制列<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; matrix[i][j] &lt;&lt; "\t";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>按列优先遍历</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int matrix[3][4] = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{1, 2, 3, 4},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{5, 6, 7, 8},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{9, 10, 11, 12}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 按列优先遍历<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "按列优先遍历:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 4; j++) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 外层循环控制列<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 3; i++) {&nbsp;&nbsp;// 内层循环控制行<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; matrix[i][j] &lt;&lt; "\t";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 矩阵操作 -->
+        <div id="matrix" class="content">
+            <h2>矩阵操作</h2>
+            
+            <div class="concept-item">
+                <h3>矩阵加法</h3>
+                <p>两个相同维度的矩阵相加，对应位置的元素相加。</p>
+                
+                <div class="example">
+                    <h4>矩阵加法示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 定义两个3x3矩阵<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int matrix1[3][3] = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{1, 2, 3},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{4, 5, 6},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{7, 8, 9}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int matrix2[3][3] = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{9, 8, 7},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{6, 5, 4},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{3, 2, 1}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 存储结果的矩阵<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int result[3][3];<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 矩阵加法<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 3; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 3; j++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result[i][j] = matrix1[i][j] + matrix2[i][j];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 输出结果<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "矩阵加法结果:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 3; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 3; j++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; result[i][j] &lt;&lt; "\t";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>矩阵转置</h3>
+                <p>矩阵转置是将矩阵的行和列互换，原矩阵的第i行第j列元素变为新矩阵的第j行第i列元素。</p>
+                
+                <div class="example">
+                    <h4>矩阵转置示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 定义一个3x4矩阵<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int matrix[3][4] = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{1, 2, 3, 4},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{5, 6, 7, 8},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{9, 10, 11, 12}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 转置后的矩阵(4x3)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int transpose[4][3];<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 矩阵转置<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 3; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 4; j++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transpose[j][i] = matrix[i][j];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 输出原矩阵<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "原矩阵:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 3; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 4; j++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; matrix[i][j] &lt;&lt; "\t";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 输出转置矩阵<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n转置矩阵:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 4; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 3; j++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; transpose[i][j] &lt;&lt; "\t";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 应用示例 -->
+        <div id="examples" class="content">
+            <h2>二维数组应用示例</h2>
+            
+            <div class="example">
+                <h3>示例1：学生成绩管理系统</h3>
+                <p>使用二维数组存储和处理多个学生的多门课程成绩：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;iomanip&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 假设有3个学生，4门课程<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string students[3] = {"张三", "李四", "王五"};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string courses[4] = {"语文", "数学", "英语", "物理"};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int scores[3][4] = {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{85, 92, 78, 88},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{90, 87, 95, 82},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{78, 85, 89, 94}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出成绩表<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "学生成绩表:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; setw(10) &lt;&lt; "学生" &lt;&lt; setw(8) &lt;&lt; "语文" &lt;&lt; setw(8) &lt;&lt; "数学" &lt;&lt; setw(8) &lt;&lt; "英语" &lt;&lt; setw(8) &lt;&lt; "物理" &lt;&lt; setw(8) &lt;&lt; "平均分" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 3; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; setw(10) &lt;&lt; students[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 计算每个学生的总分和平均分<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int sum = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 4; j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; setw(8) &lt;&lt; scores[i][j];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += scores[i][j];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double average = (double)sum / 4;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; setw(8) &lt;&lt; fixed &lt;&lt; setprecision(1) &lt;&lt; average &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算每门课程的平均分<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n各科平均分:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 4; j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int sum = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 3; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += scores[i][j];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double average = (double)sum / 3;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; courses[j] &lt;&lt; ": " &lt;&lt; fixed &lt;&lt; setprecision(1) &lt;&lt; average &lt;&lt; "分" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>示例2：图像处理基础</h3>
+                <p>使用二维数组模拟简单的图像处理操作：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 模拟一个5x5的黑白图像(0表示黑色，1表示白色)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int image[5][5] = {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{0, 0, 0, 0, 0},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{0, 1, 1, 1, 0},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{0, 1, 1, 1, 0},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{0, 1, 1, 1, 0},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{0, 0, 0, 0, 0}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出原始图像<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "原始图像:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 5; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 5; j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; (image[i][j] ? "■" : "□") &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 图像翻转(水平翻转)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int flipped[5][5];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 5; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 5; j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flipped[i][j] = image[i][4 - j];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出翻转后的图像<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n水平翻转后:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 5; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 5; j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; (flipped[i][j] ? "■" : "□") &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践练习 -->
+        <div id="practice" class="content">
+            <h2>实践练习</h2>
+            
+            <div class="example">
+                <h3>练习1：查找二维数组中的最大值</h3>
+                <p>编写程序查找二维数组中的最大值及其位置：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 在此处添加代码<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int matrix[3][4] = {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{15, 23, 37, 41},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{52, 18, 29, 36},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{45, 67, 24, 58}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 初始化最大值和位置<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int max = matrix[0][0];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int maxRow = 0, maxCol = 0;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 查找最大值<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 3; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 4; j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (matrix[i][j] &gt; max) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max = matrix[i][j];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxRow = i;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxCol = j;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "二维数组中的最大值是: " &lt;&lt; max &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "位置在第" &lt;&lt; (maxRow + 1) &lt;&lt; "行，第" &lt;&lt; (maxCol + 1) &lt;&lt; "列" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：矩阵对角线元素处理</h3>
+                <p>编写程序计算方阵主对角线和副对角线元素之和：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 在此处添加代码<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int matrix[4][4] = {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{1, 2, 3, 4},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{5, 6, 7, 8},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{9, 10, 11, 12},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{13, 14, 15, 16}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算主对角线元素之和(从左上到右下)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int mainDiagonalSum = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 4; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mainDiagonalSum += matrix[i][i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算副对角线元素之和(从右上到左下)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int antiDiagonalSum = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 4; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;antiDiagonalSum += matrix[i][3 - i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "主对角线元素之和: " &lt;&lt; mainDiagonalSum &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "副对角线元素之和: " &lt;&lt; antiDiagonalSum &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习3：螺旋矩阵</h3>
+                <p>编写程序生成一个n×n的螺旋矩阵：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 在此处添加代码<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n = 5;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int matrix[5][5];<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 初始化边界<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int top = 0, bottom = n - 1, left = 0, right = n - 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int num = 1;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 螺旋填充矩阵<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (top &lt;= bottom && left &lt;= right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 从左到右填充上边<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = left; i &lt;= right; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matrix[top][i] = num++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;top++;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 从上到下填充右边<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = top; i &lt;= bottom; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matrix[i][right] = num++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right--;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 从右到左填充下边<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (top &lt;= bottom) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = right; i &gt;= left; i--) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matrix[bottom][i] = num++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bottom--;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 从下到上填充左边<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (left &lt;= right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = bottom; i &gt;= top; i--) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matrix[i][left] = num++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出螺旋矩阵<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "5×5螺旋矩阵:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; n; j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; matrix[i][j] &lt;&lt; "\t";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握二维数组，处理表格和矩阵数据</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

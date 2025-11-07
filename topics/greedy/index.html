@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 贪心算法</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>💰 C++ 贪心算法</h1>
+            <p class="subtitle">—— 局部最优选择全局最优解</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">🔢 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'strategy')">🧮 贪心策略</button>
+            <button class="tab" onclick="openTab(event, 'examples')">🧮 经典问题</button>
+            <button class="tab" onclick="openTab(event, 'limitations')">⚠️ 局限性</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践练习</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>贪心算法基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是贪心算法</h3>
+                <p>贪心算法（Greedy Algorithm）是一种在每一步选择中都采取在当前状态下最好或最优（即最有利）的选择，从而希望导致结果是最好或最优的算法。贪心算法在有最优子结构的问题中尤为有效。</p>
+                
+                <h4>贪心算法的特点</h4>
+                <ul>
+                    <li><strong>贪婪性</strong>：每一步都做出当前看起来最好的选择</li>
+                    <li><strong>无后效性</strong>：某阶段状态一旦确定，不受这个状态以后决策的影响</li>
+                    <li><strong>最优子结构</strong>：问题的最优解包含的子问题的解也是最优的</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>贪心算法的基本思路</h3>
+                <p>贪心算法的求解过程通常包括以下几个步骤：</p>
+                <ol>
+                    <li><strong>建立数学模型</strong>：将问题形式化描述</li>
+                    <li><strong>分解问题</strong>：将问题分解为若干个子问题</li>
+                    <li><strong>贪心选择</strong>：求解子问题的局部最优解</li>
+                    <li><strong>合并解</strong>：将子问题的局部最优解合并成原问题的解</li>
+                </ol>
+            </div>
+            
+            <div class="concept-item">
+                <h3>贪心算法与动态规划的区别</h3>
+                <table>
+                    <tr>
+                        <th>比较维度</th>
+                        <th>贪心算法</th>
+                        <th>动态规划</th>
+                    </tr>
+                    <tr>
+                        <td>决策方式</td>
+                        <td>每步做局部最优选择</td>
+                        <td>考虑所有子问题的解</td>
+                    </tr>
+                    <tr>
+                        <td>时间复杂度</td>
+                        <td>通常较低</td>
+                        <td>通常较高</td>
+                    </tr>
+                    <tr>
+                        <td>正确性证明</td>
+                        <td>需要严格数学证明</td>
+                        <td>通过状态转移方程保证</td>
+                    </tr>
+                    <tr>
+                        <td>适用范围</td>
+                        <td>特定问题</td>
+                        <td>更广泛</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 贪心策略 -->
+        <div id="strategy" class="content">
+            <h2>贪心策略</h2>
+            
+            <div class="concept-item">
+                <h3>贪心选择性质</h3>
+                <p>贪心选择性质是指所求问题的整体最优解可以通过一系列局部最优的选择，即贪心选择来达到。这是贪心算法可行的第一个基本要素。</p>
+                
+                <div class="example">
+                    <h4>贪心选择示例</h4>
+                    <p>以活动选择问题为例，每次选择结束时间最早的活动，这样可以为后续活动留下最多的时间。</p>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>最优子结构性质</h3>
+                <p>当一个问题的最优解包含其子问题的最优解时，称此问题具有最优子结构性质。这是贪心算法和动态规划都适用的性质。</p>
+                
+                <div class="example">
+                    <h4>最优子结构示例</h4>
+                    <p>在霍夫曼编码问题中，构造最优前缀码的问题具有最优子结构性质：如果T是一棵最优前缀码树，则T的任意子树也是最优的。</p>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>常见的贪心策略</h3>
+                <ul>
+                    <li><strong>选择最大/最小值</strong>：在每一步选择当前最大或最小的元素</li>
+                    <li><strong>按比例选择</strong>：按照某种比例或权重进行选择</li>
+                    <li><strong>优先级选择</strong>：根据优先级进行选择</li>
+                    <li><strong>区间贪心</strong>：在区间相关问题中按照端点排序</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 经典问题 -->
+        <div id="examples" class="content">
+            <h2>经典问题</h2>
+            
+            <div class="example">
+                <h3>问题1：活动选择问题</h3>
+                <p>有n个活动，第i个活动在时间[si, fi)内进行。选择尽可能多的活动，使得它们在时间上不冲突。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;algorithm&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    struct Activity {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int start, finish;<br>
+                    };<br>
+                    <br>
+                    // 按结束时间排序的比较函数<br>
+                    bool compare(Activity a, Activity b) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return a.finish &lt; b.finish;<br>
+                    }<br>
+                    <br>
+                    void activitySelection(vector&lt;Activity&gt;& activities) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 按结束时间排序<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;sort(activities.begin(), activities.end(), compare);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 总是选择第一个活动<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "选择的活动: " &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int i = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "(" &lt;&lt; activities[i].start &lt;&lt; ", " &lt;&lt; activities[i].finish &lt;&lt; ")" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 贪心选择其余活动<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int j = 1; j &lt; activities.size(); j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 如果这个活动的开始时间大于等于前一个选择活动的结束时间<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (activities[j].start &gt;= activities[i].finish) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "(" &lt;&lt; activities[j].start &lt;&lt; ", " &lt;&lt; activities[j].finish &lt;&lt; ")" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = j;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;Activity&gt; activities = {{5, 9}, {1, 2}, {3, 4}, {0, 6}, {5, 7}, {8, 9}};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;activitySelection(activities);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>问题2：分数背包问题</h3>
+                <p>有n个物品和一个容量为W的背包，每个物品有重量wi和价值vi。允许拿走物品的一部分，求能获得的最大价值。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;algorithm&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    struct Item {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int value, weight;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算价值密度<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double ratio() const {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (double)value / weight;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    };<br>
+                    <br>
+                    // 按价值密度排序的比较函数<br>
+                    bool compare(Item a, Item b) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return a.ratio() &gt; b.ratio();<br>
+                    }<br>
+                    <br>
+                    double fractionalKnapsack(int W, vector&lt;Item&gt;& items) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 按价值密度降序排序<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;sort(items.begin(), items.end(), compare);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double maxValue = 0.0;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 贪心选择物品<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; items.size(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (items[i].weight &lt;= W) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 如果物品可以完全放入背包<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;W -= items[i].weight;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxValue += items[i].value;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 如果物品只能部分放入背包<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxValue += items[i].value * ((double)W / items[i].weight);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return maxValue;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int W = 50;&nbsp;&nbsp;// 背包容量<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;Item&gt; items = {{60, 10}, {100, 20}, {120, 30}};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最大价值: " &lt;&lt; fractionalKnapsack(W, items) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 局限性 -->
+        <div id="limitations" class="content">
+            <h2>贪心算法的局限性</h2>
+            
+            <div class="concept-item">
+                <h3>贪心算法不能保证全局最优</h3>
+                <p>贪心算法只考虑当前的局部最优选择，有时并不能得到全局最优解。这是贪心算法最主要的局限性。</p>
+                
+                <div class="example">
+                    <h4>0-1背包问题</h4>
+                    <p>在0-1背包问题中（每个物品要么全部拿走，要么不拿），贪心算法不能保证得到最优解：</p>
+                    <div class="code">
+                        // 示例：背包容量为5<br>
+                        // 物品1: 重量2, 价值3 (价值密度1.5)<br>
+                        // 物品2: 重量3, 价值4 (价值密度1.33)<br>
+                        // 物品3: 重量4, 价值5 (价值密度1.25)<br>
+                        // <br>
+                        // 贪心策略：按价值密度选择，选择物品1和物品2，总价值7<br>
+                        // 最优解：选择物品2和物品3，总价值9
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>需要严格的数学证明</h3>
+                <p>使用贪心算法解决问题时，必须证明这种贪心策略确实能得到最优解，这通常需要严格的数学证明。</p>
+                
+                <h4>证明方法</h4>
+                <ul>
+                    <li><strong>交换论证法</strong>：通过交换元素证明贪心解不差于任何其他解</li>
+                    <li><strong>归纳法</strong>：通过数学归纳法证明每一步的贪心选择都是正确的</li>
+                    <li><strong>反证法</strong>：假设存在更优解，推导出矛盾</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>适用场景有限</h3>
+                <p>贪心算法只适用于具有贪心选择性质和最优子结构性质的问题，适用场景相对有限。</p>
+                
+                <h4>适合使用贪心算法的问题</h4>
+                <ul>
+                    <li>活动选择问题</li>
+                    <li>霍夫曼编码</li>
+                    <li>最小生成树（Kruskal和Prim算法）</li>
+                    <li>单源最短路径（Dijkstra算法）</li>
+                    <li>分数背包问题</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 实践练习 -->
+        <div id="practice" class="content">
+            <h2>实践练习</h2>
+            
+            <div class="example">
+                <h3>练习1：找零钱问题</h3>
+                <p>给定不同面值的硬币和总金额，计算可以凑成总金额所需的最少硬币个数。如果没有任何一种硬币组合能组成总金额，返回-1。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;algorithm&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int coinChange(vector&lt;int&gt;& coins, int amount) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 贪心策略：优先使用面值大的硬币<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;sort(coins.begin(), coins.end(), greater&lt;int&gt;());<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int count = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int coin : coins) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (amount &gt;= coin) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount -= coin;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return amount == 0 ? count : -1;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; coins = {1, 3, 4};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int amount = 6;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int result = coinChange(coins, amount);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (result != -1) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最少需要 " &lt;&lt; result &lt;&lt; " 个硬币" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "无法组成该金额" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p><strong>注意：</strong>贪心算法在某些硬币系统中能得到最优解（如美元系统），但在某些系统中不能（如上面的例子）。对于一般情况，需要使用动态规划。</p>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：最大子数组和</h3>
+                <p>给定一个整数数组，找出一个具有最大和的连续子数组（子数组最少包含一个元素）。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;algorithm&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int maxSubArray(vector&lt;int&gt;& nums) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 贪心策略：如果当前子数组和为负数，则丢弃<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int maxSum = nums[0];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int currentSum = nums[0];<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; nums.size(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 贪心选择：决定是否将当前元素加入子数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currentSum = max(nums[i], currentSum + nums[i]);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxSum = max(maxSum, currentSum);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return maxSum;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; nums = {-2, 1, -3, 4, -1, 2, 1, -5, 4};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最大子数组和: " &lt;&lt; maxSubArray(nums) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习3：跳跃游戏</h3>
+                <p>给定一个非负整数数组，你最初位于数组的第一个位置。数组中的每个元素代表你在该位置可以跳跃的最大长度。判断你是否能够到达最后一个位置。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;algorithm&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    bool canJump(vector&lt;int&gt;& nums) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 贪心策略：维护能到达的最远位置<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int maxReach = 0;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; nums.size(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 如果当前位置超出了能到达的最远位置，则无法到达<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (i &gt; maxReach) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 更新能到达的最远位置<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxReach = max(maxReach, i + nums[i]);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; nums1 = {2, 3, 1, 1, 4};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; nums2 = {3, 2, 1, 0, 4};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "数组1能否到达最后位置: " &lt;&lt; (canJump(nums1) ? "能" : "不能") &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "数组2能否到达最后位置: " &lt;&lt; (canJump(nums2) ? "能" : "不能") &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握贪心算法，解决优化问题</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

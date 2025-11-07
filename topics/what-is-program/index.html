@@ -5,99 +5,627 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>什么是程序 - C++ 基础知识</title>
     <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
     <link rel="stylesheet" href="../../styles/components.css">
     <link rel="stylesheet" href="../../styles/topic.css">
+    <style>
+        .animated-background {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particles {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.6;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--accent-light);
+            box-shadow: 0 0 12px var(--accent-light);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particle-float 6s ease-in-out infinite;
+            filter: blur(0.5px);
+        }
+
+        .particle:nth-child(3n) { width: 8px; height: 8px; background: #60a5fa; }
+        .particle:nth-child(3n+1) { width: 4px; height: 4px; background: #93c5fd; }
+
+        /* 粒子位置 */
+        .particle:nth-child(1) { left: 5%; top: 15%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 15%; top: 35%; animation-delay: -1s; }
+        .particle:nth-child(3) { left: 25%; top: 55%; animation-delay: -2s; }
+        .particle:nth-child(4) { left: 35%; top: 75%; animation-delay: -3s; }
+        .particle:nth-child(5) { left: 45%; top: 25%; animation-delay: -4s; }
+        .particle:nth-child(6) { left: 55%; top: 45%; animation-delay: -5s; }
+        .particle:nth-child(7) { left: 65%; top: 65%; animation-delay: -1.5s; }
+        .particle:nth-child(8) { left: 75%; top: 35%; animation-delay: -2.5s; }
+        .particle:nth-child(9) { left: 85%; top: 55%; animation-delay: -3.5s; }
+        .particle:nth-child(10) { left: 95%; top: 25%; animation-delay: -4.5s; }
+        .particle:nth-child(11) { left: 12%; top: 85%; animation-delay: -0.5s; }
+        .particle:nth-child(12) { left: 28%; top: 15%; animation-delay: -1.8s; }
+        .particle:nth-child(13) { left: 42%; top: 65%; animation-delay: -2.7s; }
+        .particle:nth-child(14) { left: 58%; top: 85%; animation-delay: -3.2s; }
+        .particle:nth-child(15) { left: 72%; top: 15%; animation-delay: -4.1s; }
+        .particle:nth-child(16) { left: 88%; top: 75%; animation-delay: -4.8s; }
+        .particle:nth-child(17) { left: 22%; top: 45%; animation-delay: -2.2s; }
+        .particle:nth-child(18) { left: 48%; top: 85%; animation-delay: -3.7s; }
+        .particle:nth-child(19) { left: 68%; top: 35%; animation-delay: -1.3s; }
+        .particle:nth-child(20) { left: 82%; top: 65%; animation-delay: -4.4s; }
+
+        @keyframes particle-float {
+            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0; }
+            25% { opacity: 0.8; }
+            50% { transform: translateY(-120px) scale(1.2) rotate(180deg); opacity: 0.6; }
+            75% { opacity: 0.7; }
+            100% { transform: translateY(-240px) scale(0.8) rotate(360deg); opacity: 0; }
+        }
+
+        .gradient-blob {
+            position: absolute;
+            width: 50vmax;
+            height: 50vmax;
+            border-radius: 50vmax;
+            background: var(--accent);
+            opacity: 0.05;
+            filter: blur(100px);
+            animation: gradient-float 20s infinite;
+            mix-blend-mode: multiply;
+            will-change: transform;
+        }
+
+        .gradient-blob:nth-of-type(1) { background: var(--gradient-1, var(--accent)); top: -25%; right: -15%; }
+        .gradient-blob:nth-of-type(2) { background: var(--gradient-2, var(--accent-light)); bottom: -25%; left: -15%; animation-delay: -10s; }
+
+        .grid-pattern {
+            position: absolute;
+            inset: -100%;
+            background-image: linear-gradient(var(--border) 1.5px, transparent 1.5px), linear-gradient(90deg, var(--border) 1.5px, transparent 1.5px);
+            background-size: 50px 50px;
+            opacity: 0.02;
+            transform: perspective(1000px) rotateX(60deg);
+            animation: grid-float 20s linear infinite;
+        }
+
+        @keyframes gradient-float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(3%, 3%) rotate(120deg) scale(1.1); }
+            66% { transform: translate(-3%, -3%) rotate(240deg) scale(0.9); }
+        }
+
+        @keyframes grid-float { 
+            0% { background-position: 0 0; } 
+            100% { background-position: 50px 50px; } 
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+
+        .topic-header {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, var(--header-bg), var(--bg));
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            z-index: 2;
+        }
+
+        .topic-header h1 {
+            font-size: 2.2rem;
+            color: var(--text);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .topic-header h1 .icon {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            font-size: 2.8rem;
+        }
+
+        .topic-header h1:hover .icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .topic-header p {
+            font-size: 1.1rem;
+            margin-top: 0.25rem;
+            color: var(--text);
+            font-weight: 500;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(30deg);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            from { transform: translateX(-100%) rotate(30deg); }
+            to { transform: translateX(100%) rotate(30deg); }
+        }
+
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25em 0.6em;
+            font-size: 0.75em;
+            font-weight: 600;
+            line-height: 1;
+            color: white;
+            background-color: var(--accent);
+            border-radius: 10rem;
+            margin-left: 0.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .path-arrow {
+            color: var(--accent);
+            font-weight: 600;
+            padding: 0.15rem 0.6rem;
+            border-radius: 16px;
+            background: rgba(52, 152, 219, 0.1);
+            transition: all var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .path-arrow:hover {
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .arrow {
+            color: var(--accent);
+            opacity: 0.6;
+            font-weight: bold;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%,100% { transform: translateX(0); }
+            50% { transform: translateX(3px); }
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem auto;
+            padding: 0 var(--spacing);
+            flex-wrap: wrap;
+            max-width: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        .breadcrumb {
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .topic-section {
+            margin: 3rem 0;
+        }
+
+        .topic-section:first-child {
+            margin-top: 0;
+        }
+
+        .topic-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: var(--section-bg);
+            border-radius: 8px;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .progress-step:not(:last-child)::after {
+            content: "→";
+            margin: 0 0.5rem;
+            color: var(--text-light);
+        }
+
+        .example-block {
+            background: var(--section-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .example-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        }
+
+        .example-block:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .note-block {
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            background: var(--section-bg);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: var(--code-bg, #1e1e1e);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            overflow-x: auto;
+            color: var(--code-text, #d4d4d4);
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .code-title {
+            position: absolute;
+            top: 0;
+            right: 1rem;
+            background: #333;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0 0 8px 8px;
+            font-size: 0.8rem;
+            color: #fff;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: var(--accent-light);
+        }
+
+        .feature-item:hover::before {
+            opacity: 1;
+        }
+
+        .practice-block {
+            background: linear-gradient(120deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            color: white;
+        }
+
+        .practice-block h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .practice-block p, .practice-block li {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .diagram-container {
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            background: var(--section-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            margin-top: 4rem;
+            color: var(--text);
+            opacity: 0.7;
+            font-size: 0.95rem;
+            border-top: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        @media (max-width: 768px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-buttons .toggle-btn {
+                width: 100%;
+            }
+
+            .topic-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .progress-step:not(:last-child)::after {
+                content: "↓";
+                margin: 0 0.5rem;
+            }
+
+            .progress-indicator {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="topic-header">
-        <h1>什么是程序</h1>
+    <div class="animated-background">
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="grid-pattern"></div>
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+    </div>
+
+    <div class="button-container">
+        <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+        <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">返回学习路径</button>
+        <button class="toggle-btn" onclick="window.location.href='../../index.htm'">回到首页</button>
+    </div>
+
+    <div class="topic-header shimmer">
+        <h1 class="hover-lift">
+            <span class="icon">📘</span>
+            什么是程序？
+            <span class="badge">入门概念</span>
+        </h1>
         <p>了解程序的本质与基本概念，开启你的编程之旅</p>
     </div>
 
     <div class="container">
         <div class="content-wrapper">
-            <div class="topic-card">
-                <div class="progress-indicator">
-                    <div class="progress-step">学习路径</div>
-                    <div class="progress-step">编程启蒙</div>
-                    <div class="progress-step">什么是程序</div>
-                </div>
+            <nav class="breadcrumb">
+                <a href="../../index.htm">首页</a> → 
+                <a href="../../learning-path.html">学习路径</a> → 
+                什么是程序？
+            </nav>
 
-                <h2>程序的定义</h2>
-                <p>程序是按照一定顺序执行的指令集合。它就像是一个详细的操作手册，告诉计算机应该如何一步一步地完成特定的任务。</p>
+            <section class="topic-section">
+                <div class="topic-card">
+                    <div class="progress-indicator">
+                        <div class="progress-step">学习路径</div>
+                        <div class="progress-step">编程启蒙</div>
+                        <div class="progress-step">什么是程序</div>
+                    </div>
 
-                <div class="example-block">
-                    <h4>🎂 生活中的例子：制作蛋糕</h4>
-                    <p>做蛋糕的菜谱就像一个程序，它包含了明确的步骤：</p>
-                    <ol>
-                        <li>👨‍🍳 准备面粉、鸡蛋、牛奶等原料</li>
-                        <li>🥣 按照比例混合原料</li>
-                        <li>🔥 放入预热好的烤箱</li>
-                        <li>⏲️ 设定温度和时间</li>
-                        <li>⌛ 等待烘焙完成</li>
-                    </ol>
-                    <div class="note-block">
-                        <p>关键点：每一个步骤都是<span class="highlight">明确的指令</span>，按顺序执行就能得到期望的结果。</p>
-                    </div>
-                </div>
-            </div>
+                    <h2>程序的定义</h2>
+                    <p>程序是按照一定顺序执行的指令集合。它就像是一个详细的操作手册，告诉计算机应该如何一步一步地完成特定的任务。</p>
 
-            <div class="topic-card">
-                <h2>程序的特点</h2>
-                <div class="feature-grid">
-                    <div class="feature-item">
-                        <h4>🔄 顺序性</h4>
-                        <p>指令按特定顺序执行</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>📝 明确性</h4>
-                        <p>每个指令都必须清晰、明确</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>🔁 可重复性</h4>
-                        <p>相同的输入会得到相同的输出</p>
-                    </div>
-                    <div class="feature-item">
-                        <h4>⚡ 自动性</h4>
-                        <p>一旦开始运行，程序会自动执行直到完成</p>
+                    <div class="example-block">
+                        <h3>🎂 生活中的例子：制作蛋糕</h3>
+                        <p>做蛋糕的菜谱就像一个程序，它包含了明确的步骤：</p>
+                        <ol>
+                            <li>👨‍🍳 准备面粉、鸡蛋、牛奶等原料</li>
+                            <li>🥣 按照比例混合原料</li>
+                            <li>🔥 放入预热好的烤箱</li>
+                            <li>⏲️ 设定温度和时间</li>
+                            <li>⌛ 等待烘焙完成</li>
+                        </ol>
+                        <div class="note-block">
+                            <p>关键点：每一个步骤都是<span class="highlight">明确的指令</span>，按顺序执行就能得到期望的结果。</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="topic-card">
-                <h2>程序的基本组成部分</h2>
-                <div class="diagram-container">
-                    <img src="program-flow.png" alt="程序流程图" onerror="this.style.display='none'">
+            <section class="topic-section">
+                <div class="topic-card">
+                    <h2>程序的特点</h2>
                     <div class="feature-grid">
                         <div class="feature-item">
-                            <h4>📥 输入</h4>
-                            <p>程序需要处理的数据</p>
+                            <h3>🔄 顺序性</h3>
+                            <p>指令按特定顺序执行</p>
                         </div>
                         <div class="feature-item">
-                            <h4>⚙️ 处理</h4>
-                            <p>对输入数据进行运算和操作</p>
+                            <h3>📝 明确性</h3>
+                            <p>每个指令都必须清晰、明确</p>
                         </div>
                         <div class="feature-item">
-                            <h4>📤 输出</h4>
-                            <p>处理后的结果</p>
+                            <h3>🔁 可重复性</h3>
+                            <p>相同的输入会得到相同的输出</p>
                         </div>
                         <div class="feature-item">
-                            <h4>💾 存储</h4>
-                            <p>临时或永久保存数据</p>
-                        </div>
-                        <div class="feature-item">
-                            <h4>🎮 控制</h4>
-                            <p>决定程序执行的流程</p>
+                            <h3>⚡ 自动性</h3>
+                            <p>一旦开始运行，程序会自动执行直到完成</p>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="topic-card">
-                <h2>简单的 C++ 程序示例</h2>
-                <div class="code-block">
-                    <div class="code-title">C++</div>
-                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+            <section class="topic-section">
+                <div class="topic-card">
+                    <h2>程序的基本组成部分</h2>
+                    <div class="diagram-container">
+                        <img src="program-flow.png" alt="程序流程图" onerror="this.style.display='none'">
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <h3>📥 输入</h3>
+                                <p>程序需要处理的数据</p>
+                            </div>
+                            <div class="feature-item">
+                                <h3>⚙️ 处理</h3>
+                                <p>对输入数据进行运算和操作</p>
+                            </div>
+                            <div class="feature-item">
+                                <h3>📤 输出</h3>
+                                <p>处理后的结果</p>
+                            </div>
+                            <div class="feature-item">
+                                <h3>💾 存储</h3>
+                                <p>临时或永久保存数据</p>
+                            </div>
+                            <div class="feature-item">
+                                <h3>🎮 控制</h3>
+                                <p>决定程序执行的流程</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="topic-section">
+                <div class="topic-card">
+                    <h2>简单的 C++ 程序示例</h2>
+                    <div class="code-block">
+                        <div class="code-title">C++</div>
+                        <pre><code class="language-cpp">#include &lt;iostream&gt;
 using namespace std;
 
 int main() {
@@ -105,61 +633,66 @@ int main() {
     int num1, num2;
     
     // 输入
-    cout << "请输入两个数字：";
-    cin >> num1 >> num2;
+    cout &lt;&lt; "请输入两个数字：";
+    cin &gt;&gt; num1 &gt;&gt; num2;
     
     // 处理
     int sum = num1 + num2;
     
     // 输出
-    cout << "两个数字的和是：" << sum << endl;
+    cout &lt;&lt; "两个数字的和是：" &lt;&lt; sum &lt;&lt; endl;
     
     return 0;
 }</code></pre>
-                </div>
-                <div class="note-block">
-                    <p>这个简单的程序展示了：</p>
-                    <ul>
-                        <li>📥 <span class="highlight">输入</span>：从用户获取两个数字</li>
-                        <li>⚙️ <span class="highlight">处理</span>：计算两个数字的和</li>
-                        <li>📤 <span class="highlight">输出</span>：显示计算结果</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="topic-card">
-                <h2>动手实践</h2>
-                <div class="practice-block">
-                    <h3>🎯 练习任务</h3>
-                    <p>尝试编写一个简单的程序，完成以下功能：</p>
-                    <ol>
-                        <li>接收用户输入的姓名</li>
-                        <li>向用户显示个性化的问候信息</li>
-                    </ol>
+                    </div>
                     <div class="note-block">
-                        <p>提示：使用 <code>string</code> 类型存储姓名，使用 <code>cout</code> 输出问候。</p>
+                        <p>这个简单的程序展示了：</p>
+                        <ul>
+                            <li>📥 <span class="highlight">输入</span>：从用户获取两个数字</li>
+                            <li>⚙️ <span class="highlight">处理</span>：计算两个数字的和</li>
+                            <li>📤 <span class="highlight">输出</span>：显示计算结果</li>
+                        </ul>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="topic-card">
-                <h2>总结</h2>
-                <p>程序是解决问题的工具，它将复杂的问题分解成简单的、有序的步骤。通过学习编程，我们不仅学会了如何告诉计算机做事，更重要的是学会了如何系统地思考和解决问题。</p>
-                <div class="note-block">
-                    <p><strong>📚 下一步建议：</strong></p>
-                    <ul>
-                        <li>学习 C++ 的基本语法</li>
-                        <li>了解变量和数据类型</li>
-                        <li>练习编写简单的程序</li>
-                    </ul>
+            <section class="topic-section">
+                <div class="topic-card">
+                    <h2>动手实践</h2>
+                    <div class="practice-block">
+                        <h3>🎯 练习任务</h3>
+                        <p>尝试编写一个简单的程序，完成以下功能：</p>
+                        <ol>
+                            <li>接收用户输入的姓名</li>
+                            <li>向用户显示个性化的问候信息</li>
+                        </ol>
+                        <div class="note-block">
+                            <p>提示：使用 <code>string</code> 类型存储姓名，使用 <code>cout</code> 输出问候。</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </section>
+
+            <section class="topic-section">
+                <div class="topic-card">
+                    <h2>总结</h2>
+                    <p>程序是解决问题的工具，它将复杂的问题分解成简单的、有序的步骤。通过学习编程，我们不仅学会了如何告诉计算机做事，更重要的是学会了如何系统地思考和解决问题。</p>
+                    <div class="note-block">
+                        <p><strong>📚 下一步建议：</strong></p>
+                        <ul>
+                            <li>学习 C++ 的基本语法</li>
+                            <li>了解变量和数据类型</li>
+                            <li>练习编写简单的程序</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
 
             <div class="nav-buttons">
                 <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">
                     ← 返回学习路径
                 </button>
-                <button class="toggle-btn" onclick="window.location.href='../variables/index.html'">
+                <button class="toggle-btn" onclick="window.location.href='../variables-datatypes/index.html'">
                     下一节：变量与数据类型 →
                 </button>
             </div>
@@ -167,7 +700,60 @@ int main() {
     </div>
 
     <footer>
-        <p>© 2025 C++ 学习路径</p>
+        <p>© 2025 C++ 学习路径 | 程老师</p>
     </footer>
+
+    <script>
+        // 暗色模式切换
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (prefersDark) {
+            document.body.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '☀️ 切换亮色模式';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 切换暗色模式';
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ 切换亮色模式';
+            }
+        });
+        
+        // 添加随机移动效果到粒子
+        document.addEventListener('mousemove', function(e) {
+            const particles = document.querySelectorAll('.particle');
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            particles.forEach(particle => {
+                const rect = particle.getBoundingClientRect();
+                const particleX = rect.left + rect.width / 2;
+                const particleY = rect.top + rect.height / 2;
+                
+                const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+                const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+                const force = Math.min(500 / (distance * distance), 15);
+                
+                const translateX = Math.cos(angle) * force;
+                const translateY = Math.sin(angle) * force;
+                
+                particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+            });
+        });
+        
+        // 初始化页面导航
+        document.addEventListener('DOMContentLoaded', function() {
+            // 当前页面路径（相对于topics目录）
+            const currentPagePath = './what-is-program/index.html';
+            initTopicNavigation(currentPagePath);
+        });
+    </script>
+    
+    <script src="../../scripts/topic-nav.js"></script>
 </body>
 </html>

@@ -45,10 +45,8 @@ header p { font-size: 1.1rem; margin-top: 0.25rem; color: var(--text); font-weig
 .level-title { font-size: 1.8rem; color: var(--text); margin-bottom: 2rem; padding-bottom: 0.8rem; position: relative; display: inline-block; font-weight: 600; text-align: left; margin-left: 0; }
 .level-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 120px; height: 3px; background: linear-gradient(90deg, var(--accent), transparent); border-radius: 3px; }
 
-.topic-grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); position: relative; margin-top: 1.5rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
-#beginnerGrid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); max-width: 800px; }
-#intermediateGrid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-#advancedGrid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.topic-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); position: relative; margin-top: 1.5rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
+#beginnerGrid, #intermediateGrid, #advancedGrid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 
 .topic-grid:has(.topic-card:hover) .topic-card:not(:hover) { opacity: 0.75; transform: scale(0.98); }
 
@@ -116,6 +114,9 @@ header p { font-size: 1.1rem; margin-top: 0.25rem; color: var(--text); font-weig
 /* 顶部导航按钮特殊样式 */
 .button-container .toggle-btn {
   margin: 0 0.25rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  min-height: 44px;
 }
 
 .details { background: linear-gradient(to right, var(--section-bg), transparent); padding: 1.2rem; border-radius: 12px; border-left: 4px solid var(--accent); font-size: 0.95rem; line-height: 1.6; margin: 1rem 0; display: none; transform-origin: top; transition: all var(--transition); opacity: 0; }
@@ -210,6 +211,7 @@ footer::before { content: ''; position: absolute; top: 0; left: 50%; transform: 
   margin: 1rem auto;
   padding: 0 var(--spacing);
   flex-wrap: wrap;
+  max-width: none;
 }
 
 /* 通过添加 .show 类来控制 details 的显示（替代内联 style="display:block"） */

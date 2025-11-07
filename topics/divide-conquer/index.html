@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 分治思想</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>✂️ C++ 分治思想</h1>
+            <p class="subtitle">—— 分而治之，各个击破</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">🔢 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'steps')">🧮 基本步骤</button>
+            <button class="tab" onclick="openTab(event, 'examples')">🧮 经典算法</button>
+            <button class="tab" onclick="openTab(event, 'applications')">🧮 应用场景</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践练习</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>分治思想基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是分治思想</h3>
+                <p>分治思想（Divide and Conquer）是一种重要的算法设计思想，它将一个难以直接解决的大问题，分割成一些规模较小的相同问题，以便各个击破，分而治之。</p>
+                
+                <h4>分治思想的特点</h4>
+                <ul>
+                    <li><strong>分而治之</strong>：将复杂问题分解为多个相同或相似的子问题</li>
+                    <li><strong>递归求解</strong>：递归地解决这些子问题</li>
+                    <li><strong>合并结果</strong>：将子问题的解合并为原问题的解</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>分治思想与递归的关系</h3>
+                <p>分治思想通常通过递归来实现，但二者并不等同：</p>
+                <ul>
+                    <li><strong>分治思想</strong>：一种解决问题的思路</li>
+                    <li><strong>递归</strong>：一种编程实现技术</li>
+                    <li>分治思想可以用递归实现，也可以用非递归方式实现（如迭代）</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>分治思想的应用条件</h3>
+                <p>一个问题能够使用分治思想解决，通常需要满足以下条件：</p>
+                <ol>
+                    <li><strong>可分解性</strong>：问题能够分解为若干个规模较小的相同问题</li>
+                    <li><strong>最优子结构</strong>：问题的解可以通过子问题的解合并得到</li>
+                    <li><strong>边界条件</strong>：子问题规模足够小时可以直接求解</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 基本步骤 -->
+        <div id="steps" class="content">
+            <h2>分治思想的基本步骤</h2>
+            
+            <div class="concept-item">
+                <h3>分治算法的三个步骤</h3>
+                <ol>
+                    <li><strong>分解（Divide）</strong>：将原问题分解为若干个规模较小、相互独立的子问题</li>
+                    <li><strong>解决（Conquer）</strong>：递归地解决各个子问题，如果子问题规模足够小，则直接求解</li>
+                    <li><strong>合并（Combine）</strong>：将各个子问题的解合并为原问题的解</li>
+                </ol>
+                
+                <div class="example">
+                    <h4>分治算法框架</h4>
+                    <div class="code">
+                        void divideAndConquer(问题P) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (问题P足够小) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 直接求解<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 分解问题<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;将问题P分解为子问题P1, P2, ..., Pk;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 递归解决子问题<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (每个子问题Pi) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;divideAndConquer(Pi);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 合并子问题的解<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;合并子问题的解得到原问题的解;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>分治算法的时间复杂度分析</h3>
+                <p>分治算法的时间复杂度通常可以表示为递推关系式：</p>
+                <p><strong>T(n) = aT(n/b) + f(n)</strong></p>
+                <p>其中：</p>
+                <ul>
+                    <li>n：问题规模</li>
+                    <li>a：子问题个数</li>
+                    <li>n/b：子问题规模</li>
+                    <li>f(n)：分解和合并步骤的时间复杂度</li>
+                </ul>
+                
+                <p>根据主定理（Master Theorem）：</p>
+                <ul>
+                    <li>如果 f(n) = O(n^c) 且 c < log_b(a)，则 T(n) = Θ(n^(log_b(a)))</li>
+                    <li>如果 f(n) = Θ(n^c log^k(n)) 且 c = log_b(a)，则 T(n) = Θ(n^c log^(k+1)(n))</li>
+                    <li>如果 f(n) = Ω(n^c) 且 c > log_b(a)，则 T(n) = Θ(f(n))</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 经典算法 -->
+        <div id="examples" class="content">
+            <h2>经典分治算法</h2>
+            
+            <div class="example">
+                <h3>算法1：归并排序</h3>
+                <p>归并排序是分治思想的经典应用，它将数组分成两半，分别排序后再合并。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 合并两个有序数组<br>
+                    void merge(vector&lt;int&gt;& arr, int left, int mid, int right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; temp(right - left + 1);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int i = left, j = mid + 1, k = 0;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 合并过程<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (i &lt;= mid && j &lt;= right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (arr[i] &lt;= arr[j]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp[k++] = arr[i++];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp[k++] = arr[j++];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 处理剩余元素<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (i &lt;= mid) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp[k++] = arr[i++];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (j &lt;= right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp[k++] = arr[j++];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 将合并后的结果复制回原数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; k; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arr[left + i] = temp[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br>
+                    <br>
+                    // 归并排序主函数<br>
+                    void mergeSort(vector&lt;int&gt;& arr, int left, int right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (left &gt;= right) return;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 分解：将数组分成两半<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int mid = left + (right - left) / 2;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 解决：递归排序两半<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;mergeSort(arr, left, mid);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;mergeSort(arr, mid + 1, right);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 合并：将两半合并成有序数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;merge(arr, left, mid, right);<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; arr = {38, 27, 43, 3, 9, 82, 10};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "排序前: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int x : arr) cout &lt;&lt; x &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;mergeSort(arr, 0, arr.size() - 1);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "排序后: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int x : arr) cout &lt;&lt; x &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>算法2：快速排序</h3>
+                <p>快速排序也是分治思想的经典应用，它选择一个基准元素，将数组分为两部分，然后递归排序。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 分区函数<br>
+                    int partition(vector&lt;int&gt;& arr, int low, int high) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 选择最后一个元素作为基准<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int pivot = arr[high];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int i = low - 1;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int j = low; j &lt; high; j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (arr[j] &lt;= pivot) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap(arr[i], arr[j]);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;swap(arr[i + 1], arr[high]);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return i + 1;<br>
+                    }<br>
+                    <br>
+                    // 快速排序主函数<br>
+                    void quickSort(vector&lt;int&gt;& arr, int low, int high) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (low &lt; high) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 分解：分区操作<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int pi = partition(arr, low, high);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 解决：递归排序基准元素两侧的子数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;quickSort(arr, low, pi - 1);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;quickSort(arr, pi + 1, high);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; arr = {10, 7, 8, 9, 1, 5};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "排序前: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int x : arr) cout &lt;&lt; x &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;quickSort(arr, 0, arr.size() - 1);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "排序后: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int x : arr) cout &lt;&lt; x &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>算法3：二分查找</h3>
+                <p>二分查找通过将有序数组分成两部分，每次排除一半的元素来快速定位目标值。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 二分查找函数<br>
+                    int binarySearch(vector&lt;int&gt;& arr, int target) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int left = 0, right = arr.size() - 1;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (left &lt;= right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 分解：计算中间位置<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int mid = left + (right - left) / 2;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 解决：比较中间元素与目标值<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (arr[mid] == target) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return mid;&nbsp;&nbsp;// 找到目标值<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (arr[mid] &lt; target) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 在右半部分查找<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left = mid + 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 在左半部分查找<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right = mid - 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return -1;&nbsp;&nbsp;// 未找到目标值<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; arr = {2, 3, 4, 10, 40};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int target = 10;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int result = binarySearch(arr, target);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (result != -1) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "元素 " &lt;&lt; target &lt;&lt; " 在索引 " &lt;&lt; result &lt;&lt; " 处找到" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "元素 " &lt;&lt; target &lt;&lt; " 未找到" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 应用场景 -->
+        <div id="applications" class="content">
+            <h2>分治思想的应用场景</h2>
+            
+            <div class="concept-item">
+                <h3>排序和查找</h3>
+                <p>分治思想在排序和查找算法中应用最为广泛：</p>
+                <ul>
+                    <li><strong>归并排序</strong>：时间复杂度稳定为O(n log n)</li>
+                    <li><strong>快速排序</strong>：平均时间复杂度为O(n log n)</li>
+                    <li><strong>堆排序</strong>：时间复杂度为O(n log n)</li>
+                    <li><strong>二分查找</strong>：时间复杂度为O(log n)</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>数学计算</h3>
+                <p>分治思想在数学计算中也有广泛应用：</p>
+                <ul>
+                    <li><strong>大整数乘法</strong>：使用Karatsuba算法</li>
+                    <li><strong>矩阵乘法</strong>：使用Strassen算法</li>
+                    <li><strong>快速幂运算</strong>：计算a^n的高效方法</li>
+                    <li><strong>多项式乘法</strong>：使用FFT算法</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>快速幂运算示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 快速幂运算<br>
+                        long long power(long long base, long long exp) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (exp == 0) return 1;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 分解：将指数分成两半<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;long long half = power(base, exp / 2);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 合并：根据指数奇偶性计算结果<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (exp % 2 == 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return half * half;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return half * half * base;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;long long base = 2, exp = 10;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; base &lt;&lt; "^" &lt;&lt; exp &lt;&lt; " = " &lt;&lt; power(base, exp) &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 输出：2^10 = 1024<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>图形和几何问题</h3>
+                <p>分治思想在处理图形和几何问题时也很有用：</p>
+                <ul>
+                    <li><strong>最近点对问题</strong>：在平面上找到距离最近的两个点</li>
+                    <li><strong>凸包问题</strong>：找到包含所有点的最小凸多边形</li>
+                    <li><strong>线段相交问题</strong>：判断线段是否相交</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 实践练习 -->
+        <div id="practice" class="content">
+            <h2>实践练习</h2>
+            
+            <div class="example">
+                <h3>练习1：汉诺塔问题</h3>
+                <p>汉诺塔问题是一个经典的分治问题。有三根柱子A、B、C，在柱子A上从下往上按照大小顺序摞着n个盘子，要求将所有盘子从柱子A移动到柱子C，移动过程中需要遵守以下规则：</p>
+                <ol>
+                    <li>每次只能移动一个盘子</li>
+                    <li>大盘子不能放在小盘子上面</li>
+                </ol>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 汉诺塔问题<br>
+                    void hanoi(int n, char from, char aux, char to) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n == 1) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 边界条件：只有一个盘子时，直接移动<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "将盘子从 " &lt;&lt; from &lt;&lt; " 移动到 " &lt;&lt; to &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 分解：将前n-1个盘子从from移动到aux<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;hanoi(n - 1, from, to, aux);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 解决：将第n个盘子从from移动到to<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "将盘子从 " &lt;&lt; from &lt;&lt; " 移动到 " &lt;&lt; to &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 合并：将n-1个盘子从aux移动到to<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;hanoi(n - 1, aux, from, to);<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n = 3;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "汉诺塔问题（" &lt;&lt; n &lt;&lt; "个盘子）的解法：" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;hanoi(n, 'A', 'B', 'C');<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：最大子数组和（分治解法）</h3>
+                <p>给定一个整数数组，找出一个具有最大和的连续子数组。使用分治思想解决。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;algorithm&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 计算跨越中点的最大子数组和<br>
+                    int maxCrossingSum(vector&lt;int&gt;& nums, int left, int mid, int right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算左半部分的最大和<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int leftSum = INT_MIN;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int sum = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = mid; i &gt;= left; i--) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += nums[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;leftSum = max(leftSum, sum);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算右半部分的最大和<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int rightSum = INT_MIN;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;sum = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = mid + 1; i &lt;= right; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += nums[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rightSum = max(rightSum, sum);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 返回跨越中点的最大子数组和<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return leftSum + rightSum;<br>
+                    }<br>
+                    <br>
+                    // 分治法求最大子数组和<br>
+                    int maxSubArrayHelper(vector&lt;int&gt;& nums, int left, int right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 边界条件<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (left == right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return nums[left];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 分解：将数组分成两半<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int mid = left + (right - left) / 2;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 解决：递归求解左右两半的最大子数组和<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int leftMax = maxSubArrayHelper(nums, left, mid);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int rightMax = maxSubArrayHelper(nums, mid + 1, right);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 合并：计算跨越中点的最大子数组和<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int crossMax = maxCrossingSum(nums, left, mid, right);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 返回三者中的最大值<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return max({leftMax, rightMax, crossMax});<br>
+                    }<br>
+                    <br>
+                    int maxSubArray(vector&lt;int&gt;& nums) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (nums.empty()) return 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return maxSubArrayHelper(nums, 0, nums.size() - 1);<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; nums = {-2, 1, -3, 4, -1, 2, 1, -5, 4};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最大子数组和: " &lt;&lt; maxSubArray(nums) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习3：计算逆序对</h3>
+                <p>在一个数组中，如果前面的元素大于后面的元素，则这两个元素构成一个逆序对。使用分治思想计算数组中逆序对的总数。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 合并过程中计算逆序对<br>
+                    int mergeAndCount(vector&lt;int&gt;& nums, int left, int mid, int right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; temp(right - left + 1);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int i = left, j = mid + 1, k = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int count = 0;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 合并过程并计算逆序对<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (i &lt;= mid && j &lt;= right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (nums[i] &lt;= nums[j]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp[k++] = nums[i++];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// nums[i] > nums[j]，构成逆序对<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp[k++] = nums[j++];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// nums[i]到nums[mid]都大于nums[j]，增加逆序对数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count += (mid - i + 1);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 处理剩余元素<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (i &lt;= mid) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp[k++] = nums[i++];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (j &lt;= right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp[k++] = nums[j++];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 将合并后的结果复制回原数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; k; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nums[left + i] = temp[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return count;<br>
+                    }<br>
+                    <br>
+                    // 分治法计算逆序对<br>
+                    int mergeSortAndCount(vector&lt;int&gt;& nums, int left, int right) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (left &gt;= right) return 0;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 分解：将数组分成两半<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int mid = left + (right - left) / 2;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 解决：递归计算左右两半的逆序对数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int leftCount = mergeSortAndCount(nums, left, mid);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int rightCount = mergeSortAndCount(nums, mid + 1, right);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 合并：计算跨越中点的逆序对数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int crossCount = mergeAndCount(nums, left, mid, right);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 返回总逆序对数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return leftCount + rightCount + crossCount;<br>
+                    }<br>
+                    <br>
+                    int countInversions(vector&lt;int&gt;& nums) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (nums.size() &lt;= 1) return 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; temp = nums;&nbsp;&nbsp;// 创建副本避免修改原数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return mergeSortAndCount(temp, 0, nums.size() - 1);<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; nums = {2, 3, 8, 6, 1};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "数组: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int x : nums) cout &lt;&lt; x &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "逆序对数量: " &lt;&lt; countInversions(nums) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握分治思想，解决复杂问题</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>
