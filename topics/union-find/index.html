@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>并查集</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #5c6bc0;
+            --accent-color: #7e57c2;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --border: #e0e0e0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #7986cb;
+            --accent-color: #9575cd;
+            --background: #121212;
+            --card-bg: #1e1e1e;
+            --text: #f0f0f0;
+            --border: #444444;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--background);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            gap: 5px;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: var(--transition);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
+        .content {
+            display: none;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 0 0 12px 12px;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid var(--border);
+            border-top: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .concept-item {
+            background: var(--card-bg);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .concept-item:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(74, 144, 226, 0.03);
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .example {
+            background: linear-gradient(to right, rgba(74, 144, 226, 0.05), transparent);
+            padding: 20px;
+            border-left: 5px solid var(--primary-color);
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.7rem 1.2rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            transition: var(--transition);
+            background: transparent;
+        }
+
+        .return-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        ul, ol {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+            min-height: 44px;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- 移除了动画背景以匹配数论基础页面的风格 -->
+    
+    <div class="button-container">
+        <button class="toggle-btn" id="themeToggle" onclick="toggleTheme()">🌙 切换暗色模式</button>
+        <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">返回学习路径</button>
+        <button class="toggle-btn" onclick="window.location.href='../../index.htm'">回到首页</button>
+    </div>
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const button = document.getElementById('themeToggle');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                button.textContent = '🌙 切换暗色模式';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                button.textContent = '☀️ 切换亮色模式';
+            }
+        }
+    </script>
+
+    <div class="container">
+        <header>
+            <h1>并查集</h1>
+            <p class="subtitle">—— 高效处理不相交集合的数据结构</p>
+        </header>
+
+            <nav class="breadcrumb">
+                <a href="../../index.htm">首页</a> → 
+                <a href="../../learning-path.html">学习路径</a> → 
+                并查集
+            </nav>
+
+            <div class="tab-container">
+                <button class="tab active" onclick="openTab(event, 'concept')">📘 基本概念</button>
+                <button class="tab" onclick="openTab(event, 'implementation')">💻 实现方式</button>
+                <button class="tab" onclick="openTab(event, 'optimization')">⚡ 优化技巧</button>
+                <button class="tab" onclick="openTab(event, 'applications')">🧩 应用场景</button>
+                <button class="tab" onclick="openTab(event, 'practice')">💪 实践练习</button>
+            </div>
+
+            <!-- 基本概念 -->
+            <div id="concept" class="content active">
+                <h2>并查集基本概念</h2>
+                <div class="concept-item">
+                    <h3>什么是并查集</h3>
+                    <p>并查集(Union-Find Set)是一种树型的数据结构，用于处理一些不相交集合(Disjoint Sets)的合并及查询问题。常常在使用中以森林来表示。并查集支持以下两种操作：</p>
+                    
+                    <ul>
+                        <li><strong>查找(Find)</strong>：确定元素属于哪一个子集</li>
+                        <li><strong>合并(Union)</strong>：将两个子集合并成同一个集合</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <h4>并查集的应用场景</h4>
+                        <ul>
+                            <li>网络连接问题</li>
+                            <li>图的连通性判断</li>
+                            <li>等价类划分</li>
+                            <li>Kruskal最小生成树算法</li>
+                            <li>社交网络中的朋友圈问题</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="concept-item">
+                    <h3>并查集的基本操作</h3>
+                    <table>
+                        <tr>
+                            <th>操作</th>
+                            <th>功能</th>
+                            <th>时间复杂度</th>
+                        </tr>
+                        <tr>
+                            <td>makeSet(x)</td>
+                            <td>创建一个只包含元素x的集合</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>find(x)</td>
+                            <td>查找元素x所在的集合的代表元素</td>
+                            <td>O(树的高度)</td>
+                        </tr>
+                        <tr>
+                            <td>union(x, y)</td>
+                            <td>合并包含元素x和y的两个集合</td>
+                            <td>O(树的高度)</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="concept-item">
+                    <h3>并查集示意图</h3>
+                    <div class="union-find-diagram">
+                        <pre>
+初始状态（每个元素自成一个集合）:
+{0} {1} {2} {3} {4}
+
+执行union(0, 1)后:
+{0,1} {2} {3} {4}
+
+执行union(1, 2)后:
+{0,1,2} {3} {4}
+
+执行union(3, 4)后:
+{0,1,2} {3,4}
+
+此时:
+find(0) = find(1) = find(2) = 0（以0为代表元素）
+find(3) = find(4) = 3（以3为代表元素）
+find(2) ≠ find(3)（属于不同集合）
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 实现方式 -->
+            <div id="implementation" class="content">
+                <h2>并查集实现方式</h2>
+                <div class="concept-item">
+                    <h3>基础实现</h3>
+                    <p>并查集最简单的实现方式是使用数组，数组的下标表示元素，数组的值表示该元素的父节点。根节点的父节点指向自己。</p>
+                    
+                    <div class="example">
+                        <h4>基础并查集实现</h4>
+                        <div class="code-block">
+                            #include &lt;iostream&gt;
+                            #include &lt;vector&gt;
+                            using namespace std;
+                            
+                            class UnionFind {
+                            private:
+                                vector&lt;int&gt; parent;  // 存储每个元素的父节点
+                            
+                            public:
+                                // 构造函数，初始化n个元素
+                                UnionFind(int n) {
+                                    parent.resize(n);
+                                    // 初始时每个元素的父节点是自己
+                                    for (int i = 0; i &lt; n; i++) {
+                                        parent[i] = i;
+                                    }
+                                }
+                            
+                                // 查找元素x的根节点（代表元素）
+                                int find(int x) {
+                                    if (parent[x] != x) {
+                                        // 递归查找根节点
+                                        return find(parent[x]);
+                                    }
+                                    return x;
+                                }
+                            
+                                // 合并元素x和y所在的集合
+                                bool unite(int x, int y) {
+                                    // 查找x和y的根节点
+                                    int rootX = find(x);
+                                    int rootY = find(y);
+                            
+                                    // 如果根节点不同，则合并
+                                    if (rootX != rootY) {
+                                        parent[rootX] = rootY;
+                                        return true;
+                                    }
+                                    return false; // 已经在同一个集合中
+                                }
+                            
+                                // 判断元素x和y是否属于同一个集合
+                                bool connected(int x, int y) {
+                                    return find(x) == find(y);
+                                }
+                            };
+                            
+                            int main() {
+                                // 创建包含5个元素的并查集
+                                UnionFind uf(5);
+                            
+                                // 初始状态
+                                cout &lt;&lt; "初始状态:" &lt;&lt; endl;
+                                for (int i = 0; i &lt; 5; i++) {
+                                    cout &lt;&lt; "元素 " &lt;&lt; i &lt;&lt; " 的根节点: " &lt;&lt; uf.find(i) &lt;&lt; endl;
+                                }
+                            
+                                // 合并操作
+                                uf.unite(0, 1);
+                                uf.unite(1, 2);
+                                uf.unite(3, 4);
+                            
+                                cout &lt;&lt; "\n合并后:" &lt;&lt; endl;
+                                for (int i = 0; i &lt; 5; i++) {
+                                    cout &lt;&lt; "元素 " &lt;&lt; i &lt;&lt; " 的根节点: " &lt;&lt; uf.find(i) &lt;&lt; endl;
+                                }
+                            
+                                cout &lt;&lt; "\n连通性检查:" &lt;&lt; endl;
+                                cout &lt;&lt; "0和2是否连通: " &lt;&lt; (uf.connected(0, 2) ? "是" : "否") &lt;&lt; endl;
+                                cout &lt;&lt; "0和3是否连通: " &lt;&lt; (uf.connected(0, 3) ? "是" : "否") &lt;&lt; endl;
+                            
+                                return 0;
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 优化技巧 -->
+            <div id="optimization" class="content">
+                <h2>并查集优化技巧</h2>
+                <div class="concept-item">
+                    <h3>路径压缩优化</h3>
+                    <p>路径压缩是在执行find操作时，将路径上的所有节点直接连接到根节点，从而降低树的高度，提高后续操作的效率。</p>
+                    
+                    <div class="example">
+                        <h4>路径压缩优化实现</h4>
+                        <div class="code-block">
+                            // 带路径压缩的find操作
+                            int find(int x) {
+                                if (parent[x] != x) {
+                                    // 递归查找根节点，并将路径上的节点直接连接到根节点
+                                    parent[x] = find(parent[x]);
+                                }
+                                return parent[x];
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="concept-item">
+                    <h3>按秩合并优化</h3>
+                    <p>按秩合并是在执行union操作时，总是将较小的树连接到较大的树下，从而控制树的高度增长。</p>
+                    
+                    <div class="example">
+                        <h4>按秩合并优化实现</h4>
+                        <div class="code-block">
+                            #include &lt;iostream&gt;
+                            #include &lt;vector&gt;
+                            using namespace std;
+                            
+                            class UnionFind {
+                            private:
+                                vector&lt;int&gt; parent;  // 存储每个元素的父节点
+                                vector&lt;int&gt; rank;    // 存储每个集合的秩（近似高度）
+                            
+                            public:
+                                // 构造函数
+                                UnionFind(int n) {
+                                    parent.resize(n);
+                                    rank.resize(n, 0);  // 初始秩都为0
+                                    for (int i = 0; i &lt; n; i++) {
+                                        parent[i] = i;
+                                    }
+                                }
+                            
+                                // 带路径压缩的find操作
+                                int find(int x) {
+                                    if (parent[x] != x) {
+                                        parent[x] = find(parent[x]);
+                                    }
+                                    return parent[x];
+                                }
+                            
+                                // 按秩合并的union操作
+                                bool unite(int x, int y) {
+                                    int rootX = find(x);
+                                    int rootY = find(y);
+                            
+                                    if (rootX != rootY) {
+                                        // 将秩小的树连接到秩大的树下
+                                        if (rank[rootX] &lt; rank[rootY]) {
+                                            parent[rootX] = rootY;
+                                        } else if (rank[rootX] &gt; rank[rootY]) {
+                                            parent[rootY] = rootX;
+                                        } else {
+                                            // 秩相等时，任选一个作为根节点，秩加1
+                                            parent[rootY] = rootX;
+                                            rank[rootX]++;
+                                        }
+                                        return true;
+                                    }
+                                    return false;
+                                }
+                            
+                                // 判断连通性
+                                bool connected(int x, int y) {
+                                    return find(x) == find(y);
+                                }
+                            };
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="concept-item">
+                    <h3>优化效果</h3>
+                    <p>经过路径压缩和按秩合并优化后，并查集的操作时间复杂度接近O(1)，具体为O(α(n))，其中α(n)是阿克曼函数的反函数，增长极其缓慢。</p>
+                    
+                    <table>
+                        <tr>
+                            <th>实现方式</th>
+                            <th>时间复杂度</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>基础实现</td>
+                            <td>O(n)</td>
+                            <td>最坏情况下树退化为链</td>
+                        </tr>
+                        <tr>
+                            <td>路径压缩</td>
+                            <td>O(log n)</td>
+                            <td>摊还分析结果</td>
+                        </tr>
+                        <tr>
+                            <td>按秩合并</td>
+                            <td>O(log n)</td>
+                            <td>树的高度被控制</td>
+                        </tr>
+                        <tr>
+                            <td>双重优化</td>
+                            <td>O(α(n))</td>
+                            <td>几乎常数时间</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 应用场景 -->
+            <div id="applications" class="content">
+                <h2>并查集应用场景</h2>
+                <div class="concept-item">
+                    <h3>图的连通性</h3>
+                    <p>并查集最常见的应用是判断无向图的连通性，以及维护图的连通分量。</p>
+                    
+                    <div class="example">
+                        <h4>图的连通性检测</h4>
+                        <div class="code-block">
+                            #include &lt;iostream&gt;
+                            #include &lt;vector&gt;
+                            using namespace std;
+                            
+                            class UnionFind {
+                            private:
+                                vector&lt;int&gt; parent;
+                                vector&lt;int&gt; rank;
+                            
+                            public:
+                                UnionFind(int n) {
+                                    parent.resize(n);
+                                    rank.resize(n, 0);
+                                    for (int i = 0; i &lt; n; i++) {
+                                        parent[i] = i;
+                                    }
+                                }
+                            
+                                int find(int x) {
+                                    if (parent[x] != x) {
+                                        parent[x] = find(parent[x]);
+                                    }
+                                    return parent[x];
+                                }
+                            
+                                bool unite(int x, int y) {
+                                    int rootX = find(x);
+                                    int rootY = find(y);
+                            
+                                    if (rootX != rootY) {
+                                        if (rank[rootX] &lt; rank[rootY]) {
+                                            parent[rootX] = rootY;
+                                        } else if (rank[rootX] &gt; rank[rootY]) {
+                                            parent[rootY] = rootX;
+                                        } else {
+                                            parent[rootY] = rootX;
+                                            rank[rootX]++;
+                                        }
+                                        return true;
+                                    }
+                                    return false;
+                                }
+                            
+                                bool connected(int x, int y) {
+                                    return find(x) == find(y);
+                                }
+                            };
+                            
+                            int main() {
+                                // 检测图的连通性
+                                // 假设有6个节点，编号0-5
+                                UnionFind uf(6);
+                            
+                                // 添加边
+                                vector&lt;pair&lt;int, int&gt;&gt; edges = {
+                                    {0, 1}, {1, 2}, {3, 4}, {4, 5}
+                                };
+                            
+                                // 处理所有边
+                                for (auto& edge : edges) {
+                                    uf.unite(edge.first, edge.second);
+                                }
+                            
+                                // 检查连通性
+                                cout &lt;&lt; "节点0和2是否连通: " &lt;&lt; (uf.connected(0, 2) ? "是" : "否") &lt;&lt; endl;
+                                cout &lt;&lt; "节点0和3是否连通: " &lt;&lt; (uf.connected(0, 3) ? "是" : "否") &lt;&lt; endl;
+                                cout &lt;&lt; "节点3和5是否连通: " &lt;&lt; (uf.connected(3, 5) ? "是" : "否") &lt;&lt; endl;
+                            
+                                return 0;
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="concept-item">
+                    <h3>冗余连接检测</h3>
+                    <p>在图中添加边的过程中，检测哪条边会导致环的形成。</p>
+                    
+                    <div class="example">
+                        <h4>冗余连接检测实现</h4>
+                        <div class="code-block">
+                            #include &lt;iostream&gt;
+                            #include &lt;vector&gt;
+                            using namespace std;
+                            
+                            class UnionFind {
+                            private:
+                                vector&lt;int&gt; parent;
+                                vector&lt;int&gt; rank;
+                            
+                            public:
+                                UnionFind(int n) {
+                                    parent.resize(n);
+                                    rank.resize(n, 0);
+                                    for (int i = 0; i &lt; n; i++) {
+                                        parent[i] = i;
+                                    }
+                                }
+                            
+                                int find(int x) {
+                                    if (parent[x] != x) {
+                                        parent[x] = find(parent[x]);
+                                    }
+                                    return parent[x];
+                                }
+                            
+                                // 返回true表示成功合并，返回false表示已在同一集合
+                                bool unite(int x, int y) {
+                                    int rootX = find(x);
+                                    int rootY = find(y);
+                            
+                                    if (rootX != rootY) {
+                                        if (rank[rootX] &lt; rank[rootY]) {
+                                            parent[rootX] = rootY;
+                                        } else if (rank[rootX] &gt; rank[rootY]) {
+                                            parent[rootY] = rootX;
+                                        } else {
+                                            parent[rootY] = rootX;
+                                            rank[rootX]++;
+                                        }
+                                        return true;
+                                    }
+                                    return false; // 已在同一集合，添加这条边会形成环
+                                }
+                            };
+                            
+                            vector&lt;int&gt; findRedundantConnection(vector&lt;vector&lt;int&gt;&gt;& edges) {
+                                // 节点编号从1开始，所以创建n+1大小的并查集
+                                UnionFind uf(edges.size() + 1);
+                            
+                                // 遍历每条边
+                                for (const auto& edge : edges) {
+                                    int u = edge[0];
+                                    int v = edge[1];
+                            
+                                    // 如果合并失败，说明这条边是冗余的
+                                    if (!uf.unite(u, v)) {
+                                        return {u, v};
+                                    }
+                                }
+                            
+                                // 理论上不会执行到这里
+                                return {};
+                            }
+                            
+                            int main() {
+                                vector&lt;vector&lt;int&gt;&gt; edges = {{1,2}, {1,3}, {2,3}};
+                            
+                                vector&lt;int&gt; result = findRedundantConnection(edges);
+                            
+                                cout &lt;&lt; "冗余连接: [" &lt;&lt; result[0] &lt;&lt; ", " &lt;&lt; result[1] &lt;&lt; "]" &lt;&lt; endl;
+                            
+                                return 0;
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 实践练习 -->
+            <div id="practice" class="content">
+                <h2>实践练习</h2>
+                <div class="concept-item">
+                    <h3>练习1：朋友圈问题</h3>
+                    <div class="example">
+                        <h4>题目描述</h4>
+                        <p>有 n 个人是朋友或陌生人，一些朋友认识彼此。如果 a 与 b 直接是朋友，b 与 c 直接是朋友，则 a 与 c 间接是朋友。朋友圈是指所有直接或间接朋友的集合。给定一个 n x n 的矩阵 M，其中 M[i][j] = 1 表示第 i 个人和第 j 个人是直接朋友，返回朋友圈的总数。</p>
+                        
+                        <h4>示例</h4>
+                        <p>输入: [[1,1,0], [1,1,0], [0,0,1]]<br>
+                        输出: 2<br>
+                        解释: 0 和 1 是朋友，他们是一个朋友圈；2 是单独的朋友圈。</p>
+                        
+                        <h4>参考代码</h4>
+                        <div class="code-block">
+                            #include &lt;iostream&gt;
+                            #include &lt;vector&gt;
+                            using namespace std;
+                            
+                            class UnionFind {
+                            private:
+                                vector&lt;int&gt; parent;
+                                vector&lt;int&gt; rank;
+                                int count;
+                            
+                            public:
+                                UnionFind(int n) : count(n) {
+                                    parent.resize(n);
+                                    rank.resize(n, 0);
+                                    for (int i = 0; i &lt; n; i++) {
+                                        parent[i] = i;
+                                    }
+                                }
+                            
+                                int find(int x) {
+                                    if (parent[x] != x) {
+                                        parent[x] = find(parent[x]);
+                                    }
+                                    return parent[x];
+                                }
+                            
+                                void unite(int x, int y) {
+                                    int rootX = find(x);
+                                    int rootY = find(y);
+                            
+                                    if (rootX != rootY) {
+                                        if (rank[rootX] &lt; rank[rootY]) {
+                                            parent[rootX] = rootY;
+                                        } else if (rank[rootX] &gt; rank[rootY]) {
+                                            parent[rootY] = rootX;
+                                        } else {
+                                            parent[rootY] = rootX;
+                                            rank[rootX]++;
+                                        }
+                                        count--; // 合并后集合数减1
+                                    }
+                                }
+                            
+                                int getCount() {
+                                    return count;
+                                }
+                            };
+                            
+                            int findCircleNum(vector&lt;vector&lt;int&gt;&gt;& M) {
+                                int n = M.size();
+                                UnionFind uf(n);
+                            
+                                // 遍历矩阵上三角部分
+                                for (int i = 0; i &lt; n; i++) {
+                                    for (int j = i + 1; j &lt; n; j++) {
+                                        if (M[i][j] == 1) {
+                                            uf.unite(i, j);
+                                        }
+                                    }
+                                }
+                            
+                                return uf.getCount();
+                            }
+                            
+                            int main() {
+                                vector&lt;vector&lt;int&gt;&gt; M = {{1,1,0}, {1,1,0}, {0,0,1}};
+                                cout &lt;&lt; "朋友圈数量: " &lt;&lt; findCircleNum(M) &lt;&lt; endl;
+                                return 0;
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="concept-item">
+                    <h3>练习2：等式方程的可满足性</h3>
+                    <div class="example">
+                        <h4>题目描述</h4>
+                        <p>给定一个由表示变量之间关系的字符串方程组成的数组，每个字符串方程 equations[i] 的长度为 4，并采用两种不同的形式之一："a==b" 或 "a!=b"。在这里，a 和 b 是小写字母（不一定不同），表示单字母变量名。只有当可以将整数分配给变量名，以便满足所有给定的方程时才返回 true，否则返回 false。</p>
+                        
+                        <h4>示例</h4>
+                        <p>输入：["a==b","b!=a"]<br>
+                        输出：false<br>
+                        解释：如果我们指定，a = 1 且 b = 1，那么可以满足第一个方程，但无法满足第二个方程。没有办法分配变量同时满足这两个方程。</p>
+                        
+                        <h4>提示</h4>
+                        <p>这道题的关键在于：</p>
+                        <ol>
+                            <li>先处理所有等式，构建变量之间的连通关系</li>
+                            <li>再检查所有不等式，确保不等式两边的变量不在同一个连通分量中</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 标签页切换功能
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+
+</body>
+</html>

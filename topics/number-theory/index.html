@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>数论基础</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #5c6bc0;
+            --accent-color: #7e57c2;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --border: #e0e0e0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #7986cb;
+            --accent-color: #9575cd;
+            --background: #121212;
+            --card-bg: #1e1e1e;
+            --text: #f0f0f0;
+            --border: #444444;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--background);
+            background-image: var(--grid-pattern);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            gap: 5px;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: var(--transition);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
+        .content {
+            display: none;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 0 0 12px 12px;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid var(--border);
+            border-top: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .concept-item {
+            background: var(--card-bg);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .concept-item:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(74, 144, 226, 0.03);
+        }
+
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .example {
+            background: linear-gradient(to right, rgba(74, 144, 226, 0.05), transparent);
+            padding: 20px;
+            border-left: 5px solid var(--primary-color);
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text);
+            font-size: 0.95rem;
+            opacity: 0.8;
+            padding: 25px;
+            border-top: 1px solid var(--border);
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.7rem 1.2rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            transition: var(--transition);
+            background: transparent;
+        }
+
+        .return-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .priority-high {
+            color: #e53935;
+            font-weight: bold;
+        }
+
+        .priority-medium {
+            color: #fb8c00;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            color: #43a047;
+            font-weight: bold;
+        }
+
+        ul, ol {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .formula {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--section-bg);
+            border-radius: 10px;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-container {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-radius: 8px;
+                margin-bottom: 5px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🔢 数论基础</h1>
+            <p class="subtitle">—— 理解数学在编程中的应用</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">📘 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'primes')">🔢 质数</button>
+            <button class="tab" onclick="openTab(event, 'gcd-lcm')">➗ 最大公约数与最小公倍数</button>
+            <button class="tab" onclick="openTab(event, 'modular')">➕ 模运算</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧩 实践应用</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>数论基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是数论</h3>
+                <p>数论是纯粹数学的分支之一，主要研究整数的性质。在计算机科学中，数论有着广泛的应用，特别是在密码学、算法设计和编码理论等领域。</p>
+                
+                <h4>基本定义</h4>
+                <ul>
+                    <li><strong>整除</strong>：对于整数a和b(b≠0)，如果存在整数k使得a=kb，则称b整除a，记作b|a</li>
+                    <li><strong>约数</strong>：如果b|a，则称b是a的约数(或因子)</li>
+                    <li><strong>倍数</strong>：如果b|a，则称a是b的倍数</li>
+                    <li><strong>完全商</strong>：a除以b的商</li>
+                    <li><strong>余数</strong>：a除以b的余数</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>整除示例</h4>
+                    <p>12 = 3 × 4，所以3整除12，记作3|12</p>
+                    <p>3是12的约数，12是3的倍数</p>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>整数的分类</h3>
+                <ul>
+                    <li><strong>奇数</strong>：不能被2整除的整数</li>
+                    <li><strong>偶数</strong>：能被2整除的整数</li>
+                    <li><strong>正整数</strong>：大于0的整数</li>
+                    <li><strong>负整数</strong>：小于0的整数</li>
+                    <li><strong>零</strong>：既不是正数也不是负数</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 质数 -->
+        <div id="primes" class="content">
+            <h2>质数</h2>
+            <div class="concept-item">
+                <h3>质数的定义</h3>
+                <p>质数(素数)是指在大于1的自然数中，除了1和它本身以外不再有其他因数的自然数。与之相对的是合数，合数是指除了1和它本身之外还有其他因数的自然数。</p>
+                
+                <h4>质数的性质</h4>
+                <ul>
+                    <li>最小的质数是2，也是唯一的偶质数</li>
+                    <li>除了2以外，所有的质数都是奇数</li>
+                    <li>质数有无穷多个(欧几里得定理)</li>
+                    <li>每个大于1的自然数要么是质数，要么可以唯一地分解为质数的乘积</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>前20个质数</h4>
+                    <p>2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71</p>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>质数判断算法</h3>
+                <p>判断一个数是否为质数有多种方法，从简单的试除法到高效的米勒-拉宾测试。</p>
+                
+                <div class="example">
+                    <h4>试除法判断质数</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;cmath&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 基本试除法<br>
+                        bool isPrimeBasic(int n) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 1) return false;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 3) return true;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (n % 2 == 0 || n % 3 == 0) return false;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 5; i * i &lt;= n; i += 6) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (n % i == 0 || n % (i + 2) == 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+                        }<br>
+                        <br>
+                        // 优化的试除法<br>
+                        bool isPrimeOptimized(int n) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 1) return false;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (n == 2) return true;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (n % 2 == 0) return false;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int limit = sqrt(n);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 3; i &lt;= limit; i += 2) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (n % i == 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int numbers[] = {2, 3, 4, 17, 25, 29, 97, 100};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int size = sizeof(numbers) / sizeof(numbers[0]);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "质数判断结果:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; size; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; numbers[i] &lt;&lt; ": " <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; (isPrimeOptimized(numbers[i]) ? "是质数" : "不是质数") &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>埃拉托斯特尼筛法</h3>
+                <p>埃拉托斯特尼筛法是一种用于找出一定范围内所有质数的古老算法。</p>
+                
+                <div class="example">
+                    <h4>埃拉托斯特尼筛法实现</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 埃拉托斯特尼筛法<br>
+                        vector&lt;int&gt; sieveOfEratosthenes(int n) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;bool&gt; isPrime(n + 1, true);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; primes;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;isPrime[0] = isPrime[1] = false;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 2; i * i &lt;= n; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isPrime[i]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = i * i; j &lt;= n; j += i) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isPrime[j] = false;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 2; i &lt;= n; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isPrime[i]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;primes.push_back(i);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return primes;<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int n = 30;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; primes = sieveOfEratosthenes(n);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "不超过 " &lt;&lt; n &lt;&lt; " 的质数有: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int prime : primes) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; prime &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "共有 " &lt;&lt; primes.size() &lt;&lt; " 个质数" &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 最大公约数与最小公倍数 -->
+        <div id="gcd-lcm" class="content">
+            <h2>最大公约数与最小公倍数</h2>
+            <div class="concept-item">
+                <h3>基本概念</h3>
+                <p>最大公约数(Greatest Common Divisor, GCD)指两个或多个整数共有约数中最大的一个。最小公倍数(Least Common Multiple, LCM)指两个或多个整数公有的倍数中最小的一个。</p>
+                
+                <div class="formula">
+                    <p>gcd(a,b) × lcm(a,b) = |a × b|</p>
+                </div>
+                
+                <div class="example">
+                    <h4>示例</h4>
+                    <p>对于数字12和18：</p>
+                    <p>12的约数：1, 2, 3, 4, 6, 12</p>
+                    <p>18的约数：1, 2, 3, 6, 9, 18</p>
+                    <p>公共约数：1, 2, 3, 6</p>
+                    <p>最大公约数：6</p>
+                    <p>最小公倍数：36</p>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>欧几里得算法</h3>
+                <p>欧几里得算法(辗转相除法)是计算两个数最大公约数的高效算法，基于以下原理：两个整数的最大公约数等于其中较小的数和两数相除余数的最大公约数。</p>
+                
+                <div class="formula">
+                    <p>gcd(a,b) = gcd(b, a mod b)</p>
+                </div>
+                
+                <div class="example">
+                    <h4>欧几里得算法实现</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 递归实现欧几里得算法<br>
+                        int gcdRecursive(int a, int b) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (b == 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return gcdRecursive(b, a % b);<br>
+                        }<br>
+                        <br>
+                        // 迭代实现欧几里得算法<br>
+                        int gcdIterative(int a, int b) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (b != 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int temp = b;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b = a % b;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a = temp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return a;<br>
+                        }<br>
+                        <br>
+                        // 计算最小公倍数<br>
+                        int lcm(int a, int b) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return (a / gcdIterative(a, b)) * b;<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int x = 48, y = 18;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "数字 " &lt;&lt; x &lt;&lt; " 和 " &lt;&lt; y &lt;&lt; ":" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最大公约数(递归): " &lt;&lt; gcdRecursive(x, y) &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最大公约数(迭代): " &lt;&lt; gcdIterative(x, y) &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最小公倍数: " &lt;&lt; lcm(x, y) &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>扩展欧几里得算法</h3>
+                <p>扩展欧几里得算法不仅能够求出两个数的最大公约数，还能求出贝祖等式ax + by = gcd(a,b)的一组整数解。</p>
+                
+                <div class="example">
+                    <h4>扩展欧几里得算法实现</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 扩展欧几里得算法<br>
+                        int extendedGCD(int a, int b, int& x, int& y) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (b == 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = 1;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y = 0;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int x1, y1;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int gcd = extendedGCD(b, a % b, x1, y1);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;x = y1;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;y = x1 - (a / b) * y1;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return gcd;<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int a = 30, b = 18;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int x, y;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int gcd = extendedGCD(a, b, x, y);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "gcd(" &lt;&lt; a &lt;&lt; ", " &lt;&lt; b &lt;&lt; ") = " &lt;&lt; gcd &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "贝祖等式: " &lt;&lt; a &lt;&lt; " × " &lt;&lt; x <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; " + " &lt;&lt; b &lt;&lt; " × " &lt;&lt; y &lt;&lt; " = " &lt;&lt; gcd &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "验证: " &lt;&lt; a * x + b * y &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模运算 -->
+        <div id="modular" class="content">
+            <h2>模运算</h2>
+            <div class="concept-item">
+                <h3>模运算基本概念</h3>
+                <p>模运算是求两个数相除的余数的运算。给定一个正整数n和任意整数a，存在唯一的整数q和r，使得a = qn + r，其中0 ≤ r < n。称r为a模n的余数，记作a mod n。</p>
+                
+                <h4>模运算的性质</h4>
+                <ul>
+                    <li>(a + b) mod n = ((a mod n) + (b mod n)) mod n</li>
+                    <li>(a - b) mod n = ((a mod n) - (b mod n)) mod n</li>
+                    <li>(a × b) mod n = ((a mod n) × (b mod n)) mod n</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>模运算示例</h4>
+                    <p>17 mod 5 = 2</p>
+                    <p>(17 + 13) mod 5 = 30 mod 5 = 0</p>
+                    <p>((17 mod 5) + (13 mod 5)) mod 5 = (2 + 3) mod 5 = 0</p>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>模幂运算</h3>
+                <p>模幂运算是计算a^b mod n的值，常用于密码学中。为了避免计算大数，通常使用快速幂算法。</p>
+                
+                <div class="example">
+                    <h4>快速幂算法实现</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 快速幂算法<br>
+                        long long fastPower(long long base, long long exp, long long mod) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;long long result = 1;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;base = base % mod;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (exp &gt; 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (exp % 2 == 1) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = (result * base) % mod;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exp = exp &gt;&gt; 1;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;base = (base * base) % mod;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return result;<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;long long base = 2;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;long long exp = 10;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;long long mod = 1000;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; base &lt;&lt; "^" &lt;&lt; exp &lt;&lt; " mod " &lt;&lt; mod <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; " = " &lt;&lt; fastPower(base, exp, mod) &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 验证<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;long long verify = 1;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; exp; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verify = (verify * base) % mod;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "验证结果: " &lt;&lt; verify &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>模逆元</h3>
+                <p>如果a和m互质，那么存在整数b使得ab ≡ 1 (mod m)，称b为a模m的逆元。</p>
+                
+                <div class="example">
+                    <h4>扩展欧几里得求模逆元</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 扩展欧几里得算法<br>
+                        int extendedGCD(int a, int b, int& x, int& y) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (b == 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = 1;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y = 0;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int x1, y1;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int gcd = extendedGCD(b, a % b, x1, y1);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;x = y1;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;y = x1 - (a / b) * y1;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return gcd;<br>
+                        }<br>
+                        <br>
+                        // 计算模逆元<br>
+                        int modInverse(int a, int m) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int x, y;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int gcd = extendedGCD(a, m, x, y);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (gcd != 1) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return -1; // 逆元不存在<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (x % m + m) % m;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int a = 3;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int m = 11;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int inverse = modInverse(a, m);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (inverse == -1) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; a &lt;&lt; " 模 " &lt;&lt; m &lt;&lt; " 的逆元不存在" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; a &lt;&lt; " 模 " &lt;&lt; m &lt;&lt; " 的逆元是 " &lt;&lt; inverse &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "验证: " &lt;&lt; (a * inverse) % m &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践应用 -->
+        <div id="practice" class="content">
+            <h2>实践应用</h2>
+            
+            <div class="example">
+                <h3>练习1：质因数分解</h3>
+                <p>实现一个程序，将一个正整数分解为质因数的乘积：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 质因数分解<br>
+                    vector&lt;pair&lt;int, int&gt;&gt; primeFactorization(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;pair&lt;int, int&gt;&gt; factors;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 处理因子2<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n % 2 == 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int count = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (n % 2 == 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n /= 2;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;factors.push_back({2, count});<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 处理奇数因子<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 3; i * i &lt;= n; i += 2) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (n % i == 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int count = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (n % i == 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n /= i;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;factors.push_back({i, count});<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 如果n是大于2的质数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &gt; 2) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;factors.push_back({n, 1});<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return factors;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int numbers[] = {12, 60, 97, 100, 315};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int size = sizeof(numbers) / sizeof(numbers[0]);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; size; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int n = numbers[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;pair&lt;int, int&gt;&gt; factors = primeFactorization(n);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; n &lt;&lt; " = ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (size_t j = 0; j &lt; factors.size(); j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (j &gt; 0) cout &lt;&lt; " × ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; factors[j].first;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (factors[j].second &gt; 1) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "^" &lt;&lt; factors[j].second;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：中国剩余定理</h3>
+                <p>实现中国剩余定理，解决同余方程组问题：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 扩展欧几里得算法<br>
+                    long long extendedGCD(long long a, long long b, long long& x, long long& y) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (b == 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;long long x1, y1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;long long gcd = extendedGCD(b, a % b, x1, y1);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;x = y1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;y = x1 - (a / b) * y1;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return gcd;<br>
+                    }<br>
+                    <br>
+                    // 计算模逆元<br>
+                    long long modInverse(long long a, long long m) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;long long x, y;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;long long gcd = extendedGCD(a, m, x, y);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (gcd != 1) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return -1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (x % m + m) % m;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br>
+                    <br>
+                    // 中国剩余定理<br>
+                    long long chineseRemainderTheorem(const vector&lt;long long&gt;& remainders,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const vector&lt;long long&gt;& moduli) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n = remainders.size();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算所有模数的乘积<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;long long product = 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;product *= moduli[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算结果<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;long long result = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long long pp = product / moduli[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long long inv = modInverse(pp, moduli[i]);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result += remainders[i] * pp * inv;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return result % product;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 解同余方程组:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// x ≡ 2 (mod 3)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// x ≡ 3 (mod 5)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// x ≡ 2 (mod 7)<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;long long&gt; remainders = {2, 3, 2};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;long long&gt; moduli = {3, 5, 7};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;long long solution = chineseRemainderTheorem(remainders, moduli);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "同余方程组的解: x = " &lt;&lt; solution &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 验证结果<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "验证:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (size_t i = 0; i &lt; moduli.size(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; solution &lt;&lt; " ≡ " &lt;&lt; remainders[i] <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; " (mod " &lt;&lt; moduli[i] &lt;&lt; ")" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习3：大数质性判断</h3>
+                <p>使用费马小定理实现大数的质性概率判断：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;cstdlib&gt;<br>
+                    #include &lt;ctime&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    // 快速模幂运算<br>
+                    long long modPow(long long base, long long exp, long long mod) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;long long result = 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;base %= mod;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (exp &gt; 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (exp &amp; 1) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = (result * base) % mod;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exp &gt;&gt;= 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;base = (base * base) % mod;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return result;<br>
+                    }<br>
+                    <br>
+                    // 费马质性测试<br>
+                    bool fermatTest(long long n, int k) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 1) return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 3) return true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n % 2 == 0) return false;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 进行k次测试<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; k; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 随机选择测试基数a<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long long a = 2 + rand() % (n - 4);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 计算a^(n-1) mod n<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (modPow(a, n - 1, n) != 1) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false; // 肯定不是质数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return true; // 很可能是质数<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;srand(time(0));<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;long long numbers[] = {17, 97, 1009, 1013, 10007, 100003};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int size = sizeof(numbers) / sizeof(numbers[0]);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "费马质性测试结果 (测试次数: 5):" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; size; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long long n = numbers[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bool isPrime = fermatTest(n, 5);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; n &lt;&lt; ": " &lt;&lt; (isPrime ? "可能是质数" : "不是质数") &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握数论基础，解决数学问题</p>
+        </footer>
+    </div>
+
+    <script src="../../scripts/theme-toggle.js"></script>
+    <script src="../../scripts/topic-nav.js"></script>
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

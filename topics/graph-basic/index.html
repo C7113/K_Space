@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>图的基础知识</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #5c6bc0;
+            --accent-color: #7e57c2;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --border: #e0e0e0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #7986cb;
+            --accent-color: #9575cd;
+            --background: #121212;
+            --card-bg: #1e1e1e;
+            --text: #f0f0f0;
+            --border: #444444;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--background);
+            background-image: var(--grid-pattern);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            gap: 5px;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: var(--transition);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
+        .content {
+            display: none;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 0 0 12px 12px;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid var(--border);
+            border-top: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .concept-item {
+            background: var(--card-bg);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .concept-item:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(74, 144, 226, 0.03);
+        }
+
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .example {
+            background: linear-gradient(to right, rgba(74, 144, 226, 0.05), transparent);
+            padding: 20px;
+            border-left: 5px solid var(--primary-color);
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text);
+            font-size: 0.95rem;
+            opacity: 0.8;
+            padding: 25px;
+            border-top: 1px solid var(--border);
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.7rem 1.2rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            transition: var(--transition);
+            background: transparent;
+        }
+
+        .return-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .priority-high {
+            color: #e53935;
+            font-weight: bold;
+        }
+
+        .priority-medium {
+            color: #fb8c00;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            color: #43a047;
+            font-weight: bold;
+        }
+
+        ul, ol {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .graph-diagram {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 10px;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-container {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-radius: 8px;
+                margin-bottom: 5px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🕸️ 图的基础知识</h1>
+            <p class="subtitle">—— 理解图形数据结构</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">📘 图的概念</button>
+            <button class="tab" onclick="openTab(event, 'representation')">💾 图的表示</button>
+            <button class="tab" onclick="openTab(event, 'traversal')">🔁 图的遍历</button>
+            <button class="tab" onclick="openTab(event, 'implementation')">💻 图的实现</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧩 实践应用</button>
+        </div>
+
+        <!-- 图的概念 -->
+        <div id="concept" class="content active">
+            <h2>图的基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是图</h3>
+                <p>图(Graph)是一种较线性表和树更加复杂的数据结构。在线性表中，数据元素之间仅有线性关系，每个数据元素只有一个直接前驱和一个直接后继；在树形结构中，数据元素之间有着明显的层次关系；而在图形结构中，节点之间的关系可以是任意的，图中任意两个数据元素之间都可能相关。</p>
+                
+                <h4>图的基本术语</h4>
+                <ul>
+                    <li><strong>顶点(Vertex)</strong>：图中的数据元素</li>
+                    <li><strong>边(Edge)</strong>：图中连接两个顶点的线</li>
+                    <li><strong>无向图</strong>：边没有方向的图</li>
+                    <li><strong>有向图</strong>：边有方向的图</li>
+                    <li><strong>权(Weight)</strong>：与边相关的数值</li>
+                    <li><strong>度(Degree)</strong>：与顶点相连的边的条数</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>图的分类</h4>
+                    <table>
+                        <tr>
+                            <th>类型</th>
+                            <th>特点</th>
+                            <th>示意图</th>
+                        </tr>
+                        <tr>
+                            <td>无向图</td>
+                            <td>边没有方向，顶点间的关系是双向的</td>
+                            <td>
+                                <pre>
+                                1 ---- 2
+                                |      |
+                                |      |
+                                3 ---- 4
+                                </pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>有向图</td>
+                            <td>边有方向，顶点间的关系是单向的</td>
+                            <td>
+                                <pre>
+                                1 ---> 2
+                                |      |
+                                |      v
+                                v      v
+                                3 ---> 4
+                                </pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>带权图</td>
+                            <td>边有权值，表示连接的代价或距离</td>
+                            <td>
+                                <pre>
+                                1 --5-- 2
+                                |       |
+                               2|      3|
+                                |       |
+                                3 --4-- 4
+                                </pre>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>图的重要概念</h3>
+                <ul>
+                    <li><strong>路径</strong>：从一个顶点到另一个顶点经过的顶点序列</li>
+                    <li><strong>简单路径</strong>：序列中顶点不重复出现的路径</li>
+                    <li><strong>回路/环</strong>：第一个顶点和最后一个顶点相同的路径</li>
+                    <li><strong>连通图</strong>：任意两个顶点都是连通的无向图</li>
+                    <li><strong>强连通图</strong>：任意两个顶点都是强连通的有向图</li>
+                    <li><strong>生成树</strong>：包含图中所有顶点的极小连通子图</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 图的表示 -->
+        <div id="representation" class="content">
+            <h2>图的表示方法</h2>
+            <div class="concept-item">
+                <h3>邻接矩阵</h3>
+                <p>邻接矩阵是表示顶点之间相邻关系的矩阵，用二维数组来表示图。对于有权图，矩阵中存储权值；对于无权图，矩阵中存储0或1表示是否相邻。</p>
+                
+                <div class="example">
+                    <h4>无向图的邻接矩阵示例</h4>
+                    <div class="graph-diagram">
+                        <pre>
+                        无向图:     邻接矩阵:
+                        0 --- 1     0 1 2 3
+                        |     |   0 0 1 1 0
+                        |     |   1 1 0 1 1
+                        2 --- 3   2 1 1 0 1
+                                  3 0 1 1 0
+                        </pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>邻接表</h3>
+                <p>邻接表是图的一种链式存储结构，对图中的每个顶点建立一个单链表，第i个单链表中的结点表示依附于顶点vi的边。</p>
+                
+                <div class="example">
+                    <h4>有向图的邻接表示例</h4>
+                    <div class="graph-diagram">
+                        <pre>
+                        有向图:         邻接表:
+                        0 ---> 1        0: 1 -> 2 -> NULL
+                        |      |        1: 2 -> NULL
+                        |      v        2: 3 -> NULL
+                        v      3        3: NULL
+                        2 ---> 3
+                        </pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>两种表示方法的比较</h3>
+                <table>
+                    <tr>
+                        <th>比较项</th>
+                        <th>邻接矩阵</th>
+                        <th>邻接表</th>
+                    </tr>
+                    <tr>
+                        <td>空间复杂度</td>
+                        <td>O(n²)</td>
+                        <td>O(n+e)</td>
+                    </tr>
+                    <tr>
+                        <td>判断两顶点是否相邻</td>
+                        <td>O(1)</td>
+                        <td>O(n)</td>
+                    </tr>
+                    <tr>
+                        <td>求顶点的度</td>
+                        <td>O(n)</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td>适用场景</td>
+                        <td>稠密图</td>
+                        <td>稀疏图</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 图的遍历 -->
+        <div id="traversal" class="content">
+            <h2>图的遍历</h2>
+            <div class="concept-item">
+                <h3>深度优先搜索(DFS)</h3>
+                <p>深度优先搜索类似于树的先序遍历，从图中某个顶点v出发，访问此顶点，然后从v的未被访问的邻接点出发深度优先遍历图，直至图中所有和v有路径相通的顶点都被访问到。</p>
+                
+                <div class="example">
+                    <h4>DFS遍历过程</h4>
+                    <div class="graph-diagram">
+                        <pre>
+                        图结构:
+                        0 --- 1 --- 4
+                        |     |     |
+                        |     |     |
+                        2 --- 3 --- 5
+                        
+                        DFS遍历顺序(从0开始): 0 -> 1 -> 4 -> 5 -> 3 -> 2
+                        </pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>广度优先搜索(BFS)</h3>
+                <p>广度优先搜索类似于树的层序遍历，从图中某个顶点v出发，在访问了v之后依次访问v的各个未曾访问过的邻接点，然后再分别从这些邻接点出发依次访问它们的邻接点，并使"先被访问的顶点的邻接点"先于"后被访问的顶点的邻接点"被访问，直至图中所有已被访问的顶点的邻接点都被访问到。</p>
+                
+                <div class="example">
+                    <h4>BFS遍历过程</h4>
+                    <div class="graph-diagram">
+                        <pre>
+                        图结构:
+                        0 --- 1 --- 4
+                        |     |     |
+                        |     |     |
+                        2 --- 3 --- 5
+                        
+                        BFS遍历顺序(从0开始): 0 -> 1 -> 2 -> 3 -> 4 -> 5
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图的实现 -->
+        <div id="implementation" class="content">
+            <h2>图的实现</h2>
+            <div class="concept-item">
+                <h3>邻接矩阵实现</h3>
+                <p>使用二维数组表示图的邻接关系，适用于顶点数较少的稠密图。</p>
+                
+                <div class="example">
+                    <h4>邻接矩阵实现代码</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        class GraphMatrix {<br>
+                        private:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int numVertices;  // 顶点数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;int&gt;&gt; adjMatrix;  // 邻接矩阵<br>
+                        <br>
+                        public:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 构造函数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;GraphMatrix(int vertices) : numVertices(vertices) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjMatrix.resize(vertices, vector&lt;int&gt;(vertices, 0));<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 添加边<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;void addEdge(int i, int j) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjMatrix[i][j] = 1;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjMatrix[j][i] = 1;  // 无向图<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 删除边<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;void removeEdge(int i, int j) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjMatrix[i][j] = 0;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjMatrix[j][i] = 0;  // 无向图<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 打印邻接矩阵<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;void printGraph() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "邻接矩阵:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; numVertices; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; numVertices; j++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; adjMatrix[i][j] &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 获取顶点的度<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int getDegree(int vertex) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int degree = 0;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; numVertices; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (adjMatrix[vertex][i] == 1) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;degree++;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return degree;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        };
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>邻接表实现</h3>
+                <p>使用链表数组表示图的邻接关系，适用于顶点数较多的稀疏图。</p>
+                
+                <div class="example">
+                    <h4>邻接表实现代码</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;list&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        class GraphList {<br>
+                        private:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int numVertices;  // 顶点数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;list&lt;int&gt;&gt; adjList;  // 邻接表<br>
+                        <br>
+                        public:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 构造函数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;GraphList(int vertices) : numVertices(vertices) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjList.resize(vertices);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 添加边<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;void addEdge(int i, int j) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjList[i].push_back(j);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjList[j].push_back(i);  // 无向图<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 删除边<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;void removeEdge(int i, int j) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjList[i].remove(j);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjList[j].remove(i);  // 无向图<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 打印邻接表<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;void printGraph() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "邻接表:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; numVertices; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "顶点 " &lt;&lt; i &lt;&lt; ": ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int vertex : adjList[i]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; vertex &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 获取顶点的度<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int getDegree(int vertex) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return adjList[vertex].size();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        };
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践应用 -->
+        <div id="practice" class="content">
+            <h2>实践应用</h2>
+            
+            <div class="example">
+                <h3>练习1：图的遍历实现</h3>
+                <p>实现图的深度优先搜索和广度优先搜索：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;list&gt;<br>
+                    #include &lt;queue&gt;<br>
+                    #include &lt;stack&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    class Graph {<br>
+                    private:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int numVertices;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;list&lt;int&gt;&gt; adjList;<br>
+                    <br>
+                    public:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Graph(int vertices) : numVertices(vertices) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjList.resize(vertices);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;void addEdge(int i, int j) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjList[i].push_back(j);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 对于无向图，添加反向边<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjList[j].push_back(i);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 深度优先搜索<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;void DFS(int startVertex) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;bool&gt; visited(numVertices, false);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DFSUtil(startVertex, visited);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;void DFSUtil(int vertex, vector&lt;bool&gt;& visited) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited[vertex] = true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; vertex &lt;&lt; " ";<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int adjVertex : adjList[vertex]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!visited[adjVertex]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DFSUtil(adjVertex, visited);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 广度优先搜索<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;void BFS(int startVertex) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;bool&gt; visited(numVertices, false);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue&lt;int&gt; q;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited[startVertex] = true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(startVertex);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (!q.empty()) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int currentVertex = q.front();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.pop();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; currentVertex &lt;&lt; " ";<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int adjVertex : adjList[currentVertex]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!visited[adjVertex]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited[adjVertex] = true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(adjVertex);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 打印图<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;void printGraph() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; numVertices; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "顶点 " &lt;&lt; i &lt;&lt; ": ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int vertex : adjList[i]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; vertex &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    };<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 创建图<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 0 --- 1 --- 4<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// |     |     |<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// |     |     |<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 2 --- 3 --- 5<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Graph g(6);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g.addEdge(0, 1);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g.addEdge(0, 2);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g.addEdge(1, 3);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g.addEdge(1, 4);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g.addEdge(2, 3);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g.addEdge(3, 5);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g.addEdge(4, 5);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "图的结构:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g.printGraph();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n深度优先搜索(从顶点0开始): ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g.DFS(0);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n广度优先搜索(从顶点0开始): ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g.BFS(0);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：判断图的连通性</h3>
+                <p>实现判断无向图是否为连通图的算法：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;list&gt;<br>
+                    #include &lt;queue&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    class Graph {<br>
+                    private:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int numVertices;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;list&lt;int&gt;&gt; adjList;<br>
+                    <br>
+                    public:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Graph(int vertices) : numVertices(vertices) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjList.resize(vertices);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;void addEdge(int i, int j) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjList[i].push_back(j);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adjList[j].push_back(i);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 使用BFS判断图是否连通<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bool isConnected() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (numVertices == 0) return true;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;bool&gt; visited(numVertices, false);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue&lt;int&gt; q;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 从顶点0开始BFS<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited[0] = true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(0);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int visitedCount = 1;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (!q.empty()) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int currentVertex = q.front();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.pop();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int adjVertex : adjList[currentVertex]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!visited[adjVertex]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited[adjVertex] = true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(adjVertex);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visitedCount++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 如果所有顶点都被访问，则图是连通的<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return visitedCount == numVertices;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算连通分量的数量<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int countConnectedComponents() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;bool&gt; visited(numVertices, false);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int components = 0;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; numVertices; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!visited[i]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BFSUtil(i, visited);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;components++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return components;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;void BFSUtil(int startVertex, vector&lt;bool&gt;& visited) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue&lt;int&gt; q;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited[startVertex] = true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(startVertex);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (!q.empty()) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int currentVertex = q.front();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.pop();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int adjVertex : adjList[currentVertex]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!visited[adjVertex]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited[adjVertex] = true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(adjVertex);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 打印图<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;void printGraph() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; numVertices; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "顶点 " &lt;&lt; i &lt;&lt; ": ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int vertex : adjList[i]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; vertex &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    };<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 创建连通图<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "连通图示例:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Graph g1(5);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g1.addEdge(0, 1);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g1.addEdge(1, 2);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g1.addEdge(2, 3);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g1.addEdge(3, 4);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g1.printGraph();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "是否连通: " &lt;&lt; (g1.isConnected() ? "是" : "否") &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "连通分量数: " &lt;&lt; g1.countConnectedComponents() &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n非连通图示例:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Graph g2(6);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g2.addEdge(0, 1);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g2.addEdge(1, 2);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g2.addEdge(3, 4);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;g2.printGraph();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "是否连通: " &lt;&lt; (g2.isConnected() ? "是" : "否") &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "连通分量数: " &lt;&lt; g2.countConnectedComponents() &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 理解图结构，掌握复杂关系建模</p>
+        </footer>
+    </div>
+
+    <script src="../../scripts/theme-toggle.js"></script>
+    <script src="../../scripts/topic-nav.js"></script>
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

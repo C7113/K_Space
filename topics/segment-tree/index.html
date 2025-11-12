@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>线段树</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #5c6bc0;
+            --accent-color: #7e57c2;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --border: #e0e0e0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #7986cb;
+            --accent-color: #9575cd;
+            --background: #121212;
+            --card-bg: #1e1e1e;
+            --text: #f0f0f0;
+            --border: #444444;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--background);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            gap: 5px;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: var(--transition);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
+        .content {
+            display: none;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 0 0 12px 12px;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid var(--border);
+            border-top: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .concept-item {
+            background: var(--card-bg);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .concept-item:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(74, 144, 226, 0.03);
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .example {
+            background: linear-gradient(to right, rgba(74, 144, 226, 0.05), transparent);
+            padding: 20px;
+            border-left: 5px solid var(--primary-color);
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.7rem 1.2rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            transition: var(--transition);
+            background: transparent;
+        }
+
+        .return-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        ul, ol {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+            min-height: 44px;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button class="toggle-btn" id="themeToggle" onclick="toggleTheme()">🌙 切换暗色模式</button>
+        <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">返回学习路径</button>
+        <button class="toggle-btn" onclick="window.location.href='../../index.htm'">回到首页</button>
+    </div>
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const button = document.getElementById('themeToggle');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                button.textContent = '🌙 切换暗色模式';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                button.textContent = '☀️ 切换亮色模式';
+            }
+        }
+    </script>
+
+    <div class="container">
+        <header>
+            <h1>线段树</h1>
+            <p class="subtitle">—— 高效处理区间查询和区间更新的数据结构</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="../../index.htm">首页</a> → 
+            <a href="../../learning-path.html">学习路径</a> → 
+            线段树
+        </nav>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">📘 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'implementation')">💻 实现原理</button>
+            <button class="tab" onclick="openTab(event, 'operations')">⚙️ 基本操作</button>
+            <button class="tab" onclick="openTab(event, 'applications')">🎯 应用场景</button>
+            <button class="tab" onclick="openTab(event, 'practice')">💪 实践练习</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>线段树是什么？</h2>
+            
+            <div class="concept-item">
+                <h3>定义</h3>
+                <p>线段树是一种基于分治思想的二叉树结构，用于在区间上进行信息统计。线段树的每个节点都代表一个闭区间 [L,R]，其中叶子节点表示长度为1的元区间 [x,x]。</p>
+                
+                <div class="example">
+                    <h4>核心特性</h4>
+                    <ul>
+                        <li><strong>高效查询</strong>：可以在 O(log n) 时间内完成区间查询操作</li>
+                        <li><strong>灵活更新</strong>：支持单点更新和区间更新操作</li>
+                        <li><strong>广泛应用</strong>：适用于区间最值、区间和等统计问题</li>
+                        <li><strong>空间复杂度</strong>：需要 2n~4n 的空间</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>适用场景</h3>
+                <p>当你遇到以下类型的题目时，可以考虑使用线段树：</p>
+                <ul>
+                    <li>多次查询某个区间的和、最大值、最小值等聚合信息</li>
+                    <li>需要频繁修改数组中某个位置或某个区间的值</li>
+                    <li>对同一个数组进行大量区间操作</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>时间复杂度对比</h3>
+                <table>
+                    <tr>
+                        <th>操作类型</th>
+                        <th>朴素做法</th>
+                        <th>线段树</th>
+                    </tr>
+                    <tr>
+                        <td>单次区间查询</td>
+                        <td>O(n)</td>
+                        <td>O(log n)</td>
+                    </tr>
+                    <tr>
+                        <td>单次单点更新</td>
+                        <td>O(1)</td>
+                        <td>O(log n)</td>
+                    </tr>
+                    <tr>
+                        <td>单次区间更新</td>
+                        <td>O(n)</td>
+                        <td>O(log n)*</td>
+                    </tr>
+                    <tr>
+                        <td>m次操作总时间</td>
+                        <td>O(mn)</td>
+                        <td>O(m log n)</td>
+                    </tr>
+                </table>
+                <p>* 使用懒惰传播(Lazy Propagation)技术</p>
+            </div>
+        </div>
+
+        <!-- 实现原理 -->
+        <div id="implementation" class="content">
+            <h2>线段树的实现原理</h2>
+            
+            <div class="concept-item">
+                <h3>结构特点</h3>
+                <p>线段树是一棵完全二叉树，对于包含 n 个元素的数组，线段树有以下性质：</p>
+                <ul>
+                    <li>根节点代表整个区间 [1,n]</li>
+                    <li>每个内部节点 [L,R] 都有两个子节点：
+                        <ul>
+                            <li>左子节点代表区间 [L,mid]</li>
+                            <li>右子节点代表区间 [mid+1,R]</li>
+                            <li>其中 mid = (L+R)/2</li>
+                        </ul>
+                    </li>
+                    <li>叶子节点代表单个元素 [i,i]</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>线段树结构示意图</h4>
+                    <p>对于数组 [1, 2, 3, 4, 5, 6, 7, 8]，对应的线段树结构如下：</p>
+                    <pre>
+                              [1,8]
+                             /      \
+                         [1,4]      [5,8]
+                        /    \      /    \
+                     [1,2]  [3,4] [5,6] [7,8]
+                     /  \   /  \  /  \   /  \
+                   [1] [2] [3] [4][5] [6] [7] [8]
+                    </pre>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>节点存储方式</h3>
+                <p>线段树通常使用数组存储，对于节点 i：</p>
+                <ul>
+                    <li>父节点：i/2 (向下取整)</li>
+                    <li>左子节点：2*i</li>
+                    <li>右子节点：2*i+1</li>
+                </ul>
+                <p>为了方便起见，我们通常开 4n 大小的数组来存储线段树。</p>
+            </div>
+            
+            <div class="concept-item">
+                <h3>建树过程</h3>
+                <p>建树是一个自顶向下的递归过程：</p>
+                <ol>
+                    <li>如果当前节点对应区间只有一个元素，则直接赋值</li>
+                    <li>否则，递归构建左右子树</li>
+                    <li>当前节点的值等于左右子节点值的某种聚合操作（如求和、求最值等）</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 基本操作 -->
+        <div id="operations" class="content">
+            <h2>线段树的基本操作</h2>
+            
+            <div class="concept-item">
+                <h3>1. 单点更新</h3>
+                <p>将数组中某个位置的值修改为新值：</p>
+                <div class="code-block">
+                    // 单点更新：将位置 pos 的值更新为 val<br>
+                    void update(int node, int start, int end, int pos, int val) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (start == end) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 叶子节点，直接更新<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tree[node] = val;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int mid = (start + end) / 2;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (pos &lt;= mid) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 在左子树中<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;update(2*node, start, mid, pos, val);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 在右子树中<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;update(2*node+1, mid+1, end, pos, val);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 更新当前节点的值<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tree[node] = tree[2*node] + tree[2*node+1];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>2. 区间查询</h3>
+                <p>查询数组中某个区间 [L,R] 的聚合值（如区间和）：</p>
+                <div class="code-block">
+                    // 查询区间 [L,R] 的和<br>
+                    int query(int node, int start, int end, int L, int R) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (R &lt; start || L &gt; end) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 无交集<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (L &lt;= start && end &lt;= R) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 完全包含<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return tree[node];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 部分相交，递归查询<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int mid = (start + end) / 2;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int left_sum = query(2*node, start, mid, L, R);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int right_sum = query(2*node+1, mid+1, end, L, R);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return left_sum + right_sum;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>3. 区间更新（懒惰传播）</h3>
+                <p>对区间 [L,R] 内的所有元素执行相同的操作（如加上某个值）：</p>
+                <div class="code-block">
+                    // 懒惰标记数组<br>
+                    int lazy[MAXN*4];<br>
+                    <br>
+                    // 区间更新：给区间 [L,R] 中的每个元素加上 val<br>
+                    void update_range(int node, int start, int end, int L, int R, int val) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (lazy[node] != 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 将懒惰标记下传<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tree[node] += (end - start + 1) * lazy[node];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (start != end) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lazy[2*node] += lazy[node];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lazy[2*node+1] += lazy[node];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lazy[node] = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (start &gt; R || end &lt; L) return; // 无交集<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (start &gt;= L && end &lt;= R) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 完全包含<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tree[node] += (end - start + 1) * val;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (start != end) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lazy[2*node] += val;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lazy[2*node+1] += val;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 部分相交，递归处理<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int mid = (start + end) / 2;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;update_range(2*node, start, mid, L, R, val);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;update_range(2*node+1, mid+1, end, L, R, val);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;tree[node] = tree[2*node] + tree[2*node+1];<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 应用场景 -->
+        <div id="applications" class="content">
+            <h2>线段树的应用场景</h2>
+            
+            <div class="concept-item">
+                <h3>常见问题类型</h3>
+                <p>线段树特别适合解决以下几类问题：</p>
+                <div class="example">
+                    <h4>1. 区间最值查询(RMQ)</h4>
+                    <p>在数组中多次查询某个区间的最大值或最小值</p>
+                    <p>示例：给出一个数组，多次询问某个区间内的最大值</p>
+                    
+                    <h4>2. 区间和查询</h4>
+                    <p>在数组中多次查询某个区间的元素和，同时可能修改某些元素</p>
+                    <p>示例：维护一个序列，支持单点修改和区间求和</p>
+                    
+                    <h4>3. 区间修改</h4>
+                    <p>对数组的一个区间内所有元素同时进行某种操作</p>
+                    <p>示例：给区间内所有元素加上一个值，或者将区间内所有元素改为某个值</p>
+                    
+                    <h4>4. 离散化+坐标压缩</h4>
+                    <p>处理值域很大的问题时，通过离散化将大值映射到较小范围</p>
+                    <p>示例：在很大范围内的点上进行区间操作</p>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>典型题目</h3>
+                <ul>
+                    <li><strong>区间和问题</strong>：给定一个数组，支持单点修改和区间求和</li>
+                    <li><strong>区间最值问题</strong>：给定一个数组，支持单点修改和区间最大/最小值查询</li>
+                    <li><strong>区间染色问题</strong>：维护一个序列的颜色，支持区间染色和查询区间颜色种数</li>
+                    <li><strong>逆序对计数</strong>：结合离散化，使用线段树统计逆序对数量</li>
+                    <li><strong>二维操作</strong>：结合扫描线算法处理二维平面问题</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 实践练习 -->
+        <div id="practice" class="content">
+            <h2>实践练习</h2>
+            
+            <div class="concept-item">
+                <h3>练习1：区间和问题</h3>
+                <div class="example">
+                    <h4>题目描述</h4>
+                    <p>给你一个长度为 n 的数组，初始值都为 0，现在要执行 m 次操作，每次操作有两种类型：</p>
+                    <ol>
+                        <li>1 x y：将第 x 个数加上 y</li>
+                        <li>2 l r：查询区间 [l,r] 的和</li>
+                    </ol>
+                    
+                    <h4>输入格式</h4>
+                    <p>第一行包含两个整数 n 和 m，分别表示数组长度和操作次数。<br>
+                    接下来 m 行，每行表示一个操作。</p>
+                    
+                    <h4>输出格式</h4>
+                    <p>对于每个类型 2 的操作，输出一行表示区间和。</p>
+                    
+                    <h4>参考代码</h4>
+                    <div class="code-block">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        const int MAXN = 100005;<br>
+                        long long tree[MAXN*4];<br>
+                        <br>
+                        void update(int node, int start, int end, int idx, long long val) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (start == end) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tree[node] += val;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int mid = (start + end) / 2;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (idx &lt;= mid)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;update(2*node, start, mid, idx, val);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;update(2*node+1, mid+1, end, idx, val);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tree[node] = tree[2*node] + tree[2*node+1];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }<br>
+                        <br>
+                        long long query(int node, int start, int end, int L, int R) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (R &lt; start || L &gt; end)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (L &lt;= start && end &lt;= R)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return tree[node];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int mid = (start + end) / 2;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return query(2*node, start, mid, L, R) +<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;query(2*node+1, mid+1, end, L, R);<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int n, m;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n &gt;&gt; m;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; m; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int op;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; op;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (op == 1) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int x, y;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; x &gt;&gt; y;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;update(1, 1, n, x, y);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int l, r;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; l &gt;&gt; r;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; query(1, 1, n, l, r) &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>练习2：区间最值问题</h3>
+                <div class="example">
+                    <h4>题目描述</h4>
+                    <p>给你一个长度为 n 的数组，初始值都为 0，现在要执行 m 次操作，每次操作有两种类型：</p>
+                    <ol>
+                        <li>1 x y：将第 x 个数修改为 y</li>
+                        <li>2 l r：查询区间 [l,r] 的最大值</li>
+                    </ol>
+                    
+                    <h4>提示</h4>
+                    <p>这道题的关键在于将线段树的聚合操作从求和改为求最大值。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 标签页切换功能
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+
+</body>
+</html>

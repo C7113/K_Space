@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 数组参数与函数封装</title>
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/animations.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/topic.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #0d6efd;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #0d6efd;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f8fdff;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #0d6efd;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #0d6efd;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f9ff;
+        }
+        .code {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0275d8;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .principle {
+            background: #f1f8e9;
+            border-left: 5px solid #7cb342;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .stack-heap {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .stack, .heap {
+            flex: 1;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .stack {
+            background: #ffebee;
+            border: 1px solid #ef9a9a;
+        }
+        .heap {
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+        }
+        .stack h4, .heap h4 {
+            margin-top: 0;
+            color: #d32f2f;
+        }
+        .heap h4 {
+            color: #388e3c;
+        }
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧮 C++ 数组参数与函数封装</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 主题：爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'outline')">📋 课程目录</button>
+            <button class="tab" onclick="openTab(event, 'intro')">🔍 知识引入</button>
+            <button class="tab" onclick="openTab(event, 'memory')">🧠 堆与栈</button>
+            <button class="tab" onclick="openTab(event, 'array-pass')">📤 数组传参</button>
+            <button class="tab" onclick="openTab(event, 'projects')">🧩 项目实战</button>
+            <button class="tab" onclick="openTab(event, 'extend')">➕ 拓展练习</button>
+        </div>
+
+        <!-- 课程目录 -->
+        <div id="outline" class="content active">
+            <h2>📋 本课核心内容</h2>
+            <ul style="font-size: 1.1em; line-height: 1.8;">
+                <li>了解数组查询功能的基本原理</li>
+                <li>学习堆（Heap）与栈（Stack）的存储方式</li>
+                <li>掌握数组作为函数参数的传递机制</li>
+                <li>实践函数封装的基础运用</li>
+                <li>完成多个综合编程项目</li>
+            </ul>
+            <div class="tip">
+                <strong>匠心提示：</strong>理解"数组传参"本质是理解指针和内存管理的第一步，务必夯实基础！
+            </div>
+        </div>
+
+        <!-- 知识引入 -->
+        <div id="intro" class="content">
+            <h2>🔍 知识引入：查找功能</h2>
+            <div class="concept-item">
+                <h3>问题场景</h3>
+                <p>在数组 <code>[1, 4, 6, 2, 7, 5, 10]</code> 中查找数字 <code>n</code> 的下标。若不存在，提示"列表中没有该数"。</p>
+                <div class="example">
+                    <h3>思考：如何封装成函数？</h3>
+                    <p>我们需要一个函数，接收：<br>
+                    - 数组<br>
+                    - 数组长度<br>
+                    - 要查找的目标值<br>
+                    返回：下标 或 特殊值（如 -1）表示未找到。
+                    </p>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>参数传递的本质疑问</h3>
+                <p>普通变量传参是"值传递"，但数组传参时，我们处理的是"地址"还是"副本"？</p>
+                <p>这引出了对<strong>内存模型</strong>的理解需求 —— 堆与栈。</p>
+            </div>
+        </div>
+
+        <!-- 堆与栈 -->
+        <div id="memory" class="content">
+            <h2>🧠 堆（Heap）与栈（Stack）</h2>
+            <div class="concept-item">
+                <h3>栈（Stack）</h3>
+                <ul>
+                    <li>自动分配/释放，速度快</li>
+                    <li>存储局部变量、函数参数、返回地址</li>
+                    <li>大小有限（通常几MB）</li>
+                    <li>后进先出（LIFO）</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>堆（Heap）</h3>
+                <ul>
+                    <li>手动分配/释放（<code>new</code>/<code>delete</code>），速度较慢</li>
+                    <li>存储动态数据（如动态数组）</li>
+                    <li>大小受限于物理内存</li>
+                    <li>可随机访问</li>
+                </ul>
+            </div>
+            <div class="stack-heap">
+                <div class="stack">
+                    <h4>栈示例（局部数组）</h4>
+                    <pre>void func() {
+    int arr[5]; // 存在于栈
+}</pre>
+                </div>
+                <div class="heap">
+                    <h4>堆示例（动态数组）</h4>
+                    <pre>int* arr = new int[5]; // 存在于堆
+// 使用后需 delete[] arr;</pre>
+                </div>
+            </div>
+            <div class="tip">
+                <strong>关键点：</strong>C++ 中函数内的普通数组（如 <code>int arr[n]</code>）通常分配在<strong>栈</strong>上；而通过 <code>new</code> 创建的数组在<strong>堆</strong>上。
+            </div>
+        </div>
+
+        <!-- 数组传参 -->
+        <div id="array-pass" class="content">
+            <h2>📤 数组作为函数参数</h2>
+            <div class="concept-item">
+                <h3>传递的是地址，不是副本！</h3>
+                <p>在 C++ 中，当数组作为函数参数时，实际上传递的是<strong>数组首元素的地址</strong>（即指针）。</p>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">// 以下三种写法等价：
+void func(int arr[], int size);
+void func(int arr[10], int size); // 10 被忽略
+void func(int* arr, int size);</code></pre>
+                </div>
+                <p>✅ 因此，函数内对数组的修改会<strong>直接影响原数组</strong>。</p>
+            </div>
+            <div class="example">
+                <h3>内存视角</h3>
+                <p>假设主函数中定义 <code>int arr[5] = {10,20,30,40,50};</code></p>
+                <table>
+                    <tr><th>栈（主函数）</th><th>堆（无）</th></tr>
+                    <tr>
+                        <td>
+                            a → 10<br>
+                            b → 20<br>
+                            arr → 0x71fea8 (地址)
+                        </td>
+                        <td>
+                            [10]<br>
+                            [20]<br>
+                            [30]<br>
+                            [40]<br>
+                            [50]
+                        </td>
+                    </tr>
+                </table>
+                <p>调用 <code>swap(arr, 1, 3)</code> 时，<code>arr</code> 参数接收到的是 <code>0x71fea8</code>，函数直接操作该地址上的数据。</p>
+            </div>
+            <div class="tip">
+                <strong>重要提醒：</strong>由于数组退化为指针，函数内部无法通过 <code>sizeof(arr)</code> 获取数组长度！必须显式传递 <code>size</code> 参数。
+            </div>
+        </div>
+
+        <!-- 项目实战 -->
+        <div id="projects" class="content">
+            <h2>🧩 项目实战</h2>
+
+            <div class="concept-item">
+                <h3>1. 积木交换机器人</h3>
+                <p><strong>任务：</strong>交换数组中两个位置的值。</p>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+void swap(int arr[], int a, int b) {
+    int temp = arr[a];
+    arr[a] = arr[b];
+    arr[b] = temp;
+}
+
+void arr_print(int arr[], int size) {
+    for (int i = 0; i &lt; size; ++i)
+        cout &lt;&lt; arr[i] &lt;&lt; " ";
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    int n; cin >> n;
+    int arr[n];
+    for (int i = 0; i &lt; n; ++i) cin >> arr[i];
+    int a, b; cin >> a >> b;
+    swap(arr, a, b);
+    arr_print(arr, n);
+    return 0;
+}</code></pre>
+                </div>
+                <p>✅ 考察：数组传参、函数封装、输入输出。</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>2. 游戏关卡时间分析</h3>
+                <p><strong>任务：</strong>统计超过平均通关时间的关卡数量。</p>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">double sum = 0;
+for (int i = 0; i &lt; n; i++) sum += time[i];
+double avg = sum / n;
+int count = 0;
+for (int i = 0; i &lt; n; i++)
+    if (time[i] > avg) count++;
+cout &lt;&lt; count &lt;&lt; endl;</code></pre>
+                </div>
+                <p>✅ 考察：数组遍历、浮点运算、条件判断。</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>3. 歌手大赛评分</h3>
+                <p><strong>任务：</strong>去掉最高分和最低分，求平均分（保留两位小数）。</p>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">void findMinMax(int scores[], int n, int& min, int& max) {
+    min = max = scores[0];
+    for (int i = 1; i &lt; n; i++) {
+        if (scores[i] &lt; min) min = scores[i];
+        if (scores[i] > max) max = scores[i];
+    }
+}
+
+double calculateScore(int scores[], int n) {
+    int min, max;
+    findMinMax(scores, n, min, max);
+    int sum = 0;
+    for (int i = 0; i &lt; n; i++) sum += scores[i];
+    return (double)(sum - min - max) / (n - 2);
+}
+// 输出时：cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; score;</code></pre>
+                </div>
+                <p>✅ 考察：引用传参（可选）、函数协作、格式化输出。</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>4. 装备排序大挑战（选择排序）</h3>
+                <p><strong>任务：</strong>实现选择排序，并统计交换次数。</p>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">int selectionSort(int arr[], int n) {
+    int swaps = 0;
+    for (int i = 0; i &lt; n - 1; i++) {
+        int minIdx = i;
+        for (int j = i + 1; j &lt; n; j++)
+            if (arr[j] &lt; arr[minIdx]) minIdx = j;
+        if (minIdx != i) {
+            swap(arr, i, minIdx);
+            swaps++;
+        }
+    }
+    return swaps;
+}</code></pre>
+                </div>
+                <p>✅ 考察：算法实现、数组操作、计数逻辑。</p>
+            </div>
+        </div>
+
+        <!-- 拓展练习 -->
+        <div id="extend" class="content">
+            <h2>➕ 拓展练习：素数筛选</h2>
+            <div class="concept-item">
+                <h3>任务描述</h3>
+                <p>将数组 <code>arr = {90,3,19,20,89,11,45,17,76,5}</code> 中的所有素数提取到新数组 <code>arr2</code> 并输出。</p>
+            </div>
+            <div class="concept-item">
+                <h3>实现思路</h3>
+                <ol>
+                    <li>编写 <code>isPrime(int x)</code> 函数判断素数；</li>
+                    <li>遍历原数组，若为素数则存入 <code>arr2</code>；</li>
+                    <li>记录素数个数，用于输出。</li>
+                </ol>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">bool isPrime(int x) {
+    if (x &lt; 2) return false;
+    for (int i = 2; i * i &lt;= x; i++)
+        if (x % i == 0) return false;
+    return true;
+}
+
+int main() {
+    int arr[] = {90,3,19,20,89,11,45,17,76,5};
+    int n = 10;
+    int arr2[10], idx = 0;
+    for (int i = 0; i &lt; n; i++)
+        if (isPrime(arr[i])) arr2[idx++] = arr[i];
+    for (int i = 0; i &lt; idx; i++)
+        cout &lt;&lt; arr2[i] &lt;&lt; " ";
+    return 0;
+}</code></pre>
+                </div>
+                <p>✅ 考察：函数复用、逻辑判断、数组动态填充。</p>
+            </div>
+            <div class="principle">
+                <strong>匠心总结：</strong>
+                <ul>
+                    <li>数组传参 = 地址传递 → 高效但需谨慎</li>
+                    <li>函数封装 = 模块化思维 → 提高代码可读性与复用性</li>
+                    <li>理解内存 = 编程底层认知 → 避免常见错误（如越界、未初始化）</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++ 数组参数课程 | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

@@ -169,6 +169,62 @@
     },
     {
       "id": "module6",
+      "title": "数据结构与算法理论",
+      "description": "深入学习数据结构和算法理论知识",
+      "items": [
+        {
+          "id": "tree-basic",
+          "title": "树的基础知识",
+          "desc": "树的概念、二叉树、树的遍历",
+          "link": "./topics/tree-basic/index.html",
+          "tags": ["数据结构", "重点"]
+        },
+        {
+          "id": "graph-basic",
+          "title": "图的基础知识",
+          "desc": "图的概念、表示方法、基本算法",
+          "link": "./topics/graph-basic/index.html",
+          "tags": ["数据结构", "重点"]
+        },
+        {
+          "id": "number-theory",
+          "title": "数论基础",
+          "desc": "质数、最大公约数、模运算等数论知识",
+          "link": "./topics/number-theory/index.html",
+          "tags": ["算法", "数学"]
+        }
+      ]
+    },
+    {
+      "id": "module7",
+      "title": "高级数据结构",
+      "description": "掌握高级数据结构，解决复杂问题",
+      "items": [
+        {
+          "id": "union-find",
+          "title": "并查集",
+          "desc": "并查集的概念、实现和应用",
+          "link": "./topics/union-find/index.html",
+          "tags": ["数据结构", "重点"]
+        },
+        {
+          "id": "segment-tree",
+          "title": "线段树",
+          "desc": "线段树的概念、实现和区间操作",
+          "link": "./topics/segment-tree/index.html",
+          "tags": ["数据结构", "重点"]
+        },
+        {
+          "id": "trie",
+          "title": "字典树",
+          "desc": "字典树的概念、实现和字符串处理应用",
+          "link": "./topics/trie/index.html",
+          "tags": ["数据结构", "重点"]
+        }
+      ]
+    },
+    {
+      "id": "module8",
       "title": "算法思想与竞赛应用",
       "description": "掌握解决问题的思维方法",
       "items": [

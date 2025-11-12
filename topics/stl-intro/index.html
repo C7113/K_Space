@@ -8,90 +8,174 @@
     <link rel="stylesheet" href="../../styles/animations.css">
     <link rel="stylesheet" href="../../styles/components.css">
     <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #5c6bc0;
+            --accent-color: #7e57c2;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --border: #e0e0e0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #7986cb;
+            --accent-color: #9575cd;
+            --background: #121212;
+            --card-bg: #1e1e1e;
+            --text: #f0f0f0;
+            --border: #444444;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
         body {
-            font-family: 'Microsoft YaHei', sans-serif;
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text);
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background-color: var(--bg);
+            background-color: var(--background);
+            background-image: var(--grid-pattern);
+            line-height: 1.6;
         }
+
         .container {
             max-width: 1000px;
             margin: 20px auto;
             padding: 20px;
             background: var(--card-bg);
-            border-radius: 10px;
+            border-radius: 16px;
             box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
         }
+
         header {
             text-align: center;
-            padding: 20px 0;
-            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
         }
+
         h1 {
             margin: 0;
-            font-size: 2.2em;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
+
         .subtitle {
-            font-size: 1.1em;
+            font-size: 1.2rem;
             opacity: 0.9;
+            margin-top: 10px;
         }
+
         .tab-container {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             border-bottom: 2px solid var(--border);
+            gap: 5px;
         }
+
         .tab {
-            padding: 15px 20px;
+            padding: 16px 24px;
             cursor: pointer;
-            background: var(--section-bg);
+            background: transparent;
             border: none;
             flex: 1;
             text-align: center;
-            font-size: 1.1em;
-            font-weight: bold;
+            font-size: 1.1rem;
+            font-weight: 600;
             color: var(--text);
-            transition: all 0.3s;
-            border-radius: 8px 8px 0 0;
+            transition: var(--transition);
+            border-radius: 10px 10px 0 0;
+            position: relative;
         }
+
         .tab:hover {
-            background: var(--accent-light);
-            color: white;
+            background: rgba(74, 144, 226, 0.1);
         }
+
         .tab.active {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
         }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
         .content {
             display: none;
-            padding: 20px;
-            background: var(--section-bg);
-            border-radius: 0 0 10px 10px;
-            animation: fadeIn 0.5s;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 0 0 12px 12px;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid var(--border);
+            border-top: none;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
         .content.active {
             display: block;
         }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
         .concept-item {
             background: var(--card-bg);
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
+            transition: var(--transition);
         }
-        .concept-item h3 {
-            margin-top: 0;
-            color: var(--accent);
+
+        .concept-item:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -99,90 +183,150 @@
             background: var(--card-bg);
             border-radius: 10px;
             overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
+
         table, th, td {
             border: 1px solid var(--border);
         }
+
         th, td {
-            padding: 12px;
-            text-align: center;
+            padding: 14px;
+            text-align: left;
         }
+
         th {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
+            font-weight: 600;
         }
+
         tr:nth-child(even) {
-            background: var(--section-bg);
+            background: rgba(74, 144, 226, 0.03);
         }
+
         .code {
             background: #2d3748;
-            color: #aef;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'Courier New', monospace;
             overflow-x: auto;
-            margin: 15px 0;
-            line-height: 1.5;
-        }
-        .example {
-            background: linear-gradient(to right, var(--section-bg), transparent);
-            padding: 15px;
-            border-left: 5px solid var(--accent);
             margin: 20px 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .example {
+            background: linear-gradient(to right, rgba(74, 144, 226, 0.05), transparent);
+            padding: 20px;
+            border-left: 5px solid var(--primary-color);
+            margin: 25px 0;
             border-radius: 0 8px 8px 0;
         }
+
         .example h3 {
             margin-top: 0;
-            color: var(--accent);
+            color: var(--primary-color);
         }
+
         footer {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 40px;
             color: var(--text);
-            font-size: 0.9em;
-            opacity: 0.7;
-            padding: 20px;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            padding: 25px;
             border-top: 1px solid var(--border);
         }
+
         .highlight {
             background: #fffacd;
-            padding: 2px 5px;
-            border-radius: 3px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
         }
+
         .comment {
             color: #6ca06c;
             font-style: italic;
         }
+
         .keyword {
             color: #ff9800;
             font-weight: bold;
         }
+
         .return-link {
             display: inline-block;
             margin-bottom: 20px;
             text-decoration: none;
-            color: var(--accent);
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border: 2px solid var(--accent);
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.7rem 1.2rem;
+            border: 2px solid var(--primary-color);
             border-radius: 8px;
-            transition: all var(--transition);
+            transition: var(--transition);
+            background: transparent;
         }
+
         .return-link:hover {
-            background: var(--accent);
+            background: var(--primary-color);
             color: white;
+            transform: translateY(-2px);
         }
+
         .priority-high {
-            color: #e74c3c;
+            color: #e53935;
             font-weight: bold;
         }
+
         .priority-medium {
-            color: #f39c12;
+            color: #fb8c00;
             font-weight: bold;
         }
+
         .priority-low {
-            color: #2ecc71;
+            color: #43a047;
             font-weight: bold;
+        }
+
+        ul, ol {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-container {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-radius: 8px;
+                margin-bottom: 5px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
         }
     </style>
 </head>
@@ -202,278 +346,206 @@
         <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
 
         <div class="tab-container">
-            <button class="tab active" onclick="openTab(event, 'concept')">🔢 基本概念</button>
-            <button class="tab" onclick="openTab(event, 'containers')">🧮 容器</button>
-            <button class="tab" onclick="openTab(event, 'algorithms')">🔄 算法</button>
-            <button class="tab" onclick="openTab(event, 'iterators')">🔁 迭代器</button>
-            <button class="tab" onclick="openTab(event, 'examples')">🧮 应用示例</button>
-            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践练习</button>
+            <button class="tab active" onclick="openTab(event, 'concept')">📘 STL概念</button>
+            <button class="tab" onclick="openTab(event, 'containers')">📦 容器分类</button>
+            <button class="tab" onclick="openTab(event, 'iterators')">🔗 迭代器</button>
+            <button class="tab" onclick="openTab(event, 'algorithms')">⚙️ 算法</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧩 实践应用</button>
         </div>
 
-        <!-- 基本概念 -->
+        <!-- STL概念 -->
         <div id="concept" class="content active">
             <h2>STL基本概念</h2>
             <div class="concept-item">
                 <h3>什么是STL</h3>
                 <p>STL（Standard Template Library，标准模板库）是C++标准库的重要组成部分，它提供了一套高度可复用的组件，包括容器、算法和迭代器。</p>
                 
-                <h4>STL的特点</h4>
+                <h4>STL的组成</h4>
                 <ul>
-                    <li><strong>高效性</strong>：STL组件经过高度优化，性能优异</li>
-                    <li><strong>通用性</strong>：使用模板技术，支持多种数据类型</li>
-                    <li><strong>可扩展性</strong>：可以方便地扩展和定制</li>
-                    <li><strong>标准化</strong>：遵循C++标准，具有良好的可移植性</li>
+                    <li><strong>容器（Containers）</strong>：用于存储数据的结构，如vector、list、map等</li>
+                    <li><strong>算法（Algorithms）</strong>：用于处理容器中数据的函数，如排序、查找等</li>
+                    <li><strong>迭代器（Iterators）</strong>：用于访问容器中元素的指针-like对象</li>
+                    <li><strong>函数对象（Function Objects）</strong>：可以像函数一样调用的对象</li>
+                    <li><strong>适配器（Adapters）</strong>：用于修改现有容器或函数对象接口的组件</li>
+                    <li><strong>分配器（Allocators）</strong>：用于管理内存分配的组件</li>
                 </ul>
                 
                 <div class="example">
-                    <h4>STL的组成</h4>
-                    <div class="code">
-                        STL主要由以下几部分组成:<br>
-                        <br>
-                        1. 容器(Container)<br>
-                        &nbsp;&nbsp;&nbsp;- 顺序容器: vector, list, deque<br>
-                        &nbsp;&nbsp;&nbsp;- 关联容器: set, map, multiset, multimap<br>
-                        &nbsp;&nbsp;&nbsp;- 容器适配器: stack, queue, priority_queue<br>
-                        <br>
-                        2. 算法(Algorithm)<br>
-                        &nbsp;&nbsp;&nbsp;- 查找算法: find, binary_search<br>
-                        &nbsp;&nbsp;&nbsp;- 排序算法: sort, stable_sort<br>
-                        &nbsp;&nbsp;&nbsp;- 数值算法: accumulate, inner_product<br>
-                        <br>
-                        3. 迭代器(Iterator)<br>
-                        &nbsp;&nbsp;&nbsp;- 输入迭代器、输出迭代器<br>
-                        &nbsp;&nbsp;&nbsp;- 前向迭代器、双向迭代器、随机访问迭代器<br>
-                        <br>
-                        4. 函数对象(Function Object)<br>
-                        &nbsp;&nbsp;&nbsp;- 算术函数对象<br>
-                        &nbsp;&nbsp;&nbsp;- 关系函数对象<br>
-                        &nbsp;&nbsp;&nbsp;- 逻辑函数对象<br>
-                        <br>
-                        5. 适配器(Adapter)<br>
-                        &nbsp;&nbsp;&nbsp;- 容器适配器<br>
-                        &nbsp;&nbsp;&nbsp;- 函数适配器<br>
-                        &nbsp;&nbsp;&nbsp;- 迭代器适配器
-                    </div>
+                    <h4>STL的优势</h4>
+                    <ul>
+                        <li><strong>高效性</strong>：STL组件经过高度优化，性能优异</li>
+                        <li><strong>安全性</strong>：提供了边界检查等安全机制</li>
+                        <li><strong>可复用性</strong>：一套接口适用于多种数据类型</li>
+                        <li><strong>一致性</strong>：统一的接口设计，易于学习和使用</li>
+                        <li><strong>可扩展性</strong>：支持自定义类型和扩展</li>
+                    </ul>
                 </div>
             </div>
             
             <div class="concept-item">
-                <h3>STL的重要性</h3>
-                <p>STL是现代C++编程的基础，掌握STL对于提高编程效率和代码质量具有重要意义。</p>
+                <h3>STL的基本使用</h3>
+                <p>使用STL需要包含相应的头文件，并使用标准命名空间：</p>
                 
-                <h4>学习STL的意义</h4>
-                <ul>
-                    <li><strong>提高开发效率</strong>：使用现成的高效组件，避免重复造轮子</li>
-                    <li><strong>提升代码质量</strong>：STL组件经过严格测试，稳定性高</li>
-                    <li><strong>增强程序性能</strong>：STL组件经过优化，性能优异</li>
-                    <li><strong>为后续学习打基础</strong>：为学习更高级的C++特性和算法打下基础</li>
-                </ul>
+                <div class="code">
+                    #include &lt;vector&gt;<br>
+                    #include &lt;algorithm&gt;<br>
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 使用vector容器<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; numbers = {3, 1, 4, 1, 5, 9, 2, 6};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 使用STL算法排序<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;sort(numbers.begin(), numbers.end());<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出结果<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int n : numbers) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; n &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
             </div>
-            
+        </div>
+
+        <!-- 容器分类 -->
+        <div id="containers" class="content">
+            <h2>容器分类</h2>
             <div class="concept-item">
-                <h3>STL的使用准备</h3>
-                <p>使用STL需要包含相应的头文件，并了解基本的使用方法。</p>
+                <h3>序列容器</h3>
+                <p>序列容器以线性方式存储元素，元素的位置取决于插入时间和位置：</p>
                 
-                <h4>常用头文件</h4>
                 <table>
                     <tr>
-                        <th>头文件</th>
-                        <th>包含内容</th>
-                        <th>使用示例</th>
+                        <th>容器</th>
+                        <th>特点</th>
+                        <th>适用场景</th>
                     </tr>
                     <tr>
-                        <td>&lt;vector&gt;</td>
-                        <td>vector容器</td>
-                        <td>#include &lt;vector&gt;</td>
+                        <td>vector</td>
+                        <td>动态数组，支持随机访问</td>
+                        <td>需要频繁随机访问元素</td>
                     </tr>
                     <tr>
-                        <td>&lt;list&gt;</td>
-                        <td>list容器</td>
-                        <td>#include &lt;list&gt;</td>
+                        <td>deque</td>
+                        <td>双端队列，两端可高效插入删除</td>
+                        <td>需要在两端操作元素</td>
                     </tr>
                     <tr>
-                        <td>&lt;queue&gt;</td>
-                        <td>queue和priority_queue容器</td>
-                        <td>#include &lt;queue&gt;</td>
+                        <td>list</td>
+                        <td>双向链表，任意位置高效插入删除</td>
+                        <td>需要频繁在中间插入删除</td>
                     </tr>
                     <tr>
-                        <td>&lt;stack&gt;</td>
-                        <td>stack容器</td>
-                        <td>#include &lt;stack&gt;</td>
+                        <td>forward_list</td>
+                        <td>单向链表，节省内存</td>
+                        <td>只需要单向遍历</td>
                     </tr>
                     <tr>
-                        <td>&lt;algorithm&gt;</td>
-                        <td>常用算法函数</td>
-                        <td>#include &lt;algorithm&gt;</td>
-                    </tr>
-                    <tr>
-                        <td>&lt;iterator&gt;</td>
-                        <td>迭代器相关</td>
-                        <td>#include &lt;iterator&gt;</td>
+                        <td>array</td>
+                        <td>固定大小数组，性能最优</td>
+                        <td>大小固定的场景</td>
                     </tr>
                 </table>
-            </div>
-        </div>
-
-        <!-- 容器 -->
-        <div id="containers" class="content">
-            <h2>STL容器</h2>
-            
-            <div class="concept-item">
-                <h3>容器的概念</h3>
-                <p>容器是用来存储和管理数据的对象，STL提供了多种不同特性的容器以满足不同的需求。</p>
-                
-                <h4>容器的分类</h4>
-                <ul>
-                    <li><strong>顺序容器</strong>：元素按线性顺序排列</li>
-                    <li><strong>关联容器</strong>：通过键值对存储数据</li>
-                    <li><strong>容器适配器</strong>：基于其他容器实现特定接口</li>
-                </ul>
-            </div>
-            
-            <div class="concept-item">
-                <h3>常用容器介绍</h3>
-                <p>以下是一些常用的STL容器及其特点：</p>
                 
                 <div class="example">
-                    <h4>vector（动态数组）</h4>
+                    <h4>序列容器示例</h4>
                     <div class="code">
-                        #include &lt;iostream&gt;<br>
                         #include &lt;vector&gt;<br>
+                        #include &lt;list&gt;<br>
+                        #include &lt;deque&gt;<br>
+                        #include &lt;iostream&gt;<br>
                         using namespace std;<br>
                         <br>
                         int main() {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建vector容器<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// vector示例<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {1, 2, 3};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vec.push_back(4);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "vector: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : vec) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
                         <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 添加元素<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;vec.push_back(10);<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;vec.push_back(20);<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;vec.push_back(30);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// list示例<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;list&lt;int&gt; lst = {1, 2, 3};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;lst.push_front(0);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;lst.push_back(4);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "list: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : lst) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
                         <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 访问元素<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第一个元素: " &lt;&lt; vec[0] &lt;&lt; endl;<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "容器大小: " &lt;&lt; vec.size() &lt;&lt; endl;<br>
-                        <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 遍历容器<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "所有元素: ";<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; vec.size(); i++) {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; vec[i] &lt;&lt; " ";<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// deque示例<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;deque&lt;int&gt; deq = {1, 2, 3};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;deq.push_front(0);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;deq.push_back(4);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "deque: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : deq) cout &lt;&lt; x &lt;&lt; " ";<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
                         <br>
                         &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
                         }
                     </div>
                 </div>
-                
-                <div class="example">
-                    <h4>stack（栈）</h4>
-                    <div class="code">
-                        #include &lt;iostream&gt;<br>
-                        #include &lt;stack&gt;<br>
-                        using namespace std;<br>
-                        <br>
-                        int main() {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建stack容器<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;stack&lt;int&gt; stk;<br>
-                        <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 入栈操作<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;stk.push(10);<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;stk.push(20);<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;stk.push(30);<br>
-                        <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 访问栈顶元素<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "栈顶元素: " &lt;&lt; stk.top() &lt;&lt; endl;<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "栈的大小: " &lt;&lt; stk.size() &lt;&lt; endl;<br>
-                        <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 出栈操作<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;while (!stk.empty()) {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "弹出: " &lt;&lt; stk.top() &lt;&lt; endl;<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stk.pop();<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                        <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 算法 -->
-        <div id="algorithms" class="content">
-            <h2>STL算法</h2>
-            
-            <div class="concept-item">
-                <h3>算法的概念</h3>
-                <p>STL算法是一组用于处理容器中数据的函数模板，它们通过迭代器访问容器中的元素。</p>
-                
-                <h4>算法的特点</h4>
-                <ul>
-                    <li><strong>通用性</strong>：可以用于任何支持相应迭代器的容器</li>
-                    <li><strong>高效性</strong>：经过优化实现，性能优异</li>
-                    <li><strong>一致性</strong>：具有统一的接口和使用方式</li>
-                </ul>
             </div>
             
             <div class="concept-item">
-                <h3>常用算法介绍</h3>
-                <p>以下是一些常用的STL算法：</p>
+                <h3>关联容器</h3>
+                <p>关联容器通过键值对存储元素，根据键自动排序或哈希：</p>
+                
+                <table>
+                    <tr>
+                        <th>容器</th>
+                        <th>特点</th>
+                        <th>适用场景</th>
+                    </tr>
+                    <tr>
+                        <td>set</td>
+                        <td>有序集合，元素唯一</td>
+                        <td>需要有序且唯一的元素</td>
+                    </tr>
+                    <tr>
+                        <td>multiset</td>
+                        <td>有序集合，允许重复元素</td>
+                        <td>需要有序但允许重复</td>
+                    </tr>
+                    <tr>
+                        <td>map</td>
+                        <td>有序键值对，键唯一</td>
+                        <td>需要键值映射关系</td>
+                    </tr>
+                    <tr>
+                        <td>multimap</td>
+                        <td>有序键值对，允许重复键</td>
+                        <td>键可重复的映射关系</td>
+                    </tr>
+                </table>
                 
                 <div class="example">
-                    <h4>sort（排序算法）</h4>
+                    <h4>关联容器示例</h4>
                     <div class="code">
+                        #include &lt;set&gt;<br>
+                        #include &lt;map&gt;<br>
                         #include &lt;iostream&gt;<br>
-                        #include &lt;vector&gt;<br>
-                        #include &lt;algorithm&gt;<br>
                         using namespace std;<br>
                         <br>
                         int main() {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建vector容器并初始化<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {5, 2, 8, 1, 9, 3};<br>
-                        <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 输出排序前的元素<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "排序前: ";<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; vec.size(); i++) {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; vec[i] &lt;&lt; " ";<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// set示例<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;set&lt;int&gt; s = {3, 1, 4, 1, 5, 9, 2, 6};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "set: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : s) cout &lt;&lt; x &lt;&lt; " ";<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
                         <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用sort算法排序<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;sort(vec.begin(), vec.end());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// map示例<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;map&lt;string, int&gt; scores;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;scores["Alice"] = 95;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;scores["Bob"] = 87;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;scores["Charlie"] = 92;<br>
                         <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 输出排序后的元素<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "排序后: ";<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; vec.size(); i++) {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; vec[i] &lt;&lt; " ";<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
-                        <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
-                        }
-                    </div>
-                </div>
-                
-                <div class="example">
-                    <h4>find（查找算法）</h4>
-                    <div class="code">
-                        #include &lt;iostream&gt;<br>
-                        #include &lt;vector&gt;<br>
-                        #include &lt;algorithm&gt;<br>
-                        using namespace std;<br>
-                        <br>
-                        int main() {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建vector容器并初始化<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {10, 20, 30, 40, 50};<br>
-                        <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用find算法查找元素<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt;::iterator it = find(vec.begin(), vec.end(), 30);<br>
-                        <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 判断是否找到<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;if (it != vec.end()) {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "找到了元素 30，位置: " &lt;&lt; (it - vec.begin()) &lt;&lt; endl;<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "未找到元素 30" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "Scores:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (const auto& pair : scores) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; pair.first &lt;&lt; ": " &lt;&lt; pair.second &lt;&lt; endl;<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;}<br>
                         <br>
                         &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
@@ -485,11 +557,10 @@
 
         <!-- 迭代器 -->
         <div id="iterators" class="content">
-            <h2>STL迭代器</h2>
-            
+            <h2>迭代器</h2>
             <div class="concept-item">
-                <h3>迭代器的概念</h3>
-                <p>迭代器是一种广义的指针，它提供了一种统一的方式来访问容器中的元素，而不需要了解容器的内部实现。</p>
+                <h3>迭代器概念</h3>
+                <p>迭代器是STL的重要组成部分，它提供了一种统一的方式来访问容器中的元素，类似于指针但更加抽象和安全。</p>
                 
                 <h4>迭代器的分类</h4>
                 <table>
@@ -500,65 +571,122 @@
                     </tr>
                     <tr>
                         <td>输入迭代器</td>
-                        <td>只能读取数据</td>
-                        <td>++it, *it, it1 == it2, it1 != it2</td>
+                        <td>只读，单向移动</td>
+                        <td>++, *, ==, !=</td>
                     </tr>
                     <tr>
                         <td>输出迭代器</td>
-                        <td>只能写入数据</td>
-                        <td>++it, *it</td>
+                        <td>只写，单向移动</td>
+                        <td>++, *</td>
                     </tr>
                     <tr>
                         <td>前向迭代器</td>
-                        <td>可读写，可向前移动</td>
-                        <td>++it, *it, it1 == it2, it1 != it2</td>
+                        <td>读写，单向移动</td>
+                        <td>++, *, ==, !=</td>
                     </tr>
                     <tr>
                         <td>双向迭代器</td>
-                        <td>可读写，可前后移动</td>
-                        <td>++it, --it, *it, it1 == it2, it1 != it2</td>
+                        <td>读写，双向移动</td>
+                        <td>++, --, *, ==, !=</td>
                     </tr>
                     <tr>
                         <td>随机访问迭代器</td>
-                        <td>可读写，可随机访问</td>
-                        <td>++it, --it, it+n, it-n, it1-it2, it1<it2, *it等</td>
+                        <td>读写，随机访问</td>
+                        <td>++, --, +, -, [], <, >, <=, >=</td>
                     </tr>
                 </table>
-            </div>
-            
-            <div class="concept-item">
-                <h3>迭代器的使用</h3>
-                <p>迭代器是连接容器和算法的桥梁，通过迭代器可以访问和操作容器中的元素。</p>
                 
                 <div class="example">
-                    <h4>使用迭代器遍历容器</h4>
+                    <h4>迭代器使用示例</h4>
                     <div class="code">
-                        #include &lt;iostream&gt;<br>
                         #include &lt;vector&gt;<br>
+                        #include &lt;list&gt;<br>
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;algorithm&gt;<br>
                         using namespace std;<br>
                         <br>
                         int main() {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 创建vector容器并初始化<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {1, 2, 3, 4, 5};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {5, 2, 8, 1, 9, 3};<br>
                         <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用迭代器遍历容器<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用迭代器遍历vector<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "使用迭代器遍历: ";<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;for (vector&lt;int&gt;::iterator it = vec.begin(); it != vec.end(); ++it) {<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; *it &lt;&lt; " ";<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;}<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
                         <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用const_iterator遍历（只读）<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "使用const_iterator遍历: ";<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;for (vector&lt;int&gt;::const_iterator it = vec.begin(); it != vec.end(); ++it) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用auto关键字简化迭代器声明<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "使用auto关键字: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (auto it = vec.begin(); it != vec.end(); ++it) {<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; *it &lt;&lt; " ";<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;}<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
                         <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;// C++11范围for循环（最简洁的方式）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用范围for循环（最简洁）<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "使用范围for循环: ";<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;for (int value : vec) {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; value &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : vec) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用算法和迭代器<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;sort(vec.begin(), vec.end());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "排序后: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : vec) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>迭代器失效问题</h3>
+                <p>在使用迭代器时，需要注意迭代器失效的问题，即某些操作可能导致迭代器不再有效：</p>
+                
+                <h4>常见迭代器失效情况</h4>
+                <ul>
+                    <li><strong>vector</strong>：插入或删除元素可能导致所有迭代器失效</li>
+                    <li><strong>list</strong>：删除元素只使指向该元素的迭代器失效</li>
+                    <li><strong>map/set</strong>：插入元素不影响其他迭代器，删除元素只使指向该元素的迭代器失效</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>迭代器失效示例</h4>
+                    <div class="code">
+                        #include &lt;vector&gt;<br>
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {1, 2, 3, 4, 5};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 错误示例：可能导致迭代器失效<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;/*<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (auto it = vec.begin(); it != vec.end(); ++it) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (*it == 3) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vec.push_back(10); // 可能导致迭代器失效<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;*/<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 正确示例：避免迭代器失效<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;auto it = vec.begin();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (it != vec.end()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (*it == 3) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;it = vec.insert(it, 0); // insert返回新插入元素的迭代器<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;it += 2; // 跳过刚插入的元素和原元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;++it;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "处理后: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : vec) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; x &lt;&lt; " ";<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;}<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
                         <br>
@@ -569,188 +697,157 @@
             </div>
         </div>
 
-        <!-- 应用示例 -->
-        <div id="examples" class="content">
-            <h2>STL应用示例</h2>
-            
-            <div class="example">
-                <h3>示例1：学生成绩管理</h3>
-                <p>使用vector容器和STL算法管理学生成绩：</p>
-                <div class="code">
-                    #include &lt;iostream&gt;<br>
-                    #include &lt;vector&gt;<br>
-                    #include &lt;algorithm&gt;<br>
-                    using namespace std;<br>
-                    <br>
-                    int main() {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 使用vector存储学生成绩<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; scores = {85, 92, 78, 96, 88, 76, 89, 94, 82, 90};<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出所有成绩<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "学生成绩: ";<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;for (int score : scores) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; score &lt;&lt; " ";<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算最高分和最低分<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;int maxScore = *max_element(scores.begin(), scores.end());<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;int minScore = *min_element(scores.begin(), scores.end());<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最高分: " &lt;&lt; maxScore &lt;&lt; endl;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最低分: " &lt;&lt; minScore &lt;&lt; endl;<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算平均分<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;int sum = 0;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;for (int score : scores) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += score;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;double average = (double)sum / scores.size();<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "平均分: " &lt;&lt; average &lt;&lt; endl;<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 排序成绩<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;sort(scores.begin(), scores.end());<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "排序后成绩: ";<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;for (int score : scores) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; score &lt;&lt; " ";<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 查找特定成绩<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;int target = 90;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt;::iterator it = find(scores.begin(), scores.end(), target);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;if (it != scores.end()) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "找到了成绩 " &lt;&lt; target &lt;&lt; "，位置: " &lt;&lt; (it - scores.begin()) &lt;&lt; endl;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "未找到成绩 " &lt;&lt; target &lt;&lt; endl;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
-                    }
+        <!-- 算法 -->
+        <div id="algorithms" class="content">
+            <h2>STL算法</h2>
+            <div class="concept-item">
+                <h3>STL算法概述</h3>
+                <p>STL算法是一组用于处理容器元素的函数模板，它们通过迭代器来操作容器中的元素，与具体的容器类型无关。</p>
+                
+                <h4>算法分类</h4>
+                <ul>
+                    <li><strong>非修改性序列算法</strong>：不修改容器元素，如find、count、equal</li>
+                    <li><strong>修改性序列算法</strong>：修改容器元素，如copy、fill、transform</li>
+                    <li><strong>排序相关算法</strong>：排序和相关操作，如sort、binary_search</li>
+                    <li><strong>数值算法</strong>：数值计算相关，如accumulate、inner_product</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>常用算法示例</h4>
+                    <div class="code">
+                        #include &lt;vector&gt;<br>
+                        #include &lt;algorithm&gt;<br>
+                        #include &lt;numeric&gt;<br>
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {3, 1, 4, 1, 5, 9, 2, 6, 5};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 查找算法<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;auto it = find(vec.begin(), vec.end(), 5);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (it != vec.end()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "找到元素5，位置: " &lt;&lt; (it - vec.begin()) &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 计数算法<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int count5 = count(vec.begin(), vec.end(), 5);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "元素5出现次数: " &lt;&lt; count5 &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 排序算法<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;sort(vec.begin(), vec.end());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "排序后: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : vec) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 数值算法<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int sum = accumulate(vec.begin(), vec.end(), 0);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "元素总和: " &lt;&lt; sum &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 变换算法<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; squares(vec.size());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;transform(vec.begin(), vec.end(), squares.begin(),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](int x) { return x * x; });<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "平方值: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : squares) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
                 </div>
             </div>
             
-            <div class="example">
-                <h3>示例2：括号匹配检查</h3>
-                <p>使用stack容器检查括号是否匹配：</p>
-                <div class="code">
-                    #include &lt;iostream&gt;<br>
-                    #include &lt;stack&gt;<br>
-                    #include &lt;string&gt;<br>
-                    using namespace std;<br>
-                    <br>
-                    bool isBalanced(const string& expr) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;stack&lt;char&gt; s;<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;for (char c : expr) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (c == '(' || c == '[' || c == '{') {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 遇到开括号，入栈<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s.push(c);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (c == ')' || c == ']' || c == '}') {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 遇到闭括号<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (s.empty()) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 栈为空，不匹配<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char top = s.top();<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s.pop();<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 检查括号是否匹配<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ((c == ')' && top != '(') ||<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(c == ']' && top != '[') ||<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(c == '}' && top != '{')) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 检查栈是否为空<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;return s.empty();<br>
-                    }<br>
-                    <br>
-                    int main() {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;string expr1 = "{[()()]}";<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;string expr2 = "{[()]}";<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;string expr3 = "{[()])";<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; expr1 &lt;&lt; " 是否匹配: " &lt;&lt; (isBalanced(expr1) ? "是" : "否") &lt;&lt; endl;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; expr2 &lt;&lt; " 是否匹配: " &lt;&lt; (isBalanced(expr2) ? "是" : "否") &lt;&lt; endl;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; expr3 &lt;&lt; " 是否匹配: " &lt;&lt; (isBalanced(expr3) ? "是" : "否") &lt;&lt; endl;<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
-                    }
+            <div class="concept-item">
+                <h3>自定义比较函数</h3>
+                <p>许多STL算法支持自定义比较函数，可以实现自定义的排序或查找规则：</p>
+                
+                <div class="example">
+                    <h4>自定义比较函数示例</h4>
+                    <div class="code">
+                        #include &lt;vector&gt;<br>
+                        #include &lt;algorithm&gt;<br>
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        struct Student {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string name;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int score;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Student(const string& n, int s) : name(n), score(s) {}<br>
+                        };<br>
+                        <br>
+                        // 比较函数：按分数降序排列<br>
+                        bool compareByScore(const Student& a, const Student& b) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return a.score > b.score;<br>
+                        }<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;Student&gt; students = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"Alice", 85},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"Bob", 92},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"Charlie", 78},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"David", 96}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用函数指针作为比较函数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;sort(students.begin(), students.end(), compareByScore);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "按分数排序:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (const auto& s : students) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; s.name &lt;&lt; ": " &lt;&lt; s.score &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用Lambda表达式作为比较函数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;sort(students.begin(), students.end(),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](const Student& a, const Student& b) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a.name &lt; b.name;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n按姓名排序:" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (const auto& s : students) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; s.name &lt;&lt; ": " &lt;&lt; s.score &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- 实践练习 -->
+        <!-- 实践应用 -->
         <div id="practice" class="content">
-            <h2>实践练习</h2>
+            <h2>实践应用</h2>
             
             <div class="example">
-                <h3>练习1：使用vector实现简单队列</h3>
-                <p>使用vector容器实现队列的基本操作：</p>
+                <h3>练习1：统计词频</h3>
+                <p>使用map统计一段文本中各个单词出现的频率：</p>
                 <div class="code">
+                    #include &lt;map&gt;<br>
+                    #include &lt;string&gt;<br>
                     #include &lt;iostream&gt;<br>
-                    #include &lt;vector&gt;<br>
+                    #include &lt;sstream&gt;<br>
                     using namespace std;<br>
                     <br>
-                    // 在此处添加代码<br>
-                    class SimpleQueue {<br>
-                    private:<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; data;<br>
-                    <br>
-                    public:<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 入队操作<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;void enqueue(int value) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data.push_back(value);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 出队操作<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;int dequeue() {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isEmpty()) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "队列为空!" &lt;&lt; endl;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return -1;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int value = data.front();<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data.erase(data.begin());<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return value;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 检查队列是否为空<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;bool isEmpty() {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return data.empty();<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 获取队列大小<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;int size() {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return data.size();<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 显示队列内容<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;void display() {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "队列内容: ";<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int value : data) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; value &lt;&lt; " ";<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    };<br>
-                    <br>
                     int main() {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;SimpleQueue queue;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string text = "the quick brown fox jumps over the lazy dog the dog was really lazy";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;map&lt;string, int&gt; wordCount;<br>
                     <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 测试队列操作<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;queue.enqueue(10);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;queue.enqueue(20);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;queue.enqueue(30);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 分词并统计<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;istringstream iss(text);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string word;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (iss &gt;&gt; word) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 转换为小写（可选）<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transform(word.begin(), word.end(), word.begin(), ::tolower);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wordCount[word]++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
                     <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;queue.display();<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "出队元素: " &lt;&lt; queue.dequeue() &lt;&lt; endl;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "出队元素: " &lt;&lt; queue.dequeue() &lt;&lt; endl;<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;queue.display();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出统计结果<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "词频统计结果:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (const auto& pair : wordCount) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; pair.first &lt;&lt; ": " &lt;&lt; pair.second &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
                     <br>
                     &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
                     }
@@ -758,48 +855,31 @@
             </div>
             
             <div class="example">
-                <h3>练习2：使用algorithm算法处理数据</h3>
-                <p>使用STL算法处理整数数组：</p>
+                <h3>练习2：去除重复元素</h3>
+                <p>使用set去除vector中的重复元素：</p>
                 <div class="code">
-                    #include &lt;iostream&gt;<br>
+                    #include &lt;set&gt;<br>
                     #include &lt;vector&gt;<br>
-                    #include &lt;algorithm&gt;<br>
+                    #include &lt;iostream&gt;<br>
                     using namespace std;<br>
                     <br>
-                    // 在此处添加代码<br>
                     int main() {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; numbers = {3, 1, 4, 1, 5, 9, 2, 6, 5, 3};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; numbers = {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};<br>
                     <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出原始数据<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "原始数据: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "原数组: ";<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;for (int n : numbers) {<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; n &lt;&lt; " ";<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;}<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
                     <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 1. 查找元素<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt;::iterator it = find(numbers.begin(), numbers.end(), 5);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;if (it != numbers.end()) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "找到了元素5，位置: " &lt;&lt; (it - numbers.begin()) &lt;&lt; endl;<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 使用set去重<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;set&lt;int&gt; uniqueNumbers(numbers.begin(), numbers.end());<br>
                     <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 2. 统计元素出现次数<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;int count5 = count(numbers.begin(), numbers.end(), 5);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "元素5出现次数: " &lt;&lt; count5 &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 转换回vector<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; result(uniqueNumbers.begin(), uniqueNumbers.end());<br>
                     <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 3. 排序<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;sort(numbers.begin(), numbers.end());<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "排序后: ";<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;for (int n : numbers) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; n &lt;&lt; " ";<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;// 4. 去除重复元素<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt;::iterator newEnd = unique(numbers.begin(), numbers.end());<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;numbers.erase(newEnd, numbers.end());<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "去重后: ";<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;for (int n : numbers) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int n : result) {<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; n &lt;&lt; " ";<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;}<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
@@ -914,6 +994,8 @@
         </footer>
     </div>
 
+    <script src="../../scripts/theme-toggle.js"></script>
+    <script src="../../scripts/topic-nav.js"></script>
     <script>
         function openTab(evt, tabName) {
             const tabs = document.getElementsByClassName("tab");
