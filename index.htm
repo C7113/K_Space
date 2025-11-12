@@ -271,7 +271,7 @@
       const isExpand = btn.textContent.includes('收起');
       if(isExpand) {
         cards.forEach(function(card, idx) {
-          if(idx > 2) card.classList.add('hide');
+          if(idx > 3) card.classList.add('hide');
           else card.classList.remove('hide');
         });
         btn.textContent = '展开更多';
@@ -287,7 +287,7 @@
         const cards = grid.querySelectorAll('.topic-card');
         let hasHidden = false;
         cards.forEach(function(card, idx) {
-          if(idx > 2) {
+          if(idx > 3) {
             card.classList.add('hide');
             hasHidden = true;
           } else {
@@ -295,7 +295,7 @@
           }
         });
         const existBtn = grid.querySelector('.expand-btn');
-        if (cards.length > 3) {
+        if (cards.length > 4) {
           if (!existBtn) {
             const btn = document.createElement('button');
             btn.className = 'expand-btn';
@@ -304,7 +304,7 @@
             grid.appendChild(btn);
           }
         } else if (existBtn) {
-          existBtn.remove(); // 如果卡片数减少到3个及以下，移除按钮
+          existBtn.remove(); // 如果卡片数减少到4个及以下，移除按钮
         }
       });
     });
