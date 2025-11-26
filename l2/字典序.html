@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 字符串函数与高效输入输出</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #7b1fa2;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #7b1fa2;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f3ff;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #7b1fa2;
+        }
+        .code {
+            background: #2d3748;
+            color: #ba68c8;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #f3e5f5;
+            padding: 15px;
+            border-left: 5px solid #ab47bc;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #6a1b9a;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .principle {
+            background: #f1f8e9;
+            border-left: 5px solid #7cb342;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #7b1fa2;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f3ff;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔤 C++ 字符串函数与高效 I/O</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 主题：爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'outline')">📋 课程目录</button>
+            <button class="tab" onclick="openTab(event, 'dict-order')">📖 字典序详解</button>
+            <button class="tab" onclick="openTab(event, 'fast-io')">⚡ 快读快写（Fast I/O）</button>
+            <button class="tab" onclick="openTab(event, 'memset-fill')">🧽 memset 与 fill 初始化</button>
+            <button class="tab" onclick="openTab(event, 'projects')">🧩 项目实战</button>
+            <button class="tab" onclick="openTab(event, 'tips')">💡 最佳实践与注意事项</button>
+        </div>
+
+        <!-- 课程目录 -->
+        <div id="outline" class="content active">
+            <h2>📋 本课核心内容</h2>
+            <ul style="font-size: 1.1em; line-height: 1.8;">
+                <li>掌握<strong>字典序</strong>的概念及在字符串排序中的应用</li>
+                <li>理解并实现<strong>快读快写</strong>（Fast I/O），提升大输入/输出效率</li>
+                <li>熟练使用 <code>memset</code> 和 <code>fill</code> 快速初始化数组</li>
+                <li>通过“成绩排序”和“01串排序”项目综合运用知识</li>
+                <li>培养对程序性能优化的敏感度</li>
+            </ul>
+            <div class="principle">
+                <strong>匠心理念：</strong>高效的 I/O 与合理的数据初始化，是竞赛与工程中不可忽视的细节。
+            </div>
+        </div>
+
+        <!-- 字典序详解 -->
+        <div id="dict-order" class="content">
+            <h2>📖 字典序（Lexicographical Order）</h2>
+            <div class="concept-item">
+                <h3>什么是字典序？</h3>
+                <p>字典序即“字典中的排列顺序”，规则如下：</p>
+                <ol>
+                    <li>从左到右逐字符比较 ASCII 值；</li>
+                    <li>第一个不同字符决定大小；</li>
+                    <li>若一串是另一串的前缀，则短者更小。</li>
+                </ol>
+                <p>✅ 示例：<code>"Apple" &lt; "Banana"</code>，<code>"A" &lt; "AA"</code>，<code>"12" &lt; "2"</code>（因为 '1' &lt; '2'）</p>
+            </div>
+            <div class="example">
+                <h3>实际问题：VIP 座位排序</h3>
+                <p>原始数据：<code>{"VIP3 排 5 座", "VIP3 排 23 座", "VIP3 排 12 座"}</code></p>
+                <p>直接 <code>sort</code> 结果：<br>
+                <code>VIP3 排 12 座</code><br>
+                <code>VIP3 排 23 座</code><br>
+                <code>VIP3 排 5 座</code></p>
+                <p>⚠️ 问题：按字典序，“5” > “23”（因为 '5' > '2'），不符合数字逻辑。</p>
+                <div class="tip">
+                    <strong>解决方案：</strong>若需按数字排序，应提取数字部分单独比较，或统一补零（如 "05"）。
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>C++ 中的字典序支持</h3>
+                <p><code>std::string</code> 默认支持字典序比较，<code>sort</code> 直接可用：</p>
+                <div class="code">
+#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+int main() {
+    string arr[] = {"banana", "apple", "cherry"};
+    sort(arr, arr + 3); // 结果：apple, banana, cherry
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- 快读快写 -->
+        <div id="fast-io" class="content">
+            <h2>⚡ 快读快写（Fast I/O）</h2>
+            <div class="concept-item">
+                <h3>为什么需要快读快写？</h3>
+                <p>在处理大规模输入/输出（如 10⁵+ 行）时，<code>cin/cout</code> 可能超时。<br>
+                使用 <code>getchar/putchar</code> 手动解析可显著提速（常用于算法竞赛）。</p>
+            </div>
+            <div class="concept-item">
+                <h3>快读实现（整数）</h3>
+                <div class="code">
+inline int read() {
+    int x = 0, f = 1;
+    char ch = getchar();
+    while (ch < '0' || ch > '9') {
+        if (ch == '-') f = -1;
+        ch = getchar();
+    }
+    while (ch >= '0' && ch <= '9') {
+        x = (x << 3) + (x << 1) + (ch ^ 48); // x*10 + (ch-'0')
+        ch = getchar();
+    }
+    return x * f;
+}
+                </div>
+                <p>✅ 技巧：<code>(x << 3) + (x << 1)</code> 等价于 <code>x * 10</code>，位运算更快。</p>
+            </div>
+            <div class="concept-item">
+                <h3>快写实现（整数）</h3>
+                <div class="code">
+void write(int x) {
+    if (x < 0) {
+        putchar('-');
+        x = -x;
+    }
+    if (x > 9) write(x / 10); // 递归输出高位
+    putchar(x % 10 + '0');    // 输出当前位
+}
+                </div>
+                <p>✅ 注意：负数处理、递归输出保证顺序正确。</p>
+            </div>
+            <div class="tip">
+                <strong>现代替代方案：</strong>也可使用 <code>ios::sync_with_stdio(false); cin.tie(0);</code> 加速 <code>cin/cout</code>。
+            </div>
+        </div>
+
+        <!-- memset 与 fill -->
+        <div id="memset-fill" class="content">
+            <h2>🧽 memset 与 fill 初始化</h2>
+            <div class="concept-item">
+                <h3>memset：按字节填充</h3>
+                <div class="code">
+int a[10];
+memset(a, 0, sizeof(a)); // 安全：清零
+
+// ⚠️ 危险示例：
+memset(a, 1, sizeof(a)); // 不等于 a[i]=1！
+// 因为 memset 按字节设为 0x01 → int 值为 0x01010101
+                </div>
+                <p>✅ 适用场景：仅推荐用于清零（0）或设为 -1（0xFF）。</p>
+            </div>
+            <div class="concept-item">
+                <h3>fill：按元素赋值</h3>
+                <div class="code">
+#include &lt;algorithm&gt;
+int b[10];
+fill(b, b + 10, 9); // 所有元素 = 9
+                </div>
+                <p>✅ 优势：类型安全，可赋任意值。</p>
+            </div>
+            <div class="concept-item">
+                <h3>对比总结</h3>
+                <table>
+                    <tr><th>函数</th><th>头文件</th><th>单位</th><th>安全性</th><th>典型用途</th></tr>
+                    <tr><td><code>memset</code></td><td><code>&lt;cstring&gt;</code></td><td>字节</td><td>低（仅限0/-1）</td><td>快速清零</td></tr>
+                    <tr><td><code>fill</code></td><td><code>&lt;algorithm&gt;</code></td><td>元素</td><td>高</td><td>任意值初始化</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 项目实战 -->
+        <div id="projects" class="content">
+            <h2>🧩 项目实战</h2>
+
+            <div class="concept-item">
+                <h3>1. 成绩排序</h3>
+                <p><strong>要求：</strong>按分数降序，同分则按名字字典序升序。</p>
+                <div class="code">
+struct Student {
+    string name;
+    int score;
+};
+
+bool cmp(const Student& a, const Student& b) {
+    if (a.score != b.score)
+        return a.score > b.score; // 分数高者在前
+    return a.name < b.name;       // 同分：字典序小者在前
+}
+
+// 主函数中
+vector<Student> students(n);
+sort(students.begin(), students.end(), cmp);
+                </div>
+                <p>✅ 关键：自定义比较函数实现多关键字排序。</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>2. 01串排序</h3>
+                <p><strong>规则：</strong><br>
+                1. 按长度升序<br>
+                2. 长度相同 → 按 1 的个数升序<br>
+                3. 1 的个数相同 → 按字典序升序</p>
+                <div class="code">
+int countOnes(const string& s) {
+    return count(s.begin(), s.end(), '1');
+}
+
+bool cmp01(const string& a, const string& b) {
+    if (a.size() != b.size()) return a.size() < b.size();
+    int ca = countOnes(a), cb = countOnes(b);
+    if (ca != cb) return ca < cb;
+    return a < b;
+}
+                </div>
+                <p>✅ 考察：多级排序条件组合。</p>
+            </div>
+        </div>
+
+        <!-- 最佳实践与注意事项 -->
+        <div id="tips" class="content">
+            <h2>💡 最佳实践与注意事项</h2>
+            <div class="concept-item">
+                <h3>字典序陷阱</h3>
+                <ul>
+                    <li>数字字符串排序 ≠ 数值排序（如 "10" &lt; "2"）</li>
+                    <li>混合字母大小写时，'A' (65) &lt; 'a' (97)，注意是否需统一转大小写</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>快读快写注意事项</h3>
+                <ul>
+                    <li>仅适用于整数（浮点数需额外处理）</li>
+                    <li>不处理非法输入（假设输入合法）</li>
+                    <li>竞赛中常用，但工程代码更倾向可读性</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>初始化选择指南</h3>
+                <ul>
+                    <li>清零数组 → <code>memset(a, 0, sizeof(a))</code></li>
+                    <li>赋非零值 → <code>fill(a, a+n, value)</code></li>
+                    <li>C++11 起也可用初始化列表：<code>int a[10] = {};</code></li>
+                </ul>
+            </div>
+            <div class="principle">
+                <strong>创新思维：</strong>性能优化应基于实际需求。日常开发优先可读性，竞赛/高频场景再考虑极致优化。
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++ 字符串与高效 I/O 课程 | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>
