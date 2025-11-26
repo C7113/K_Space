@@ -161,8 +161,70 @@ header p { font-size: 1.1rem; margin-top: 0.25rem; color: var(--text); font-weig
   box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3) !important;
 }
 
+/* 修复进阶级别按钮无法点击的问题 */
+#intermediateGrid .action-links {
+  position: relative;
+  z-index: 10;
+}
+
+#intermediateGrid .action-links a {
+  display: inline-block;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  position: relative;
+  z-index: 20;
+  border: none !important;
+  outline: none !important;
+  pointer-events: auto !important;
+}
+
+#intermediateGrid .action-links a:hover {
+  background: #0b5ed7 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3) !important;
+}
+
+/* 修复高级级别按钮无法点击的问题 */
+#advancedGrid .action-links {
+  position: relative;
+  z-index: 10;
+}
+
+#advancedGrid .action-links a {
+  display: inline-block;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  position: relative;
+  z-index: 20;
+  border: none !important;
+  outline: none !important;
+  pointer-events: auto !important;
+}
+
+#advancedGrid .action-links a:hover {
+  background: #0b5ed7 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3) !important;
+}
+
 /* 确保卡片不会覆盖按钮 */
-#beginnerGrid .topic-card {
+#beginnerGrid .topic-card,
+#intermediateGrid .topic-card,
+#advancedGrid .topic-card {
   overflow: visible !important;
 }
 

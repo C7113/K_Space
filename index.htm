@@ -428,6 +428,44 @@
           }
         });
       });
+      
+      // 为进阶级别按钮添加额外的点击事件处理
+      const intermediateButtons = document.querySelectorAll('#intermediateGrid .action-links a');
+      intermediateButtons.forEach(button => {
+        // 确保按钮可点击
+        button.style.pointerEvents = 'auto';
+        button.style.cursor = 'pointer';
+        
+        // 添加额外的点击事件处理
+        button.addEventListener('click', function(e) {
+          // 检查href属性是否存在且有效
+          if (this.href && this.href !== '#') {
+            // 如果点击事件被阻止了，我们手动跳转
+            setTimeout(() => {
+              window.location.href = this.href;
+            }, 100);
+          }
+        });
+      });
+      
+      // 为高级级别按钮添加额外的点击事件处理
+      const advancedButtons = document.querySelectorAll('#advancedGrid .action-links a');
+      advancedButtons.forEach(button => {
+        // 确保按钮可点击
+        button.style.pointerEvents = 'auto';
+        button.style.cursor = 'pointer';
+        
+        // 添加额外的点击事件处理
+        button.addEventListener('click', function(e) {
+          // 检查href属性是否存在且有效
+          if (this.href && this.href !== '#') {
+            // 如果点击事件被阻止了，我们手动跳转
+            setTimeout(() => {
+              window.location.href = this.href;
+            }, 100);
+          }
+        });
+      });
     });
   </script>
 </body>
