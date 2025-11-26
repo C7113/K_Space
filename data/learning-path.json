@@ -22,14 +22,14 @@
           "id": "how-computer-works",
           "title": "计算机如何工作？",
           "desc": "输入->处理->输出(IPO模型)，算法概念，用流程图描述问题",
-          "link": "./topics/how-computer-works/index.html",
+          "link": "/topics/how-computer-works/index.html",
           "tags": ["启蒙", "思维"]
         },
         {
           "id": "first-experience",
           "title": "编程环境初体验",
           "desc": "IDE界面认识，编译和运行的概念，第一个Hello World程序",
-          "link": "./topics/first-experience/index.html",
+          "link": "#",
           "tags": ["工具", "实践"]
         }
       ]
@@ -43,21 +43,21 @@
           "id": "variables",
           "title": "变量与数据类型",
           "desc": "变量概念、核心数据类型(int/double/char/bool)、常量、命名规则",
-          "link": "./topics/variables-datatypes/index.html",
+          "link": "#",
           "tags": ["基础", "重点"]
         },
         {
           "id": "operators",
           "title": "运算符与表达式",
           "desc": "算术运算符、关系运算符、逻辑运算符、运算符优先级",
-          "link": "./topics/operators-expressions/index.html",
+          "link": "#",
           "tags": ["基础", "重点"]
         },
         {
           "id": "io-basics",
           "title": "输入与输出",
           "desc": "cout输出、cin输入、多个输入输出处理",
-          "link": "./topics/io-basics/index.html",
+          "link": "#",
           "tags": ["基础", "实践"]
         }
       ]
@@ -71,28 +71,28 @@
           "id": "sequence",
           "title": "顺序结构",
           "desc": "程序默认的执行顺序，语句的顺序执行",
-          "link": "./topics/sequence/index.html",
+          "link": "#",
           "tags": ["基础"]
         },
         {
           "id": "branch",
           "title": "分支结构",
           "desc": "if语句、if-else语句、if-else if-else语句、switch-case语句",
-          "link": "./topics/branch/index.html",
+          "link": "#",
           "tags": ["基础", "重点"]
         },
         {
           "id": "loop",
           "title": "循环结构",
           "desc": "for循环、while循环、do-while循环、循环控制",
-          "link": "./topics/loop/index.html",
+          "link": "#",
           "tags": ["基础", "重点"]
         },
         {
           "id": "nested",
           "title": "复合结构",
           "desc": "嵌套if语句、循环嵌套、break和continue",
-          "link": "./topics/nested/index.html",
+          "link": "#",
           "tags": ["进阶", "重点"]
         }
       ]
@@ -106,35 +106,35 @@
           "id": "array1d",
           "title": "一维数组",
           "desc": "数组概念、定义初始化、遍历、查找排序",
-          "link": "./topics/array1d/index.html",
+          "link": "#",
           "tags": ["基础", "重点"]
         },
         {
           "id": "array2d",
           "title": "二维数组",
           "desc": "表格和矩阵概念、定义遍历、实际应用",
-          "link": "./topics/array2d/index.html",
+          "link": "#",
           "tags": ["进阶", "重点"]
-        },
-        {
-          "id": "function-basics",
-          "title": "函数基础",
-          "desc": "函数定义调用、参数传递、返回值",
-          "link": "./topics/function-basics/index.html",
-          "tags": ["基础", "重点"]
         },
         {
           "id": "string-ops",
           "title": "字符串处理",
           "desc": "string类型、常用操作、字符数组对比",
-          "link": "./topics/string-ops/index.html",
+          "link": "#",
+          "tags": ["基础", "重点"]
+        },
+        {
+          "id": "function-basics",
+          "title": "函数基础",
+          "desc": "函数定义调用、参数传递、返回值",
+          "link": "#",
           "tags": ["基础", "重点"]
         },
         {
           "id": "recursion",
           "title": "递归初步",
           "desc": "递归概念、终止条件、经典递归例题",
-          "link": "./topics/recursion/index.html",
+          "link": "#",
           "tags": ["进阶", "重点"]
         }
       ]
@@ -148,83 +148,27 @@
           "id": "stl-intro",
           "title": "STL基础",
           "desc": "STL概念、常用头文件、基本用法",
-          "link": "./topics/stl-intro/index.html",
+          "link": "#",
           "tags": ["进阶", "工具"]
         },
         {
           "id": "containers",
           "title": "常用容器",
           "desc": "vector、stack、queue、priority_queue的使用",
-          "link": "./topics/containers/index.html",
+          "link": "#",
           "tags": ["进阶", "重点"]
         },
         {
           "id": "algorithms",
           "title": "常用算法",
           "desc": "sort、find、binary_search等算法函数",
-          "link": "./topics/algorithms/index.html",
+          "link": "#",
           "tags": ["进阶", "重点"]
         }
       ]
     },
     {
       "id": "module6",
-      "title": "数据结构与算法理论",
-      "description": "深入学习数据结构和算法理论知识",
-      "items": [
-        {
-          "id": "tree-basic",
-          "title": "树的基础知识",
-          "desc": "树的概念、二叉树、树的遍历",
-          "link": "./topics/tree-basic/index.html",
-          "tags": ["数据结构", "重点"]
-        },
-        {
-          "id": "graph-basic",
-          "title": "图的基础知识",
-          "desc": "图的概念、表示方法、基本算法",
-          "link": "./topics/graph-basic/index.html",
-          "tags": ["数据结构", "重点"]
-        },
-        {
-          "id": "number-theory",
-          "title": "数论基础",
-          "desc": "质数、最大公约数、模运算等数论知识",
-          "link": "./topics/number-theory/index.html",
-          "tags": ["算法", "数学"]
-        }
-      ]
-    },
-    {
-      "id": "module7",
-      "title": "高级数据结构",
-      "description": "掌握高级数据结构，解决复杂问题",
-      "items": [
-        {
-          "id": "union-find",
-          "title": "并查集",
-          "desc": "并查集的概念、实现和应用",
-          "link": "./topics/union-find/index.html",
-          "tags": ["数据结构", "重点"]
-        },
-        {
-          "id": "segment-tree",
-          "title": "线段树",
-          "desc": "线段树的概念、实现和区间操作",
-          "link": "./topics/segment-tree/index.html",
-          "tags": ["数据结构", "重点"]
-        },
-        {
-          "id": "trie",
-          "title": "字典树",
-          "desc": "字典树的概念、实现和字符串处理应用",
-          "link": "./topics/trie/index.html",
-          "tags": ["数据结构", "重点"]
-        }
-      ]
-    },
-    {
-      "id": "module8",
       "title": "算法思想与竞赛应用",
       "description": "掌握解决问题的思维方法",
       "items": [
@@ -232,35 +176,35 @@
           "id": "enum-sim",
           "title": "枚举与模拟",
           "desc": "暴力破解、日期计算、游戏模拟",
-          "link": "./topics/enum-sim/index.html",
+          "link": "#",
           "tags": ["算法", "基础"]
         },
         {
           "id": "greedy",
           "title": "贪心算法",
           "desc": "贪心策略、经典问题、局限性",
-          "link": "./topics/greedy/index.html",
+          "link": "#",
           "tags": ["算法", "重点"]
         },
         {
           "id": "divide-conquer",
           "title": "分治思想",
           "desc": "分而治之、归并排序、快速排序",
-          "link": "./topics/divide-conquer/index.html",
+          "link": "#",
           "tags": ["算法", "重点"]
         },
         {
           "id": "dp-basic",
           "title": "动态规划基础",
           "desc": "状态定义、状态转移、经典模型",
-          "link": "./topics/dp-basic/index.html",
+          "link": "#",
           "tags": ["算法", "进阶"]
         },
         {
           "id": "search",
           "title": "搜索算法",
           "desc": "深度优先搜索(DFS)、广度优先搜索(BFS)",
-          "link": "./topics/search/index.html",
+          "link": "#",
           "tags": ["算法", "进阶"]
         }
       ]

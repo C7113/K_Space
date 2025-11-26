@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>条件嵌套和三目运算</title>
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/animations.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .tab-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            margin: 0 5px;
+            background: var(--tab-bg);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .tab:hover {
+            background: var(--tab-hover-bg);
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+        }
+        .content.active {
+            display: block;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>📦 条件嵌套和三目运算</h1>
+            <p class="subtitle">—— 掌握条件嵌套与三目运算符的用法 | 程老师主讲</p>
+        </header>
+
+        <a href="../index.htm" class="return-link">🔙 返回知识导航首页</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'nested')">📘 条件嵌套</button>
+            <button class="tab" onclick="openTab(event, 'ternary')">🔢 三目运算符</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 项目实践</button>
+        </div>
+
+        <!-- 条件嵌套 -->
+        <div id="nested" class="content active">
+            <h2>什么是条件嵌套？</h2>
+            <div class="concept-item">
+                <h3>定义</h3>
+                <p>条件嵌套是指在一个条件语句中嵌套另一个条件语句，用于处理更复杂的逻辑。</p>
+            </div>
+            <div class="concept-item">
+                <h3>示例代码</h3>
+                <div class="code">
+                    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int score;
+    cout << "请输入分数: ";
+    cin >> score;
+
+    if (score >= 60) {
+        if (score >= 90) {
+            cout << "优秀" << endl;
+        } else {
+            cout << "及格" << endl;
+        }
+    } else {
+        cout << "不及格" << endl;
+    }
+
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 三目运算符 -->
+        <div id="ternary" class="content">
+            <h2>三目运算符</h2>
+            <div class="concept-item">
+                <h3>定义</h3>
+                <p>三目运算符（Ternary Operator）是条件判断的简写形式，语法如下：</p>
+                <div class="code">
+                    <pre><code>条件表达式 ? 表达式1 : 表达式2;</code></pre>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>示例代码</h3>
+                <div class="code">
+                    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int a = 10, b = 20;
+    int max = (a > b) ? a : b;
+
+    cout << "较大的值是: " << max << endl;
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目实践 -->
+        <div id="practice" class="content">
+            <h2>实践项目</h2>
+            <div class="concept-item">
+                <h3>练习 1</h3>
+                <p>编写一个程序，输入三个数字，输出其中最大的值。</p>
+            </div>
+            <div class="concept-item">
+                <h3>练习 2</h3>
+                <p>编写一个程序，输入一个学生的成绩，输出其对应的等级（优秀、良好、及格、不及格）。</p>
+            </div>
+            <div class="concept-item">
+                <h3>练习 3</h3>
+                <p>编写一个程序，输入两个整数，使用三目运算符输出较大的值。</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 C++ 学习路径</p>
+    </footer>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
