@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 结构体（Struct）详解</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #1976d2;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #1976d2;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        .code {
+            background: #2d3748;
+            color: #90caf9;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0d47a1;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .principle {
+            background: #e3f2fd;
+            border-left: 5px solid #64b5f6;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #1976d2;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #e3f2fd;
+        }
+        .highlight {
+            background: #e3f2fd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧱 C++ 结构体（Struct）</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 主题：爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'outline')">📋 课程目录</button>
+            <button class="tab" onclick="openTab(event, 'concept')">🧠 什么是结构体？</button>
+            <button class="tab" onclick="openTab(event, 'declaration')">📝 声明与定义</button>
+            <button class="tab" onclick="openTab(event, 'usage')">🔧 创建与使用</button>
+            <button class="tab" onclick="openTab(event, 'projects')">🎯 实战项目</button>
+            <button class="tab" onclick="openTab(event, 'operator-overload')">⚙️ 运算符重载（拓展）</button>
+        </div>
+
+        <!-- 课程目录 -->
+        <div id="outline" class="content active">
+            <h2>📋 本课核心内容</h2>
+            <ul style="font-size: 1.1em; line-height: 1.8;">
+                <li>理解<strong>结构体</strong>的概念及其在组织复合数据中的作用</li>
+                <li>掌握结构体的<strong>声明</strong>、<strong>定义</strong>和<strong>初始化</strong>方法</li>
+                <li>学会创建结构体变量并访问其成员（点运算符 <code>.</code>）</li>
+                <li>通过“学生成绩排序”和“贺年卡采购”两个项目强化应用能力</li>
+                <li>初步了解<strong>运算符重载</strong>在结构体比较中的用途（为后续课程铺垫）</li>
+            </ul>
+            <div class="principle">
+                <strong>匠心理念：</strong>结构体是构建现实世界模型的第一步，让程序更贴近生活。
+            </div>
+        </div>
+
+        <!-- 什么是结构体？ -->
+        <div id="concept" class="content">
+            <h2>🧠 什么是结构体？</h2>
+            <div class="concept-item">
+                <h3>为什么需要结构体？</h3>
+                <p>在实际问题中，一个对象往往包含多种类型的数据。例如：</p>
+                <ul>
+                    <li>一个学生：学号（字符串）、姓名（字符串）、年龄（整型）、成绩（整型）</li>
+                    <li>一个游戏角色：生命值（int）、攻击力（int）、防御力（int）、元素精通（int）</li>
+                </ul>
+                <p>若用多个独立变量表示，代码冗余且难以维护。结构体将这些相关数据<strong>封装</strong>成一个整体。</p>
+            </div>
+            <div class="concept-item">
+                <h3>结构体的本质</h3>
+                <p><strong>结构体（struct）</strong>是一种用户自定义的<strong>复合数据类型</strong>，可以包含多个不同类型的成员（字段）。</p>
+                <p>✅ 类似于“数据容器”或“对象模板”（在面向对象编程中，类是对结构体的扩展）。</p>
+            </div>
+        </div>
+
+        <!-- 声明与定义 -->
+        <div id="declaration" class="content">
+            <h2>📝 声明与定义</h2>
+            <div class="concept-item">
+                <h3>基本语法</h3>
+                <div class="code">
+struct Student {
+    string id;
+    string name;
+    int age;
+    int mathScore;
+};
+                </div>
+                <p>说明：</p>
+                <ul>
+                    <li><code>struct</code> 是关键字；</li>
+                    <li><code>Student</code> 是结构体标签（类型名）；</li>
+                    <li>大括号内是成员列表，每行以分号结尾。</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>声明位置</h3>
+                <p>通常放在全局作用域（函数外部），以便在多个函数中使用。</p>
+                <div class="tip">
+                    <strong>注意：</strong>结构体只定义了“类型”，不分配内存。只有创建变量时才分配空间。
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>初始化方式（C++11 起支持）</h3>
+                <div class="code">
+// 方式1：逐个赋值
+Student s1;
+s1.id = "1";
+s1.name = "zhangfang";
+s1.mathScore = 98;
+
+// 方式2：初始化列表（推荐）
+Student s2 = {"2", "liming", 15, 100};
+
+// 方式3：C++11 统一初始化
+Student s3{"3", "sunhua", 16, 99};
+                </div>
+            </div>
+        </div>
+
+        <!-- 创建与使用 -->
+        <div id="usage" class="content">
+            <h2>🔧 创建与使用</h2>
+            <div class="concept-item">
+                <h3>访问成员：点运算符 <code>.</code></h3>
+                <div class="code">
+Student stu = {"1", "zhangfang", 15, 98};
+cout << "学号: " << stu.id << endl;
+cout << "数学成绩: " << stu.mathScore << endl;
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>数组与结构体</h3>
+                <p>可以创建结构体数组来管理多个对象：</p>
+                <div class="code">
+const int N = 100;
+Student students[N]; // 最多100个学生
+
+// 输入
+for (int i = 0; i < n; i++) {
+    cin >> students[i].id >> students[i].name >> students[i].mathScore;
+}
+                </div>
+            </div>
+            <div class="example">
+                <h3>角色示例：游戏人物</h3>
+                <div class="code">
+struct Character {
+    string name;
+    int hp;
+    int attack;
+    int defense;
+    int mastery;
+};
+
+Character wendy = {"温迪", 100, 80, 50, 120};
+cout << wendy.name << " 的攻击力是 " << wendy.attack << endl;
+                </div>
+            </div>
+        </div>
+
+        <!-- 实战项目 -->
+        <div id="projects" class="content">
+            <h2>🎯 实战项目</h2>
+
+            <div class="concept-item">
+                <h3>项目1：学生成绩排序</h3>
+                <p><strong>题目：</strong>按数学成绩从高到低排序，成绩相同则按学号升序。</p>
+                <div class="code">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+struct Student {
+    string id;
+    string name;
+    int score;
+};
+
+// 自定义比较函数
+bool cmp(const Student& a, const Student& b) {
+    if (a.score != b.score)
+        return a.score > b.score; // 成绩降序
+    return a.id < b.id;           // 学号升序（字符串比较）
+}
+
+int main() {
+    int n;
+    cin >> n;
+    Student students[100];
+    for (int i = 0; i < n; i++) {
+        cin >> students[i].id >> students[i].name >> students[i].score;
+    }
+    sort(students, students + n, cmp);
+    for (int i = 0; i < n; i++) {
+        cout << students[i].id << " "
+             << students[i].name << " "
+             << students[i].score << endl;
+    }
+}
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>项目2：购买贺年卡（贪心+结构体）</h3>
+                <p><strong>题目：</strong>在多个商铺中购买 m 张贺卡，求最小花费。</p>
+                <div class="code">
+struct Shop {
+    int price;
+    int stock;
+};
+
+bool cmpShop(const Shop& a, const Shop& b) {
+    return a.price < b.price; // 按单价升序
+}
+
+int main() {
+    int m, n;
+    cin >> m >> n;
+    Shop shops[100];
+    for (int i = 0; i < n; i++) {
+        cin >> shops[i].price >> shops[i].stock;
+    }
+    sort(shops, shops + n, cmpShop);
+
+    int totalCost = 0;
+    for (int i = 0; i < n && m > 0; i++) {
+        int buy = min(m, shops[i].stock);
+        totalCost += buy * shops[i].price;
+        m -= buy;
+    }
+    cout << totalCost << endl;
+}
+                </div>
+                <p>✅ 核心思想：**贪心算法**——优先在最便宜的店买。</p>
+            </div>
+        </div>
+
+        <!-- 运算符重载（拓展） -->
+        <div id="operator-overload" class="content">
+            <h2>⚙️ 运算符重载（拓展）</h2>
+            <div class="concept-item">
+                <h3>为什么需要运算符重载？</h3>
+                <p>默认情况下，C++ 不知道如何比较两个结构体（如 <code>s1 > s2</code>）。通过<strong>运算符重载</strong>，我们可以赋予运算符特殊含义。</p>
+            </div>
+            <div class="concept-item">
+                <h3>在结构体内重载 <code>&lt;</code>（用于 sort）</h3>
+                <div class="code">
+struct Student {
+    string id;
+    string name;
+    int score;
+
+    // 重载 < 运算符
+    bool operator<(const Student& other) const {
+        if (score != other.score)
+            return score > other.score; // 注意：sort 默认升序，所以这里反向
+        return id < other.id;
+    }
+};
+
+// 使用时直接 sort，无需 cmp 函数
+sort(students, students + n);
+                </div>
+                <p>✅ 优势：代码更简洁，逻辑内聚。</p>
+            </div>
+            <div class="concept-item">
+                <h3>通用格式</h3>
+                <div class="code">
+返回类型 operator 运算符 (参数) const {
+    // 实现逻辑
+}
+                </div>
+                <p>常见重载： <code>&lt;</code>, <code>==</code>, <code>+</code>, <code>-</code> 等。</p>
+                <div class="tip">
+                    <strong>注意：</strong>本课仅作引入，详细内容将在“面向对象编程”章节深入讲解。
+                </div>
+            </div>
+            <div class="principle">
+                <strong>创新思维：</strong>结构体是通往面向对象编程的大门。掌握它，你就掌握了建模现实世界的能力。
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++ 结构体课程 | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>
