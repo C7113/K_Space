@@ -100,7 +100,7 @@ function createItemCard(item) {
   const p = document.createElement("p");
   p.textContent = item.desc || "";
   p.style.lineHeight = "1.6";
-  p.style.marginBottom = "1rem";
+  p.style.marginBottom = "1.25rem";
   p.style.flex = "1";
   el.appendChild(p);
 
@@ -174,8 +174,11 @@ function renderLearningPath(data) {
     a.style.padding = "0.25rem 0.5rem";
     a.style.borderRadius = "4px";
     a.style.transition = "all var(--transition)";
-    a.addEventListener("hover", function() {
+    a.addEventListener("mouseenter", function() {
       this.style.background = "var(--section-bg)";
+    });
+    a.addEventListener("mouseleave", function() {
+      this.style.background = "";
     });
     toc.appendChild(a);
   });

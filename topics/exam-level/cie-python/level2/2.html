@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python二级课程第二课：列表高级操作与内置函数</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .main-content {
+            flex: 3;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+        }
+        
+        h2 {
+            color: #27ae60;
+            border-left: 5px solid #2ecc71;
+            padding-left: 15px;
+            margin: 25px 0 15px;
+        }
+        
+        h3 {
+            color: #2ecc71;
+            margin: 20px 0 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .example-box {
+            background: #f1f8ff;
+            border-left: 4px solid #4dabf7;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            overflow-x: auto;
+        }
+        
+        .exercise {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .answer {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #2ecc71;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #27ae60;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .key-point {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .tip {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .method-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .method-table th {
+            background-color: #2ecc71;
+            color: white;
+            padding: 12px;
+        }
+        
+        .method-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .method-table tr:hover {
+            background-color: #f1f8e9;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Python二级课程第二课</h1>
+            <p class="subtitle">列表高级操作与内置函数</p>
+        </header>
+        
+        <div class="content">
+            <div class="main-content">
+                <div class="card">
+                    <h2>课程目标</h2>
+                    <p>掌握Python列表的高级操作方法，包括增删改查、排序、复制以及常用内置函数的使用。</p>
+                </div>
+                
+                <h2>一、列表常用操作方法</h2>
+                <div class="card">
+                    <h3>1. 增加元素的方法</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>append(元素)</td>
+                            <td>在列表末尾添加一个元素</td>
+                            <td>list.append(4)</td>
+                        </tr>
+                        <tr>
+                            <td>insert(索引, 元素)</td>
+                            <td>在指定索引位置插入元素</td>
+                            <td>list.insert(1, 'a')</td>
+                        </tr>
+                        <tr>
+                            <td>extend(可迭代对象)</td>
+                            <td>将可迭代对象的元素逐个添加到列表末尾</td>
+                            <td>list.extend([4,5,6])</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 增加元素示例<br>
+                        fruits = ['apple', 'banana']<br>
+                        <br>
+                        # 使用append添加单个元素<br>
+                        fruits.append('orange')<br>
+                        print(fruits)  # 输出：['apple', 'banana', 'orange']<br>
+                        <br>
+                        # 使用insert在指定位置插入<br>
+                        fruits.insert(1, 'grape')<br>
+                        print(fruits)  # 输出：['apple', 'grape', 'banana', 'orange']<br>
+                        <br>
+                        # 使用extend添加多个元素<br>
+                        fruits.extend(['peach', 'pear'])<br>
+                        print(fruits)  # 输出：['apple', 'grape', 'banana', 'orange', 'peach', 'pear']
+                    </div>
+                    
+                    <div class="tip">
+                        <strong>注意：</strong>append()和extend()的区别：append()将整个对象作为一个元素添加，extend()将可迭代对象的元素逐个添加。
+                    </div>
+                    
+                    <h3>2. 删除元素的方法</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>del 列表[索引]</td>
+                            <td>删除指定索引位置的元素</td>
+                            <td>del list[1]</td>
+                        </tr>
+                        <tr>
+                            <td>remove(元素)</td>
+                            <td>删除第一个匹配的元素</td>
+                            <td>list.remove('a')</td>
+                        </tr>
+                        <tr>
+                            <td>pop()</td>
+                            <td>删除并返回最后一个元素</td>
+                            <td>list.pop()</td>
+                        </tr>
+                        <tr>
+                            <td>pop(索引)</td>
+                            <td>删除并返回指定索引位置的元素</td>
+                            <td>list.pop(2)</td>
+                        </tr>
+                        <tr>
+                            <td>clear()</td>
+                            <td>清空列表中的所有元素</td>
+                            <td>list.clear()</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 删除元素示例<br>
+                        numbers = [1, 2, 3, 4, 5, 2]<br>
+                        <br>
+                        # 使用del删除指定索引元素<br>
+                        del numbers[1]<br>
+                        print(numbers)  # 输出：[1, 3, 4, 5, 2]<br>
+                        <br>
+                        # 使用remove删除第一个匹配元素<br>
+                        numbers.remove(2)<br>
+                        print(numbers)  # 输出：[1, 3, 4, 5]<br>
+                        <br>
+                        # 使用pop删除并返回元素<br>
+                        last = numbers.pop()<br>
+                        print("删除的元素:", last)  # 输出：删除的元素: 5<br>
+                        print(numbers)  # 输出：[1, 3, 4]<br>
+                        <br>
+                        # 使用clear清空列表<br>
+                        numbers.clear()<br>
+                        print(numbers)  # 输出：[]
+                    </div>
+                    
+                    <h3>3. 修改元素的方法</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>列表[索引] = 新值</td>
+                            <td>修改指定索引位置的元素</td>
+                            <td>list[0] = 'new'</td>
+                        </tr>
+                        <tr>
+                            <td>列表[起始:结束] = 新列表</td>
+                            <td>修改指定范围内的元素</td>
+                            <td>list[1:3] = [4,5]</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 修改元素示例<br>
+                        colors = ['red', 'green', 'blue', 'yellow']<br>
+                        <br>
+                        # 修改单个元素<br>
+                        colors[1] = 'purple'<br>
+                        print(colors)  # 输出：['red', 'purple', 'blue', 'yellow']<br>
+                        <br>
+                        # 修改范围内的元素<br>
+                        colors[1:3] = ['orange', 'pink']<br>
+                        print(colors)  # 输出：['red', 'orange', 'pink', 'yellow']<br>
+                        <br>
+                        # 修改不连续的元素（需要两边数量相等）<br>
+                        numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]<br>
+                        numbers[0:8:2] = [10, 12, 14, 16]<br>
+                        print(numbers)  # 输出：[10, 1, 12, 3, 14, 5, 16, 7, 8, 9]
+                    </div>
+                    
+                    <h3>4. 查询元素的方法</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>列表[索引]</td>
+                            <td>获取指定索引位置的元素</td>
+                            <td>list[0]</td>
+                        </tr>
+                        <tr>
+                            <td>index(元素)</td>
+                            <td>返回元素第一次出现的索引</td>
+                            <td>list.index('a')</td>
+                        </tr>
+                        <tr>
+                            <td>count(元素)</td>
+                            <td>返回元素在列表中出现的次数</td>
+                            <td>list.count('a')</td>
+                        </tr>
+                        <tr>
+                            <td>len(列表)</td>
+                            <td>返回列表长度（元素个数）</td>
+                            <td>len(list)</td>
+                        </tr>
+                        <tr>
+                            <td>元素 in 列表</td>
+                            <td>检查元素是否在列表中</td>
+                            <td>'a' in list</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 查询元素示例<br>
+                        fruits = ['apple', 'banana', 'orange', 'apple', 'grape']<br>
+                        <br>
+                        # 使用index查找元素位置<br>
+                        pos = fruits.index('orange')<br>
+                        print("orange的位置:", pos)  # 输出：orange的位置: 2<br>
+                        <br>
+                        # 使用count统计元素出现次数<br>
+                        count = fruits.count('apple')<br>
+                        print("apple出现的次数:", count)  # 输出：apple出现的次数: 2<br>
+                        <br>
+                        # 使用len获取列表长度<br>
+                        length = len(fruits)<br>
+                        print("列表长度:", length)  # 输出：列表长度: 5<br>
+                        <br>
+                        # 使用in检查元素是否存在<br>
+                        has_banana = 'banana' in fruits<br>
+                        print("是否有banana:", has_banana)  # 输出：是否有banana: True
+                    </div>
+                </div>
+                
+                <h2>二、列表排序与反转</h2>
+                <div class="card">
+                    <h3>1. 排序方法</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>sort()</td>
+                            <td>对原列表进行升序排序（改变原列表）</td>
+                            <td>list.sort()</td>
+                        </tr>
+                        <tr>
+                            <td>sort(reverse=True)</td>
+                            <td>对原列表进行降序排序</td>
+                            <td>list.sort(reverse=True)</td>
+                        </tr>
+                        <tr>
+                            <td>sorted(列表)</td>
+                            <td>返回排序后的新列表（不改变原列表）</td>
+                            <td>new_list = sorted(list)</td>
+                        </tr>
+                        <tr>
+                            <td>reverse()</td>
+                            <td>反转列表中的元素顺序（改变原列表）</td>
+                            <td>list.reverse()</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 排序与反转示例<br>
+                        numbers = [3, 1, 4, 1, 5, 9, 2, 6]<br>
+                        <br>
+                        # 使用sort升序排序（改变原列表）<br>
+                        numbers.sort()<br>
+                        print("升序排序:", numbers)  # 输出：升序排序: [1, 1, 2, 3, 4, 5, 6, 9]<br>
+                        <br>
+                        # 使用sort降序排序<br>
+                        numbers.sort(reverse=True)<br>
+                        print("降序排序:", numbers)  # 输出：降序排序: [9, 6, 5, 4, 3, 2, 1, 1]<br>
+                        <br>
+                        # 使用sorted创建排序副本（不改变原列表）<br>
+                        original = [3, 1, 4, 1, 5, 9, 2, 6]<br>
+                        sorted_list = sorted(original)<br>
+                        print("原列表:", original)  # 输出：原列表: [3, 1, 4, 1, 5, 9, 2, 6]<br>
+                        print("排序副本:", sorted_list)  # 输出：排序副本: [1, 1, 2, 3, 4, 5, 6, 9]<br>
+                        <br>
+                        # 使用reverse反转列表<br>
+                        numbers.reverse()<br>
+                        print("反转后:", numbers)  # 输出：反转后: [1, 1, 2, 3, 4, 5, 6, 9]
+                    </div>
+                    
+                    <div class="tip">
+                        <strong>注意：</strong>sort()方法直接修改原列表，sorted()函数返回一个新列表而不改变原列表。
+                    </div>
+                    
+                    <h3>2. 列表复制方法</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>copy()</td>
+                            <td>创建列表的浅拷贝</td>
+                            <td>new_list = list.copy()</td>
+                        </tr>
+                        <tr>
+                            <td>列表[:]</td>
+                            <td>使用切片创建列表的浅拷贝</td>
+                            <td>new_list = list[:]</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 列表复制示例<br>
+                        original = [1, 2, 3, 4, 5]<br>
+                        <br>
+                        # 使用copy()方法复制<br>
+                        copy1 = original.copy()<br>
+                        copy1[0] = 100<br>
+                        print("原列表:", original)  # 输出：原列表: [1, 2, 3, 4, 5]<br>
+                        print("副本1:", copy1)      # 输出：副本1: [100, 2, 3, 4, 5]<br>
+                        <br>
+                        # 使用切片复制<br>
+                        copy2 = original[:]<br>
+                        copy2[0] = 200<br>
+                        print("原列表:", original)  # 输出：原列表: [1, 2, 3, 4, 5]<br>
+                        print("副本2:", copy2)      # 输出：副本2: [200, 2, 3, 4, 5]
+                    </div>
+                </div>
+                
+                <h2>三、列表内置函数</h2>
+                <div class="card">
+                    <h3>常用内置函数</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>函数</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>min(列表)</td>
+                            <td>返回列表中的最小值</td>
+                            <td>min([1, 2, 3]) → 1</td>
+                        </tr>
+                        <tr>
+                            <td>max(列表)</td>
+                            <td>返回列表中的最大值</td>
+                            <td>max([1, 2, 3]) → 3</td>
+                        </tr>
+                        <tr>
+                            <td>sum(列表)</td>
+                            <td>返回列表中所有元素的和</td>
+                            <td>sum([1, 2, 3]) → 6</td>
+                        </tr>
+                        <tr>
+                            <td>len(列表)</td>
+                            <td>返回列表中元素的个数</td>
+                            <td>len([1, 2, 3]) → 3</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 内置函数示例<br>
+                        numbers = [1, 23, 2, 334, 8989]<br>
+                        <br>
+                        # 获取最小值<br>
+                        min_val = min(numbers)<br>
+                        print("最小值:", min_val)  # 输出：最小值: 1<br>
+                        <br>
+                        # 获取最大值<br>
+                        max_val = max(numbers)<br>
+                        print("最大值:", max_val)  # 输出：最大值: 8989<br>
+                        <br>
+                        # 计算总和<br>
+                        total = sum(numbers)<br>
+                        print("总和:", total)  # 输出：总和: 9349<br>
+                        <br>
+                        # 获取长度<br>
+                        length = len(numbers)<br>
+                        print("长度:", length)  # 输出：长度: 5<br>
+                        <br>
+                        # 字符串列表的最小最大值（按字典序）<br>
+                        words = ["abc", "abd", "abf"]<br>
+                        print("最小字符串:", min(words))  # 输出：最小字符串: abc<br>
+                        print("最大字符串:", max(words))  # 输出：最大字符串: abf
+                    </div>
+                </div>
+                
+                <h2>四、例题训练</h2>
+                <div class="card">
+                    <div class="exercise">
+                        <h3>题目1：列表综合操作</h3>
+                        <p>创建一个包含10个整数的列表，然后：</p>
+                        <ol>
+                            <li>在列表开头添加一个元素0</li>
+                            <li>在列表中间（第5个位置）插入元素99</li>
+                            <li>删除列表中的第3个元素</li>
+                            <li>查找元素99的位置</li>
+                            <li>将列表排序并反转</li>
+                        </ol>
+                        <button class="btn" onclick="toggleAnswer('answer1')">显示答案</button>
+                        
+                        <div id="answer1" class="answer">
+                            # 答案<br>
+                            # 创建列表<br>
+                            numbers = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]<br>
+                            print("原列表:", numbers)<br>
+                            <br>
+                            # 1. 在开头添加元素0<br>
+                            numbers.insert(0, 0)<br>
+                            print("添加0后:", numbers)<br>
+                            <br>
+                            # 2. 在第5个位置插入元素99<br>
+                            numbers.insert(4, 99)  # 索引4是第5个位置<br>
+                            print("插入99后:", numbers)<br>
+                            <br>
+                            # 3. 删除第3个元素<br>
+                            del numbers[2]  # 索引2是第3个元素<br>
+                            print("删除第3个元素后:", numbers)<br>
+                            <br>
+                            # 4. 查找元素99的位置<br>
+                            pos = numbers.index(99)<br>
+                            print("99的位置:", pos)<br>
+                            <br>
+                            # 5. 排序并反转<br>
+                            numbers.sort()<br>
+                            numbers.reverse()<br>
+                            print("排序并反转后:", numbers)
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h3>题目2：学生成绩管理</h3>
+                        <p>创建一个学生成绩列表，包含5个学生的成绩：[85, 92, 78, 96, 88]</p>
+                        <p>完成以下操作：</p>
+                        <ol>
+                            <li>计算平均成绩</li>
+                            <li>找出最高分和最低分</li>
+                            <li>添加一个新学生的成绩90</li>
+                            <li>删除最低分</li>
+                            <li>将成绩按从高到低排序</li>
+                        </ol>
+                        <button class="btn" onclick="toggleAnswer('answer2')">显示答案</button>
+                        
+                        <div id="answer2" class="answer">
+                            # 答案<br>
+                            scores = [85, 92, 78, 96, 88]<br>
+                            print("原始成绩:", scores)<br>
+                            <br>
+                            # 1. 计算平均成绩<br>
+                            average = sum(scores) / len(scores)<br>
+                            print("平均成绩:", average)<br>
+                            <br>
+                            # 2. 找出最高分和最低分<br>
+                            max_score = max(scores)<br>
+                            min_score = min(scores)<br>
+                            print("最高分:", max_score)<br>
+                            print("最低分:", min_score)<br>
+                            <br>
+                            # 3. 添加新学生成绩90<br>
+                            scores.append(90)<br>
+                            print("添加90后:", scores)<br>
+                            <br>
+                            # 4. 删除最低分<br>
+                            scores.remove(min_score)<br>
+                            print("删除最低分后:", scores)<br>
+                            <br>
+                            # 5. 按从高到低排序<br>
+                            scores.sort(reverse=True)<br>
+                            print("从高到低排序:", scores)
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h3>题目3：列表方法综合应用</h3>
+                        <p>给定列表：<code>data = [1, 2, 3, 2, 4, 2, 5, 2]</code></p>
+                        <p>完成以下操作：</p>
+                        <ol>
+                            <li>统计数字2出现的次数</li>
+                            <li>删除所有数字2（不能使用循环）</li>
+                            <li>在列表末尾添加[6, 7, 8]三个元素</li>
+                            <li>创建列表的副本并修改副本，验证原列表是否改变</li>
+                            <li>清空列表</li>
+                        </ol>
+                        <button class="btn" onclick="toggleAnswer('answer3')">显示答案</button>
+                        
+                        <div id="answer3" class="answer">
+                            data = [1, 2, 3, 2, 4, 2, 5, 2]<br>
+                            print("原始列表:", data)<br>
+                            <br>
+                            # 1. 统计数字2出现的次数<br>
+                            count = data.count(2)<br>
+                            print("2出现的次数:", count)<br>
+                            <br>
+                            # 2. 删除所有数字2（使用循环）<br>
+                            # 注意：不能直接在遍历时删除，可以反向遍历或使用列表推导式<br>
+                            # 方法1：使用while循环<br>
+                            while 2 in data:<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;data.remove(2)<br>
+                            print("删除所有2后:", data)<br>
+                            <br>
+                            # 3. 在列表末尾添加[6, 7, 8]<br>
+                            data.extend([6, 7, 8])<br>
+                            print("添加6,7,8后:", data)<br>
+                            <br>
+                            # 4. 创建副本并修改<br>
+                            data_copy = data.copy()<br>
+                            data_copy[0] = 100<br>
+                            print("原列表:", data)<br>
+                            print("副本:", data_copy)<br>
+                            <br>
+                            # 5. 清空列表<br>
+                            data.clear()<br>
+                            print("清空后:", data)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <h2>课程要点</h2>
+                <div class="key-point">
+                    <h3>核心方法</h3>
+                    <ul>
+                        <li>增加：append, insert, extend</li>
+                        <li>删除：del, remove, pop, clear</li>
+                        <li>修改：直接赋值，切片赋值</li>
+                        <li>查询：index, count, len, in</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>排序与复制</h3>
+                    <ul>
+                        <li>sort() - 改变原列表</li>
+                        <li>sorted() - 返回新列表</li>
+                        <li>reverse() - 反转列表</li>
+                        <li>copy()和[:] - 创建副本</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>内置函数</h3>
+                    <ul>
+                        <li>min() - 最小值</li>
+                        <li>max() - 最大值</li>
+                        <li>sum() - 求和</li>
+                        <li>len() - 长度</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>常见错误</h3>
+                    <ul>
+                        <li>混淆append和extend</li>
+                        <li>在遍历列表时删除元素</li>
+                        <li>混淆sort和sorted</li>
+                        <li>直接赋值导致的地址传递</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>下节课预告</h3>
+                    <p>元组与集合</p>
+                    <ul>
+                        <li>元组的概念与操作</li>
+                        <li>集合的概念与操作</li>
+                        <li>列表、元组与集合的比较</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav">
+            <button class="btn" onclick="location.href='1.html'">上一课</button>
+            <button class="btn" onclick="location.href='3.html'">下一课</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const answer = document.getElementById(id);
+            if (answer.style.display === "block") {
+                answer.style.display = "none";
+            } else {
+                answer.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python二级课程第七课：计算思维与综合实战</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .main-content {
+            flex: 3;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+        }
+        
+        h2 {
+            color: #c0392b;
+            border-left: 5px solid #e74c3c;
+            padding-left: 15px;
+            margin: 25px 0 15px;
+        }
+        
+        h3 {
+            color: #e74c3c;
+            margin: 20px 0 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .example-box {
+            background: #f1f8ff;
+            border-left: 4px solid #4dabf7;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            overflow-x: auto;
+        }
+        
+        .exercise {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .answer {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #c0392b;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .key-point {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .tip {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .method-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .method-table th {
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px;
+        }
+        
+        .method-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .method-table tr:hover {
+            background-color: #fdeaea;
+        }
+        
+        .debug-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .correct-code {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Python二级课程第七课</h1>
+            <p class="subtitle">计算思维与综合实战</p>
+        </header>
+        
+        <div class="content">
+            <div class="main-content">
+                <div class="card">
+                    <h2>课程目标</h2>
+                    <p>培养计算思维能力，掌握程序阅读、调试和错误处理的技巧，能够综合运用所学知识解决实际问题。</p>
+                </div>
+                
+                <h2>一、计算思维与问题解决</h2>
+                <div class="card">
+                    <h3>1. 计算思维的概念</h3>
+                    <p>计算思维是一种运用计算机科学基本概念进行问题求解、系统设计和人类行为理解的思维方式。</p>
+                    
+                    <ul>
+                        <li><strong>分解</strong>：将复杂问题分解为更小、更易管理的部分</li>
+                        <li><strong>模式识别</strong>：发现问题的规律和模式</li>
+                        <li><strong>抽象</strong>：提取问题的核心特征，忽略无关细节</li>
+                        <li><strong>算法设计</strong>：设计步骤清晰的解决方案</li>
+                    </ul>
+                    
+                    <div class="example-box">
+                        # 计算思维示例：计算平均分<br>
+                        # 1. 分解：输入成绩 -> 计算总和 -> 计算平均 -> 输出结果<br>
+                        # 2. 模式识别：所有成绩都需要相加，然后除以数量<br>
+                        # 3. 抽象：只关心成绩数值，不关心具体学生<br>
+                        # 4. 算法设计：明确的步骤<br>
+                        <br>
+                        scores = [85, 92, 78, 90, 88]<br>
+                        total = 0<br>
+                        count = 0<br>
+                        <br>
+                        for score in scores:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;total += score<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;count += 1<br>
+                        <br>
+                        average = total / count<br>
+                        print(f"平均分: {average:.2f}")
+                    </div>
+                    
+                    <h3>2. 问题解决流程</h3>
+                    
+                    <div class="example-box">
+                        # 问题解决流程示例：找出列表中的最大值<br>
+                        # 1. 理解问题：需要在列表中找出最大的数字<br>
+                        # 2. 制定计划：遍历列表，比较每个元素<br>
+                        # 3. 执行计划：编写代码实现<br>
+                        # 4. 检查回顾：验证结果是否正确<br>
+                        <br>
+                        numbers = [3, 7, 2, 9, 1, 8, 5]<br>
+                        <br>
+                        # 初始化最大值<br>
+                        max_value = numbers[0]<br>
+                        <br>
+                        # 遍历列表，比较每个元素<br>
+                        for num in numbers:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if num > max_value:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_value = num<br>
+                        <br>
+                        print(f"列表中的最大值: {max_value}")<br>
+                        <br>
+                        # 检查：使用内置函数验证<br>
+                        print(f"验证: {max(numbers)}")
+                    </div>
+                </div>
+                
+                <h2>二、程序阅读与调试</h2>
+                <div class="card">
+                    <h3>1. 程序阅读技巧</h3>
+                    <p>阅读程序时，需要理解代码的逻辑和执行流程。</p>
+                    
+                    <div class="example-box">
+                        # 程序阅读示例1<br>
+                        def process_data(data):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;result = []<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for item in data:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if item % 2 == 0:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result.append(item * 2)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result.append(item + 1)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return result<br>
+                        <br>
+                        numbers = [1, 2, 3, 4, 5]<br>
+                        output = process_data(numbers)<br>
+                        print(output)  # 输出什么？<br>
+                        <br>
+                        # 分析：<br>
+                        # - 遍历列表中的每个元素<br>
+                        # - 如果是偶数，乘以2<br>
+                        # - 如果是奇数，加1<br>
+                        # - 所以输出应该是: [2, 4, 4, 8, 6]
+                    </div>
+                    
+                    <div class="example-box">
+                        # 程序阅读示例2<br>
+                        text = "Python programming is fun"<br>
+                        words = text.split()<br>
+                        result = ""<br>
+                        <br>
+                        for word in words:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if len(word) > 3:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result += word.upper() + " "<br>
+                        <br>
+                        print(result.strip())  # 输出什么？<br>
+                        <br>
+                        # 分析：<br>
+                        # - 将文本按空格分割成单词列表<br>
+                        # - 遍历每个单词<br>
+                        # - 如果单词长度大于3，转换为大写并添加到结果<br>
+                        # - 所以输出应该是: "PYTHON PROGRAMMING"
+                    </div>
+                    
+                    <h3>2. 常见错误类型</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>错误类型</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>语法错误</td>
+                            <td>代码不符合Python语法规则</td>
+                            <td>缺少冒号、括号不匹配等</td>
+                        </tr>
+                        <tr>
+                            <td>运行时错误</td>
+                            <td>代码语法正确，但执行时出错</td>
+                            <td>除零错误、索引越界等</td>
+                        </tr>
+                        <tr>
+                            <td>逻辑错误</td>
+                            <td>代码能运行，但结果不符合预期</td>
+                            <td>算法错误、条件判断错误等</td>
+                        </tr>
+                    </table>
+                    
+                    <h3>3. 调试技巧</h3>
+                    
+                    <div class="debug-box">
+                        # 有错误的代码<br>
+                        def calculate_average(scores):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;total = 0<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for i in range(len(scores)):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;total = total + scores[i]  # 错误：应该是 +=<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;average = total / len(scores)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return average<br>
+                        <br>
+                        # 测试<br>
+                        test_scores = [85, 92, 78]<br>
+                        result = calculate_average(test_scores)<br>
+                        print(f"平均分: {result}")  # 输出错误，应该是85
+                    </div>
+                    
+                    <div class="correct-code">
+                        # 调试后的正确代码<br>
+                        def calculate_average(scores):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;total = 0<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for i in range(len(scores)):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;total += scores[i]  # 修正：使用 +=<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;average = total / len(scores)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return average<br>
+                        <br>
+                        # 测试<br>
+                        test_scores = [85, 92, 78]<br>
+                        result = calculate_average(test_scores)<br>
+                        print(f"平均分: {result}")  # 正确输出: 平均分: 85.0
+                    </div>
+                    
+                    <div class="tip">
+                        <strong>调试技巧：</strong>
+                        <ul>
+                            <li>使用print语句输出中间结果</li>
+                            <li>分步骤测试代码</li>
+                            <li>检查边界条件</li>
+                            <li>使用调试器（如pdb）</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h2>三、内置函数复习</h2>
+                <div class="card">
+                    <h3>1. 数据类型转换函数</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>函数</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>int(x)</td>
+                            <td>将x转换为整数</td>
+                            <td>int("123") → 123</td>
+                        </tr>
+                        <tr>
+                            <td>float(x)</td>
+                            <td>将x转换为浮点数</td>
+                            <td>float("3.14") → 3.14</td>
+                        </tr>
+                        <tr>
+                            <td>str(x)</td>
+                            <td>将x转换为字符串</td>
+                            <td>str(123) → "123"</td>
+                        </tr>
+                        <tr>
+                            <td>list(x)</td>
+                            <td>将x转换为列表</td>
+                            <td>list("abc") → ['a','b','c']</td>
+                        </tr>
+                        <tr>
+                            <td>tuple(x)</td>
+                            <td>将x转换为元组</td>
+                            <td>tuple([1,2,3]) → (1,2,3)</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 数据类型转换示例<br>
+                        # 字符串转数字<br>
+                        num_str = "123"<br>
+                        num_int = int(num_str)<br>
+                        print(f"字符串转整数: {num_int}, 类型: {type(num_int)}")<br>
+                        <br>
+                        # 数字转字符串<br>
+                        number = 456<br>
+                        num_str = str(number)<br>
+                        print(f"数字转字符串: {num_str}, 类型: {type(num_str)}")<br>
+                        <br>
+                        # 进制转换<br>
+                        binary_str = "1010"<br>
+                        decimal_num = int(binary_str, 2)<br>
+                        print(f"二进制{binary_str}转十进制: {decimal_num}")<br>
+                        <br>
+                        # 列表和元组转换<br>
+                        my_list = [1, 2, 3]<br>
+                        my_tuple = tuple(my_list)<br>
+                        print(f"列表转元组: {my_tuple}")
+                    </div>
+                    
+                    <h3>2. 数学相关函数</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>函数</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>abs(x)</td>
+                            <td>返回x的绝对值</td>
+                            <td>abs(-5) → 5</td>
+                        </tr>
+                        <tr>
+                            <td>round(x)</td>
+                            <td>返回x的四舍五入值</td>
+                            <td>round(3.14159, 2) → 3.14</td>
+                        </tr>
+                        <tr>
+                            <td>max(iterable)</td>
+                            <td>返回可迭代对象中的最大值</td>
+                            <td>max([1,5,3]) → 5</td>
+                        </tr>
+                        <tr>
+                            <td>min(iterable)</td>
+                            <td>返回可迭代对象中的最小值</td>
+                            <td>min([1,5,3]) → 1</td>
+                        </tr>
+                        <tr>
+                            <td>sum(iterable)</td>
+                            <td>返回可迭代对象中所有元素的和</td>
+                            <td>sum([1,2,3]) → 6</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 数学函数示例<br>
+                        numbers = [3, 1, 4, 1, 5, 9, 2]<br>
+                        <br>
+                        # 最大值和最小值<br>
+                        max_val = max(numbers)<br>
+                        min_val = min(numbers)<br>
+                        print(f"最大值: {max_val}, 最小值: {min_val}")<br>
+                        <br>
+                        # 求和<br>
+                        total = sum(numbers)<br>
+                        print(f"总和: {total}")<br>
+                        <br>
+                        # 绝对值<br>
+                        negative_num = -10<br>
+                        abs_val = abs(negative_num)<br>
+                        print(f"绝对值: {abs_val}")<br>
+                        <br>
+                        # 四舍五入<br>
+                        pi = 3.14159<br>
+                        rounded = round(pi, 2)<br>
+                        print(f"四舍五入: {rounded}")
+                    </div>
+                    
+                    <h3>3. 进制转换函数</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>函数</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>bin(x)</td>
+                            <td>将整数转换为二进制字符串</td>
+                            <td>bin(10) → '0b1010'</td>
+                        </tr>
+                        <tr>
+                            <td>oct(x)</td>
+                            <td>将整数转换为八进制字符串</td>
+                            <td>oct(10) → '0o12'</td>
+                        </tr>
+                        <tr>
+                            <td>hex(x)</td>
+                            <td>将整数转换为十六进制字符串</td>
+                            <td>hex(255) → '0xff'</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 进制转换示例<br>
+                        decimal_num = 42<br>
+                        <br>
+                        # 转换为二进制<br>
+                        binary = bin(decimal_num)<br>
+                        print(f"十进制 {decimal_num} 的二进制: {binary}")<br>
+                        <br>
+                        # 转换为八进制<br>
+                        octal = oct(decimal_num)<br>
+                        print(f"十进制 {decimal_num} 的八进制: {octal}")<br>
+                        <br>
+                        # 转换为十六进制<br>
+                        hexadecimal = hex(decimal_num)<br>
+                        print(f"十进制 {decimal_num} 的十六进制: {hexadecimal}")<br>
+                        <br>
+                        # 其他进制转十进制<br>
+                        binary_str = "101010"<br>
+                        from_binary = int(binary_str, 2)<br>
+                        print(f"二进制 {binary_str} 的十进制: {from_binary}")<br>
+                        <br>
+                        octal_str = "52"<br>
+                        from_octal = int(octal_str, 8)<br>
+                        print(f"八进制 {octal_str} 的十进制: {from_octal}")<br>
+                        <br>
+                        hex_str = "2a"<br>
+                        from_hex = int(hex_str, 16)<br>
+                        print(f"十六进制 {hex_str} 的十进制: {from_hex}")
+                    </div>
+                </div>
+                
+                <h2>四、综合实战项目</h2>
+                <div class="card">
+                    <h3>1. 学生成绩管理系统</h3>
+                    
+                    <div class="example-box">
+                        # 学生成绩管理系统<br>
+                        def display_menu():<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("\n=== 学生成绩管理系统 ===")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("1. 添加学生成绩")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("2. 查看所有成绩")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("3. 计算平均分")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("4. 查找学生成绩")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("5. 删除学生成绩")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("6. 退出系统")<br>
+                        <br>
+                        def add_student(students):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;name = input("请输入学生姓名: ")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;score = float(input("请输入学生成绩: "))<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;students[name] = score<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"成功添加学生 {name}，成绩 {score}")<br>
+                        <br>
+                        def view_all_students(students):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if not students:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print("暂无学生成绩记录")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("\n所有学生成绩:")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for name, score in students.items():<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"{name}: {score}")<br>
+                        <br>
+                        def calculate_average(students):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if not students:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print("暂无学生成绩记录")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;total = sum(students.values())<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;average = total / len(students)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"平均分: {average:.2f}")<br>
+                        <br>
+                        def find_student(students):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;name = input("请输入要查找的学生姓名: ")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if name in students:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"{name}的成绩是: {students[name]}")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"未找到学生 {name}")<br>
+                        <br>
+                        def delete_student(students):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;name = input("请输入要删除的学生姓名: ")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if name in students:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;del students[name]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"成功删除学生 {name}")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"未找到学生 {name}")<br>
+                        <br>
+                        def main():<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;students = {}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while True:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display_menu()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;choice = input("请选择操作(1-6): ")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if choice == '1':<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add_student(students)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elif choice == '2':<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;view_all_students(students)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elif choice == '3':<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;calculate_average(students)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elif choice == '4':<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;find_student(students)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elif choice == '5':<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete_student(students)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elif choice == '6':<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print("感谢使用，再见！")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print("无效选择，请重新输入")<br>
+                        <br>
+                        # 运行程序<br>
+                        if __name__ == "__main__":<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;main()
+                    </div>
+                    
+                    <h3>2. 数据分析小工具</h3>
+                    
+                    <div class="example-box">
+                        # 数据分析小工具<br>
+                        def analyze_data(data):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"""分析数据并返回统计信息"""<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if not data:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "数据为空"<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stats = {}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stats['count'] = len(data)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stats['sum'] = sum(data)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stats['average'] = stats['sum'] / stats['count']<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stats['max'] = max(data)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stats['min'] = min(data)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stats['range'] = stats['max'] - stats['min']<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;# 计算中位数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;sorted_data = sorted(data)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;mid = stats['count'] // 2<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if stats['count'] % 2 == 0:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stats['median'] = (sorted_data[mid-1] + sorted_data[mid]) / 2<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stats['median'] = sorted_data[mid]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return stats<br>
+                        <br>
+                        def display_stats(stats):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"""显示统计信息"""<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if isinstance(stats, str):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(stats)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("\n=== 数据分析结果 ===")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"数据个数: {stats['count']}")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"总和: {stats['sum']}")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"平均值: {stats['average']:.2f}")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"最大值: {stats['max']}")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"最小值: {stats['min']}")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"极差: {stats['range']}")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"中位数: {stats['median']}")<br>
+                        <br>
+                        # 测试数据<br>
+                        test_data = [23, 45, 67, 12, 89, 34, 56, 78, 90, 11]<br>
+                        <br>
+                        # 分析数据<br>
+                        results = analyze_data(test_data)<br>
+                        display_stats(results)<br>
+                        <br>
+                        # 空数据测试<br>
+                        empty_data = []<br>
+                        empty_results = analyze_data(empty_data)<br>
+                        display_stats(empty_results)
+                    </div>
+                </div>
+                
+                <h2>五、例题训练</h2>
+                <div class="card">
+                    <div class="exercise">
+                        <h3>题目1：程序阅读与输出</h3>
+                        <p>阅读以下程序，写出输出结果：</p>
+                        <div class="example-box">
+                            data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]<br>
+                            result = []<br>
+                            <br>
+                            for num in data:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;if num % 2 == 0:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result.append(num * 2)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result.append(num // 2)<br>
+                            <br>
+                            print(result)
+                        </div>
+                        <button class="btn" onclick="toggleAnswer('answer1')">显示答案</button>
+                        
+                        <div id="answer1" class="answer">
+                            # 答案分析：<br>
+                            # - 遍历列表中的每个数字<br>
+                            # - 如果是偶数，乘以2<br>
+                            # - 如果是奇数，整除2<br>
+                            # 所以输出应该是: [0, 4, 1, 8, 2, 12, 3, 16, 4, 20]<br>
+                            <br>
+                            # 验证：<br>
+                            data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]<br>
+                            result = []<br>
+                            <br>
+                            for num in data:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;if num % 2 == 0:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result.append(num * 2)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result.append(num // 2)<br>
+                            <br>
+                            print(result)  # 输出: [0, 4, 1, 8, 2, 12, 3, 16, 4, 20]
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h3>题目2：调试程序</h3>
+                        <p>下面的程序有错误，请找出并修正：</p>
+                        <div class="example-box">
+                            # 有错误的程序：计算字符串中每个单词的长度<br>
+                            text = "Python is a great programming language"<br>
+                            words = text.split(" ")<br>
+                            lengths = []<br>
+                            <br>
+                            for word in words<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;lengths.append(len(word))<br>
+                            <br>
+                            print("单词长度:", lengths)
+                        </div>
+                        <button class="btn" onclick="toggleAnswer('answer2')">显示答案</button>
+                        
+                        <div id="answer2" class="answer">
+                            # 修正后的程序：<br>
+                            text = "Python is a great programming language"<br>
+                            words = text.split(" ")  # 或者直接使用 text.split()<br>
+                            lengths = []<br>
+                            <br>
+                            for word in words:  # 修正：添加冒号<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;lengths.append(len(word))<br>
+                            <br>
+                            print("单词长度:", lengths)<br>
+                            <br>
+                            # 错误分析：<br>
+                            # 1. for循环缺少冒号<br>
+                            # 2. split()默认按空格分割，可以省略参数<br>
+                            # 3. 程序逻辑正确，只是语法错误
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h3>题目3：综合编程</h3>
+                        <p>编写一个程序，实现以下功能：</p>
+                        <ol>
+                            <li>生成1-100之间的随机整数列表（包含10个数字）</li>
+                            <li>找出列表中的素数和合数</li>
+                            <li>计算素数和合数的平均值</li>
+                            <li>找出最大的素数和最小的合数</li>
+                        </ol>
+                        <button class="btn" onclick="toggleAnswer('answer3')">显示答案</button>
+                        
+                        <div id="answer3" class="answer">
+                            # 答案<br>
+                            import random<br>
+                            <br>
+                            def is_prime(n):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"""判断一个数是否为素数"""<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;if n < 2:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return False<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;for i in range(2, int(n**0.5) + 1):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if n % i == 0:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return False<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;return True<br>
+                            <br>
+                            # 生成随机数列表<br>
+                            numbers = [random.randint(1, 100) for _ in range(10)]<br>
+                            print(f"生成的随机数: {numbers}")<br>
+                            <br>
+                            # 分类素数和合数<br>
+                            primes = []<br>
+                            composites = []<br>
+                            <br>
+                            for num in numbers:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;if is_prime(num):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;primes.append(num)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;composites.append(num)<br>
+                            <br>
+                            print(f"素数: {primes}")<br>
+                            print(f"合数: {composites}")<br>
+                            <br>
+                            # 计算平均值<br>
+                            prime_avg = sum(primes) / len(primes) if primes else 0<br>
+                            composite_avg = sum(composites) / len(composites) if composites else 0<br>
+                            <br>
+                            print(f"素数平均值: {prime_avg:.2f}")<br>
+                            print(f"合数平均值: {composite_avg:.2f}")<br>
+                            <br>
+                            # 找出最大的素数和最小的合数<br>
+                            max_prime = max(primes) if primes else "无"<br>
+                            min_composite = min(composites) if composites else "无"<br>
+                            <br>
+                            print(f"最大素数: {max_prime}")<br>
+                            print(f"最小合数: {min_composite}")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <h2>课程要点</h2>
+                <div class="key-point">
+                    <h3>计算思维</h3>
+                    <ul>
+                        <li>分解问题</li>
+                        <li>模式识别</li>
+                        <li>抽象思维</li>
+                        <li>算法设计</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>程序调试</h3>
+                    <ul>
+                        <li>语法错误检查</li>
+                        <li>逻辑错误分析</li>
+                        <li>使用print调试</li>
+                        <li>分步测试</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>内置函数</h3>
+                    <ul>
+                        <li>数据类型转换</li>
+                        <li>数学计算</li>
+                        <li>进制转换</li>
+                        <li>序列操作</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>项目开发</h3>
+                    <ul>
+                        <li>需求分析</li>
+                        <li>功能设计</li>
+                        <li>代码实现</li>
+                        <li>测试验证</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>常见错误</h3>
+                    <ul>
+                        <li>语法错误（缺少冒号等）</li>
+                        <li>逻辑错误（算法错误）</li>
+                        <li>边界条件处理</li>
+                        <li>异常情况处理</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>学习建议</h3>
+                    <ul>
+                        <li>多练习编程题目</li>
+                        <li>阅读他人代码</li>
+                        <li>参与实际项目</li>
+                        <li>持续学习新技术</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav">
+            <button class="btn" onclick="location.href='lesson6.html'">上一课</button>
+            <button class="btn" onclick="location.href='lesson8.html'">下一课</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const answer = document.getElementById(id);
+            if (answer.style.display === "block") {
+                answer.style.display = "none";
+            } else {
+                answer.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

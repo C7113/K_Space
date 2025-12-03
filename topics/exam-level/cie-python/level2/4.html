@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python二级课程第四课：字符串操作</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .main-content {
+            flex: 3;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+        }
+        
+        h2 {
+            color: #c0392b;
+            border-left: 5px solid #e74c3c;
+            padding-left: 15px;
+            margin: 25px 0 15px;
+        }
+        
+        h3 {
+            color: #e74c3c;
+            margin: 20px 0 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .example-box {
+            background: #f1f8ff;
+            border-left: 4px solid #4dabf7;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            overflow-x: auto;
+        }
+        
+        .exercise {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .answer {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #c0392b;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .key-point {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .tip {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .method-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .method-table th {
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px;
+        }
+        
+        .method-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .method-table tr:hover {
+            background-color: #fdeaea;
+        }
+        
+        .code-highlight {
+            background: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #e74c3c;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Python二级课程第四课</h1>
+            <p class="subtitle">字符串操作</p>
+        </header>
+        
+        <div class="content">
+            <div class="main-content">
+                <div class="card">
+                    <h2>课程目标</h2>
+                    <p>掌握Python字符串的基本概念、特点和常用操作，能够熟练使用字符串方法进行数据处理和格式化输出。</p>
+                </div>
+                
+                <h2>一、字符串基础</h2>
+                <div class="card">
+                    <h3>1. 字符串的概念与特点</h3>
+                    <p>字符串是Python中用于表示文本数据的数据类型，由一系列字符组成。</p>
+                    
+                    <ul>
+                        <li><strong>不可变序列</strong>：字符串创建后不能修改，只能创建新的字符串</li>
+                        <li><strong>有序集合</strong>：字符按顺序排列，支持索引和切片</li>
+                        <li><strong>支持转义字符</strong>：使用反斜杠表示特殊字符</li>
+                        <li><strong>多种定义方式</strong>：单引号、双引号、三引号</li>
+                    </ul>
+                    
+                    <div class="example-box">
+                        # 字符串定义示例<br>
+                        # 使用单引号<br>
+                        str1 = 'Hello, World!'<br>
+                        <br>
+                        # 使用双引号<br>
+                        str2 = "Python Programming"<br>
+                        <br>
+                        # 使用三引号（多行字符串）<br>
+                        str3 = '''这是一个<br>
+                        多行<br>
+                        字符串'''<br>
+                        <br>
+                        # 转义字符<br>
+                        str4 = "这是第一行\n这是第二行"  # \n 表示换行<br>
+                        str5 = "这是一个\"引号\""  # \" 表示双引号<br>
+                        str6 = '这是一个\'引号\''  # \' 表示单引号<br>
+                        <br>
+                        print(str4)<br>
+                        # 输出：<br>
+                        # 这是第一行<br>
+                        # 这是第二行
+                    </div>
+                    
+                    <h3>2. 字符串比较</h3>
+                    <p>Python使用ASCII码（或Unicode）值进行字符串比较。</p>
+                    
+                    <div class="example-box">
+                        # 字符串比较示例<br>
+                        # 根据ASCII码比较<br>
+                        print('a' > 'A')  # 输出：True（a的ASCII码是97，A是65）<br>
+                        print('abc' > 'aaaaa')  # 输出：True（先比较第一个字符，相同再比较下一个）<br>
+                        <br>
+                        # 字符串比较规则：<br>
+                        # 1. 比较第一个字符的ASCII码<br>
+                        # 2. 如果相同，比较下一个字符<br>
+                        # 3. 直到找到不同的字符或一个字符串结束<br>
+                        <br>
+                        print('apple' < 'banana')  # 输出：True（a的ASCII码小于b）<br>
+                        print('cat' < 'category')  # 输出：True（前三个字符相同，但第一个字符串较短）
+                    </div>
+                    
+                    <div class="tip">
+                        <strong>ASCII码小知识：</strong> 'A'=65, 'a'=97, '0'=48。小写字母 > 大写字母 > 数字。
+                    </div>
+                </div>
+                
+                <h2>二、字符串常用操作</h2>
+                <div class="card">
+                    <h3>1. 字符串查询与统计</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>len(str)</td>
+                            <td>返回字符串长度</td>
+                            <td>len("hello") → 5</td>
+                        </tr>
+                        <tr>
+                            <td>str.count(sub)</td>
+                            <td>返回子串sub在字符串中出现的次数</td>
+                            <td>"hello".count("l") → 2</td>
+                        </tr>
+                        <tr>
+                            <td>str.find(sub)</td>
+                            <td>返回子串sub第一次出现的索引，不存在返回-1</td>
+                            <td>"hello".find("l") → 2</td>
+                        </tr>
+                        <tr>
+                            <td>str.rfind(sub)</td>
+                            <td>返回子串sub最后一次出现的索引，不存在返回-1</td>
+                            <td>"hello".rfind("l") → 3</td>
+                        </tr>
+                        <tr>
+                            <td>str.index(sub)</td>
+                            <td>返回子串sub第一次出现的索引，不存在抛出错误</td>
+                            <td>"hello".index("l") → 2</td>
+                        </tr>
+                        <tr>
+                            <td>str.rindex(sub)</td>
+                            <td>返回子串sub最后一次出现的索引，不存在抛出错误</td>
+                            <td>"hello".rindex("l") → 3</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 字符串查询与统计示例<br>
+                        text = "Python programming is fun and Python is powerful"<br>
+                        <br>
+                        # 获取字符串长度<br>
+                        length = len(text)<br>
+                        print("字符串长度:", length)  # 输出：字符串长度: 45<br>
+                        <br>
+                        # 统计子串出现次数<br>
+                        count_python = text.count("Python")<br>
+                        print("Python出现次数:", count_python)  # 输出：Python出现次数: 2<br>
+                        <br>
+                        # 查找子串位置<br>
+                        pos1 = text.find("Python")<br>
+                        print("Python第一次出现位置:", pos1)  # 输出：Python第一次出现位置: 0<br>
+                        <br>
+                        pos2 = text.rfind("Python")<br>
+                        print("Python最后一次出现位置:", pos2)  # 输出：Python最后一次出现位置: 24<br>
+                        <br>
+                        # 使用index查找（找不到会报错）<br>
+                        pos3 = text.index("is")<br>
+                        print("is第一次出现位置:", pos3)  # 输出：is第一次出现位置: 17<br>
+                        <br>
+                        # find和index的区别<br>
+                        not_found_find = text.find("Java")  # 返回-1<br>
+                        # not_found_index = text.index("Java")  # 会报错：ValueError
+                    </div>
+                    
+                    <h3>2. 字符串大小写转换</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>str.upper()</td>
+                            <td>将字符串转换为大写</td>
+                            <td>"hello".upper() → "HELLO"</td>
+                        </tr>
+                        <tr>
+                            <td>str.lower()</td>
+                            <td>将字符串转换为小写</td>
+                            <td>"HELLO".lower() → "hello"</td>
+                        </tr>
+                        <tr>
+                            <td>str.capitalize()</td>
+                            <td>将字符串首字母大写，其余小写</td>
+                            <td>"hello WORLD".capitalize() → "Hello world"</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 字符串大小写转换示例<br>
+                        text = "Python Programming"<br>
+                        <br>
+                        # 转换为大写<br>
+                        upper_text = text.upper()<br>
+                        print("大写:", upper_text)  # 输出：大写: PYTHON PROGRAMMING<br>
+                        <br>
+                        # 转换为小写<br>
+                        lower_text = text.lower()<br>
+                        print("小写:", lower_text)  # 输出：小写: python programming<br>
+                        <br>
+                        # 首字母大写<br>
+                        capitalized = "hello world".capitalize()<br>
+                        print("首字母大写:", capitalized)  # 输出：首字母大写: Hello world<br>
+                        <br>
+                        # 实际应用：不区分大小写的比较<br>
+                        user_input = "Yes"<br>
+                        if user_input.lower() == "yes":<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("用户同意了")
+                    </div>
+                    
+                    <h3>3. 字符串判断方法</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>str.isalpha()</td>
+                            <td>判断字符串是否只包含字母</td>
+                            <td>"Hello".isalpha() → True</td>
+                        </tr>
+                        <tr>
+                            <td>str.isdigit()</td>
+                            <td>判断字符串是否只包含数字</td>
+                            <td>"123".isdigit() → True</td>
+                        </tr>
+                        <tr>
+                            <td>str.isalnum()</td>
+                            <td>判断字符串是否只包含字母和数字</td>
+                            <td>"Hello123".isalnum() → True</td>
+                        </tr>
+                        <tr>
+                            <td>str.isspace()</td>
+                            <td>判断字符串是否只包含空白字符</td>
+                            <td>"  \t\n".isspace() → True</td>
+                        </tr>
+                        <tr>
+                            <td>str.startswith(prefix)</td>
+                            <td>判断字符串是否以指定前缀开头</td>
+                            <td>"hello".startswith("he") → True</td>
+                        </tr>
+                        <tr>
+                            <td>str.endswith(suffix)</td>
+                            <td>判断字符串是否以指定后缀结尾</td>
+                            <td>"hello".endswith("lo") → True</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 字符串判断示例<br>
+                        # 检查是否只包含字母<br>
+                        print("Hello".isalpha())  # 输出：True<br>
+                        print("Hello123".isalpha())  # 输出：False<br>
+                        <br>
+                        # 检查是否只包含数字<br>
+                        print("123".isdigit())  # 输出：True<br>
+                        print("12.3".isdigit())  # 输出：False（小数点不是数字）<br>
+                        <br>
+                        # 检查是否只包含字母和数字<br>
+                        print("Hello123".isalnum())  # 输出：True<br>
+                        print("Hello 123".isalnum())  # 输出：False（空格不是字母或数字）<br>
+                        <br>
+                        # 检查是否只包含空白字符<br>
+                        print("  \t\n".isspace())  # 输出：True<br>
+                        print("hello".isspace())  # 输出：False<br>
+                        <br>
+                        # 检查开头和结尾<br>
+                        filename = "document.txt"<br>
+                        print(filename.startswith("doc"))  # 输出：True<br>
+                        print(filename.endswith(".txt"))  # 输出：True
+                    </div>
+                    
+                    <h3>4. 字符串去除空白</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>str.strip()</td>
+                            <td>去除字符串开头和结尾的空白字符</td>
+                            <td>" hello ".strip() → "hello"</td>
+                        </tr>
+                        <tr>
+                            <td>str.lstrip()</td>
+                            <td>去除字符串开头的空白字符</td>
+                            <td>" hello ".lstrip() → "hello "</td>
+                        </tr>
+                        <tr>
+                            <td>str.rstrip()</td>
+                            <td>去除字符串结尾的空白字符</td>
+                            <td>" hello ".rstrip() → " hello"</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 字符串去除空白示例<br>
+                        text = "  Hello, World!  "<br>
+                        <br>
+                        # 去除两端空白<br>
+                        stripped = text.strip()<br>
+                        print("去除两端空白:", f"'{stripped}'")  # 输出：去除两端空白: 'Hello, World!'<br>
+                        <br>
+                        # 去除左端空白<br>
+                        left_stripped = text.lstrip()<br>
+                        print("去除左端空白:", f"'{left_stripped}'")  # 输出：去除左端空白: 'Hello, World!  '<br>
+                        <br>
+                        # 去除右端空白<br>
+                        right_stripped = text.rstrip()<br>
+                        print("去除右端空白:", f"'{right_stripped}'")  # 输出：去除右端空白: '  Hello, World!'<br>
+                        <br>
+                        # 实际应用：用户输入处理<br>
+                        user_input = "  yes  "<br>
+                        if user_input.strip().lower() == "yes":<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("去除空白后匹配成功")
+                    </div>
+                    
+                    <h3>5. 字符串分割与连接</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>str.split(sep)</td>
+                            <td>使用分隔符sep分割字符串，返回列表</td>
+                            <td>"a,b,c".split(",") → ["a","b","c"]</td>
+                        </tr>
+                        <tr>
+                            <td>str.join(iterable)</td>
+                            <td>使用字符串连接可迭代对象中的元素</td>
+                            <td>",".join(["a","b","c"]) → "a,b,c"</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 字符串分割与连接示例<br>
+                        # 分割字符串<br>
+                        csv_data = "apple,banana,orange,grape"<br>
+                        fruits = csv_data.split(",")<br>
+                        print("分割结果:", fruits)  # 输出：分割结果: ['apple', 'banana', 'orange', 'grape']<br>
+                        <br>
+                        # 限制分割次数<br>
+                        limited_split = csv_data.split(",", 2)<br>
+                        print("限制分割次数:", limited_split)  # 输出：限制分割次数: ['apple', 'banana', 'orange,grape']<br>
+                        <br>
+                        # 连接字符串<br>
+                        fruit_list = ["apple", "banana", "orange"]<br>
+                        joined = ", ".join(fruit_list)<br>
+                        print("连接结果:", joined)  # 输出：连接结果: apple, banana, orange<br>
+                        <br>
+                        # 使用不同连接符<br>
+                        path = "/".join(["home", "user", "documents"])<br>
+                        print("路径:", path)  # 输出：路径: home/user/documents<br>
+                        <br>
+                        # 实际应用：处理多行文本<br>
+                        multi_line = "第一行\n第二行\n第三行"<br>
+                        lines = multi_line.split("\n")<br>
+                        print("行列表:", lines)  # 输出：行列表: ['第一行', '第二行', '第三行']
+                    </div>
+                    
+                    <h3>6. 字符串替换</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>str.replace(old, new)</td>
+                            <td>将字符串中的old替换为new</td>
+                            <td>"hello".replace("l", "x") → "hexxo"</td>
+                        </tr>
+                        <tr>
+                            <td>str.replace(old, new, count)</td>
+                            <td>将字符串中的old替换为new，最多替换count次</td>
+                            <td>"hello".replace("l", "x", 1) → "hexlo"</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 字符串替换示例<br>
+                        text = "I like apples and apples are tasty"<br>
+                        <br>
+                        # 替换所有匹配项<br>
+                        replaced_all = text.replace("apples", "oranges")<br>
+                        print("全部替换:", replaced_all)  # 输出：全部替换: I like oranges and oranges are tasty<br>
+                        <br>
+                        # 替换指定次数<br>
+                        replaced_once = text.replace("apples", "oranges", 1)<br>
+                        print("替换一次:", replaced_once)  # 输出：替换一次: I like oranges and apples are tasty<br>
+                        <br>
+                        # 实际应用：数据清洗<br>
+                        dirty_text = "  Hello,   World!  "<br>
+                        cleaned = dirty_text.replace("  ", " ").strip()<br>
+                        print("清洗后:", f"'{cleaned}'")  # 输出：清洗后: 'Hello, World!'
+                    </div>
+                </div>
+                
+                <h2>三、字符串格式化</h2>
+                <div class="card">
+                    <h3>1. format() 方法</h3>
+                    <p>format() 方法用于格式化字符串，可以按位置或关键字插入值。</p>
+                    
+                    <div class="example-box">
+                        # format() 方法示例<br>
+                        # 按位置格式化<br>
+                        text1 = "{} {}".format("Hello", "World")<br>
+                        print(text1)  # 输出：Hello World<br>
+                        <br>
+                        # 按索引格式化<br>
+                        text2 = "{1} {0}".format("World", "Hello")<br>
+                        print(text2)  # 输出：Hello World<br>
+                        <br>
+                        # 按关键字格式化<br>
+                        text3 = "{name} is {age} years old".format(name="Alice", age=25)<br>
+                        print(text3)  # 输出：Alice is 25 years old<br>
+                        <br>
+                        # 格式化数字<br>
+                        text4 = "Value: {:.2f}".format(3.14159)<br>
+                        print(text4)  # 输出：Value: 3.14<br>
+                        <br>
+                        # 格式化百分比<br>
+                        text5 = "Success rate: {:.1%}".format(0.856)<br>
+                        print(text5)  # 输出：Success rate: 85.6%
+                    </div>
+                    
+                    <h3>2. f-string 格式化（Python 3.6+）</h3>
+                    <p>f-string 是一种更简洁、更直观的字符串格式化方法。</p>
+                    
+                    <div class="example-box">
+                        # f-string 示例<br>
+                        name = "Alice"<br>
+                        age = 25<br>
+                        <br>
+                        # 基本用法<br>
+                        text1 = f"{name} is {age} years old"<br>
+                        print(text1)  # 输出：Alice is 25 years old<br>
+                        <br>
+                        # 表达式计算<br>
+                        text2 = f"Next year, {name} will be {age + 1} years old"<br>
+                        print(text2)  # 输出：Next year, Alice will be 26 years old<br>
+                        <br>
+                        # 格式化数字<br>
+                        pi = 3.14159<br>
+                        text3 = f"Pi value: {pi:.2f}"<br>
+                        print(text3)  # 输出：Pi value: 3.14<br>
+                        <br>
+                        # 调用方法<br>
+                        text4 = f"Name in uppercase: {name.upper()}"<br>
+                        print(text4)  # 输出：Name in uppercase: ALICE
+                    </div>
+                    
+                    <h3>3. % 格式化（传统方法）</h3>
+                    <p>% 操作符是Python早期的字符串格式化方法，现在仍被广泛使用。</p>
+                    
+                    <div class="example-box">
+                        # % 格式化示例<br>
+                        name = "Bob"<br>
+                        age = 30<br>
+                        <br>
+                        # 基本用法<br>
+                        text1 = "%s is %d years old" % (name, age)<br>
+                        print(text1)  # 输出：Bob is 30 years old<br>
+                        <br>
+                        # 格式化浮点数<br>
+                        price = 19.99<br>
+                        text2 = "Price: $%.2f" % price<br>
+                        print(text2)  # 输出：Price: $19.99<br>
+                        <br>
+                        # 格式化百分比<br>
+                        ratio = 0.75<br>
+                        text3 = "Completion: %.1f%%" % (ratio * 100)<br>
+                        print(text3)  # 输出：Completion: 75.0%
+                    </div>
+                    
+                    <div class="tip">
+                        <strong>格式化符号：</strong> %s=字符串, %d=整数, %f=浮点数, %%=百分号。
+                    </div>
+                </div>
+                
+                <h2>四、字符串内置函数</h2>
+                <div class="card">
+                    <h3>常用内置函数</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>函数</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>min(str)</td>
+                            <td>返回字符串中最小的字符（按ASCII码）</td>
+                            <td>min("hello") → 'e'</td>
+                        </tr>
+                        <tr>
+                            <td>max(str)</td>
+                            <td>返回字符串中最大的字符（按ASCII码）</td>
+                            <td>max("hello") → 'o'</td>
+                        </tr>
+                        <tr>
+                            <td>len(str)</td>
+                            <td>返回字符串长度</td>
+                            <td>len("hello") → 5</td>
+                        </tr>
+                        <tr>
+                            <td>str(obj)</td>
+                            <td>将对象转换为字符串</td>
+                            <td>str(123) → "123"</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 字符串内置函数示例<br>
+                        text = "Python"<br>
+                        <br>
+                        # 最小字符<br>
+                        min_char = min(text)<br>
+                        print("最小字符:", min_char)  # 输出：最小字符: P<br>
+                        <br>
+                        # 最大字符<br>
+                        max_char = max(text)<br>
+                        print("最大字符:", max_char)  # 输出：最大字符: y<br>
+                        <br>
+                        # 字符串长度<br>
+                        length = len(text)<br>
+                        print("字符串长度:", length)  # 输出：字符串长度: 6<br>
+                        <br>
+                        # 类型转换<br>
+                        number = 123<br>
+                        text_number = str(number)<br>
+                        print("转换为字符串:", text_number, type(text_number))  # 输出：转换为字符串: 123 &lt;class 'str'&gt;
+                    </div>
+                </div>
+                
+                <h2>五、例题训练</h2>
+                <div class="card">
+                    <div class="exercise">
+                        <h3>题目1：字符串基本操作</h3>
+                        <p>给定字符串：<code>text = "  Python Programming is FUN!  "</code></p>
+                        <p>完成以下操作：</p>
+                        <ol>
+                            <li>去除字符串两端的空白字符</li>
+                            <li>将字符串转换为全小写</li>
+                            <li>统计字符串中字母"m"出现的次数</li>
+                            <li>将"FUN"替换为"powerful"</li>
+                            <li>将字符串按空格分割成单词列表</li>
+                        </ol>
+                        <button class="btn" onclick="toggleAnswer('answer1')">显示答案</button>
+                        
+                        <div id="answer1" class="answer">
+                            # 答案<br>
+                            text = "  Python Programming is FUN!  "<br>
+                            print("原字符串:", f"'{text}'")<br>
+                            <br>
+                            # 1. 去除字符串两端的空白字符<br>
+                            trimmed = text.strip()<br>
+                            print("去除空白后:", f"'{trimmed}'")<br>
+                            <br>
+                            # 2. 将字符串转换为全小写<br>
+                            lower_text = trimmed.lower()<br>
+                            print("转换为小写:", lower_text)<br>
+                            <br>
+                            # 3. 统计字符串中字母"m"出现的次数<br>
+                            count_m = trimmed.count('m')<br>
+                            print("m出现次数:", count_m)<br>
+                            <br>
+                            # 4. 将"FUN"替换为"powerful"<br>
+                            replaced = trimmed.replace("FUN", "powerful")<br>
+                            print("替换后:", replaced)<br>
+                            <br>
+                            # 5. 将字符串按空格分割成单词列表<br>
+                            words = trimmed.split()<br>
+                            print("单词列表:", words)
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h3>题目2：字符串格式化</h3>
+                        <p>创建一个学生信息字典：<code>student = {"name": "张三", "age": 18, "score": 92.5}</code></p>
+                        <p>使用三种不同的字符串格式化方法输出以下信息：</p>
+                        <ol>
+                            <li>学生张三今年18岁，考试成绩92.5分</li>
+                            <li>学生张三的考试成绩是92.50分（保留两位小数）</li>
+                            <li>学生张三的考试优秀率是92.5%（添加百分号）</li>
+                        </ol>
+                        <button class="btn" onclick="toggleAnswer('answer2')">显示答案</button>
+                        
+                        <div id="answer2" class="answer">
+                            # 答案<br>
+                            student = {"name": "张三", "age": 18, "score": 92.5}<br>
+                            <br>
+                            # 1. 使用format方法<br>
+                            text1 = "学生{}今年{}岁，考试成绩{}分".format(student["name"], student["age"], student["score"])<br>
+                            print("format方法:", text1)<br>
+                            <br>
+                            # 2. 使用f-string方法<br>
+                            text2 = f"学生{student['name']}今年{student['age']}岁，考试成绩{student['score']}分"<br>
+                            print("f-string方法:", text2)<br>
+                            <br>
+                            # 3. 使用%方法<br>
+                            text3 = "学生%s今年%d岁，考试成绩%.1f分" % (student["name"], student["age"], student["score"])<br>
+                            print("%方法:", text3)<br>
+                            <br>
+                            # 保留两位小数<br>
+                            text4 = f"学生{student['name']}的考试成绩是{student['score']:.2f}分"<br>
+                            print("保留两位小数:", text4)<br>
+                            <br>
+                            # 添加百分号<br>
+                            text5 = f"学生{student['name']}的考试优秀率是{student['score']:.1f}%"<br>
+                            print("添加百分号:", text5)
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h3>题目3：字符串处理综合应用</h3>
+                        <p>给定一个包含多个邮箱地址的字符串：<code>emails = "user1@example.com; user2@test.org; user3@demo.net"</code></p>
+                        <p>完成以下操作：</p>
+                        <ol>
+                            <li>将字符串按分号分割成单个邮箱地址</li>
+                            <li>去除每个邮箱地址两端的空白字符</li>
+                            <li>提取每个邮箱的域名（@后面的部分）</li>
+                            <li>统计不同域名的出现次数</li>
+                            <li>将所有邮箱地址用逗号连接成一个字符串</li>
+                        </ol>
+                        <button class="btn" onclick="toggleAnswer('answer3')">显示答案</button>
+                        
+                        <div id="answer3" class="answer">
+                            # 答案<br>
+                            emails = "user1@example.com; user2@test.org; user3@demo.net"<br>
+                            print("原字符串:", emails)<br>
+                            <br>
+                            # 1. 将字符串按分号分割成单个邮箱地址<br>
+                            email_list = emails.split(";")<br>
+                            print("分割后的邮箱列表:", email_list)<br>
+                            <br>
+                            # 2. 去除每个邮箱地址两端的空白字符<br>
+                            cleaned_emails = [email.strip() for email in email_list]<br>
+                            print("去除空白后的邮箱列表:", cleaned_emails)<br>
+                            <br>
+                            # 3. 提取每个邮箱的域名（@后面的部分）<br>
+                            domains = [email.split('@')[1] for email in cleaned_emails]<br>
+                            print("域名列表:", domains)<br>
+                            <br>
+                            # 4. 统计不同域名的出现次数<br>
+                            from collections import Counter<br>
+                            domain_count = Counter(domains)<br>
+                            print("域名出现次数:", domain_count)<br>
+                            <br>
+                            # 5. 将所有邮箱地址用逗号连接成一个字符串<br>
+                            joined_emails = ", ".join(cleaned_emails)<br>
+                            print("连接后的字符串:", joined_emails)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <h2>课程要点</h2>
+                <div class="key-point">
+                    <h3>字符串核心概念</h3>
+                    <ul>
+                        <li>不可变序列</li>
+                        <li>支持索引和切片</li>
+                        <li>多种定义方式</li>
+                        <li>支持转义字符</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>重要字符串方法</h3>
+                    <ul>
+                        <li>查找：find, index, count</li>
+                        <li>转换：upper, lower, capitalize</li>
+                        <li>判断：isalpha, isdigit, startswith</li>
+                        <li>处理：strip, split, join, replace</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>字符串格式化</h3>
+                    <ul>
+                        <li>format() 方法</li>
+                        <li>f-string (Python 3.6+)</li>
+                        <li>% 格式化</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>常见错误</h3>
+                    <ul>
+                        <li>尝试修改字符串（字符串不可变）</li>
+                        <li>混淆find和index（找不到时的处理）</li>
+                        <li>忘记字符串方法返回新字符串</li>
+                        <li>错误使用格式化符号</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>下节课预告</h3>
+                    <p>字典与复杂数据结构</p>
+                    <ul>
+                        <li>字典的概念与特点</li>
+                        <li>字典的增删改查</li>
+                        <li>字典的遍历</li>
+                        <li>字典的嵌套</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav">
+            <button class="btn" onclick="location.href='3.html'">上一课</button>
+            <button class="btn" onclick="location.href='5.html'">下一课</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const answer = document.getElementById(id);
+            if (answer.style.display === "block") {
+                answer.style.display = "none";
+            } else {
+                answer.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

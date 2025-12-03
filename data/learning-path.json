@@ -208,6 +208,48 @@
           "tags": ["算法", "进阶"]
         }
       ]
+    },
+    {
+      "id": "module7",
+      "title": "等级考试知识点",
+      "description": "各类编程等级考试知识点整理",
+      "items": [
+        {
+          "id": "cie-scratch",
+          "title": "CIE 图形化编程",
+          "desc": "CIE 图形化编程等级考试知识点",
+          "link": "./topics/exam-level/cie-scratch/index.html",
+          "tags": ["考试", "CIE"]
+        },
+        {
+          "id": "cie-python",
+          "title": "CIE Python编程",
+          "desc": "CIE Python编程等级考试知识点",
+          "link": "./topics/exam-level/cie-python/index.html",
+          "tags": ["考试", "CIE"]
+        },
+        {
+          "id": "cie-cpp",
+          "title": "CIE C++编程",
+          "desc": "CIE C++编程等级考试知识点",
+          "link": "./topics/exam-level/cie-cpp/index.html",
+          "tags": ["考试", "CIE"]
+        },
+        {
+          "id": "gesp",
+          "title": "GESP等级考试",
+          "desc": "GESP编程能力等级考试知识点",
+          "link": "./topics/exam-level/gesp/index.html",
+          "tags": ["考试", "GESP"]
+        },
+        {
+          "id": "csp",
+          "title": "CSP-J/S等级考试",
+          "desc": "CSP-J/S等级考试知识点",
+          "link": "./topics/exam-level/csp/index.html",
+          "tags": ["考试", "CSP"]
+        }
+      ]
     }
   ]
 }

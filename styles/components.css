@@ -42,11 +42,79 @@ header p { font-size: 1.1rem; margin-top: 0.25rem; color: var(--text); font-weig
 
 .theme-toggle { display: block; margin: 1rem auto 2rem; padding: 0.6rem 1.2rem; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95rem; font-weight: 500; }
 
-.level-title { font-size: 1.8rem; color: var(--text); margin-bottom: 2rem; padding-bottom: 0.8rem; position: relative; display: inline-block; font-weight: 600; text-align: left; margin-left: 0; }
+.level-title { font-size: 1.6rem; color: var(--text); margin-bottom: 1.6rem; padding-bottom: 0.6rem; position: relative; display: inline-block; font-weight: 600; text-align: left; margin-left: 0; }
 .level-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 120px; height: 3px; background: linear-gradient(90deg, var(--accent), transparent); border-radius: 3px; }
 
-.topic-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); position: relative; margin-top: 1.5rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
-#beginnerGrid, #intermediateGrid, #advancedGrid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.topic-subtitle { font-size: 1.2rem; color: var(--text); margin: 1.6rem 0 0.8rem 0; padding-bottom: 0.35rem; position: relative; font-weight: 500; text-align: left; width: 100%; }
+.topic-subtitle::after { content: ''; position: absolute; bottom: 0; left: 0; width: 80px; height: 2px; background: linear-gradient(90deg, var(--accent-light), transparent); border-radius: 2px; }
+
+.topic-grid { 
+  display: grid; 
+  gap: 1.2rem; 
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+  position: relative; 
+  margin-top: 1.5rem; 
+  max-width: 1200px; 
+  margin-left: auto; 
+  margin-right: auto; 
+  justify-items: center; 
+  justify-content: center; 
+  align-items: center; 
+  place-items: center; 
+}
+
+.topic-grid.collapsible .topic-card { display: none; }
+.topic-grid.collapsible .topic-card:nth-child(-n+4) { display: flex; }
+.topic-grid.collapsible .topic-card.always-show { display: flex; }
+
+.topic-grid .expand-btn {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin: 0.4rem auto;
+  padding: 0.4rem 1rem;
+  background: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: none;
+  transition: all 0.3s ease;
+  align-self: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.topic-grid .expand-btn {
+  display: block;
+}
+
+#beginnerGrid .topic-card.hide ~ .expand-btn,
+#intermediateGrid .topic-card.hide ~ .expand-btn,
+#advancedGrid .topic-card.hide ~ .expand-btn {
+  display: block !important;
+}
+
+.topic-grid .expand-btn:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.topic-grid.has-more-than-four .expand-btn {
+  display: block !important;
+}
+
+.topic-grid.expanded .topic-card {
+  display: flex;
+}
+
+.topic-grid.expanded .expand-btn::after {
+  content: ' 收起';
+}
+#beginnerGrid, #intermediateGrid, #advancedGrid { 
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+}
 
 .topic-grid:has(.topic-card:hover) .topic-card:not(:hover) { opacity: 0.75; transform: scale(0.98); }
 
@@ -57,18 +125,225 @@ header p { font-size: 1.1rem; margin-top: 0.25rem; color: var(--text); font-weig
 #contestGrid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
 
 .topic-card.hide { display: none; }
-.expand-btn { grid-column: 1 / -1; margin: 0.5rem auto 0 auto; padding: 0.5rem 1.2rem; background: #6c757d; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95rem; display: block; width: fit-content; }
 
-.topic-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; transition: all 0.3s ease; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 0.875rem; }
-.topic-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-light)); opacity: 0; transition: opacity 0.3s ease; }
-.topic-card:hover { border-color: var(--accent-light); transform: translateY(-4px); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); }
-.topic-card:hover::before { opacity: 1; }
+.topic-card { 
+  background: var(--card-bg); 
+  border: 1px solid var(--border); 
+  border-radius: 10px; 
+  padding: 1.25rem; 
+  transition: all 0.3s ease; 
+  position: relative; 
+  overflow: hidden; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 0.8rem; 
+  min-height: 180px; 
+  margin: 0 auto; 
+  text-align: center; 
+  align-self: center; 
+  justify-self: center; 
+  cursor: pointer;
+  width: 100%;
+}
 
-.topic-card::after { content: ''; position: absolute; bottom: 0; right: 0; width: 100px; height: 100px; background: linear-gradient(135deg, transparent 50%, var(--accent) 51%); opacity: 0.03; border-radius: 0 0 16px 0; transition: opacity var(--transition); }
-.topic-card:hover::after { opacity: 0.06; }
+.topic-card::before { 
+  content: ''; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  height: 4px; 
+  background: linear-gradient(90deg, var(--accent), var(--accent-light)); 
+  opacity: 0; 
+  transition: opacity 0.3s ease; 
+}
 
-.topic-card h3 { font-size: 1.3rem; color: var(--accent); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; position: relative; }
-.topic-card h3::before { content: '📚'; font-size: 1.2rem; opacity: 0.8; transform: translateY(-1px); }
+.topic-card:hover { 
+  border-color: var(--accent-light); 
+  transform: translateY(-6px); 
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1); 
+}
+
+.topic-card:hover::before { 
+  opacity: 1; 
+}
+
+.topic-card::after { 
+  content: ''; 
+  position: absolute; 
+  bottom: 0; 
+  right: 0; 
+  width: 120px; 
+  height: 120px; 
+  background: linear-gradient(135deg, transparent 50%, var(--accent) 51%); 
+  opacity: 0.04; 
+  border-radius: 0 0 20px 0; 
+  transition: opacity var(--transition); 
+}
+
+.topic-card:hover::after { 
+  opacity: 0.08; 
+}
+
+.topic-card h3 { 
+  font-size: 1.25rem; 
+  color: var(--accent); 
+  margin-bottom: 0.6rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 0.5rem; 
+  position: relative; 
+  z-index: 2;
+}
+
+.topic-card h3::before { 
+  content: '📚'; 
+  font-size: 1.25rem; 
+  opacity: 0.85; 
+  transform: translateY(-1px); 
+}
+
+.details { 
+  background: linear-gradient(to right, var(--section-bg), transparent); 
+  padding: 0.9rem; 
+  border-radius: 8px; 
+  border-left: 3px solid var(--accent); 
+  font-size: 0.9rem; 
+  line-height: 1.5; 
+  margin: 0.9rem auto; 
+  display: none; 
+  transform-origin: top; 
+  transition: all var(--transition); 
+  opacity: 0; 
+  text-align: center; 
+  z-index: 2;
+  position: relative;
+}
+
+.details[style*="display: block"] { 
+  opacity: 1; 
+  animation: slideDown 0.3s ease-out; 
+}
+
+.action-links { 
+  margin-top: 0.8rem; 
+  display: flex; 
+  gap: 0.5rem; 
+  flex-wrap: wrap; 
+  align-items: center; 
+  justify-content: center; 
+  z-index: 2;
+  position: relative;
+}
+
+.action-links a { 
+  display: inline-block; 
+  margin: 0; 
+  padding: 0.45rem 0.9rem; 
+  background: var(--accent); 
+  color: white; 
+  text-decoration: none; 
+  border-radius: 5px; 
+  font-size: 0.85rem; 
+  z-index: 2;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.action-links a:hover {
+  background: #0b5ed7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.35);
+}
+
+footer { text-align: center; padding: 2.5rem 1rem; margin-top: 4rem; color: var(--text); opacity: 0.7; font-size: 0.95rem; border-top: 1px solid var(--border); position: relative; overflow: hidden; }
+footer::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 200px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+
+.hover-lift { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.hover-lift:hover { transform: translateY(-4px); }
+.hover-glow { transition: all 0.3s ease; }
+.hover-glow:hover { box-shadow: 0 0 20px rgba(52, 152, 219, 0.3); }
+
+.pulse { animation: pulse 2s infinite; }
+
+.badge { display: inline-block; padding: 0.25em 0.6em; font-size: 0.75em; font-weight: 600; line-height: 1; color: white; background-color: var(--accent); border-radius: 10rem; margin-left: 0.5rem; }
+
+.shimmer { position: relative; overflow: hidden; }
+.shimmer::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); transform: rotate(30deg); animation: shimmer 3s infinite; }
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .topic-grid { 
+    grid-template-columns: 1fr; 
+    gap: 1.5rem; 
+  }
+  header { 
+    padding: 2.5rem 1.25rem; 
+  }
+  header h1 { 
+    font-size: 2.2rem; 
+  }
+  .level-title { 
+    font-size: 1.8rem; 
+    margin-bottom: 1.8rem; 
+  }
+  .topic-card { 
+    padding: 1.5rem; 
+  }
+  .container { 
+    padding: 0 1.25rem; 
+    margin: 2rem auto; 
+  }
+  .button-container { 
+    padding: 0 1.25rem; 
+  }
+  .theme-toggle { 
+    padding: 0.6rem 1.2rem; 
+    font-size: 1rem; 
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 { 
+    font-size: 2rem; 
+  }
+  header p { 
+    font-size: 1.1rem; 
+  }
+  .level-title { 
+    font-size: 1.6rem; 
+  }
+  .topic-card { 
+    padding: 1.25rem; 
+  }
+  .action-links { 
+    flex-direction: column; 
+  }
+  .action-links a { 
+    width: 100%; 
+    text-align: center; 
+  }
+}
+
+/* 将之前的内联样式移动到此处 */
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem auto;
+  padding: 0 var(--spacing);
+  flex-wrap: wrap;
+  max-width: none;
+}
+
+/* 通过添加 .show 类来控制 details 的显示（替代内联 style="display:block"） */
+.details.show {
+  display: block;
+  opacity: 1;
+  animation: slideDown 0.3s ease-out;
+}
 
 .toggle-btn { 
   background: transparent; 
@@ -117,168 +392,4 @@ header p { font-size: 1.1rem; margin-top: 0.25rem; color: var(--text); font-weig
   padding: 0.6rem 1.2rem;
   font-size: 0.95rem;
   min-height: 44px;
-}
-
-.details { background: linear-gradient(to right, var(--section-bg), transparent); padding: 1.2rem; border-radius: 12px; border-left: 4px solid var(--accent); font-size: 0.95rem; line-height: 1.6; margin: 1rem 0; display: none; transform-origin: top; transition: all var(--transition); opacity: 0; }
-.details[style*="display: block"] { opacity: 1; animation: slideDown 0.3s ease-out; }
-
-.action-links { margin-top: 1.2rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
-.action-links a { display: inline-block; margin: 0; padding: 0.5rem 1rem; background: var(--accent); color: white; text-decoration: none; border-radius: 5px; font-size: 0.9rem; }
-.action-links a:hover {
-  background: #0b5ed7; /* 背景色变化 */
-  transform: translateY(-2px); /* 轻微上移效果 */
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3); /* 添加阴影效果 */
-}
-
-/* 在文件末尾添加以下代码 */
-/* 修复基础级别按钮无法点击的问题 */
-#beginnerGrid .action-links {
-  position: relative;
-  z-index: 10;
-}
-
-#beginnerGrid .action-links a {
-  display: inline-block;
-  margin: 0;
-  padding: 0.5rem 1rem;
-  background: var(--accent);
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  transition: all 0.3s ease !important;
-  cursor: pointer !important;
-  position: relative;
-  z-index: 20;
-  border: none !important;
-  outline: none !important;
-  pointer-events: auto !important;
-}
-
-#beginnerGrid .action-links a:hover {
-  background: #0b5ed7 !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3) !important;
-}
-
-/* 修复进阶级别按钮无法点击的问题 */
-#intermediateGrid .action-links {
-  position: relative;
-  z-index: 10;
-}
-
-#intermediateGrid .action-links a {
-  display: inline-block;
-  margin: 0;
-  padding: 0.5rem 1rem;
-  background: var(--accent);
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  transition: all 0.3s ease !important;
-  cursor: pointer !important;
-  position: relative;
-  z-index: 20;
-  border: none !important;
-  outline: none !important;
-  pointer-events: auto !important;
-}
-
-#intermediateGrid .action-links a:hover {
-  background: #0b5ed7 !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3) !important;
-}
-
-/* 修复高级级别按钮无法点击的问题 */
-#advancedGrid .action-links {
-  position: relative;
-  z-index: 10;
-}
-
-#advancedGrid .action-links a {
-  display: inline-block;
-  margin: 0;
-  padding: 0.5rem 1rem;
-  background: var(--accent);
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  transition: all 0.3s ease !important;
-  cursor: pointer !important;
-  position: relative;
-  z-index: 20;
-  border: none !important;
-  outline: none !important;
-  pointer-events: auto !important;
-}
-
-#advancedGrid .action-links a:hover {
-  background: #0b5ed7 !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3) !important;
-}
-
-/* 确保卡片不会覆盖按钮 */
-#beginnerGrid .topic-card,
-#intermediateGrid .topic-card,
-#advancedGrid .topic-card {
-  overflow: visible !important;
-}
-
-footer { text-align: center; padding: 2.5rem 1rem; margin-top: 4rem; color: var(--text); opacity: 0.7; font-size: 0.95rem; border-top: 1px solid var(--border); position: relative; overflow: hidden; }
-footer::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 200px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
-
-.hover-lift { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-.hover-lift:hover { transform: translateY(-4px); }
-.hover-glow { transition: all 0.3s ease; }
-.hover-glow:hover { box-shadow: 0 0 20px rgba(52, 152, 219, 0.3); }
-
-.pulse { animation: pulse 2s infinite; }
-
-.badge { display: inline-block; padding: 0.25em 0.6em; font-size: 0.75em; font-weight: 600; line-height: 1; color: white; background-color: var(--accent); border-radius: 10rem; margin-left: 0.5rem; }
-
-.shimmer { position: relative; overflow: hidden; }
-.shimmer::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); transform: rotate(30deg); animation: shimmer 3s infinite; }
-
-/* 响应式 */
-@media (max-width: 768px) {
-  .topic-grid { grid-template-columns: 1fr; gap: 1.2rem; }
-  header { padding: 2rem 1rem; }
-  header h1 { font-size: 2rem; }
-  .level-title { font-size: 1.6rem; margin-bottom: 1.5rem; }
-  .topic-card { padding: 1.25rem; }
-  .container { padding: 0 1rem; margin: 1.5rem auto; }
-  .button-container { padding: 0 1rem; }
-  .theme-toggle { padding: 0.5rem 1rem; font-size: 0.9rem; }
-}
-
-@media (max-width: 480px) {
-  header h1 { font-size: 1.8rem; }
-  header p { font-size: 1rem; }
-  .level-title { font-size: 1.4rem; }
-  .topic-card { padding: 1rem; }
-  .action-links { flex-direction: column; }
-  .action-links a { width: 100%; text-align: center; }
-}
-
-/* 将之前的内联样式移动到此处 */
-.button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 1rem auto;
-  padding: 0 var(--spacing);
-  flex-wrap: wrap;
-  max-width: none;
-}
-
-/* 通过添加 .show 类来控制 details 的显示（替代内联 style="display:block"） */
-.details.show {
-  display: block;
-  opacity: 1;
-  animation: slideDown 0.3s ease-out;
 }

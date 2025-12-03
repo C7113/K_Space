@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python二级课程第五课：字典与复杂数据结构</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .main-content {
+            flex: 3;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+        }
+        
+        h2 {
+            color: #e67e22;
+            border-left: 5px solid #f39c12;
+            padding-left: 15px;
+            margin: 25px 0 15px;
+        }
+        
+        h3 {
+            color: #f39c12;
+            margin: 20px 0 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #f39c12;
+        }
+        
+        .example-box {
+            background: #f1f8ff;
+            border-left: 4px solid #4dabf7;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            overflow-x: auto;
+        }
+        
+        .exercise {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .answer {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #f39c12;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #e67e22;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .key-point {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .tip {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .method-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .method-table th {
+            background-color: #f39c12;
+            color: white;
+            padding: 12px;
+        }
+        
+        .method-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .method-table tr:hover {
+            background-color: #fef5e7;
+        }
+        
+        .code-highlight {
+            background: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #e67e22;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Python二级课程第五课</h1>
+            <p class="subtitle">字典与复杂数据结构</p>
+        </header>
+        
+        <div class="content">
+            <div class="main-content">
+                <div class="card">
+                    <h2>课程目标</h2>
+                    <p>掌握Python字典的基本概念、特点和常用操作，理解复杂数据结构的构建和应用，能够熟练使用字典进行数据存储和处理。</p>
+                </div>
+                
+                <h2>一、字典基础</h2>
+                <div class="card">
+                    <h3>1. 字典的概念与特点</h3>
+                    <p>字典是Python中一种可变容器模型，可存储任意类型对象，以键值对的形式存储数据。</p>
+                    
+                    <ul>
+                        <li><strong>键值对结构</strong>：每个元素由键(key)和值(value)组成</li>
+                        <li><strong>无序集合</strong>：元素没有固定顺序（Python 3.7+有序）</li>
+                        <li><strong>可变长度</strong>：可以动态添加、删除键值对</li>
+                        <li><strong>键必须唯一</strong>：同一个字典中键不能重复</li>
+                        <li><strong>键必须不可变</strong>：键可以是字符串、数字、元组等不可变类型</li>
+                    </ul>
+                    
+                    <div class="example-box">
+                        # 字典的特点示例<br>
+                        # 字典定义<br>
+                        student = {"name": "张三", "age": 18, "score": 90}<br>
+                        print(student)  # 输出：{'name': '张三', 'age': 18, 'score': 90}<br>
+                        <br>
+                        # 键必须是不可变类型<br>
+                        valid_keys = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"name": "字符串键",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;123: "整数键",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;(1, 2): "元组键"<br>
+                        }<br>
+                        print(valid_keys)  # 输出：{'name': '字符串键', 123: '整数键', (1, 2): '元组键'}<br>
+                        <br>
+                        # 键不能重复，后面的会覆盖前面的<br>
+                        duplicate_keys = {"a": 1, "a": 2}<br>
+                        print(duplicate_keys)  # 输出：{'a': 2}<br>
+                        <br>
+                        # 错误示例：列表不能作为键<br>
+                        # invalid_dict = {[1,2]: "value"}  # 这行会报错：TypeError
+                    </div>
+                    
+                    <h3>2. 字典的声明方法</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>声明方法</th>
+                            <th>示例</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>直接声明</td>
+                            <td>d = {"key": "value"}</td>
+                            <td>使用花括号和冒号</td>
+                        </tr>
+                        <tr>
+                            <td>dict()函数</td>
+                            <td>d = dict(key="value")</td>
+                            <td>关键字参数形式</td>
+                        </tr>
+                        <tr>
+                            <td>dict()函数</td>
+                            <td>d = dict([("key", "value")])</td>
+                            <td>键值对元组列表</td>
+                        </tr>
+                        <tr>
+                            <td>fromkeys()</td>
+                            <td>d = dict.fromkeys(["k1","k2"])</td>
+                            <td>创建具有相同值的字典</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 字典声明示例<br>
+                        # 方法1：直接声明<br>
+                        dict1 = {"name": "Alice", "age": 20}<br>
+                        print("直接声明:", dict1)  # 输出：直接声明: {'name': 'Alice', 'age': 20}<br>
+                        <br>
+                        # 方法2：dict()函数（关键字参数）<br>
+                        dict2 = dict(name="Bob", age=25)<br>
+                        print("dict()关键字:", dict2)  # 输出：dict()关键字: {'name': 'Bob', 'age': 25}<br>
+                        <br>
+                        # 方法3：dict()函数（元组列表）<br>
+                        dict3 = dict([("name", "Charlie"), ("age", 30)])<br>
+                        print("dict()元组:", dict3)  # 输出：dict()元组: {'name': 'Charlie', 'age': 30}<br>
+                        <br>
+                        # 方法4：fromkeys()方法<br>
+                        dict4 = dict.fromkeys(["name", "age", "score"])<br>
+                        print("fromkeys()默认:", dict4)  # 输出：fromkeys()默认: {'name': None, 'age': None, 'score': None}<br>
+                        <br>
+                        dict5 = dict.fromkeys(["name", "age", "score"], "unknown")<br>
+                        print("fromkeys()指定值:", dict5)  # 输出：fromkeys()指定值: {'name': 'unknown', 'age': 'unknown', 'score': 'unknown'}<br>
+                        <br>
+                        # 空字典<br>
+                        empty_dict1 = {}<br>
+                        empty_dict2 = dict()<br>
+                        print("空字典1:", empty_dict1)  # 输出：空字典1: {}<br>
+                        print("空字典2:", empty_dict2)  # 输出：空字典2: {}
+                    </div>
+                </div>
+                
+                <h2>二、字典常用操作</h2>
+                <div class="card">
+                    <h3>1. 增加和修改元素</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>字典[键] = 值</td>
+                            <td>添加或修改键值对</td>
+                            <td>d["key"] = "value"</td>
+                        </tr>
+                        <tr>
+                            <td>setdefault(键, 值)</td>
+                            <td>键不存在时添加，存在时不修改</td>
+                            <td>d.setdefault("k", "v")</td>
+                        </tr>
+                        <tr>
+                            <td>update(字典2)</td>
+                            <td>用字典2更新当前字典</td>
+                            <td>d1.update(d2)</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 增加和修改元素示例<br>
+                        student = {"name": "张三", "age": 18}<br>
+                        print("原字典:", student)<br>
+                        <br>
+                        # 添加新键值对<br>
+                        student["score"] = 90<br>
+                        print("添加score:", student)  # 输出：添加score: {'name': '张三', 'age': 18, 'score': 90}<br>
+                        <br>
+                        # 修改已有键的值<br>
+                        student["age"] = 19<br>
+                        print("修改age:", student)  # 输出：修改age: {'name': '张三', 'age': 19, 'score': 90}<br>
+                        <br>
+                        # 使用setdefault添加（键不存在时）<br>
+                        student.setdefault("gender", "男")<br>
+                        print("setdefault添加:", student)  # 输出：setdefault添加: {'name': '张三', 'age': 19, 'score': 90, 'gender': '男'}<br>
+                        <br>
+                        # 使用setdefault（键存在时不修改）<br>
+                        student.setdefault("name", "李四")<br>
+                        print("setdefault存在:", student)  # 输出：setdefault存在: {'name': '张三', 'age': 19, 'score': 90, 'gender': '男'}<br>
+                        <br>
+                        # 使用update更新字典<br>
+                        update_info = {"age": 20, "class": "一班"}<br>
+                        student.update(update_info)<br>
+                        print("update更新:", student)  # 输出：update更新: {'name': '张三', 'age': 20, 'score': 90, 'gender': '男', 'class': '一班'}
+                    </div>
+                    
+                    <h3>2. 删除元素</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>del 字典[键]</td>
+                            <td>删除指定键值对</td>
+                            <td>del d["key"]</td>
+                        </tr>
+                        <tr>
+                            <td>pop(键)</td>
+                            <td>删除并返回指定键的值</td>
+                            <td>d.pop("key")</td>
+                        </tr>
+                        <tr>
+                            <td>popitem()</td>
+                            <td>删除并返回最后一个键值对</td>
+                            <td>d.popitem()</td>
+                        </tr>
+                        <tr>
+                            <td>clear()</td>
+                            <td>清空字典</td>
+                            <td>d.clear()</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 删除元素示例<br>
+                        student = {"name": "张三", "age": 18, "score": 90, "class": "一班"}<br>
+                        print("原字典:", student)<br>
+                        <br>
+                        # 使用del删除<br>
+                        del student["class"]<br>
+                        print("del删除class:", student)  # 输出：del删除class: {'name': '张三', 'age': 18, 'score': 90}<br>
+                        <br>
+                        # 使用pop删除并返回值<br>
+                        age = student.pop("age")<br>
+                        print("pop删除age, 返回值:", age)  # 输出：pop删除age, 返回值: 18<br>
+                        print("pop后字典:", student)  # 输出：pop后字典: {'name': '张三', 'score': 90}<br>
+                        <br>
+                        # 使用popitem删除最后一个元素<br>
+                        last_item = student.popitem()<br>
+                        print("popitem返回值:", last_item)  # 输出：popitem返回值: ('score', 90)<br>
+                        print("popitem后字典:", student)  # 输出：popitem后字典: {'name': '张三'}<br>
+                        <br>
+                        # 使用clear清空字典<br>
+                        student.clear()<br>
+                        print("clear后字典:", student)  # 输出：clear后字典: {}
+                    </div>
+                    
+                    <h3>3. 查询元素</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>方法</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>字典[键]</td>
+                            <td>获取指定键的值，键不存在会报错</td>
+                            <td>d["key"]</td>
+                        </tr>
+                        <tr>
+                            <td>get(键)</td>
+                            <td>获取指定键的值，键不存在返回None</td>
+                            <td>d.get("key")</td>
+                        </tr>
+                        <tr>
+                            <td>get(键, 默认值)</td>
+                            <td>获取指定键的值，键不存在返回默认值</td>
+                            <td>d.get("key", "default")</td>
+                        </tr>
+                        <tr>
+                            <td>keys()</td>
+                            <td>返回所有键的视图</td>
+                            <td>d.keys()</td>
+                        </tr>
+                        <tr>
+                            <td>values()</td>
+                            <td>返回所有值的视图</td>
+                            <td>d.values()</td>
+                        </tr>
+                        <tr>
+                            <td>items()</td>
+                            <td>返回所有键值对的视图</td>
+                            <td>d.items()</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 查询元素示例<br>
+                        student = {"name": "张三", "age": 18, "score": 90}<br>
+                        print("原字典:", student)<br>
+                        <br>
+                        # 使用键直接访问<br>
+                        name = student["name"]<br>
+                        print("直接访问name:", name)  # 输出：直接访问name: 张三<br>
+                        <br>
+                        # 使用get方法访问（安全）<br>
+                        age = student.get("age")<br>
+                        print("get访问age:", age)  # 输出：get访问age: 18<br>
+                        <br>
+                        # 访问不存在的键<br>
+                        # gender = student["gender"]  # 这行会报错：KeyError<br>
+                        gender = student.get("gender")<br>
+                        print("get访问不存在的键:", gender)  # 输出：get访问不存在的键: None<br>
+                        <br>
+                        gender = student.get("gender", "未知")<br>
+                        print("get访问不存在的键(带默认值):", gender)  # 输出：get访问不存在的键(带默认值): 未知<br>
+                        <br>
+                        # 获取所有键<br>
+                        keys = student.keys()<br>
+                        print("所有键:", keys)  # 输出：所有键: dict_keys(['name', 'age', 'score'])<br>
+                        <br>
+                        # 获取所有值<br>
+                        values = student.values()<br>
+                        print("所有值:", values)  # 输出：所有值: dict_values(['张三', 18, 90])<br>
+                        <br>
+                        # 获取所有键值对<br>
+                        items = student.items()<br>
+                        print("所有键值对:", items)  # 输出：所有键值对: dict_items([('name', '张三'), ('age', 18), ('score', 90)])
+                    </div>
+                    
+                    <h3>4. 字典遍历</h3>
+                    
+                    <div class="example-box">
+                        # 字典遍历示例<br>
+                        student = {"name": "张三", "age": 18, "score": 90}<br>
+                        <br>
+                        # 遍历所有键<br>
+                        print("遍历所有键:")<br>
+                        for key in student.keys():<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"键: {key}")<br>
+                        <br>
+                        # 遍历所有值<br>
+                        print("\n遍历所有值:")<br>
+                        for value in student.values():<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"值: {value}")<br>
+                        <br>
+                        # 遍历所有键值对<br>
+                        print("\n遍历所有键值对:")<br>
+                        for key, value in student.items():<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"{key}: {value}")<br>
+                        <br>
+                        # 直接遍历字典（默认遍历键）<br>
+                        print("\n直接遍历字典(键):")<br>
+                        for key in student:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"键: {key}, 值: {student[key]}")<br>
+                        <br>
+                        # 输出结果：<br>
+                        # 遍历所有键:<br>
+                        # 键: name<br>
+                        # 键: age<br>
+                        # 键: score<br>
+                        # <br>
+                        # 遍历所有值:<br>
+                        # 值: 张三<br>
+                        # 值: 18<br>
+                        # 值: 90<br>
+                        # <br>
+                        # 遍历所有键值对:<br>
+                        # name: 张三<br>
+                        # age: 18<br>
+                        # score: 90<br>
+                        # <br>
+                        # 直接遍历字典(键):<br>
+                        # 键: name, 值: 张三<br>
+                        # 键: age, 值: 18<br>
+                        # 键: score, 值: 90
+                    </div>
+                    
+                    <h3>5. 字典复制</h3>
+                    
+                    <div class="example-box">
+                        # 字典复制示例<br>
+                        original = {"name": "张三", "age": 18, "scores": [90, 85, 95]}<br>
+                        <br>
+                        # 直接赋值（引用同一个对象）<br>
+                        reference = original<br>
+                        reference["name"] = "李四"<br>
+                        print("原字典:", original)  # 输出：原字典: {'name': '李四', 'age': 18, 'scores': [90, 85, 95]}<br>
+                        <br>
+                        # 重置原字典<br>
+                        original = {"name": "张三", "age": 18, "scores": [90, 85, 95]}<br>
+                        <br>
+                        # 浅拷贝<br>
+                        shallow_copy = original.copy()<br>
+                        shallow_copy["name"] = "王五"<br>
+                        shallow_copy["scores"].append(100)  # 修改嵌套对象<br>
+                        print("原字典:", original)  # 输出：原字典: {'name': '张三', 'age': 18, 'scores': [90, 85, 95, 100]}<br>
+                        print("浅拷贝:", shallow_copy)  # 输出：浅拷贝: {'name': '王五', 'age': 18, 'scores': [90, 85, 95, 100]}<br>
+                        <br>
+                        # 深拷贝<br>
+                        import copy<br>
+                        original = {"name": "张三", "age": 18, "scores": [90, 85, 95]}<br>
+                        deep_copy = copy.deepcopy(original)<br>
+                        deep_copy["scores"].append(100)<br>
+                        print("原字典:", original)  # 输出：原字典: {'name': '张三', 'age': 18, 'scores': [90, 85, 95]}<br>
+                        print("深拷贝:", deep_copy)  # 输出：深拷贝: {'name': '张三', 'age': 18, 'scores': [90, 85, 95, 100]}
+                    </div>
+                    
+                    <div class="tip">
+                        <strong>注意：</strong>浅拷贝只复制第一层，嵌套对象仍然是引用。深拷贝会递归复制所有嵌套对象。
+                    </div>
+                </div>
+                
+                <h2>三、复杂数据结构</h2>
+                <div class="card">
+                    <h3>1. 字典的嵌套</h3>
+                    <p>字典的值可以是任意类型，包括列表、字典等，这样可以构建复杂的数据结构。</p>
+                    
+                    <div class="example-box">
+                        # 字典嵌套示例<br>
+                        # 字典中嵌套列表<br>
+                        student1 = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"name": "张三",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"age": 18,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"scores": [90, 85, 95]<br>
+                        }<br>
+                        <br>
+                        # 字典中嵌套字典<br>
+                        student2 = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"name": "李四",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"age": 19,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"contact": {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"phone": "123456789",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"email": "lisi@example.com"<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }<br>
+                        <br>
+                        # 列表中嵌套字典<br>
+                        students = [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{"name": "张三", "age": 18},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{"name": "李四", "age": 19},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{"name": "王五", "age": 20}<br>
+                        ]<br>
+                        <br>
+                        print("学生1:", student1)<br>
+                        print("学生2:", student2)<br>
+                        print("学生列表:", students)<br>
+                        <br>
+                        # 访问嵌套数据<br>
+                        print("张三的第一个成绩:", student1["scores"][0])  # 输出：张三的第一个成绩: 90<br>
+                        print("李四的电话:", student2["contact"]["phone"])  # 输出：李四的电话: 123456789<br>
+                        print("第二个学生的名字:", students[1]["name"])  # 输出：第二个学生的名字: 李四
+                    </div>
+                    
+                    <h3>2. 复杂数据结构的应用</h3>
+                    
+                    <div class="example-box">
+                        # 复杂数据结构应用示例<br>
+                        # 学校数据结构<br>
+                        school = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"name": "第一中学",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"classes": [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"class_name": "高一(1)班",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"teacher": "张老师",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"students": [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"name": "张三", "age": 16, "scores": {"math": 90, "english": 85}},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"name": "李四", "age": 17, "scores": {"math": 95, "english": 88}}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"class_name": "高一(2)班",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"teacher": "李老师",<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"students": [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"name": "王五", "age": 16, "scores": {"math": 88, "english": 92}}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                        }<br>
+                        <br>
+                        # 访问复杂数据<br>
+                        print("学校名称:", school["name"])<br>
+                        print("第一个班级:", school["classes"][0]["class_name"])<br>
+                        print("第一个班级的班主任:", school["classes"][0]["teacher"])<br>
+                        print("第一个班级第一个学生:", school["classes"][0]["students"][0]["name"])<br>
+                        print("张三的数学成绩:", school["classes"][0]["students"][0]["scores"]["math"])<br>
+                        <br>
+                        # 遍历所有班级和学生<br>
+                        for class_info in school["classes"]:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(f"\n{class_info['class_name']} - {class_info['teacher']}")<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for student in class_info["students"]:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"  - {student['name']}, 年龄: {student['age']}")
+                    </div>
+                </div>
+                
+                <h2>四、字典内置函数</h2>
+                <div class="card">
+                    <h3>常用内置函数</h3>
+                    
+                    <table class="method-table">
+                        <tr>
+                            <th>函数</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                        </tr>
+                        <tr>
+                            <td>len(dict)</td>
+                            <td>返回字典中键值对的数量</td>
+                            <td>len({"a":1}) → 1</td>
+                        </tr>
+                        <tr>
+                            <td>str(dict)</td>
+                            <td>将字典转换为字符串表示</td>
+                            <td>str({"a":1}) → "{'a': 1}"</td>
+                        </tr>
+                        <tr>
+                            <td>type(dict)</td>
+                            <td>返回对象的类型</td>
+                            <td>type({}) → &lt;class 'dict'&gt;</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-box">
+                        # 字典内置函数示例<br>
+                        student = {"name": "张三", "age": 18, "score": 90}<br>
+                        <br>
+                        # 获取字典长度<br>
+                        length = len(student)<br>
+                        print("字典长度:", length)  # 输出：字典长度: 3<br>
+                        <br>
+                        # 转换为字符串<br>
+                        str_dict = str(student)<br>
+                        print("字符串表示:", str_dict)  # 输出：字符串表示: {'name': '张三', 'age': 18, 'score': 90}<br>
+                        print("类型:", type(str_dict))  # 输出：类型: &lt;class 'str'&gt;<br>
+                        <br>
+                        # 检查类型<br>
+                        print("字典类型:", type(student))  # 输出：字典类型: &lt;class 'dict'&gt;<br>
+                        <br>
+                        # 检查键是否存在<br>
+                        has_name = "name" in student<br>
+                        has_gender = "gender" in student<br>
+                        print("是否有name:", has_name)  # 输出：是否有name: True<br>
+                        print("是否有gender:", has_gender)  # 输出：是否有gender: False
+                    </div>
+                </div>
+                
+                <h2>五、例题训练</h2>
+                <div class="card">
+                    <div class="exercise">
+                        <h3>题目1：字典基本操作</h3>
+                        <p>创建一个学生字典：<code>student = {"name": "张三", "age": 18, "major": "计算机"}</code></p>
+                        <p>完成以下操作：</p>
+                        <ol>
+                            <li>添加键值对 "grade": 90</li>
+                            <li>将年龄修改为19</li>
+                            <li>删除专业信息</li>
+                            <li>使用get方法安全地获取"phone"键的值，如果不存在返回"未知"</li>
+                            <li>遍历并打印所有键值对</li>
+                        </ol>
+                        <button class="btn" onclick="toggleAnswer('answer1')">显示答案</button>
+                        
+                        <div id="answer1" class="answer">
+                            # 答案<br>
+                            student = {"name": "张三", "age": 18, "major": "计算机"}<br>
+                            print("原字典:", student)<br>
+                            <br>
+                            # 1. 添加键值对 "grade": 90<br>
+                            student["grade"] = 90<br>
+                            print("添加grade后:", student)<br>
+                            <br>
+                            # 2. 将年龄修改为19<br>
+                            student["age"] = 19<br>
+                            print("修改age后:", student)<br>
+                            <br>
+                            # 3. 删除专业信息<br>
+                            del student["major"]<br>
+                            print("删除major后:", student)<br>
+                            <br>
+                            # 4. 使用get方法安全地获取"phone"键的值<br>
+                            phone = student.get("phone", "未知")<br>
+                            print("phone:", phone)<br>
+                            <br>
+                            # 5. 遍历并打印所有键值对<br>
+                            print("\n所有键值对:")<br>
+                            for key, value in student.items():<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;print(f"{key}: {value}")
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h3>题目2：字典综合应用</h3>
+                        <p>创建一个班级字典，包含多个学生的信息：</p>
+                        <ol>
+                            <li>创建一个空字典class_info</li>
+                            <li>添加班级名称"class_name": "Python二级班"</li>
+                            <li>添加学生列表"students"，包含至少3个学生字典</li>
+                            <li>计算班级学生的平均年龄</li>
+                            <li>找出年龄最大的学生</li>
+                            <li>统计每个专业的学生人数</li>
+                        </ol>
+                        <button class="btn" onclick="toggleAnswer('answer2')">显示答案</button>
+                        
+                        <div id="answer2" class="answer">
+                            # 答案<br>
+                            # 1. 创建空字典<br>
+                            class_info = {}<br>
+                            <br>
+                            # 2. 添加班级名称<br>
+                            class_info["class_name"] = "Python二级班"<br>
+                            <br>
+                            # 3. 添加学生列表<br>
+                            class_info["students"] = [<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;{"name": "张三", "age": 18, "major": "计算机"},<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;{"name": "李四", "age": 19, "major": "数学"},<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;{"name": "王五", "age": 20, "major": "计算机"},<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;{"name": "赵六", "age": 18, "major": "物理"}<br>
+                            ]<br>
+                            <br>
+                            print("班级信息:", class_info)<br>
+                            <br>
+                            # 4. 计算平均年龄<br>
+                            total_age = 0<br>
+                            for student in class_info["students"]:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;total_age += student["age"]<br>
+                            average_age = total_age / len(class_info["students"])<br>
+                            print(f"平均年龄: {average_age:.1f}")<br>
+                            <br>
+                            # 5. 找出年龄最大的学生<br>
+                            oldest_student = max(class_info["students"], key=lambda x: x["age"])<br>
+                            print(f"年龄最大的学生: {oldest_student['name']}, 年龄: {oldest_student['age']}")<br>
+                            <br>
+                            # 6. 统计每个专业的学生人数<br>
+                            major_count = {}<br>
+                            for student in class_info["students"]:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;major = student["major"]<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;major_count[major] = major_count.get(major, 0) + 1<br>
+                            <br>
+                            print("专业分布:")<br>
+                            for major, count in major_count.items():<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;print(f"{major}: {count}人")
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h3>题目3：复杂数据结构操作</h3>
+                        <p>给定一个嵌套字典，表示学校信息：</p>
+                        <div class="example-box">
+                            school = {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"name": "第一中学",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"classes": [<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "高一(1)班",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"teacher": "张老师",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"students": [<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"name": "张三", "scores": {"语文": 85, "数学": 90, "英语": 88}},<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"name": "李四", "scores": {"语文": 92, "数学": 95, "英语": 90}}<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "高一(2)班",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"teacher": "李老师",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"students": [<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"name": "王五", "scores": {"语文": 88, "数学": 92, "英语": 85}}<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                            }
+                        </div>
+                        <p>完成以下操作：</p>
+                        <ol>
+                            <li>获取"高一(1)班"班主任的名字</li>
+                            <li>获取"李四"的数学成绩</li>
+                            <li>计算"高一(1)班"学生的数学平均分</li>
+                            <li>为"高一(2)班"添加一个新学生</li>
+                            <li>找出全校数学成绩最高的学生</li>
+                        </ol>
+                        <button class="btn" onclick="toggleAnswer('answer3')">显示答案</button>
+                        
+                        <div id="answer3" class="answer">
+                            # 答案<br>
+                            school = {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"name": "第一中学",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"classes": [<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "高一(1)班",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"teacher": "张老师",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"students": [<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"name": "张三", "scores": {"语文": 85, "数学": 90, "英语": 88}},<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"name": "李四", "scores": {"语文": 92, "数学": 95, "英语": 90}}<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "高一(2)班",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"teacher": "李老师",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"students": [<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"name": "王五", "scores": {"语文": 88, "数学": 92, "英语": 85}}<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                            }<br>
+                            <br>
+                            # 1. 获取"高一(1)班"班主任的名字<br>
+                            teacher_name = school["classes"][0]["teacher"]<br>
+                            print("高一(1)班班主任:", teacher_name)<br>
+                            <br>
+                            # 2. 获取"李四"的数学成绩<br>
+                            lisi_math = school["classes"][0]["students"][1]["scores"]["数学"]<br>
+                            print("李四的数学成绩:", lisi_math)<br>
+                            <br>
+                            # 3. 计算"高一(1)班"学生的数学平均分<br>
+                            class1_students = school["classes"][0]["students"]<br>
+                            math_scores = [student["scores"]["数学"] for student in class1_students]<br>
+                            average_math = sum(math_scores) / len(math_scores)<br>
+                            print("高一(1)班数学平均分:", average_math)<br>
+                            <br>
+                            # 4. 为"高一(2)班"添加一个新学生<br>
+                            new_student = {"name": "赵六", "scores": {"语文": 90, "数学": 88, "英语": 92}}<br>
+                            school["classes"][1]["students"].append(new_student)<br>
+                            print("添加新学生后高一(2)班:")<br>
+                            for student in school["classes"][1]["students"]:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;print(f"  - {student['name']}")<br>
+                            <br>
+                            # 5. 找出全校数学成绩最高的学生<br>
+                            best_math_score = 0<br>
+                            best_math_student = ""<br>
+                            <br>
+                            for class_info in school["classes"]:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;for student in class_info["students"]:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if student["scores"]["数学"] > best_math_score:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;best_math_score = student["scores"]["数学"]<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;best_math_student = student["name"]<br>
+                            <br>
+                            print(f"数学成绩最高的学生: {best_math_student}, 成绩: {best_math_score}")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <h2>课程要点</h2>
+                <div class="key-point">
+                    <h3>字典核心概念</h3>
+                    <ul>
+                        <li>键值对结构</li>
+                        <li>无序集合（Python 3.7+有序）</li>
+                        <li>键必须唯一且不可变</li>
+                        <li>值可以是任意类型</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>重要字典方法</h3>
+                    <ul>
+                        <li>增改：直接赋值、setdefault、update</li>
+                        <li>删除：del、pop、popitem、clear</li>
+                        <li>查询：直接访问、get、keys、values、items</li>
+                        <li>复制：copy、deepcopy</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>字典遍历</h3>
+                    <ul>
+                        <li>遍历键：for key in dict</li>
+                        <li>遍历值：for value in dict.values()</li>
+                        <li>遍历键值对：for key, value in dict.items()</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>复杂数据结构</h3>
+                    <ul>
+                        <li>字典嵌套列表</li>
+                        <li>字典嵌套字典</li>
+                        <li>列表中嵌套字典</li>
+                        <li>多层嵌套结构</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>常见错误</h3>
+                    <ul>
+                        <li>使用可变对象作为键</li>
+                        <li>直接访问不存在的键</li>
+                        <li>混淆浅拷贝和深拷贝</li>
+                        <li>在遍历时修改字典</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <h3>下节课预告</h3>
+                    <p>流程控制与循环结构</p>
+                    <ul>
+                        <li>条件语句：if, elif, else</li>
+                        <li>循环结构：for, while</li>
+                        <li>循环控制：break, continue</li>
+                        <li>range()函数</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav">
+            <button class="btn" onclick="location.href='4.html'">上一课</button>
+            <button class="btn" onclick="location.href='6.html'">下一课</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const answer = document.getElementById(id);
+            if (answer.style.display === "block") {
+                answer.style.display = "none";
+            } else {
+                answer.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

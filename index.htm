@@ -49,6 +49,7 @@
     <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
     <button class="toggle-btn" onclick="window.location.href='http://8.130.178.205/'">鲁班创客OJ</button>
     <button class="toggle-btn" onclick="window.location.href='learning-path.html'">学习路径</button>
+    <button class="toggle-btn" onclick="window.location.href='exam-topics.html'">等级考试知识点</button>
   </div>
   <div class="container">
 
@@ -440,65 +441,6 @@
         const translateY = Math.sin(angle) * force;
         
         particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
-      });
-    });
-    // 在现有的<script>标签内添加以下代码（在文件末尾的script部分）
-    document.addEventListener('DOMContentLoaded', function() {
-      // 为基础级别按钮添加额外的点击事件处理
-      const beginnerButtons = document.querySelectorAll('#beginnerGrid .action-links a');
-      beginnerButtons.forEach(button => {
-        // 确保按钮可点击
-        button.style.pointerEvents = 'auto';
-        button.style.cursor = 'pointer';
-        
-        // 添加额外的点击事件处理
-        button.addEventListener('click', function(e) {
-          // 检查href属性是否存在且有效
-          if (this.href && this.href !== '#') {
-            // 如果点击事件被阻止了，我们手动跳转
-            setTimeout(() => {
-              window.location.href = this.href;
-            }, 100);
-          }
-        });
-      });
-      
-      // 为进阶级别按钮添加额外的点击事件处理
-      const intermediateButtons = document.querySelectorAll('#intermediateGrid .action-links a');
-      intermediateButtons.forEach(button => {
-        // 确保按钮可点击
-        button.style.pointerEvents = 'auto';
-        button.style.cursor = 'pointer';
-        
-        // 添加额外的点击事件处理
-        button.addEventListener('click', function(e) {
-          // 检查href属性是否存在且有效
-          if (this.href && this.href !== '#') {
-            // 如果点击事件被阻止了，我们手动跳转
-            setTimeout(() => {
-              window.location.href = this.href;
-            }, 100);
-          }
-        });
-      });
-      
-      // 为高级级别按钮添加额外的点击事件处理
-      const advancedButtons = document.querySelectorAll('#advancedGrid .action-links a');
-      advancedButtons.forEach(button => {
-        // 确保按钮可点击
-        button.style.pointerEvents = 'auto';
-        button.style.cursor = 'pointer';
-        
-        // 添加额外的点击事件处理
-        button.addEventListener('click', function(e) {
-          // 检查href属性是否存在且有效
-          if (this.href && this.href !== '#') {
-            // 如果点击事件被阻止了，我们手动跳转
-            setTimeout(() => {
-              window.location.href = this.href;
-            }, 100);
-          }
-        });
       });
     });
   </script>
