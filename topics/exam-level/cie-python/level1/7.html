@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python一级 - 第7课：Turtle图形编程基础 - C++ 知识导航</title>
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/topic.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="stylesheet" href="/styles/animations.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        Python一级 第7课：Turtle图形编程基础
+        <span class="badge">基础入门</span>
+      </h1>
+      <p>掌握Turtle模块导入 | 熟悉基本绘图命令 | 控制画笔属性</p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <a href="../index.html" class="toggle-btn">↩ 返回 CIE Python 考试首页</a>
+    <a href="../../../../exam-topics.html" class="toggle-btn">↩ 返回 等级考试知识点</a>
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+  </div>
+  
+  <div class="container">
+    <section class="topic-section">
+      <h2>知识点概览</h2>
+      <div class="knowledge-points">
+        <ul>
+          <li>导入模块：import turtle</li>
+          <li>基本绘图命令：turtle.forward(100)、turtle.backward(50)、turtle.left(90)、turtle.right(60)、turtle.circle(50)</li>
+          <li>控制画笔：turtle.penup()、turtle.pendown()</li>
+          <li>结束绘图：turtle.done()</li>
+          <li>要求能绘制正方形、三角形、圆形等基本图形</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2>知识点详解</h2>
+      
+      <h3>1. Turtle模块简介</h3>
+      <p>Turtle是Python内置的一个图形绘制模块，它通过控制一个虚拟的"海龟"在屏幕上移动来绘制图形。这个模块非常适合初学者学习编程，因为它能直观地展示代码执行的效果。</p>
+      
+      <div class="concept-card">
+        <h4>Turtle的工作原理</h4>
+        <ul>
+          <li>屏幕上有一个坐标系，中心点为(0,0)</li>
+          <li>有一只"海龟"初始位于屏幕中央，面向右侧</li>
+          <li>通过命令控制海龟移动，移动时会在屏幕上留下轨迹</li>
+          <li>可以通过控制画笔的抬起和落下控制是否绘制轨迹</li>
+        </ul>
+      </div>
+      
+      <h3>2. 导入Turtle模块</h3>
+      <p>在使用Turtle模块之前，需要先导入它：</p>
+      
+      <div class="example-code">
+# 导入turtle模块
+import turtle
+
+# 创建一个窗口对象
+window = turtle.Screen()
+
+# 创建一个海龟对象
+pen = turtle.Turtle()
+
+# 设置窗口标题
+window.title("我的第一个Turtle程序")
+
+# 设置窗口背景色
+window.bgcolor("white")
+
+# 关闭窗口时保持显示
+window.mainloop()
+      </div>
+      
+      <h3>3. 基本绘图命令</h3>
+      
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>命令</th>
+            <th>功能</th>
+            <th>简写</th>
+            <th>示例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>turtle.forward(distance)</td>
+            <td>向前移动指定距离</td>
+            <td>turtle.fd()</td>
+            <td>turtle.forward(100)</td>
+          </tr>
+          <tr>
+            <td>turtle.backward(distance)</td>
+            <td>向后移动指定距离</td>
+            <td>turtle.bk()</td>
+            <td>turtle.backward(50)</td>
+          </tr>
+          <tr>
+            <td>turtle.left(angle)</td>
+            <td>向左转指定角度</td>
+            <td>turtle.lt()</td>
+            <td>turtle.left(90)</td>
+          </tr>
+          <tr>
+            <td>turtle.right(angle)</td>
+            <td>向右转指定角度</td>
+            <td>turtle.rt()</td>
+            <td>turtle.right(60)</td>
+          </tr>
+          <tr>
+            <td>turtle.circle(radius)</td>
+            <td>绘制圆形</td>
+            <td></td>
+            <td>turtle.circle(50)</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="concept-card">
+        <h4>turtle.forward() 和 turtle.backward()</h4>
+        <p>控制海龟向前或向后移动指定的距离（像素）：</p>
+        <div class="example-code">
+import turtle
+
+# 创建海龟对象
+pen = turtle.Turtle()
+
+# 向前移动100像素
+pen.forward(100)
+
+# 向后移动50像素
+pen.backward(50)
+
+# 简写形式
+pen.fd(100)  # 等同于 forward(100)
+pen.bk(50)   # 等同于 backward(50)
+
+turtle.done()
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>turtle.left() 和 turtle.right()</h4>
+        <p>控制海龟左转或右转指定的角度：</p>
+        <div class="example-code">
+import turtle
+
+# 创建海龟对象
+pen = turtle.Turtle()
+
+# 向前移动100像素
+pen.forward(100)
+
+# 向左转90度
+pen.left(90)
+
+# 向前移动100像素
+pen.forward(100)
+
+# 向右转60度
+pen.right(60)
+
+# 向前移动100像素
+pen.forward(100)
+
+# 简写形式
+pen.lt(90)  # 等同于 left(90)
+pen.rt(60)  # 等同于 right(60)
+
+turtle.done()
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>turtle.circle()</h4>
+        <p>绘制圆形或弧形：</p>
+        <div class="example-code">
+import turtle
+
+# 创建海龟对象
+pen = turtle.Turtle()
+
+# 绘制半径为50的圆
+pen.circle(50)
+
+# 绘制半圆（180度弧）
+pen.circle(50, 180)
+
+# 绘制弧形（90度）
+pen.circle(50, 90)
+
+# 绘制半径为-50的圆（逆时针方向）
+pen.circle(-50)
+
+turtle.done()
+        </div>
+      </div>
+      
+      <h3>4. 控制画笔</h3>
+      
+      <div class="concept-card">
+        <h4>抬起和放下画笔</h4>
+        <p>控制海龟移动时是否绘制轨迹：</p>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>命令</th>
+              <th>功能</th>
+              <th>示例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>turtle.penup()</td>
+              <td>抬起画笔，移动时不绘制</td>
+              <td>turtle.penup()</td>
+            </tr>
+            <tr>
+              <td>turtle.pendown()</td>
+              <td>放下画笔，移动时绘制</td>
+              <td>turtle.pendown()</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div class="example-code">
+import turtle
+
+# 创建海龟对象
+pen = turtle.Turtle()
+
+# 绘制一条线
+pen.forward(100)
+
+# 抬起画笔
+pen.penup()
+
+# 移动到新位置（不绘制）
+pen.goto(-100, 100)
+
+# 放下画笔
+pen.pendown()
+
+# 绘制另一条线
+pen.forward(100)
+
+turtle.done()
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>设置画笔属性</h4>
+        <p>可以设置画笔的颜色、粗细等属性：</p>
+        <div class="example-code">
+import turtle
+
+# 创建海龟对象
+pen = turtle.Turtle()
+
+# 设置画笔颜色
+pen.color("red")
+
+# 设置画笔粗细
+pen.pensize(5)
+
+# 绘制红色粗线
+pen.forward(100)
+
+# 更改颜色和粗细
+pen.color("blue")
+pen.pensize(2)
+
+# 绘制蓝色细线
+pen.left(90)
+pen.forward(100)
+
+turtle.done()
+        </div>
+      </div>
+      
+      <h3>5. 结束绘图</h3>
+      <p>使用turtle.done()告诉程序绘图已完成，保持窗口打开：</p>
+      
+      <div class="example-code">
+import turtle
+
+# 绘图代码...
+pen = turtle.Turtle()
+pen.forward(100)
+pen.left(90)
+pen.forward(100)
+
+# 结束绘图，保持窗口打开
+turtle.done()
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>示例演示</h2>
+      
+      <h3>示例1：绘制正方形</h3>
+      <div class="example-code">
+# draw_square.py
+# 绘制正方形
+
+import turtle
+
+# 创建海龟对象
+pen = turtle.Turtle()
+
+# 设置画笔属性
+pen.color("blue")
+pen.pensize(3)
+
+# 绘制正方形
+for i in range(4):
+    pen.forward(100)  # 向前移动100像素
+    pen.left(90)      # 左转90度
+
+# 结束绘图
+turtle.done()
+      </div>
+      
+      <h3>示例2：绘制三角形</h3>
+      <div class="example-code">
+# draw_triangle.py
+# 绘制三角形
+
+import turtle
+
+# 创建海龟对象
+pen = turtle.Turtle()
+
+# 设置画笔属性
+pen.color("red")
+pen.pensize(3)
+
+# 绘制三角形
+for i in range(3):
+    pen.forward(100)  # 向前移动100像素
+    pen.left(120)     # 左转120度
+
+# 结束绘图
+turtle.done()
+      </div>
+      
+      <h3>示例3：绘制多个图形</h3>
+      <div class="example-code">
+# draw_multiple_shapes.py
+# 绘制多个图形
+
+import turtle
+
+# 创建海龟对象
+pen = turtle.Turtle()
+
+# 设置画笔属性
+pen.speed(2)  # 设置绘制速度
+pen.pensize(2)
+
+# 绘制正方形
+pen.color("red")
+pen.penup()
+pen.goto(-150, 0)
+pen.pendown()
+
+for i in range(4):
+    pen.forward(100)
+    pen.left(90)
+
+# 绘制三角形
+pen.color("blue")
+pen.penup()
+pen.goto(0, 0)
+pen.pendown()
+
+for i in range(3):
+    pen.forward(100)
+    pen.left(120)
+
+# 绘制圆形
+pen.color("green")
+pen.penup()
+pen.goto(150, -50)  # 移动到合适位置（圆心在(150, 0)，但circle从下方开始绘制）
+pen.pendown()
+pen.circle(50)
+
+# 结束绘图
+turtle.done()
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>课堂练习</h2>
+      
+      <div class="exercise-card">
+        <h3>练习1：绘制矩形</h3>
+        <p>编写程序绘制一个长为150像素、宽为100像素的矩形。</p>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+# draw_rectangle.py
+# 绘制矩形
+
+import turtle
+
+pen = turtle.Turtle()
+pen.color("purple")
+pen.pensize(3)
+
+# 绘制矩形
+for i in range(2):
+    pen.forward(150)  # 长边
+    pen.left(90)
+    pen.forward(100)  # 短边
+    pen.left(90)
+
+turtle.done()
+          </div>
+        </details>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习2：绘制五角星</h3>
+        <p>编写程序绘制一个五角星。（提示：五角星的每个尖角是36度，内角是108度）</p>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+# draw_star.py
+# 绘制五角星
+
+import turtle
+
+pen = turtle.Turtle()
+pen.color("orange")
+pen.pensize(3)
+
+# 绘制五角星
+for i in range(5):
+    pen.forward(100)
+    pen.right(144)  # 180 - 36 = 144度
+
+turtle.done()
+          </div>
+        </details>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习3：绘制同心圆</h3>
+        <p>编写程序绘制三个同心圆（圆心相同，半径不同）。</p>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+# draw_concentric_circles.py
+# 绘制同心圆
+
+import turtle
+
+pen = turtle.Turtle()
+pen.color("black")
+pen.pensize(2)
+
+# 绘制三个同心圆
+for radius in [50, 80, 110]:
+    pen.penup()
+    pen.goto(0, -radius)  # 移动到圆的底部
+    pen.pendown()
+    pen.circle(radius)
+
+turtle.done()
+          </div>
+        </details>
+      </div>
+    </section>
+  </div>
+  
+  <div class="navigation-buttons">
+    <a href="6.html" class="nav-button">上一课：类型转换</a>
+    <a href="8.html" class="nav-button next">下一课：综合案例实战 ➔</a>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+  </footer>
+
+  <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+
+    // 粒子动画效果
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

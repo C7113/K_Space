@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python一级 - 第6课：类型转换 - C++ 知识导航</title>
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/topic.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="stylesheet" href="/styles/animations.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        Python一级 第6课：类型转换
+        <span class="badge">基础入门</span>
+      </h1>
+      <p>掌握常用转换函数 | 理解类型不匹配错误 | 正确进行数据类型转换</p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <a href="../index.html" class="toggle-btn">↩ 返回 CIE Python 考试首页</a>
+    <a href="../../../../exam-topics.html" class="toggle-btn">↩ 返回 等级考试知识点</a>
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+  </div>
+  
+  <div class="container">
+    <section class="topic-section">
+      <h2>知识点概览</h2>
+      <div class="knowledge-points">
+        <ul>
+          <li>常用转换函数：int(x)、float(x)、str(x)</li>
+          <li>int(x)：转为整数（如 int("10") → 10）</li>
+          <li>float(x)：转为浮点数（如 float("3.5") → 3.5）</li>
+          <li>str(x)：转为字符串（如 str(100) → "100"）</li>
+          <li>理解类型不匹配会导致错误（如 "5" + 3 报错）</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2>知识点详解</h2>
+      
+      <h3>1. 类型转换概述</h3>
+      <p>在编程过程中，我们经常需要在不同的数据类型之间进行转换。Python提供了一些内置函数来实现常见的类型转换。</p>
+      
+      <div class="concept-card">
+        <h4>为什么需要类型转换？</h4>
+        <ul>
+          <li>input()函数返回的都是字符串，需要转换为数值进行计算</li>
+          <li>数值需要与字符串拼接时需要转换为字符串</li>
+          <li>不同数值类型之间可能需要转换（如整数转浮点数）</li>
+          <li>避免类型不匹配导致的错误</li>
+        </ul>
+      </div>
+      
+      <h3>2. 常用类型转换函数</h3>
+      
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>函数</th>
+            <th>功能</th>
+            <th>示例</th>
+            <th>结果</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>int(x)</td>
+            <td>转换为整数</td>
+            <td>int("123")</td>
+            <td>123</td>
+          </tr>
+          <tr>
+            <td>float(x)</td>
+            <td>转换为浮点数</td>
+            <td>float("3.14")</td>
+            <td>3.14</td>
+          </tr>
+          <tr>
+            <td>str(x)</td>
+            <td>转换为字符串</td>
+            <td>str(42)</td>
+            <td>"42"</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="concept-card">
+        <h4>int() 函数 - 转换为整数</h4>
+        <p>int()函数用于将其他类型的数据转换为整数：</p>
+        <div class="example-code">
+# 字符串转整数
+num_str = "123"
+num_int = int(num_str)
+print(num_int, type(num_int))  # 123 &lt;class 'int'&gt;
+
+# 浮点数转整数（截断小数部分）
+num_float = 3.14
+num_int = int(num_float)
+print(num_int, type(num_int))  # 3 &lt;class 'int'&gt;
+
+# 布尔值转整数
+bool_true = True
+bool_false = False
+print(int(bool_true))   # 1
+print(int(bool_false))  # 0
+        </div>
+        
+        <div class="concept-card warning">
+          <h4>注意事项</h4>
+          <p>如果字符串不能转换为整数，会抛出ValueError异常：</p>
+          <div class="example-code">
+# 错误示例
+try:
+    invalid_conversion = int("abc")
+except ValueError as e:
+    print("转换错误：", e)  # 转换错误： invalid literal for int() with base 10: 'abc'
+    
+# 包含小数点的字符串也不能直接转为整数
+try:
+    invalid_conversion = int("3.14")
+except ValueError as e:
+    print("转换错误：", e)  # 转换错误： invalid literal for int() with base 10: '3.14'
+          </div>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>float() 函数 - 转换为浮点数</h4>
+        <p>float()函数用于将其他类型的数据转换为浮点数：</p>
+        <div class="example-code">
+# 字符串转浮点数
+num_str = "3.14"
+num_float = float(num_str)
+print(num_float, type(num_float))  # 3.14 &lt;class 'float'&gt;
+
+# 整数转浮点数
+num_int = 42
+num_float = float(num_int)
+print(num_float, type(num_float))  # 42.0 &lt;class 'float'&gt;
+
+# 科学计数法字符串
+scientific = "1.5e2"
+num_float = float(scientific)
+print(num_float, type(num_float))  # 150.0 &lt;class 'float'&gt;
+        </div>
+        
+        <div class="concept-card warning">
+          <h4>注意事项</h4>
+          <p>无效的字符串同样会导致ValueError：</p>
+          <div class="example-code">
+# 错误示例
+try:
+    invalid_conversion = float("abc")
+except ValueError as e:
+    print("转换错误：", e)  # 转换错误： could not convert string to float: abc
+          </div>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>str() 函数 - 转换为字符串</h4>
+        <p>str()函数用于将其他类型的数据转换为字符串：</p>
+        <div class="example-code">
+# 数值转字符串
+num_int = 42
+num_float = 3.14
+str_int = str(num_int)
+str_float = str(num_float)
+print(str_int, type(str_int))    # "42" &lt;class 'str'&gt;
+print(str_float, type(str_float)) # "3.14" &lt;class 'str'&gt;
+
+# 布尔值转字符串
+bool_true = True
+bool_false = False
+print(str(bool_true))   # "True"
+print(str(bool_false))  # "False"
+
+# 列表转字符串（后续会学到）
+my_list = [1, 2, 3]
+print(str(my_list))     # "[1, 2, 3]"
+        </div>
+      </div>
+      
+      <h3>3. 类型不匹配导致的错误</h3>
+      <p>在Python中，不同类型的数据不能直接进行某些操作，否则会导致错误：</p>
+      
+      <div class="concept-card warning">
+        <h4>常见错误示例</h4>
+        <div class="example-code">
+# 错误1：字符串和数字相加
+try:
+    result = "5" + 3
+except TypeError as e:
+    print("类型错误：", e)  # 类型错误： can only concatenate str (not "int") to str
+
+# 错误2：字符串和数字比较
+try:
+    result = "5" > 3
+except TypeError as e:
+    print("类型错误：", e)  # 类型错误： '>' not supported between instances of 'str' and 'int'
+
+# 错误3：使用字符串进行数学运算
+try:
+    result = "10" * "5"
+except TypeError as e:
+    print("类型错误：", e)  # 类型错误： can't multiply sequence by non-int of type 'str'
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>正确的处理方式</h4>
+        <div class="example-code">
+# 正确的做法：先进行类型转换
+# 字符串和数字相加
+result = int("5") + 3
+print(result)  # 8
+
+# 字符串和数字比较
+result = int("5") > 3
+print(result)  # True
+
+# 使用字符串进行数学运算
+result = 10 * int("5")
+print(result)  # 50
+
+# 数字和字符串拼接
+age = 18
+message = "我今年" + str(age) + "岁"
+print(message)  # 我今年18岁
+        </div>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>示例演示</h2>
+      
+      <h3>示例1：计算器程序（加强版）</h3>
+      <div class="example-code">
+# advanced_calculator.py
+# 加强版计算器程序
+
+print("=== 加强版计算器 ===")
+
+# 获取用户输入（字符串形式）
+num1_str = input("请输入第一个数字：")
+operator = input("请输入运算符（+、-、*、/）：")
+num2_str = input("请输入第二个数字：")
+
+# 尝试转换为数值
+try:
+    num1 = float(num1_str)
+    num2 = float(num2_str)
+    
+    # 执行计算
+    if operator == "+":
+        result = num1 + num2
+        print(f"计算结果：{num1} + {num2} = {result}")
+    elif operator == "-":
+        result = num1 - num2
+        print(f"计算结果：{num1} - {num2} = {result}")
+    elif operator == "*":
+        result = num1 * num2
+        print(f"计算结果：{num1} * {num2} = {result}")
+    elif operator == "/":
+        if num2 != 0:
+            result = num1 / num2
+            print(f"计算结果：{num1} / {num2} = {result}")
+        else:
+            print("错误：除数不能为零！")
+    else:
+        print("错误：不支持的运算符！")
+        
+except ValueError:
+    print("错误：请输入有效的数字！")
+      </div>
+      
+      <h3>示例2：成绩统计系统</h3>
+      <div class="example-code">
+# grade_statistics_system.py
+# 成绩统计系统
+
+print("=== 成绩统计系统 ===")
+
+# 输入成绩（字符串形式）
+chinese_str = input("请输入语文成绩：")
+math_str = input("请输入数学成绩：")
+english_str = input("请输入英语成绩：")
+
+try:
+    # 转换为数值
+    chinese = float(chinese_str)
+    math = float(math_str)
+    english = float(english_str)
+    
+    # 验证成绩范围
+    if 0 <= chinese <= 100 and 0 <= math <= 100 and 0 <= english <= 100:
+        # 计算总分和平均分
+        total = chinese + math + english
+        average = total / 3
+        
+        # 输出结果
+        print("\n=== 成绩统计结果 ===")
+        print(f"语文成绩：{chinese}")
+        print(f"数学成绩：{math}")
+        print(f"英语成绩：{english}")
+        print(f"总分：{total}")
+        print(f"平均分：{average:.2f}")
+        
+        # 判断等级
+        if average >= 90:
+            grade = "优秀"
+        elif average >= 80:
+            grade = "良好"
+        elif average >= 70:
+            grade = "中等"
+        elif average >= 60:
+            grade = "及格"
+        else:
+            grade = "不及格"
+            
+        print(f"平均成绩等级：{grade}")
+    else:
+        print("错误：成绩应在0-100之间！")
+        
+except ValueError:
+    print("错误：请输入有效的数字成绩！")
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>课堂练习</h2>
+      
+      <div class="exercise-card">
+        <h3>练习1：类型转换结果预测</h3>
+        <p>预测以下类型转换的结果：</p>
+        <div class="example-code">
+1. int("50")
+2. float("3.14")
+3. str(100)
+4. int(3.14)
+5. float(42)
+6. str(3.14)
+7. int("3.14")
+8. float("abc")
+        </div>
+        <details>
+          <summary>点击查看答案</summary>
+          <ol>
+            <li>int("50") → 50 （整数）</li>
+            <li>float("3.14") → 3.14 （浮点数）</li>
+            <li>str(100) → "100" （字符串）</li>
+            <li>int(3.14) → 3 （整数，截断小数）</li>
+            <li>float(42) → 42.0 （浮点数）</li>
+            <li>str(3.14) → "3.14" （字符串）</li>
+            <li>int("3.14") → ValueError （错误）</li>
+            <li>float("abc") → ValueError （错误）</li>
+          </ol>
+        </details>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习2：单位转换程序</h3>
+        <p>编写一个程序，用户输入英寸长度，程序将其转换为厘米并输出。</p>
+        <p>转换关系：1英寸 = 2.54厘米</p>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+# unit_converter.py
+# 单位转换程序
+
+print("=== 英寸到厘米转换器 ===")
+inches_str = input("请输入英寸长度：")
+
+try:
+    inches = float(inches_str)
+    centimeters = inches * 2.54
+    print(f"{inches} 英寸 = {centimeters:.2f} 厘米")
+except ValueError:
+    print("错误：请输入有效的数字！")
+          </div>
+        </details>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习3：字符串拼接程序</h3>
+        <p>编写一个程序，用户输入姓名和年龄，程序输出"我是[name]，今年[age]岁了"。</p>
+        <p>注意：年龄是数字，需要转换为字符串才能拼接。</p>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+# string_concatenation.py
+# 字符串拼接程序
+
+print("=== 个人信息拼接 ===")
+name = input("请输入姓名：")
+age_str = input("请输入年龄：")
+
+try:
+    age = int(age_str)
+    message = "我是" + name + "，今年" + str(age) + "岁了"
+    print(message)
+except ValueError:
+    print("错误：年龄请输入数字！")
+          </div>
+        </details>
+      </div>
+    </section>
+  </div>
+  
+  <div class="navigation-buttons">
+    <a href="5.html" class="nav-button">上一课：输入与输出</a>
+    <a href="7.html" class="nav-button next">下一课：Turtle图形编程基础 ➔</a>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+  </footer>
+
+  <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+
+    // 粒子动画效果
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

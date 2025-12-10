@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python一级 - 课程模板 - C++ 知识导航</title>
+  <link rel="stylesheet" href="../../../styles/base.css">
+  <link rel="stylesheet" href="../../../styles/topic.css">
+  <link rel="stylesheet" href="../../../styles/components.css">
+  <link rel="stylesheet" href="../../../styles/animations.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        Python一级 第X课：课程标题
+        <span class="badge">基础入门</span>
+      </h1>
+      <p>课程简要描述 | 关键词1 | 关键词2</p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+  </div>
+  
+  <div class="container">
+    <section class="topic-section">
+      <h2>知识点概览</h2>
+      <div class="knowledge-points">
+        <ul>
+          <li>知识点1</li>
+          <li>知识点2</li>
+          <li>知识点3</li>
+          <li>知识点4</li>
+          <li>知识点5</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2>知识点详解</h2>
+      
+      <h3>1. 知识点标题</h3>
+      <p>知识点详细说明</p>
+      
+      <div class="concept-card">
+        <h4>概念标题</h4>
+        <p>概念详细说明</p>
+        <ul>
+          <li>要点1</li>
+          <li>要点2</li>
+        </ul>
+      </div>
+      
+      <div class="example-code">
+# 示例代码
+print("Hello, World!")
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>示例演示</h2>
+      
+      <h3>示例1：示例标题</h3>
+      <div class="example-code">
+# 示例代码
+name = input("请输入您的姓名：")
+print("您好，" + name)
+      </div>
+      
+      <p>运行结果：</p>
+      <div class="example-code">
+请输入您的姓名：小明
+您好，小明
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>课堂练习</h2>
+      
+      <div class="exercise-card">
+        <h3>练习1：练习标题</h3>
+        <p>练习要求说明</p>
+        <div class="example-code">
+print("练习示例")
+        </div>
+        <details>
+          <summary>点击查看答案</summary>
+          <p>答案解析</p>
+        </details>
+      </div>
+    </section>
+  </div>
+  
+  <div class="navigation-buttons">
+    <a href="#" class="nav-button">上一课：课程名称</a>
+    <a href="#" class="nav-button next">下一课：课程名称 ➔</a>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+  </footer>
+
+  <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+
+    // 粒子动画效果
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

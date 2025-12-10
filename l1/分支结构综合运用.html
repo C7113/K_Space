@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>鲁班创客 · 课时13：分支结构综合运用</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #7b1fa2;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .info-bar {
+            background: #f3e5f5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #4a148c;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section h2 {
+            color: #7b1fa2;
+            border-bottom: 2px solid #e1bee7;
+            padding-bottom: 8px;
+        }
+        .goals {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .goal-card {
+            background: #f9f2fc;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #9c27b0;
+        }
+        .goal-card h3 {
+            margin-top: 0;
+            color: #6a1b9a;
+        }
+        .code {
+            background: #2d3748;
+            color: #ce93d8;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #f3e5f5;
+            padding: 15px;
+            border-left: 5px solid #ba68c8;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        .contact-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .highlight {
+            background: #e1bee7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        ul li {
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 课时13：分支结构综合运用</h1>
+            <p class="subtitle">—— 鲁班创客编程创意中心 | C++ 编程课程</p>
+        </header>
+
+        <div class="info-bar">
+            📅 上课时间：2025年12月6日–7日（8:00–17:30）｜👨‍🏫 主讲教师：程希宏老师
+        </div>
+
+        <div class="section">
+            <h2>📚 教学目标</h2>
+            <div class="goals">
+                <div class="goal-card">
+                    <h3>🧠 知识目标</h3>
+                    <ul>
+                        <li>理解分支结构的基本组成：单分支（<code>if</code>）、双分支（<code>if-else</code>）、多重分支（<code>else if</code>、<code>switch</code>）及其适用场景</li>
+                        <li>掌握各类分支语句的语法与使用规则</li>
+                        <li>了解逻辑运算符（<code>&&</code>、<code>||</code>、<code>!</code>）在条件表达式中的作用</li>
+                        <li>熟悉条件判断的<strong>优先级</strong>和<strong>短路求值机制</strong></li>
+                    </ul>
+                </div>
+                <div class="goal-card">
+                    <h3>🛠️ 能力目标</h3>
+                    <ul>
+                        <li>能根据具体需求设计并实现灵活的分支结构</li>
+                        <li>能正确解决多条件分类、状态判断等实际问题</li>
+                        <li>能通过逻辑优化减少分支嵌套层次，提升程序可读性与执行效率</li>
+                    </ul>
+                </div>
+                <div class="goal-card">
+                    <h3>🌟 素养目标</h3>
+                    <ul>
+                        <li>培养严谨的逻辑分析和编程能力</li>
+                        <li>学会分解复杂问题，设计高效的分支控制结构</li>
+                        <li>建立边界条件意识，提升程序健壮性</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔍 核心知识点详解（查漏补缺）</h2>
+
+            <div class="example">
+                <h3>1. 分支结构类型对比</h3>
+                <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+                    <thead>
+                        <tr style="background:#7b1fa2; color:white;">
+                            <th>类型</th>
+                            <th>语法示例</th>
+                            <th>适用场景</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid #eee;">
+                            <td><strong>单分支</strong></td>
+                            <td><code>if (condition) { ... }</code></td>
+                            <td>仅当条件成立时执行操作</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #eee;">
+                            <td><strong>双分支</strong></td>
+                            <td><code>if (cond) { ... } else { ... }</code></td>
+                            <td>二选一逻辑（是/否）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>多重分支</strong></td>
+                            <td><code>if...else if...else</code> 或 <code>switch</code></td>
+                            <td>多条件互斥判断</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="example">
+                <h3>2. switch 语句注意事项（补充原文件未详述内容）</h3>
+                <ul>
+                    <li>仅支持整型、字符型或枚举类型（不支持浮点数或字符串）</li>
+                    <li>每个 <code>case</code> 后建议加 <code>break</code>，否则会发生“穿透”（fall-through）</li>
+                    <li>必须包含 <code>default</code> 分支以处理异常输入，提高程序健壮性</li>
+                </ul>
+                <div class="code">
+switch (grade) {
+    case 'A': cout << "优秀"; break;
+    case 'B': cout << "良好"; break;
+    default:  cout << "成绩无效"; break;
+}
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>3. 逻辑运算符与短路机制（重要补充）</h3>
+                <ul>
+                    <li><code>&&</code>（与）：前为假则不计算后</li>
+                    <li><code>||</code>（或）：前为真则不计算后</li>
+                </ul>
+                <p>✅ 利用短路机制可避免运行时错误：</p>
+                <div class="code">
+// 安全访问指针
+if (ptr != nullptr && ptr->isValid()) { ... }
+
+// 防止除零
+if (denominator != 0 && numerator / denominator > 5) { ... }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>4. 嵌套优化技巧（提升代码质量）</h3>
+                <p>避免深层嵌套（“箭头代码”），推荐使用“提前返回”（Guard Clause）：</p>
+                <div class="code">
+// 不推荐
+if (user) {
+    if (user->active) {
+        if (user->hasPermission) {
+            doAction();
+        }
+    }
+}
+
+// 推荐
+if (!user) return;
+if (!user->active) return;
+if (!user->hasPermission) return;
+doAction();
+                </div>
+                <div class="tip">
+                    ✅ 减少嵌套可显著提升代码可读性和维护性！
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>5. 常见陷阱与调试建议</h3>
+                <ul>
+                    <li>混淆赋值（<code>=</code>）与比较（<code>==</code>）：编译器警告可帮助发现</li>
+                    <li>浮点数比较应使用误差范围：<code>abs(a - b) < 1e-6</code></li>
+                    <li>多条件组合时注意括号明确优先级：<code>if ((a || b) && c)</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>👨‍🏫 <strong>科技创新</strong> — 程老师 &nbsp; | &nbsp; 🤖 <strong>人工智能</strong> — 王老师</p>
+            <p>📍 地址：新沂市建邺路华泰豪庭东门北50米</p>
+            <p>📞 联系电话：<span class="highlight">13041935201</span> / <span class="highlight">17751976999</span> &nbsp; | &nbsp; 程老师：<span class="highlight">17368987780</span></p>
+            <div class="contact-box">
+                <p>💬 与老师零距离沟通，及时了解课堂动态，获取课堂照片及视频，共同关注孩子的成长！</p>
+                <p>📱 微信扫描关注公众号，了解近期鲁班动态、活动、竞赛、报名优惠信息，分享教育理念、学习方法及资源。</p>
+            </div>
+            <p style="margin-top: 15px;">© 2025 鲁班创客编程创意中心 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+</body>
+</html>

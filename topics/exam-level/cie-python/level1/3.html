@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python一级 - 第3课：变量与数据类型 - C++ 知识导航</title>
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/topic.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="stylesheet" href="/styles/animations.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        Python一级 第3课：变量与数据类型
+        <span class="badge">基础入门</span>
+      </h1>
+      <p>理解变量概念 | 掌握命名规则 | 熟悉基本数据类型</p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <a href="../index.html" class="toggle-btn">↩ 返回 CIE Python 考试首页</a>
+    <a href="../../../../exam-topics.html" class="toggle-btn">↩ 返回 等级考试知识点</a>
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+  </div>
+  
+  <div class="container">
+    <section class="topic-section">
+      <h2>知识点概览</h2>
+      <div class="knowledge-points">
+        <ul>
+          <li>变量概念：用于存储数据的"容器"</li>
+          <li>命名规则：以字母或下划线开头，只能包含字母、数字、下划线，区分大小写</li>
+          <li>不能使用Python保留字（如print, if, for, class, True, False等）</li>
+          <li>基本数据类型：整数（int）、浮点数（float）、字符串（str）</li>
+          <li>一级不要求掌握布尔型（bool），但会接触True/False作为保留字</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2>知识点详解</h2>
+      
+      <h3>1. 变量的概念</h3>
+      <p>变量是程序设计中最基本的概念之一，它是用来存储数据的"容器"。可以把变量想象成一个带有标签的盒子，盒子里可以存放各种类型的数据。</p>
+      
+      <div class="concept-card">
+        <h4>变量的特点</h4>
+        <ul>
+          <li>变量有一个名字（标识符），用于引用它所存储的数据</li>
+          <li>变量的值可以在程序执行过程中改变</li>
+          <li>每个变量都有特定的数据类型，决定它可以存储什么类型的数据</li>
+        </ul>
+      </div>
+      
+      <div class="example-code">
+```
+# 创建变量并赋值
+age = 15           # 整数类型的变量
+height = 1.65      # 浮点数类型的变量
+name = "小明"      # 字符串类型的变量
+
+# 使用变量
+print("姓名：", name)
+print("年龄：", age)
+print("身高：", height, "米")
+
+```</div>
+      
+      <h3>2. 变量命名规则</h3>
+      <p>为了保证程序的可读性和正确性，Python对变量命名有严格的规则：</p>
+      
+      <div class="concept-card">
+        <h4>必须遵守的规则</h4>
+        <ul>
+          <li>变量名必须以字母（a-z, A-Z）或下划线（_）开头</li>
+          <li>变量名只能包含字母、数字（0-9）和下划线（_）</li>
+          <li>变量名区分大小写（Name和name是不同的变量）</li>
+          <li>变量名不能是Python的关键字（保留字）</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h4>推荐的命名约定</h4>
+        <ul>
+          <li>使用有意义的名称，能够表达变量的用途</li>
+          <li>使用小写字母，多个单词间用下划线分隔（snake_case）</li>
+          <li>避免使用单个字母作为变量名（除了循环计数器等特殊情况）</li>
+        </ul>
+      </div>
+      
+      <div class="example-code">
+```
+# 合法的变量名
+student_name = "张三"
+student_age = 16
+_student_score = 95
+total_count_2025 = 100
+
+# 非法的变量名
+2student = "李四"      # 以数字开头
+student-name = "王五"  # 包含连字符
+class = "初一"         # 使用关键字
+学生姓名 = "赵六"      # 使用中文（虽然技术上可行，但不推荐）
+```</div>
+      
+      <h3>3. Python保留字（关键字）</h3>
+      <p>Python有一些特殊的单词被系统保留，不能用作变量名或其他标识符。以下是Python中常见的保留字：</p>
+      
+      <div class="example-code">
+```
+# Python关键字列表（部分）
+False, None, True, and, as, assert, break, class, continue, def, del, elif,
+else, except, finally, for, from, global, if, import, in, is, lambda, nonlocal,
+not, or, pass, raise, return, try, while, with, yield
+```</div>
+      
+      <div class="concept-card warning">
+        <h4>注意</h4>
+        <p>一些常用的函数名如print, input, int, str等虽然不是关键字，但如果用作变量名会覆盖原有功能，应当避免：</p>
+        <div class="example-code">
+```
+# 错误示例
+print = "这是错误的用法"  # 覆盖了print函数
+print("Hello")  # 这里会报错，因为print不再是函数
+
+# 正确做法
+message = "这是正确的用法"
+print(message)  # 正常工作
+```</div>
+      </div>
+      
+      <h3>4. 基本数据类型</h3>
+      <p>Python中有多种数据类型，一级考试主要涉及三种基本类型：</p>
+      
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>数据类型</th>
+            <th>说明</th>
+            <th>示例</th>
+            <th>type()函数结果</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>整数 (int)</td>
+            <td>没有小数部分的数字</td>
+            <td>42, -15, 0</td>
+            <td>&lt;class 'int'&gt;</td>
+          </tr>
+          <tr>
+            <td>浮点数 (float)</td>
+            <td>包含小数部分的数字</td>
+            <td>3.14, -0.001, 2.0</td>
+            <td>&lt;class 'float'&gt;</td>
+          </tr>
+          <tr>
+            <td>字符串 (str)</td>
+            <td>文本数据，用引号包围</td>
+            <td>"Hello", 'Python', "123"</td>
+            <td>&lt;class 'str'&gt;</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="concept-card">
+        <h4>整数类型 (int)</h4>
+        <p>整数是没有小数部分的数字，包括正整数、负整数和零。</p>
+        <div class="example-code">
+```
+# 整数类型的示例
+positive_num = 42      # 正整数
+negative_num = -15     # 负整数
+zero = 0               # 零
+
+print(type(positive_num))   # &lt;class 'int'&gt;
+print(type(negative_num))   # &lt;class 'int'&gt;
+print(type(zero))           # &lt;class 'int'&gt;
+```</div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>浮点数类型 (float)</h4>
+        <p>浮点数是包含小数部分的数字，即使小数部分为0。</p>
+        <div class="example-code">
+```
+# 浮点数类型的示例
+pi = 3.14159           # 小数
+temperature = -5.6     # 负小数
+exact_value = 10.0     # 小数部分为0的数也是浮点数
+
+print(type(pi))              # &lt;class 'float'&gt;
+print(type(temperature))     # &lt;class 'float'&gt;
+print(type(exact_value))     # &lt;class 'float'&gt;
+```</div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>字符串类型 (str)</h4>
+        <p>字符串是用来表示文本的数据类型，必须用引号（单引号或双引号）包围。</p>
+        <div class="example-code">
+```
+# 字符串类型的示例
+name = "张三"          # 双引号包围
+school = '第一中学'    # 单引号包围
+number_str = "123"     # 数字组成的字符串
+
+print(type(name))        # &lt;class 'str'&gt;
+print(type(school))      # &lt;class 'str'&gt;
+print(type(number_str))  # &lt;class 'str'&gt;
+```</div>
+      </div>
+      
+      <div class="concept-card tip">
+        <h4>类型检查函数 type()</h4>
+        <p>可以使用type()函数查看变量的数据类型：</p>
+        <div class="example-code">
+```
+age = 15
+height = 1.65
+name = "小明"
+
+print("age的类型是：", type(age))      # age的类型是： &lt;class 'int'&gt;
+print("height的类型是：", type(height)) # height的类型是： &lt;class 'float'&gt;
+print("name的类型是：", type(name))    # name的类型是： &lt;class 'str'&gt;
+```</div>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>示例演示</h2>
+      
+      <h3>示例1：学生信息管理系统</h3>
+      <div class="example-code">
+```
+# student_info.py
+# 学生信息管理示例
+
+# 定义学生信息变量
+student_name = "李雷"      # 字符串类型 - 姓名
+student_age = 15           # 整数类型 - 年龄
+student_height = 1.72      # 浮点数类型 - 身高（米）
+student_grade = "初二"     # 字符串类型 - 年级
+chinese_score = 85         # 整数类型 - 语文成绩
+math_score = 92            # 整数类型 - 数学成绩
+english_score = 78         # 整数类型 - 英语成绩
+
+# 计算平均分（涉及类型转换）
+total_score = chinese_score + math_score + english_score
+average_score = total_score / 3  # 结果是浮点数
+
+# 显示学生信息
+print("=== 学生信息 ===")
+print("姓名：", student_name)
+print("年龄：", student_age, "岁")
+print("身高：", student_height, "米")
+print("年级：", student_grade)
+print()
+
+print("=== 成绩信息 ===")
+print("语文：", chinese_score, "分")
+print("数学：", math_score, "分")
+print("英语：", english_score, "分")
+print("总分：", total_score, "分")
+print("平均分：", average_score, "分")
+```</div>
+      
+      <p>运行结果：</p>
+      <div class="example-code">
+```
+=== 学生信息 ===
+姓名： 李雷
+年龄： 15 岁
+身高： 1.72 米
+年级： 初二
+
+=== 成绩信息 ===
+语文： 85 分
+数学： 92 分
+英语： 78 分
+总分： 255 分
+平均分： 85.0 分
+```</div>
+      
+      <h3>示例2：商品价格计算</h3>
+      <div class="example-code">
+```
+# product_price.py
+# 商品价格计算示例
+
+# 商品信息
+product_name = "笔记本电脑"      # 商品名称
+unit_price = 5999.99             # 单价（浮点数）
+quantity = 2                     # 数量（整数）
+discount_rate = 0.1              # 折扣率（浮点数）
+
+# 计算总价
+subtotal = unit_price * quantity           # 小计
+discount_amount = subtotal * discount_rate # 折扣金额
+final_price = subtotal - discount_amount   # 最终价格
+
+# 显示购物清单
+print("=== 购物清单 ===")
+print("商品名称：", product_name)
+print("单价：￥", unit_price)
+print("数量：", quantity)
+print("折扣：", discount_rate * 100, "%")
+print("------------------------")
+print("小计：￥", subtotal)
+print("折扣金额：￥", discount_amount)
+print("最终价格：￥", final_price)
+```</div>
+      
+      <p>运行结果：</p>
+      <div class="example-code">
+```
+=== 购物清单 ===
+商品名称： 笔记本电脑
+单价：￥ 5999.99
+数量： 2
+折扣： 10.0 %
+------------------------
+小计：￥ 11999.98
+折扣金额：￥ 1199.998
+最终价格：￥ 10799.982
+```</div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>课堂练习</h2>
+      
+      <div class="exercise-card">
+        <h3>练习1：变量命名判断</h3>
+        <p>判断以下变量命名是否合法，如果不合法，请说明原因：</p>
+        <ol>
+          <li>my_age</li>
+          <li>_score</li>
+          <li>2nd_place</li>
+          <li>user-name</li>
+          <li>True</li>
+          <li>student_name</li>
+          <li>print</li>
+        </ol>
+        <details>
+          <summary>点击查看答案</summary>
+          <p>合法的变量名：my_age, _score, student_name</p>
+          <p>非法的变量名及原因：</p>
+          <ul>
+            <li>2nd_place - 以数字开头</li>
+            <li>user-name - 包含连字符(-)</li>
+            <li>True - Python保留字</li>
+            <li>print - 虽然不是关键字，但是内置函数名，不建议使用</li>
+          </ul>
+        </details>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习2：数据类型识别</h3>
+        <p>指出下列变量的数据类型：</p>
+        <div class="example-code">
+<pre>a = 42
+b = "42"
+c = 42.0
+d = "Hello World"
+e = -15
+f = 0.0</pre>
+        </div>
+        <details>
+          <summary>点击查看答案</summary>
+          <ul>
+            <li>a = 42 → int（整数）</li>
+            <li>b = "42" → str（字符串）</li>
+            <li>c = 42.0 → float（浮点数）</li>
+            <li>d = "Hello World" → str（字符串）</li>
+            <li>e = -15 → int（整数）</li>
+            <li>f = 0.0 → float（浮点数）</li>
+          </ul>
+        </details>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习3：个人信息录入程序</h3>
+        <p>编写一个程序，要求用户输入姓名、年龄和电话号码，然后以合适的类型存储并显示这些信息。</p>
+        <p>提示：</p>
+        <ul>
+          <li>姓名和电话号码应该是字符串类型</li>
+          <li>年龄应该是整数类型</li>
+          <li>注意使用类型转换函数</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+  
+  <div class="navigation-buttons">
+    <a href="2.html" class="nav-button">上一课：程序基本结构</a>
+    <a href="4.html" class="nav-button next">下一课：运算符与表达式 ➔</a>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+  </footer>
+
+  <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+
+    // 粒子动画效果
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

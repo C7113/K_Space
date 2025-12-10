@@ -8,6 +8,13 @@ const git = simpleGit();
 
 app.use(bodyParser.json());
 
+// 提供静态文件
+app.use(express.static('.', {
+  setHeaders: function (res, path, stat) {
+    console.log('Serving static file:', path);
+  }
+}));
+
 // 允许跨域（如果前端和后端端口不同）
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -42,6 +49,11 @@ app.post('/api/git-push', async (req, res) => {
   } catch (e) {
     res.status(500).json({ok: false, error: e.message});
   }
+});
+
+// 测试路由
+app.get('/test', (req, res) => {
+  res.send('Test route works!');
 });
 
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));
