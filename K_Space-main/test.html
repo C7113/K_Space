@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试页面</title>
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/topic.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/animations.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        测试页面标题
+        <span class="badge">测试</span>
+      </h1>
+      <p>测试页面副标题</p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+  </div>
+  
+  <div class="container">
+    <section class="topic-section">
+      <h2>测试章节</h2>
+      <div class="knowledge-points">
+        <ul>
+          <li>测试知识点1</li>
+          <li>测试知识点2</li>
+        </ul>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>概念卡片测试</h2>
+      <div class="concept-card">
+        <h4>测试概念卡片</h4>
+        <p>这是一个测试的概念卡片</p>
+      </div>
+      
+      <div class="concept-card warning">
+        <h4>警告卡片</h4>
+        <p>这是一个警告类型的概念卡片</p>
+      </div>
+      
+      <div class="concept-card tip">
+        <h4>提示卡片</h4>
+        <p>这是一个提示类型的概念卡片</p>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>代码示例测试</h2>
+      <div class="example-code">
+print("Hello, World!")
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>练习卡片测试</h2>
+      <div class="exercise-card">
+        <h3>测试练习</h3>
+        <p>这是一个测试练习</p>
+        <details>
+          <summary>点击查看答案</summary>
+          <p>测试答案</p>
+        </details>
+      </div>
+    </section>
+  </div>
+  
+  <div class="navigation-buttons">
+    <a href="#" class="nav-button">上一课</a>
+    <a href="#" class="nav-button next">下一课 ➔</a>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+  </footer>
+
+  <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+
+    // 粒子动画效果
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>计数循环：C++ for 循环详解</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #1976d2;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e3f2fd;
+        }
+        .tab.active {
+            background: #1976d2;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f5fbff;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        .code {
+            background: #2d3748;
+            color: #bbdefb;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #1976d2;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffa000;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .caution {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .best-practice {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ 计数循环：C++ for 循环详解</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🎯 什么是计数循环？</button>
+            <button class="tab" onclick="openTab(event, 'syntax')">📜 for 循环语法</button>
+            <button class="tab" onclick="openTab(event, 'factorial')">🔢 阶乘问题</button>
+            <button class="tab" onclick="openTab(event, 'average')">📊 平均分计算</button>
+            <button class="tab" onclick="openTab(event, 'increment')">➕ 自增运算符</button>
+            <button class="tab" onclick="openTab(event, 'collatz')">❄️ 角谷猜想</button>
+            <button class="tab" onclick="openTab(event, 'best')">✅ 最佳实践与补漏</button>
+        </div>
+
+        <!-- 引入 -->
+        <div id="intro" class="content active">
+            <h2>🎯 什么是计数循环？</h2>
+            <div class="concept-item">
+                <p><strong>计数循环</strong>是指循环次数已知或可预先确定的循环。</p>
+                <p>C++ 中最典型的计数循环是 <code>for</code> 循环。</p>
+            </div>
+            <div class="example">
+                💡 例如：打印 0 到 10 的数字、计算 1 到 n 的和、遍历数组等。
+            </div>
+        </div>
+
+        <!-- for 语法 -->
+        <div id="syntax" class="content">
+            <h2>📜 for 循环基本语法</h2>
+            <div class="concept-item">
+                <h3>标准格式</h3>
+                <div class="code">
+for (初值; 条件; 增量) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 循环体<br>
+}
+                </div>
+                <ul>
+                    <li><strong>初值</strong>：初始化循环变量（如 <code>int i = 0</code>）</li>
+                    <li><strong>条件</strong>：每次循环前检查（如 <code>i &lt;= 10</code>）</li>
+                    <li><strong>增量</strong>：每次循环后更新变量（如 <code>i++</code>）</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>执行流程</h3>
+                <ol>
+                    <li>执行初值（只一次）</li>
+                    <li>判断条件：若为真，执行循环体；否则退出</li>
+                    <li>执行增量</li>
+                    <li>回到步骤 2</li>
+                </ol>
+            </div>
+            <div class="concept-item">
+                <h3>示例：打印 0~10</h3>
+                <div class="code">
+for (int i = 0; i <= 10; i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << i << endl;<br>
+}
+                </div>
+            </div>
+            <div class="tip">
+                🔁 <code>for</code> 循环可等价转换为 <code>while</code>：
+                <div class="code">
+int i = 0;<br>
+while (i <= 10) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << i << endl;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;i++;<br>
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- 阶乘 -->
+        <div id="factorial" class="content">
+            <h2>🔢 阶乘问题（n!）</h2>
+            <div class="concept-item">
+                <h3>使用 for 循环实现</h3>
+                <div class="code">
+int n;<br>
+cout << "请输入 n: ";<br>
+cin >> n;<br>
+long long result = 1;<br>
+for (int i = 1; i <= n; i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result *= i;<br>
+}<br>
+cout << n << "! = " << result << endl;
+                </div>
+            </div>
+            <div class="best-practice">
+                ✅ 注意：<code>int</code> 易溢出，大数阶乘建议用 <code>long long</code> 或高精度。
+            </div>
+        </div>
+
+        <!-- 平均分 -->
+        <div id="average" class="content">
+            <h2>📊 平均分计算</h2>
+            <div class="concept-item">
+                <h3>PPT 原始代码（使用 printf/scanf）</h3>
+                <div class="code">
+float number, score, total = 0.0;<br>
+printf("请输入要计算的人数：\n");<br>
+scanf("%f", &number);<br>
+for (int i = 0; i <= number - 1; i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;scanf("%f", &score);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;total += score;<br>
+}<br>
+printf("平均分数为：%0.2f\n", total / number);
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>优化建议（补漏！）</h3>
+                <ul>
+                    <li>人数应为<strong>正整数</strong>，不应使用 <code>float</code></li>
+                    <li>使用 C++ 风格 I/O（<code>cin/cout</code>）更安全</li>
+                    <li>保留两位小数：需包含 <code>&lt;iomanip&gt;</code></li>
+                </ul>
+                <div class="code">
+#include &lt;iostream&gt;<br>
+#include &lt;iomanip&gt;<br>
+using namespace std;<br>
+int main() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int n;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "请输入人数: ";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cin >> n;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (n <= 0) { cout << "人数无效！"; return 0; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;double total = 0, score;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i < n; i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin >> score;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;total += score;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "平均分: " << fixed << setprecision(2) << total / n << endl;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- 自增运算符 -->
+        <div id="increment" class="content">
+            <h2>➕ 自增/自减运算符</h2>
+            <div class="concept-item">
+                <h3>两种形式</h3>
+                <ul>
+                    <li><code>++i</code>（前置）：先加 1，再使用</li>
+                    <li><code>i++</code>（后置）：先使用，再加 1</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>示例对比</h3>
+                <div class="code">
+int a = 5, b = 5;<br>
+int x = ++a; // a=6, x=6<br>
+int y = b++; // b=6, y=5
+                </div>
+            </div>
+            <div class="best-practice">
+                ✅ 在 <code>for</code> 循环中，<code>i++</code> 和 <code>++i</code> 效果相同（因为返回值未被使用），但习惯写 <code>i++</code>。
+            </div>
+            <div class="caution">
+                ❗ 在复杂表达式中混用可能导致未定义行为，应避免。
+            </div>
+        </div>
+
+        <!-- 角谷猜想 -->
+        <div id="collatz" class="content">
+            <h2>❄️ 角谷猜想（冰雹猜想）</h2>
+            <div class="concept-item">
+                <h3>规则</h3>
+                <p>对任意正整数 <code>x</code>：</p>
+                <ul>
+                    <li>若为奇数 → <code>x = 3*x + 1</code></li>
+                    <li>若为偶数 → <code>x = x / 2</code></li>
+                </ul>
+                <p>重复操作，最终会回到 1。</p>
+            </div>
+            <div class="concept-item">
+                <h3>实现（统计步数）</h3>
+                <div class="code">
+int x;<br>
+cout << "请输入正整数: ";<br>
+cin >> x;<br>
+if (x <= 0) { cout << "输入无效！"; return 0; }<br>
+int steps = 0;<br>
+while (x != 1) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (x % 2 == 1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = 3 * x + 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = x / 2;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;steps++;<br>
+}<br>
+cout << "共经过 " << steps << " 步回到 1。" << endl;
+                </div>
+            </div>
+            <div class="tip">
+                🌟 虽然未被数学证明，但对所有已测试的数都成立。
+            </div>
+        </div>
+
+        <!-- 最佳实践 -->
+        <div id="best" class="content">
+            <h2>✅ 最佳实践与知识补漏</h2>
+            <div class="concept-item">
+                <h3>1. 循环变量作用域</h3>
+                <p>C++ 中 <code>for(int i=0; ...)</code> 的 <code>i</code> 仅在循环内有效，避免污染外层作用域。</p>
+            </div>
+            <div class="concept-item">
+                <h3>2. 浮点数比较慎用 ==</h3>
+                <p>因精度问题，避免用 <code>==</code> 比较浮点数。但在整数除法（如 <code>x/2</code>）中安全。</p>
+            </div>
+            <div class="concept-item">
+                <h3>3. 输入验证必不可少</h3>
+                <ul>
+                    <li>人数不能 ≤ 0</li>
+                    <li>角谷猜想输入必须为正整数</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>4. 格式化输出推荐 C++ 方式</h3>
+                <div class="code">
+cout << fixed << setprecision(2) << value;
+                </div>
+                <p>比 <code>printf</code> 更类型安全。</p>
+            </div>
+            <div class="concept-item">
+                <h3>5. for 循环三要素可省略</h3>
+                <p>例如无限循环：<code>for(;;) { ... }</code>，但需配合 <code>break</code> 使用。</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 计数循环：C++ for 循环详解 | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

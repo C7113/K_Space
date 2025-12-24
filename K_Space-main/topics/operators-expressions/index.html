@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 运算符与表达式</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="button-container">
+        <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+        <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">返回学习路径</button>
+        <button class="toggle-btn" onclick="window.location.href='../../index.htm'">回到首页</button>
+    </div>
+
+    <div class="topic-header shimmer">
+        <h1 class="hover-lift" style="text-align: center;">
+            <span class="icon">🧮</span>
+            C++ 运算符与表达式
+            <span class="badge">基础语法</span>
+        </h1>
+        <p style="text-align: center;">掌握C++中的运算操作与表达式构建</p>
+    </div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <nav class="breadcrumb">
+                <a href="../../index.htm">首页</a> → 
+                <a href="../../learning-path.html">学习路径</a> → 
+                运算符与表达式
+            </nav>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'basics')">🔢 基础运算符</button>
+            <button class="tab" onclick="openTab(event, 'advanced')">⚙️ 高级运算符</button>
+            <button class="tab" onclick="openTab(event, 'expressions')">📝 表达式</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践应用</button>
+        </div>
+
+        <!-- 基础运算符 -->
+        <div id="basics" class="content active">
+            <h2>基础运算符</h2>
+            <div class="concept-item">
+                <h3>算术运算符</h3>
+                <p>用于执行基本的数学运算：</p>
+                <table>
+                    <tr>
+                        <th>运算符</th>
+                        <th>名称</th>
+                        <th>示例</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>+</td>
+                        <td>加法</td>
+                        <td>a + b</td>
+                        <td>将两个数相加</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>减法</td>
+                        <td>a - b</td>
+                        <td>将两个数相减</td>
+                    </tr>
+                    <tr>
+                        <td>*</td>
+                        <td>乘法</td>
+                        <td>a * b</td>
+                        <td>将两个数相乘</td>
+                    </tr>
+                    <tr>
+                        <td>/</td>
+                        <td>除法</td>
+                        <td>a / b</td>
+                        <td>将两个数相除</td>
+                    </tr>
+                    <tr>
+                        <td>%</td>
+                        <td>取模</td>
+                        <td>a % b</td>
+                        <td>求两个数相除的余数</td>
+                    </tr>
+                    <tr>
+                        <td>++</td>
+                        <td>自增</td>
+                        <td>++a 或 a++</td>
+                        <td>将变量值增加1</td>
+                    </tr>
+                    <tr>
+                        <td>--</td>
+                        <td>自减</td>
+                        <td>--a 或 a--</td>
+                        <td>将变量值减少1</td>
+                    </tr>
+                </table>
+                <div class="code">
+                    int a = 10, b = 3;<br>
+                    cout &lt;&lt; "a + b = " &lt;&lt; a + b &lt;&lt; endl;  <span class="comment">// 输出: 13</span><br>
+                    cout &lt;&lt; "a - b = " &lt;&lt; a - b &lt;&lt; endl;  <span class="comment">// 输出: 7</span><br>
+                    cout &lt;&lt; "a * b = " &lt;&lt; a * b &lt;&lt; endl;  <span class="comment">// 输出: 30</span><br>
+                    cout &lt;&lt; "a / b = " &lt;&lt; a / b &lt;&lt; endl;  <span class="comment">// 输出: 3 (整数除法)</span><br>
+                    cout &lt;&lt; "a % b = " &lt;&lt; a % b &lt;&lt; endl;  <span class="comment">// 输出: 1 (余数)</span>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>关系运算符</h3>
+                <p>用于比较两个值之间的关系，结果为布尔值(true/false)：</p>
+                <table>
+                    <tr>
+                        <th>运算符</th>
+                        <th>名称</th>
+                        <th>示例</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>==</td>
+                        <td>等于</td>
+                        <td>a == b</td>
+                        <td>判断两个值是否相等</td>
+                    </tr>
+                    <tr>
+                        <td>!=</td>
+                        <td>不等于</td>
+                        <td>a != b</td>
+                        <td>判断两个值是否不相等</td>
+                    </tr>
+                    <tr>
+                        <td>&gt;</td>
+                        <td>大于</td>
+                        <td>a &gt; b</td>
+                        <td>判断左边值是否大于右边值</td>
+                    </tr>
+                    <tr>
+                        <td>&lt;</td>
+                        <td>小于</td>
+                        <td>a &lt; b</td>
+                        <td>判断左边值是否小于右边值</td>
+                    </tr>
+                    <tr>
+                        <td>&gt;=</td>
+                        <td>大于等于</td>
+                        <td>a &gt;= b</td>
+                        <td>判断左边值是否大于等于右边值</td>
+                    </tr>
+                    <tr>
+                        <td>&lt;=</td>
+                        <td>小于等于</td>
+                        <td>a &lt;= b</td>
+                        <td>判断左边值是否小于等于右边值</td>
+                    </tr>
+                </table>
+                <div class="code">
+                    int x = 5, y = 8;<br>
+                    cout &lt;&lt; (x == y) &lt;&lt; endl;  <span class="comment">// 输出: 0 (false)</span><br>
+                    cout &lt;&lt; (x != y) &lt;&lt; endl;  <span class="comment">// 输出: 1 (true)</span><br>
+                    cout &lt;&lt; (x &lt; y) &lt;&lt; endl;   <span class="comment">// 输出: 1 (true)</span><br>
+                    cout &lt;&lt; (x &gt;= y) &lt;&lt; endl;  <span class="comment">// 输出: 0 (false)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 高级运算符 -->
+        <div id="advanced" class="content">
+            <h2>高级运算符</h2>
+            <div class="concept-item">
+                <h3>逻辑运算符</h3>
+                <p>用于组合多个条件表达式：</p>
+                <table>
+                    <tr>
+                        <th>运算符</th>
+                        <th>名称</th>
+                        <th>示例</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>&&</td>
+                        <td>逻辑与</td>
+                        <td>a && b</td>
+                        <td>两个条件都为真时结果为真</td>
+                    </tr>
+                    <tr>
+                        <td>||</td>
+                        <td>逻辑或</td>
+                        <td>a || b</td>
+                        <td>两个条件至少一个为真时结果为真</td>
+                    </tr>
+                    <tr>
+                        <td>!</td>
+                        <td>逻辑非</td>
+                        <td>!a</td>
+                        <td>将条件的结果取反</td>
+                    </tr>
+                </table>
+                
+                <h4>逻辑运算符的运算规则</h4>
+                <p>逻辑运算符的运算规则遵循布尔代数原理：</p>
+                <ul>
+                    <li><strong>逻辑与(&&)</strong>：只有当两个操作数都为真时，结果才为真</li>
+                    <li><strong>逻辑或(||)</strong>：只要有一个操作数为真，结果就为真</li>
+                    <li><strong>逻辑非(!)</strong>：将操作数的真假性取反</li>
+                </ul>
+                
+                <div class="code">
+                    bool a = true, b = false;<br>
+                    <br>
+                    <span class="comment">// 逻辑与运算</span><br>
+                    cout &lt;&lt; "a && a = " &lt;&lt; (a && a) &lt;&lt; endl;  <span class="comment">// 输出: 1 (true)</span><br>
+                    cout &lt;&lt; "a && b = " &lt;&lt; (a && b) &lt;&lt; endl;  <span class="comment">// 输出: 0 (false)</span><br>
+                    cout &lt;&lt; "b && a = " &lt;&lt; (b && a) &lt;&lt; endl;  <span class="comment">// 输出: 0 (false)</span><br>
+                    cout &lt;&lt; "b && b = " &lt;&lt; (b && b) &lt;&lt; endl;  <span class="comment">// 输出: 0 (false)</span><br>
+                    <br>
+                    <span class="comment">// 逻辑或运算</span><br>
+                    cout &lt;&lt; "a || a = " &lt;&lt; (a || a) &lt;&lt; endl;  <span class="comment">// 输出: 1 (true)</span><br>
+                    cout &lt;&lt; "a || b = " &lt;&lt; (a || b) &lt;&lt; endl;  <span class="comment">// 输出: 1 (true)</span><br>
+                    cout &lt;&lt; "b || a = " &lt;&lt; (b || a) &lt;&lt; endl;  <span class="comment">// 输出: 1 (true)</span><br>
+                    cout &lt;&lt; "b || b = " &lt;&lt; (b || b) &lt;&lt; endl;  <span class="comment">// 输出: 0 (false)</span><br>
+                    <br>
+                    <span class="comment">// 逻辑非运算</span><br>
+                    cout &lt;&lt; "!a = " &lt;&lt; !a &lt;&lt; endl;  <span class="comment">// 输出: 0 (false)</span><br>
+                    cout &lt;&lt; "!b = " &lt;&lt; !b &lt;&lt; endl;  <span class="comment">// 输出: 1 (true)</span>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>逻辑运算符的短路求值</h3>
+                <p>逻辑运算符具有短路求值特性，这是一种重要的优化机制：</p>
+                
+                <h4>短路求值规则</h4>
+                <ul>
+                    <li><strong>逻辑与(&&)</strong>：如果左侧表达式为假(false)，则不会计算右侧表达式</li>
+                    <li><strong>逻辑或(||)</strong>：如果左侧表达式为真(true)，则不会计算右侧表达式</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>短路求值示例</h4>
+                    <div class="code">
+                        int a = 5, b = 0;<br>
+                        bool result;<br>
+                        <br>
+                        <span class="comment">// 逻辑与短路示例</span><br>
+                        <span class="comment">// 由于 b != 0 为假(0)，不会计算 a / b，避免了除零错误</span><br>
+                        result = (b != 0) && (a / b > 1);<br>
+                        cout &lt;&lt; "(b != 0) && (a / b > 1) = " &lt;&lt; result &lt;&lt; endl;<br>
+                        <br>
+                        <span class="comment">// 逻辑或短路示例</span><br>
+                        <span class="comment">// 由于 a == 5 为真(1)，不会计算 b / (a-5)，避免了除零错误</span><br>
+                        result = (a == 5) || (b / (a-5) > 0);<br>
+                        cout &lt;&lt; "(a == 5) || (b / (a-5) > 0) = " &lt;&lt; result &lt;&lt; endl;<br>
+                    </div>
+                </div>
+                
+                <p>短路求值不仅可以提高程序效率，还能避免一些潜在的错误。</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>赋值运算符</h3>
+                <p>用于将值赋给变量：</p>
+                <table>
+                    <tr>
+                        <th>运算符</th>
+                        <th>示例</th>
+                        <th>等价表达式</th>
+                    </tr>
+                    <tr>
+                        <td>=</td>
+                        <td>a = b</td>
+                        <td>a = b</td>
+                    </tr>
+                    <tr>
+                        <td>+=</td>
+                        <td>a += b</td>
+                        <td>a = a + b</td>
+                    </tr>
+                    <tr>
+                        <td>-=</td>
+                        <td>a -= b</td>
+                        <td>a = a - b</td>
+                    </tr>
+                    <tr>
+                        <td>*=</td>
+                        <td>a *= b</td>
+                        <td>a = a * b</td>
+                    </tr>
+                    <tr>
+                        <td>/=</td>
+                        <td>a /= b</td>
+                        <td>a = a / b</td>
+                    </tr>
+                    <tr>
+                        <td>%=</td>
+                        <td>a %= b</td>
+                        <td>a = a % b</td>
+                    </tr>
+                </table>
+                
+                <h4>赋值运算符的特点</h4>
+                <p>赋值运算符具有以下特点：</p>
+                <ul>
+                    <li><strong>右结合性</strong>：赋值运算符从右向左结合，如 a = b = c 等价于 a = (b = c)</li>
+                    <li><strong>返回值</strong>：赋值表达式会返回被赋的值，可以用于连续赋值</li>
+                    <li><strong>复合赋值</strong>：复合赋值运算符是简化表达式的语法糖</li>
+                </ul>
+                
+                <div class="code">
+                    int x, y, z;<br>
+                    <br>
+                    <span class="comment">// 连续赋值</span><br>
+                    x = y = z = 10;<br>
+                    cout &lt;&lt; "x = " &lt;&lt; x &lt;&lt; ", y = " &lt;&lt; y &lt;&lt; ", z = " &lt;&lt; z &lt;&lt; endl;<br>
+                    <br>
+                    <span class="comment">// 复合赋值运算符的使用</span><br>
+                    int a = 20;<br>
+                    a += 5;   <span class="comment">// 等价于 a = a + 5; 结果 a = 25</span><br>
+                    cout &lt;&lt; "a += 5 后，a = " &lt;&lt; a &lt;&lt; endl;<br>
+                    <br>
+                    a *= 2;   <span class="comment">// 等价于 a = a * 2; 结果 a = 50</span><br>
+                    cout &lt;&lt; "a *= 2 后，a = " &lt;&lt; a &lt;&lt; endl;<br>
+                    <br>
+                    a /= 5;   <span class="comment">// 等价于 a = a / 5; 结果 a = 10</span><br>
+                    cout &lt;&lt; "a /= 5 后，a = " &lt;&lt; a &lt;&lt; endl;
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>条件运算符（三元运算符）</h3>
+                <p>条件运算符是C++中唯一的三元运算符，语法为：<code>条件 ? 值1 : 值2</code></p>
+                <p>由于我们尚未学习分支语句，这里仅作简单介绍，后续章节会详细讲解。</p>
+                
+                <h4>条件运算符的工作原理</h4>
+                <p>条件运算符根据条件的真假性来选择返回值：</p>
+                <ul>
+                    <li>如果条件为真(true)，则返回值1</li>
+                    <li>如果条件为假(false)，则返回值2</li>
+                </ul>
+                
+                <div class="code">
+                    int a = 10, b = 20;<br>
+                    int max = (a &gt; b) ? a : b;  <span class="comment">// 如果a&gt;b为真，返回a，否则返回b</span><br>
+                    cout &lt;&lt; "较大的数是: " &lt;&lt; max &lt;&lt; endl;<br>
+                    <br>
+                    <span class="comment">// 嵌套使用条件运算符</span><br>
+                    int x = 5, y = 10, z = 3;<br>
+                    int min = (x &lt; y) ? ((x &lt; z) ? x : z) : ((y &lt; z) ? y : z);<br>
+                    cout &lt;&lt; "最小值是: " &lt;&lt; min &lt;&lt; endl;
+                </div>
+            </div>
+        </div>
+
+        <!-- 表达式 -->
+        <div id="expressions" class="content">
+            <h2>表达式</h2>
+            <div class="concept-item">
+                <h3>表达式的定义</h3>
+                <p>表达式是由操作数（变量、常量）和运算符组成的组合，它会产生一个值。</p>
+                <div class="code">
+                    <span class="comment">// 以下都是表达式</span><br>
+                    5;                <span class="comment">// 常量表达式</span><br>
+                    x;                <span class="comment">// 变量表达式</span><br>
+                    x + y;            <span class="comment">// 算术表达式</span><br>
+                    x &gt; 0;            <span class="comment">// 关系表达式</span><br>
+                    (x + y) * z;      <span class="comment">// 复合表达式</span><br>
+                    x = y = 5;        <span class="comment">// 赋值表达式</span>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>表达式的求值过程</h3>
+                <p>表达式的求值是一个逐步进行的过程，遵循运算符优先级和结合性规则：</p>
+                
+                <h4>求值步骤</h4>
+                <ol>
+                    <li><strong>确定运算符优先级</strong>：找出表达式中优先级最高的运算符</li>
+                    <li><strong>考虑结合性</strong>：如果有多个相同优先级的运算符，根据结合性确定计算顺序</li>
+                    <li><strong>逐步计算</strong>：从优先级最高的运算开始，逐步计算整个表达式</li>
+                </ol>
+                
+                <div class="example">
+                    <h4>复杂表达式求值示例</h4>
+                    <p>让我们分析表达式：<code>a + b * c - d / e</code></p>
+                    <div class="code">
+                        int a = 10, b = 5, c = 3, d = 8, e = 2;<br>
+                        int result = a + b * c - d / e;<br>
+                        <span class="comment">// 求值过程：</span><br>
+                        <span class="comment">// 1. * 和 / 优先级最高，从左到右计算：</span><br>
+                        <span class="comment">//    b * c = 5 * 3 = 15</span><br>
+                        <span class="comment">//    d / e = 8 / 2 = 4</span><br>
+                        <span class="comment">// 2. 表达式变为：a + 15 - 4</span><br>
+                        <span class="comment">// 3. + 和 - 优先级相同，从左到右计算：</span><br>
+                        <span class="comment">//    a + 15 = 10 + 15 = 25</span><br>
+                        <span class="comment">//    25 - 4 = 21</span><br>
+                        <span class="comment">// 4. 最终结果：21</span><br>
+                        cout &lt;&lt; "a + b * c - d / e = " &lt;&lt; result &lt;&lt; endl;<br>
+                    </div>
+                </div>
+                
+                <h4>使用括号控制求值顺序</h4>
+                <p>括号可以改变默认的求值顺序，使表达式更加清晰：</p>
+                <div class="code">
+                    <span class="comment">// 不使用括号（按优先级计算）</span><br>
+                    result = a + b * c;      <span class="comment">// 先算乘法，再算加法</span><br>
+                    <br>
+                    <span class="comment">// 使用括号改变顺序</span><br>
+                    result = (a + b) * c;    <span class="comment">// 先算加法，再算乘法</span><br>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>运算符优先级</h3>
+                <p>当表达式中有多个运算符时，运算符优先级决定了计算顺序：</p>
+                <table>
+                    <tr>
+                        <th>优先级</th>
+                        <th>运算符</th>
+                        <th>说明</th>
+                        <th>结合性</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>() [] -> . ++ --</td>
+                        <td>括号、数组下标、成员访问、自增自减</td>
+                        <td>从左到右</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>! ~ ++ -- + - * &</td>
+                        <td>逻辑非、位取反、正负号、取地址、解引用</td>
+                        <td>从右到左</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>* / %</td>
+                        <td>乘法、除法、取模</td>
+                        <td>从左到右</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>+ -</td>
+                        <td>加法、减法</td>
+                        <td>从左到右</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>&lt; &lt;= &gt; &gt;=</td>
+                        <td>关系运算符</td>
+                        <td>从左到右</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>== !=</td>
+                        <td>相等运算符</td>
+                        <td>从左到右</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>&&</td>
+                        <td>逻辑与</td>
+                        <td>从左到右</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>||</td>
+                        <td>逻辑或</td>
+                        <td>从左到右</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>?:</td>
+                        <td>条件运算符</td>
+                        <td>从右到左</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>= += -= *= /= %=</td>
+                        <td>赋值运算符</td>
+                        <td>从右到左</td>
+                    </tr>
+                </table>
+                <div class="example">
+                    <h3>优先级示例</h3>
+                    <div class="code">
+                        int result = 5 + 3 * 2;     <span class="comment">// 结果是 11，不是 16</span><br>
+                        <span class="comment">// 因为 * 的优先级高于 +，所以先计算 3 * 2 = 6，再计算 5 + 6 = 11</span><br>
+                        <br>
+                        int result2 = (5 + 3) * 2;  <span class="comment">// 结果是 16</span><br>
+                        <span class="comment">// 使用括号改变优先级</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>运算符优先级详解</h3>
+                <p>运算符优先级决定了表达式中各个运算的执行顺序。以下是一些重要规则：</p>
+                
+                <h4>优先级规则</h4>
+                <ol>
+                    <li><strong>括号优先</strong>：括号具有最高优先级，可以改变默认的运算顺序</li>
+                    <li><strong>算术运算符</strong>：乘法(*)、除法(/)、取模(%)优先级高于加法(+)、减法(-)</li>
+                    <li><strong>关系运算符</strong>：关系运算符(&lt;、&gt;、&lt;=、&gt;=、==、!=)优先级低于算术运算符</li>
+                    <li><strong>逻辑运算符</strong>：逻辑与(&&)优先级高于逻辑或(||)</li>
+                    <li><strong>赋值运算符</strong>：赋值运算符(=、+=、-=等)优先级最低</li>
+                </ol>
+                
+                <h4>结合性</h4>
+                <p>当表达式中出现多个相同优先级的运算符时，结合性决定了它们的计算顺序：</p>
+                <ul>
+                    <li><strong>左结合</strong>：大多数运算符从左到右计算，如 a + b + c 等价于 (a + b) + c</li>
+                    <li><strong>右结合</strong>：赋值运算符从右到左计算，如 a = b = c 等价于 a = (b = c)</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>优先级示例解析</h4>
+                    <div class="code">
+                        int a = 5, b = 3, c = 2;<br>
+                        int result = a + b * c;  <span class="comment">// 结果是 11，不是 16</span><br>
+                        <span class="comment">// 解析过程：</span><br>
+                        <span class="comment">// 1. * 运算符优先级高于 +，先计算 b * c = 3 * 2 = 6</span><br>
+                        <span class="comment">// 2. 再计算 a + 6 = 5 + 6 = 11</span><br>
+                        cout &lt;&lt; "a + b * c = " &lt;&lt; result &lt;&lt; endl;<br>
+                        <br>
+                        result = (a + b) * c;  <span class="comment">// 结果是 16</span><br>
+                        <span class="comment">// 解析过程：</span><br>
+                        <span class="comment">// 1. 括号优先级最高，先计算 (a + b) = (5 + 3) = 8</span><br>
+                        <span class="comment">// 2. 再计算 8 * c = 8 * 2 = 16</span><br>
+                        cout &lt;&lt; "(a + b) * c = " &lt;&lt; result &lt;&lt; endl;<br>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>类型转换</h3>
+                <p>在表达式中不同类型的数据参与运算时会发生类型转换：</p>
+                <div class="code">
+                    int a = 10;<br>
+                    double b = 3.0;<br>
+                    double result = a / b;  <span class="comment">// int类型的a会转换为double类型</span><br>
+                    cout &lt;&lt; result &lt;&lt; endl;  <span class="comment">// 输出: 3.33333</span><br>
+                    <br>
+                    int c = 10;<br>
+                    int d = 3;<br>
+                    double result2 = c / d;  <span class="comment">// 先计算10/3=3(整数除法)，再转换为double</span><br>
+                    cout &lt;&lt; result2 &lt;&lt; endl; <span class="comment">// 输出: 3</span><br>
+                    <br>
+                    double result3 = (double)c / d; <span class="comment">// 强制类型转换</span><br>
+                    cout &lt;&lt; result3 &lt;&lt; endl; <span class="comment">// 输出: 3.33333</span>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>类型转换详解</h3>
+                <p>在表达式计算过程中，不同类型的数据可能需要进行转换以保证运算的正确性。</p>
+                
+                <h4>自动类型转换</h4>
+                <p>C++会在必要时自动进行类型转换：</p>
+                <ul>
+                    <li><strong>整型转浮点型</strong>：当整数与浮点数进行运算时，整数会自动转换为浮点数</li>
+                    <li><strong>低精度转高精度</strong>：当不同类型的数据进行运算时，低精度类型会转换为高精度类型</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>自动类型转换示例</h4>
+                    <div class="code">
+                        int a = 10;<br>
+                        double b = 3.0;<br>
+                        <br>
+                        <span class="comment">// 整型a自动转换为double类型参与运算</span><br>
+                        double result = a / b;<br>
+                        cout &lt;&lt; "10 / 3.0 = " &lt;&lt; result &lt;&lt; endl;  <span class="comment">// 输出: 3.33333</span><br>
+                        <br>
+                        <span class="comment">// 两个整数相除，结果仍是整数</span><br>
+                        int c = 10, d = 3;<br>
+                        int intResult = c / d;<br>
+                        cout &lt;&lt; "10 / 3 = " &lt;&lt; intResult &lt;&lt; endl;  <span class="comment">// 输出: 3</span><br>
+                        <br>
+                        <span class="comment">// 将结果赋给double变量，但计算时仍是整数除法</span><br>
+                        double doubleResult = c / d;<br>
+                        cout &lt;&lt; "10 / 3 (赋给double) = " &lt;&lt; doubleResult &lt;&lt; endl;  <span class="comment">// 输出: 3</span><br>
+                    </div>
+                </div>
+                
+                <h4>强制类型转换</h4>
+                <p>程序员可以使用强制类型转换来显式指定数据类型：</p>
+                <div class="code">
+                    int a = 10, b = 3;<br>
+                    <br>
+                    <span class="comment">// 强制将整数转换为double进行除法运算</span><br>
+                    double result = (double)a / b;<br>
+                    cout &lt;&lt; "(double)10 / 3 = " &lt;&lt; result &lt;&lt; endl;  <span class="comment">// 输出: 3.33333</span><br>
+                    <br>
+                    <span class="comment">// 另一种写法</span><br>
+                    result = double(a) / b;<br>
+                    cout &lt;&lt; "double(10) / 3 = " &lt;&lt; result &lt;&lt; endl;  <span class="comment">// 输出: 3.33333</span><br>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>表达式求值的注意事项</h3>
+                <p>在使用表达式时需要注意一些特殊情况和潜在问题：</p>
+                
+                <h4>运算符优先级陷阱</h4>
+                <p>复杂的表达式容易因为优先级问题产生意料之外的结果：</p>
+                <div class="code">
+                    int a = 5, b = 3, c = 2;<br>
+                    <br>
+                    <span class="comment">// 可能产生混淆的表达式</span><br>
+                    int result1 = a + b * c;     <span class="comment">// 11，不是16</span><br>
+                    int result2 = (a + b) * c;   <span class="comment">// 16，使用括号明确意图</span><br>
+                    cout &lt;&lt; "a + b * c = " &lt;&lt; result1 &lt;&lt; endl;<br>
+                    cout &lt;&lt; "(a + b) * c = " &lt;&lt; result2 &lt;&lt; endl;<br>
+                </div>
+                
+                <h4>自增自减运算符的使用注意事项</h4>
+                <p>在复杂表达式中使用自增自减运算符可能导致难以理解的代码：</p>
+                <div class="code">
+                    int a = 5;<br>
+                    int result = a++ + ++a;  <span class="comment">// 结果依赖于编译器实现，应避免</span><br>
+                    cout &lt;&lt; "result = " &lt;&lt; result &lt;&lt; endl;<br>
+                    cout &lt;&lt; "a = " &lt;&lt; a &lt;&lt; endl;<br>
+                    <br>
+                    <span class="comment">// 更清晰的写法</span><br>
+                    int b = 5;<br>
+                    b++;           <span class="comment">// b = 6</span><br>
+                    ++b;           <span class="comment">// b = 7</span><br>
+                    int result2 = b + b;  <span class="comment">// result2 = 14</span><br>
+                    cout &lt;&lt; "清晰写法的结果 result2 = " &lt;&lt; result2 &lt;&lt; endl;<br>
+                </div>
+                
+                <h4>浮点数比较问题</h4>
+                <p>由于浮点数的精度问题，直接使用关系运算符比较浮点数可能得到意外结果：</p>
+                <div class="code">
+                    double x = 0.1 + 0.2;<br>
+                    double y = 0.3;<br>
+                    <br>
+                    <span class="comment">// 可能输出0(false)，尽管数学上0.1+0.2=0.3</span><br>
+                    cout &lt;&lt; "x == y: " &lt;&lt; (x == y) &lt;&lt; endl;<br>
+                    cout &lt;&lt; "x = " &lt;&lt; x &lt;&lt; endl;<br>
+                    cout &lt;&lt; "y = " &lt;&lt; y &lt;&lt; endl;<br>
+                    <br>
+                    <span class="comment">// 更好的比较方式：使用误差范围</span><br>
+                    double epsilon = 1e-10;<br>
+                    bool equal = (x - y < epsilon) && (y - x < epsilon);<br>
+                    cout &lt;&lt; "使用误差范围比较: " &lt;&lt; equal &lt;&lt; endl;<br>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>运算符的组合使用</h3>
+                <p>多个运算符可以组合使用创建复杂的表达式，但需要注意可读性和正确性：</p>
+                
+                <h4>运算符组合的最佳实践</h4>
+                <ul>
+                    <li><strong>使用括号</strong>：使用括号明确表达式的计算顺序</li>
+                    <li><strong>避免过度复杂</strong>：过于复杂的表达式难以理解和维护</li>
+                    <li><strong>保持一致性</strong>：在项目中保持运算符使用的风格一致</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>良好与不良的表达式示例</h4>
+                    <div class="code">
+                        int a = 10, b = 5, c = 3, d = 2;<br>
+                        <br>
+                        <span class="comment">// 不推荐：难以理解的复杂表达式</span><br>
+                        int result1 = a + b * c - d++ + --c * b / a;<br>
+                        <br>
+                        <span class="comment">// 推荐：分步计算，清晰易懂</span><br>
+                        int temp1 = b * c;         <span class="comment">// 5 * 3 = 15</span><br>
+                        int temp2 = c - 1;         <span class="comment">// 3 - 1 = 2</span><br>
+                        int temp3 = temp2 * b;     <span class="comment">// 2 * 5 = 10</span><br>
+                        int temp4 = temp3 / a;     <span class="comment">// 10 / 10 = 1</span><br>
+                        int temp5 = d;             <span class="comment">// 2</span><br>
+                        d = d + 1;                 <span class="comment">// d = 3</span><br>
+                        c = temp2;                 <span class="comment">// c = 2</span><br>
+                        int result2 = a + temp1 - temp5 + temp4;<br>
+                        <span class="comment">// 10 + 15 - 2 + 1 = 24</span><br>
+                        <br>
+                        cout &lt;&lt; "复杂表达式结果: " &lt;&lt; result1 &lt;&lt; endl;<br>
+                        cout &lt;&lt; "分步计算结果: " &lt;&lt; result2 &lt;&lt; endl;<br>
+                    </div>
+                </div>
+                
+                <h4>表达式优化建议</h4>
+                <p>编写表达式时应考虑以下几点：</p>
+                <ul>
+                    <li>优先保证代码的可读性，其次考虑性能</li>
+                    <li>复杂的表达式应该添加注释说明</li>
+                    <li>避免在表达式中修改多个变量的值</li>
+                    <li>使用有意义的变量名提高表达式的可理解性</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 实践应用 -->
+        <div id="practice" class="content">
+            <h2>实践应用</h2>
+
+            <div class="example">
+                <h3>示例1：数学表达式计算</h3>
+                <p>使用运算符计算数学表达式：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int a = 10, b = 5, c = 3;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int result;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 计算 (a + b) * c</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;result = (a + b) * c;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "(a + b) * c = " &lt;&lt; result &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 计算 a² - b²</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;result = a * a - b * b;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "a² - b² = " &lt;&lt; result &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 计算 (a + b)²</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;result = (a + b) * (a + b);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "(a + b)² = " &lt;&lt; result &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>示例2：使用自增/自减运算符</h3>
+                <p>演示前置和后置自增/自减运算符的区别：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int a = 5, b = 5;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int result1, result2;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 前置自增</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;result1 = ++a;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "前置自增: ++a = " &lt;&lt; result1 &lt;&lt; ", a = " &lt;&lt; a &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 后置自增</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;result2 = b++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "后置自增: b++ = " &lt;&lt; result2 &lt;&lt; ", b = " &lt;&lt; b &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>示例3：复合赋值运算符应用</h3>
+                <p>使用复合赋值运算符简化表达式：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int balance = 1000;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int expense1 = 200, expense2 = 150, expense3 = 300;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 使用复合赋值运算符计算余额</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;balance -= expense1;  <span class="comment">// balance = balance - expense1</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "购买商品1后余额: " &lt;&lt; balance &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;balance -= expense2;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "购买商品2后余额: " &lt;&lt; balance &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;balance -= expense3;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "购买商品3后余额: " &lt;&lt; balance &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 存入工资</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int salary = 5000;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;balance += salary;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "存入工资后余额: " &lt;&lt; balance &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>示例4：关系运算符应用</h3>
+                <p>使用关系运算符比较数值：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int a = 10, b = 20;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 输出关系运算结果（1表示真，0表示假）</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "a = " &lt;&lt; a &lt;&lt; ", b = " &lt;&lt; b &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "a == b : " &lt;&lt; (a == b) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "a != b : " &lt;&lt; (a != b) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "a &gt; b : " &lt;&lt; (a &gt; b) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "a &lt; b : " &lt;&lt; (a &lt; b) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "a &gt;= b : " &lt;&lt; (a &gt;= b) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "a &lt;= b : " &lt;&lt; (a &lt;= b) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <!-- 导航按钮将由topic-nav.js动态生成 -->
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 C++课程 | 掌握运算符与表达式，构建复杂逻辑</p>
+    </footer>
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+
+        // 暗色模式切换
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (prefersDark) {
+            document.body.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '☀️ 切换亮色模式';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 切换暗色模式';
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ 切换亮色模式';
+            }
+        });
+        
+        // 添加随机移动效果到粒子
+        document.addEventListener('mousemove', function(e) {
+            const particles = document.querySelectorAll('.particle');
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            particles.forEach(particle => {
+                const rect = particle.getBoundingClientRect();
+                const particleX = rect.left + rect.width / 2;
+                const particleY = rect.top + rect.height / 2;
+                
+                const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+                const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+                const force = Math.min(500 / (distance * distance), 15);
+                
+                const translateX = Math.cos(angle) * force;
+                const translateY = Math.sin(angle) * force;
+                
+                particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+            });
+        });
+        
+        // 初始化页面导航
+        document.addEventListener('DOMContentLoaded', function() {
+            // 当前页面路径（相对于topics目录）
+            const currentPagePath = './operators-expressions/index.html';
+            initTopicNavigation(currentPagePath);
+        });
+    </script>
+    
+    <script src="../../scripts/topic-nav.js"></script>
+</body>
+</html>

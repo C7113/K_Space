@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 分支结构综合运用</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #a1887f 0%, #d7ccc8 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #5d4037;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f5f5f5;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e0e0e0;
+        }
+        .tab.active {
+            background: #5d4037;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f6f2;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #5d4037;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #5d4037;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f3ebe9;
+        }
+        .code {
+            background: #2d3748;
+            color: #ffd54f;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #efebe9;
+            padding: 15px;
+            border-left: 5px solid #8d6e63;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #5d4037;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fff8e1;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .tip {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .caution {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .principle {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 C++ 分支结构综合运用</h1>
+            <p class="subtitle">—— 鲁班创客 | 程希宏老师 | 爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🧭 为什么需要分支？</button>
+            <button class="tab" onclick="openTab(event, 'types')">🔀 分支类型全解析</button>
+            <button class="tab" onclick="openTab(event, 'logic')">🧮 逻辑与关系运算</button>
+            <button class="tab" onclick="openTab(event, 'switch')">🔌 switch 深度剖析</button>
+            <button class="tab" onclick="openTab(event, 'pitfalls')">⚠️ 常见陷阱与补漏</button>
+            <button class="tab" onclick="openTab(event, 'project')">🧱 综合项目实战</button>
+            <button class="tab" onclick="openTab(event, 'optimize')">✨ 代码优化技巧</button>
+        </div>
+
+        <!-- 引入问题 -->
+        <div id="intro" class="content active">
+            <h2>🧭 顺序结构为何不够用？</h2>
+            <div class="concept-item">
+                <h3>现实世界的决策无处不在</h3>
+                <ul>
+                    <li>成绩 ≥ 90 → A；80~89 → B；……</li>
+                    <li>余额 ≥ 商品价格 → 扣款；否则 → 提示不足</li>
+                    <li>输入是数字？字母？符号？→ 不同处理</li>
+                </ul>
+                <p>✅ <strong>结论：</strong>程序必须能“看情况办事”——这就是<strong>分支结构</strong>存在的意义。</p>
+            </div>
+            <div class="concept-item">
+                <h3>三大编程结构回顾</h3>
+                <table>
+                    <tr><th>结构</th><th>特点</th><th>局限</th></tr>
+                    <tr><td>顺序结构</td><td>从上到下执行</td><td>无法做选择</td></tr>
+                    <tr><td>分支结构</td><td>按条件跳转</td><td>不能重复执行</td></tr>
+                    <tr><td>循环结构</td><td>重复执行</td><td>需配合分支控制</td></tr>
+                </table>
+                <p>💡 分支是实现“智能”的第一步！</p>
+            </div>
+        </div>
+
+        <!-- 分支类型 -->
+        <div id="types" class="content">
+            <h2>🔀 分支结构全家族</h2>
+            <div class="concept-item">
+                <h3>1. 单分支（if）</h3>
+                <div class="code">
+if (password == "123456") {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;grantAccess();<br>
+}
+                </div>
+                <p>✅ 用于“满足条件就做”的场景，如权限校验、异常过滤。</p>
+            </div>
+            <div class="concept-item">
+                <h3>2. 双分支（if-else）</h3>
+                <div class="code">
+if (age >= 18) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "成年";<br>
+} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "未成年";<br>
+}
+                </div>
+                <p>✅ 二选一逻辑，覆盖所有可能性。</p>
+            </div>
+            <div class="concept-item">
+                <h3>3. 多重分支（if-else if-else）</h3>
+                <div class="code">
+if (score >= 90) grade = 'A';<br>
+else if (score >= 80) grade = 'B';<br>
+else if (score >= 70) grade = 'C';<br>
+else grade = 'F';
+                </div>
+                <p>✅ 注意：<strong>条件顺序很重要！</strong> 应从最严格到最宽松排列。</p>
+            </div>
+        </div>
+
+        <!-- 逻辑与关系运算 -->
+        <div id="logic" class="content">
+            <h2>🧮 关系与逻辑运算符</h2>
+            <div class="concept-item">
+                <h3>关系运算符（返回 bool）</h3>
+                <table>
+                    <tr><th>运算符</th><th>含义</th><th>示例</th></tr>
+                    <tr><td><code>==</code></td><td>等于</td><td><code>a == b</code></td></tr>
+                    <tr><td><code>!=</code></td><td>不等于</td><td><code>a != b</code></td></tr>
+                    <tr><td><code>&gt;</code></td><td>大于</td><td><code>a &gt; b</code></td></tr>
+                    <tr><td><code>&lt;</code></td><td>小于</td><td><code>a &lt; b</code></td></tr>
+                    <tr><td><code>&gt;=</code></td><td>大于等于</td><td><code>a &gt;= b</code></td></tr>
+                    <tr><td><code>&lt;=</code></td><td>小于等于</td><td><code>a &lt;= b</code></td></tr>
+                </table>
+            </div>
+            <div class="concept-item">
+                <h3>逻辑运算符</h3>
+                <table>
+                    <tr><th>运算符</th><th>名称</th><th>短路行为</th></tr>
+                    <tr><td><code>&&</code></td><td>逻辑与</td><td>前假则不计算后</td></tr>
+                    <tr><td><code>||</code></td><td>逻辑或</td><td>前真则不计算后</td></tr>
+                    <tr><td><code>!</code></td><td>逻辑非</td><td>取反</td></tr>
+                </table>
+                <div class="tip">
+                    ✅ <strong>短路机制是安全编程的关键！</strong><br>
+                    <code>if (ptr && ptr->valid())</code> —— 避免空指针解引用。
+                </div>
+            </div>
+        </div>
+
+        <!-- switch 深度剖析 -->
+        <div id="switch" class="content">
+            <h2>🔌 switch 语句详解</h2>
+            <div class="concept-item">
+                <h3>基本语法</h3>
+                <div class="code">
+switch (表达式) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;case 常量1: 语句; break;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;case 常量2: 语句; break;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;default: 语句;<br>
+}
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>关键限制（常被忽略！）</h3>
+                <ul>
+                    <li>表达式必须是 <strong>整型、字符型或枚举</strong>（不能是 float、string）</li>
+                    <li><code>case</code> 后必须是 <strong>编译期常量</strong></li>
+                    <li>忘记 <code>break</code> 会导致 <strong>fall-through（穿透）</strong></li>
+                    <li>务必包含 <code>default</code> 分支处理意外值</li>
+                </ul>
+                <div class="caution">
+                    ❌ 错误：<code>switch (name) { case "Alice": ... }</code>（字符串不支持！）
+                </div>
+            </div>
+        </div>
+
+        <!-- 常见陷阱 -->
+        <div id="pitfalls" class="content">
+            <h2>⚠️ 常见陷阱与知识补漏</h2>
+            <div class="concept-item">
+                <h3>1. 赋值 vs 比较</h3>
+                <div class="code">
+// 危险！这是赋值，不是比较！
+if (x = 5) { ... } // x 被设为 5，条件恒为真！
+
+// 正确写法
+if (x == 5) { ... }
+                </div>
+                <div class="tip">✅ 编译器警告可帮助发现此错误，建议开启 -Wall。</div>
+            </div>
+            <div class="concept-item">
+                <h3>2. 浮点数比较陷阱</h3>
+                <div class="code">
+// 错误：直接比较浮点数
+if (a == 0.1) { ... }
+
+// 正确：使用误差范围
+const double EPS = 1e-6;
+if (fabs(a - 0.1) < EPS) { ... }
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>3. 条件优先级混淆</h3>
+                <p>逻辑运算符优先级：<code>! > && > ||</code></p>
+                <div class="code">
+// 不明确
+if (a || b && c) // 实际是 a || (b && c)
+
+// 推荐加括号
+if (a || (b && c))
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目实战 -->
+        <div id="project" class="content">
+            <h2>🧱 综合项目实战</h2>
+            <div class="concept-item">
+                <h3>1. 自动售货机找零</h3>
+                <p>输入金额，判断是否足够购买 5 元饮料，并计算找零。</p>
+                <div class="code">
+int money;<br>
+cin >> money;<br>
+if (money < 5) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "余额不足";<br>
+} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "找零：" << money - 5 << "元";<br>
+}
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>2. 成绩等级 + 评语</h3>
+                <div class="code">
+int score;<br>
+cin >> score;<br>
+if (score >= 90) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "A - 优秀！";<br>
+} else if (score >= 80) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "B - 良好";<br>
+} else if (score >= 60) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "C - 加油";<br>
+} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "D - 需努力";<br>
+}
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>3. “拍七令”简化版</h3>
+                <p>输入 n，若 n 是 7 的倍数或个位是 7，输出 "拍手"，否则输出数字。</p>
+                <div class="code">
+int n;<br>
+cin >> n;<br>
+if (n % 7 == 0 || n % 10 == 7) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "拍手";<br>
+} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << n;<br>
+}
+                </div>
+                <div class="tip">✅ 融合取余、逻辑或、分支判断的经典案例！</div>
+            </div>
+        </div>
+
+        <!-- 优化技巧 -->
+        <div id="optimize" class="content">
+            <h2>✨ 分支代码优化技巧</h2>
+            <div class="concept-item">
+                <h3>1. 提前返回（Guard Clause）</h3>
+                <div class="code">
+// 优化前：深层嵌套
+if (user) {<br>
+&nbsp;&nbsp;if (user->active) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (user->hasPerm) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doWork();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+}
+
+// 优化后：扁平结构
+if (!user) return;<br>
+if (!user->active) return;<br>
+if (!user->hasPerm) return;<br>
+doWork();
+                </div>
+                <div class="principle">✅ 嵌套 ≤ 2 层为佳，提升可读性与维护性。</div>
+            </div>
+            <div class="concept-item">
+                <h3>2. 使用 switch 替代长 if-else</h3>
+                <p>当判断的是同一变量的多个离散值时，<code>switch</code> 更清晰高效。</p>
+            </div>
+            <div class="concept-item">
+                <h3>3. 避免重复计算</h3>
+                <div class="code">
+// 差
+if (expensiveFunc(x) > 0) { ... }<br>
+else if (expensiveFunc(x) < 0) { ... }
+
+// 好
+int result = expensiveFunc(x);<br>
+if (result > 0) { ... }<br>
+else if (result < 0) { ... }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 鲁班创客编程创意中心 | 程希宏老师 | 爱心 · 创新 · 匠心</p>
+            <p>📍 新沂市建邺路华泰豪庭东门北50米 | 📞 17368987780</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

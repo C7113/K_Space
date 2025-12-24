@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python二级 - 第3课：字符串操作 - C++ 知识导航</title>
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/topic.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="stylesheet" href="/styles/animations.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        Python二级 第3课：字符串操作
+        <span class="badge">文本处理</span>
+      </h1>
+      <p>掌握字符串索引与切片 | 熟悉常用字符串方法 | 应用字符串解决实际问题</p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <a href="../index.html" class="toggle-btn">↩ 返回 CIE Python 考试首页</a>
+    <a href="../../../../exam-topics.html" class="toggle-btn">↩ 返回 等级考试知识点</a>
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+  </div>
+  
+  <div class="container">
+    <section class="topic-section">
+      <h2>知识点概览</h2>
+      <div class="knowledge-points">
+        <ul>
+          <li>字符串索引：通过下标访问字符串中的字符</li>
+          <li>字符串切片：提取字符串的子串</li>
+          <li>常用字符串方法：len(), upper(), lower(), strip(), replace(), split()等</li>
+          <li>字符串格式化：使用format()方法和f-string格式化字符串</li>
+          <li>字符串应用：文本处理、数据解析等实际场景</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2>知识点详解</h2>
+      
+      <h3>1. 字符串索引</h3>
+      <p>字符串中的每个字符都有一个唯一的下标（索引），可以通过下标访问特定字符。</p>
+      
+      <div class="concept-card">
+        <h4>索引规则</h4>
+        <ul>
+          <li>正向索引：从左到右，从0开始</li>
+          <li>反向索引：从右到左，从-1开始</li>
+        </ul>
+        <div class="example-code">
+<pre>字符串:  P  y  t  h  o  n
+正向索引: 0  1  2  3  4  5
+反向索引:-6 -5 -4 -3 -2 -1</pre>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>示例：访问字符串中的字符</h4>
+        <div class="example-code">
+<pre>text = "Python"
+print(text[0])    # 输出: P
+print(text[2])    # 输出: t
+print(text[-1])   # 输出: n
+print(text[-3])   # 输出: h</pre>
+        </div>
+        <p>注意：如果索引超出范围会引发IndexError异常。</p>
+      </div>
+      
+      <h3>2. 字符串切片</h3>
+      <p>字符串切片用于提取字符串的一部分（子串）。</p>
+      
+      <div class="concept-card">
+        <h4>基本语法</h4>
+        <div class="example-code">
+<pre>字符串[起始索引:结束索引:步长]</pre>
+        </div>
+        <p>要点：</p>
+        <ul>
+          <li>起始索引：包含该位置的字符（默认为0）</li>
+          <li>结束索引：不包含该位置的字符（默认为字符串长度）</li>
+          <li>步长：每隔多少个字符取一个（默认为1）</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h4>示例：字符串切片操作</h4>
+        <div class="example-code">
+<pre>text = "Hello, Python!"
+
+# 基本切片
+print(text[0:5])     # 输出: Hello
+print(text[7:13])    # 输出: Python
+print(text[:5])      # 输出: Hello (省略起始索引)
+print(text[7:])      # 输出: Python! (省略结束索引)
+print(text[:])       # 输出: Hello, Python! (省略起始和结束索引)
+
+# 使用步长
+print(text[::2])     # 输出: Hlo yhn (每隔一个字符)
+print(text[::-1])    # 输出: !nohtyP ,olleH (反转字符串)
+
+# 负索引切片
+print(text[-7:-1])   # 输出: Python
+print(text[-6:])     # 输出: Python!</pre>
+        </div>
+      </div>
+      
+      <h3>3. 常用字符串方法</h3>
+      <p>Python为字符串提供了许多内置方法，用于处理和操作字符串。</p>
+      
+      <div class="concept-card">
+        <h4>len()函数</h4>
+        <p>获取字符串的长度（字符个数）。</p>
+        <div class="example-code">
+<pre>text = "Hello, Python!"
+print(len(text))  # 输出: 15</pre>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>大小写转换方法</h4>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>方法</th>
+              <th>说明</th>
+              <th>示例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>upper()</td>
+              <td>转换为大写</td>
+              <td>"hello".upper() → "HELLO"</td>
+            </tr>
+            <tr>
+              <td>lower()</td>
+              <td>转换为小写</td>
+              <td>"HELLO".lower() → "hello"</td>
+            </tr>
+            <tr>
+              <td>capitalize()</td>
+              <td>首字母大写</td>
+              <td>"hello".capitalize() → "Hello"</td>
+            </tr>
+            <tr>
+              <td>title()</td>
+              <td>每个单词首字母大写</td>
+              <td>"hello world".title() → "Hello World"</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="example-code">
+<pre>text = "Hello, Python!"
+print(text.upper())       # 输出: HELLO, PYTHON!
+print(text.lower())       # 输出: hello, python!
+print(text.capitalize())  # 输出: Hello, python!
+print(text.title())       # 输出: Hello, Python!</pre>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>去除空白字符方法</h4>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>方法</th>
+              <th>说明</th>
+              <th>示例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>strip()</td>
+              <td>去除两端空白字符</td>
+              <td>" hello ".strip() → "hello"</td>
+            </tr>
+            <tr>
+              <td>lstrip()</td>
+              <td>去除左端空白字符</td>
+              <td>" hello ".lstrip() → "hello "</td>
+            </tr>
+            <tr>
+              <td>rstrip()</td>
+              <td>去除右端空白字符</td>
+              <td>" hello ".rstrip() → " hello"</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="example-code">
+<pre>text = "  Hello, Python!  "
+print(f"'{text}'")
+print(f"'{text.strip()}'")
+print(f"'{text.lstrip()}'")
+print(f"'{text.rstrip()}'")</pre>
+        </div>
+        <p>运行结果：</p>
+        <div class="example-code">
+<pre>'  Hello, Python!  '
+'Hello, Python!'
+'Hello, Python!  '
+'  Hello, Python!'</pre>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>查找和替换方法</h4>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>方法</th>
+              <th>说明</th>
+              <th>示例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>find(sub)</td>
+              <td>查找子串，返回首次出现的索引，未找到返回-1</td>
+              <td>"hello".find("l") → 2</td>
+            </tr>
+            <tr>
+              <td>replace(old, new)</td>
+              <td>替换子串</td>
+              <td>"hello".replace("l", "x") → "hexxo"</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="example-code">
+<pre>text = "Hello, Python! Welcome to Python!"
+print(text.find("Python"))                    # 输出: 7
+print(text.replace("Python", "Java"))         # 输出: Hello, Java! Welcome to Java!</pre>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>分割和连接方法</h4>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>方法</th>
+              <th>说明</th>
+              <th>示例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>split(sep)</td>
+              <td>按分隔符分割字符串，返回列表</td>
+              <td>"a,b,c".split(",") → ['a', 'b', 'c']</td>
+            </tr>
+            <tr>
+              <td>join(iterable)</td>
+              <td>用字符串连接可迭代对象</td>
+              <td>",".join(['a','b','c']) → "a,b,c"</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="example-code">
+<pre>text = "apple,banana,orange"
+fruits = text.split(",")
+print(fruits)                           # 输出: ['apple', 'banana', 'orange']
+print(" | ".join(fruits))              # 输出: apple | banana | orange</pre>
+        </div>
+      </div>
+      
+      <h3>4. 字符串格式化</h3>
+      <p>字符串格式化用于将变量插入到字符串中。</p>
+      
+      <div class="concept-card">
+        <h4>f-string格式化（推荐）</h4>
+        <div class="example-code">
+<pre>name = "张三"
+age = 18
+score = 95.5
+
+# 基本用法
+print(f"姓名：{name}，年龄：{age}，成绩：{score}")
+# 输出: 姓名：张三，年龄：18，成绩：95.5
+
+# 表达式
+print(f"明年年龄：{age + 1}")
+# 输出: 明年年龄：19
+
+# 格式控制
+print(f"成绩：{score:.1f}")
+# 输出: 成绩：95.5</pre>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>format()方法</h4>
+        <div class="example-code">
+<pre>name = "李四"
+age = 17
+score = 88.0
+
+# 位置参数
+print("姓名：{}，年龄：{}，成绩：{}".format(name, age, score))
+# 输出: 姓名：李四，年龄：17，成绩：88.0
+
+# 索引参数
+print("姓名：{0}，年龄：{1}，成绩：{2}".format(name, age, score))
+# 输出: 姓名：李四，年龄：17，成绩：88.0
+
+# 关键字参数
+print("姓名：{name}，年龄：{age}，成绩：{score}".format(name=name, age=age, score=score))
+# 输出: 姓名：李四，年龄：17，成绩：88.0</pre>
+        </div>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>示例演示</h2>
+      
+      <h3>示例1：邮箱验证</h3>
+      <div class="example-code">
+<pre># 邮箱验证
+def validate_email(email):
+    # 检查是否包含@符号
+    if "@" not in email:
+        return False
+    
+    # 分割用户名和域名
+    parts = email.split("@")
+    if len(parts) != 2:
+        return False
+    
+    username, domain = parts
+    
+    # 检查用户名和域名是否为空
+    if not username or not domain:
+        return False
+    
+    # 检查域名是否包含点
+    if "." not in domain:
+        return False
+    
+    return True
+
+# 测试
+emails = ["user@example.com", "invalid.email", "@domain.com", "user@", "valid@email.com"]
+for email in emails:
+    result = validate_email(email)
+    print(f"{email}: {'有效' if result else '无效'}")</pre>
+      </div>
+      
+      <p>运行结果：</p>
+      <div class="example-code">
+<pre>user@example.com: 有效
+invalid.email: 无效
+@domain.com: 无效
+user@: 无效
+valid@email.com: 有效</pre>
+      </div>
+      
+      <h3>示例2：文本统计分析</h3>
+      <div class="example-code">
+<pre># 文本统计分析
+text = """
+Python是一种广泛使用的高级编程语言。
+它具有简洁明了的语法，易于学习。
+Python支持多种编程范式，包括面向对象和函数式编程。
+"""
+
+# 去除首尾空白字符并分割成句子
+sentences = text.strip().split("。")
+
+# 统计句子数量（去除空句子）
+sentence_count = len([s for s in sentences if s.strip()])
+print(f"句子数量：{sentence_count}")
+
+# 统计字符数量（不包括空白字符）
+char_count = len(text.replace(" ", "").replace("\n", ""))
+print(f"字符数量：{char_count}")
+
+# 查找关键词
+keywords = ["Python", "编程", "语法"]
+for keyword in keywords:
+    count = text.count(keyword)
+    print(f"'{keyword}' 出现次数：{count}")</pre>
+      </div>
+      
+      <p>运行结果：</p>
+      <div class="example-code">
+<pre>句子数量：3
+字符数量：78
+'Python' 出现次数：3
+'编程' 出现次数：2
+'语法' 出现次数：1</pre>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>课堂练习</h2>
+      
+      <div class="exercise-card">
+        <h3>练习1：密码强度检测</h3>
+        <p>编写一个程序，检测用户输入密码的强度。</p>
+        <p>密码强度规则：</p>
+        <ul>
+          <li>长度至少8位</li>
+          <li>包含至少一个大写字母</li>
+          <li>包含至少一个小写字母</li>
+          <li>包含至少一个数字</li>
+        </ul>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+<pre># 密码强度检测
+def check_password_strength(password):
+    # 检查长度
+    if len(password) < 8:
+        return "弱：密码长度至少8位"
+    
+    # 检查是否包含大写字母、小写字母和数字
+    has_upper = any(c.isupper() for c in password)
+    has_lower = any(c.islower() for c in password)
+    has_digit = any(c.isdigit() for c in password)
+    
+    if not has_upper:
+        return "弱：密码需要包含至少一个大写字母"
+    if not has_lower:
+        return "弱：密码需要包含至少一个小写字母"
+    if not has_digit:
+        return "弱：密码需要包含至少一个数字"
+    
+    return "强：密码符合安全要求"
+
+# 测试
+passwords = ["123456", "Password", "Password123", "MySecurePass123"]
+for pwd in passwords:
+    result = check_password_strength(pwd)
+    print(f"密码 '{pwd}': {result}")</pre>
+          </div>
+        </details>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习2：字符串处理工具</h3>
+        <p>编写一个程序，提供字符串处理功能：</p>
+        <ol>
+          <li>统计字符串中各类字符的数量（字母、数字、空白字符、其他字符）</li>
+          <li>将字符串中的单词首字母大写</li>
+          <li>反转字符串</li>
+        </ol>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+<pre># 字符串处理工具
+def analyze_string(text):
+    letters = digits = spaces = others = 0
+    for char in text:
+        if char.isalpha():
+            letters += 1
+        elif char.isdigit():
+            digits += 1
+        elif char.isspace():
+            spaces += 1
+        else:
+            others += 1
+    return letters, digits, spaces, others
+
+def capitalize_words(text):
+    return ' '.join(word.capitalize() for word in text.split())
+
+# 测试
+text = "hello world! this is python 123."
+print(f"原文本：{text}")
+
+# 统计字符
+letters, digits, spaces, others = analyze_string(text)
+print(f"字母：{letters}，数字：{digits}，空白字符：{spaces}，其他字符：{others}")
+
+# 单词首字母大写
+capitalized = capitalize_words(text)
+print(f"首字母大写：{capitalized}")
+
+# 反转字符串
+reversed_text = text[::-1]
+print(f"反转字符串：{reversed_text}")</pre>
+          </div>
+        </details>
+      </div>
+    </section>
+  </div>
+  
+  <div class="navigation-buttons">
+    <a href="2.html" class="nav-button">上一课：循环结构</a>
+    <a href="4.html" class="nav-button next">下一课：列表(List) ➔</a>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+  </footer>
+
+  <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+
+    // 粒子动画效果
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

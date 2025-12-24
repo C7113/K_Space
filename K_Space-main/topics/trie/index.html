@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>字典树</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #5c6bc0;
+            --accent-color: #7e57c2;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --border: #e0e0e0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #7986cb;
+            --accent-color: #9575cd;
+            --background: #121212;
+            --card-bg: #1e1e1e;
+            --text: #f0f0f0;
+            --border: #444444;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--background);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            gap: 5px;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: var(--transition);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
+        .content {
+            display: none;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 0 0 12px 12px;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid var(--border);
+            border-top: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .concept-item {
+            background: var(--card-bg);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .concept-item:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(74, 144, 226, 0.03);
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .example {
+            background: linear-gradient(to right, rgba(74, 144, 226, 0.05), transparent);
+            padding: 20px;
+            border-left: 5px solid var(--primary-color);
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.7rem 1.2rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            transition: var(--transition);
+            background: transparent;
+        }
+
+        .return-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        ul, ol {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+            min-height: 44px;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button class="toggle-btn" id="themeToggle" onclick="toggleTheme()">🌙 切换暗色模式</button>
+        <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">返回学习路径</button>
+        <button class="toggle-btn" onclick="window.location.href='../../index.htm'">回到首页</button>
+    </div>
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const button = document.getElementById('themeToggle');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                button.textContent = '🌙 切换暗色模式';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                button.textContent = '☀️ 切换亮色模式';
+            }
+        }
+    </script>
+
+    <div class="container">
+        <header>
+            <h1>字典树</h1>
+            <p class="subtitle">—— 高效处理字符串集合的数据结构</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="../../index.htm">首页</a> → 
+            <a href="../../learning-path.html">学习路径</a> → 
+            字典树
+        </nav>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">📘 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'implementation')">💻 实现原理</button>
+            <button class="tab" onclick="openTab(event, 'operations')">⚙️ 基本操作</button>
+            <button class="tab" onclick="openTab(event, 'applications')">🎯 应用场景</button>
+            <button class="tab" onclick="openTab(event, 'practice')">💪 实践练习</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>字典树是什么？</h2>
+            
+            <div class="concept-item">
+                <h3>定义</h3>
+                <p>字典树（Trie，发音类似"try"）是一种树形数据结构，用于高效地存储和检索字符串集合中的键。它也被称为前缀树或单词查找树。</p>
+                
+                <div class="example">
+                    <h4>核心特性</h4>
+                    <ul>
+                        <li><strong>前缀共享</strong>：具有相同前缀的字符串共享前缀路径</li>
+                        <li><strong>快速检索</strong>：可以在 O(m) 时间内完成字符串查找（m为字符串长度）</li>
+                        <li><strong>有序遍历</strong>：可以按字典序遍历所有字符串</li>
+                        <li><strong>空间优化</strong>：通过共享前缀节省存储空间</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>字典树的结构</h3>
+                <p>字典树具有以下特点：</p>
+                <ul>
+                    <li>根节点不包含字符，除根节点外每个节点都包含一个字符</li>
+                    <li>从根节点到某个节点的路径上经过的字符连接起来就是该节点对应的字符串</li>
+                    <li>每个节点的所有子节点包含的字符都不相同</li>
+                    <li>如果一个节点对应的字符串在集合中，则标记该节点为结尾节点</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>字典树结构示意图</h4>
+                    <p>存储 {"app", "bad", "car", "be"} 字符串的字典树：</p>
+                    <pre>
+                              root
+                             /  |  \
+                            a   b   c
+                            |  / \  |
+                            p a   e a
+                            | |   | |
+                            p d   ★ r
+                              |     |
+                              ★     ★
+                    </pre>
+                    <p>其中 ★ 表示结尾节点</p>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>时间复杂度对比</h3>
+                <table>
+                    <tr>
+                        <th>操作类型</th>
+                        <th>数组存储</th>
+                        <th>平衡二叉搜索树</th>
+                        <th>哈希表</th>
+                        <th>字典树</th>
+                    </tr>
+                    <tr>
+                        <td>插入</td>
+                        <td>O(1)</td>
+                        <td>O(log n)</td>
+                        <td>O(1)*</td>
+                        <td>O(m)</td>
+                    </tr>
+                    <tr>
+                        <td>查找</td>
+                        <td>O(n×m)</td>
+                        <td>O(log n)</td>
+                        <td>O(1)*</td>
+                        <td>O(m)</td>
+                    </tr>
+                    <tr>
+                        <td>前缀查找</td>
+                        <td>O(n×m)</td>
+                        <td>O(n×m)</td>
+                        <td>不支持</td>
+                        <td>O(m)</td>
+                    </tr>
+                    <tr>
+                        <td>有序遍历</td>
+                        <td>O(n×m×log n)</td>
+                        <td>O(n)</td>
+                        <td>O(n×m×log n)</td>
+                        <td>O(n×m)</td>
+                    </tr>
+                </table>
+                <p>* 平均情况，最坏情况为O(n)</p>
+            </div>
+        </div>
+
+        <!-- 实现原理 -->
+        <div id="implementation" class="content">
+            <h2>字典树的实现原理</h2>
+            
+            <div class="concept-item">
+                <h3>节点结构</h3>
+                <p>字典树的每个节点通常包含以下信息：</p>
+                <ul>
+                    <li><strong>子节点数组</strong>：指向子节点的指针数组，大小通常为字符集大小（如26表示小写字母）</li>
+                    <li><strong>结束标记</strong>：标记该节点是否为某个字符串的结尾</li>
+                    <li><strong>计数器（可选）</strong>：记录经过该节点的字符串数量或以该节点为结尾的字符串数量</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>基础实现</h3>
+                <div class="code-block">
+                    const int MAXN = 100005;<br>
+                    const int CHARSET = 26;  // 小写字母<br>
+                    <br>
+                    struct TrieNode {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bool isEnd;  // 是否为字符串结尾<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TrieNode* children[CHARSET];  // 子节点指针数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TrieNode() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isEnd = false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; CHARSET; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;children[i] = nullptr;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    };<br>
+                    <br>
+                    class Trie {<br>
+                    private:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TrieNode* root;<br>
+                    <br>
+                    public:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Trie() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root = new TrieNode();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    };
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>内存优化</h3>
+                <p>为了节省空间，可以使用以下优化方法：</p>
+                <ul>
+                    <li><strong>静态数组</strong>：使用静态数组代替动态分配指针</li>
+                    <li><strong>压缩字典树</strong>：将只有一个子节点的链压缩成单个节点</li>
+                    <li><strong>双数组字典树</strong>：使用两个数组实现，进一步压缩空间</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 基本操作 -->
+        <div id="operations" class="content">
+            <h2>字典树的基本操作</h2>
+            
+            <div class="concept-item">
+                <h3>1. 插入操作</h3>
+                <p>将一个字符串插入到字典树中：</p>
+                <div class="code-block">
+                    void insert(string word) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TrieNode* node = root;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (char c : word) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int index = c - 'a';  // 字符映射到索引<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (node-&gt;children[index] == nullptr) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node-&gt;children[index] = new TrieNode();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node = node-&gt;children[index];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;node-&gt;isEnd = true;  // 标记为字符串结尾<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>2. 查找操作</h3>
+                <p>检查一个字符串是否在字典树中：</p>
+                <div class="code-block">
+                    bool search(string word) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TrieNode* node = root;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (char c : word) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int index = c - 'a';<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (node-&gt;children[index] == nullptr) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node = node-&gt;children[index];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return node-&gt;isEnd;  // 必须是结尾节点<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>3. 前缀查找</h3>
+                <p>检查是否存在以指定前缀开头的字符串：</p>
+                <div class="code-block">
+                    bool startsWith(string prefix) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TrieNode* node = root;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (char c : prefix) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int index = c - 'a';<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (node-&gt;children[index] == nullptr) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node = node-&gt;children[index];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return true;  // 只要能找到前缀路径即可<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>4. 删除操作</h3>
+                <p>从字典树中删除一个字符串：</p>
+                <div class="code-block">
+                    bool remove(string word) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return removeHelper(root, word, 0);<br>
+                    }<br>
+                    <br>
+                    bool removeHelper(TrieNode* node, string word, int depth) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (!node) return false;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 如果已经到达字符串末尾<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (depth == word.length()) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!node-&gt;isEnd) return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node-&gt;isEnd = false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 如果该节点没有子节点，则可以删除<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return isEmpty(node);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 递归处理子节点<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int index = word[depth] - 'a';<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (removeHelper(node-&gt;children[index], word, depth + 1)) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 删除子节点<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete node-&gt;children[index];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node-&gt;children[index] = nullptr;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 如果当前节点不是结尾且没有其他子节点，则也可以删除<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return !node-&gt;isEnd && isEmpty(node);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                    }<br>
+                    <br>
+                    // 检查节点是否没有子节点<br>
+                    bool isEmpty(TrieNode* node) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; CHARSET; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (node-&gt;children[i])<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 应用场景 -->
+        <div id="applications" class="content">
+            <h2>字典树的应用场景</h2>
+            
+            <div class="concept-item">
+                <h3>常见问题类型</h3>
+                <p>字典树特别适合解决以下几类问题：</p>
+                <div class="example">
+                    <h4>1. 字符串检索</h4>
+                    <p>在大量文本中查找特定单词或检查单词是否存在</p>
+                    <p>示例：实现搜索引擎中的关键词匹配</p>
+                    
+                    <h4>2. 前缀匹配</h4>
+                    <p>查找具有特定前缀的所有单词</p>
+                    <p>示例：输入法中的自动补全功能</p>
+                    
+                    <h4>3. 词频统计</h4>
+                    <p>统计大量文本中每个单词出现的次数</p>
+                    <p>示例：文章中词频分析</p>
+                    
+                    <h4>4. 字符串排序</h4>
+                    <p>对大量字符串按字典序进行排序</p>
+                    <p>示例：实现字典应用</p>
+                    
+                    <h4>5. 最长公共前缀</h4>
+                    <p>查找多个字符串的最长公共前缀</p>
+                    <p>示例：文件路径处理</p>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>典型题目</h3>
+                <ul>
+                    <li><strong>单词搜索</strong>：给定一个单词列表和一个二维字符网格，找出所有在网格中出现的单词</li>
+                    <li><strong>添加与搜索单词</strong>：设计一个数据结构，支持添加单词和模糊搜索（支持'.'通配符）</li>
+                    <li><strong>实现字典</strong>：实现一个字典类，支持插入、搜索和前缀匹配操作</li>
+                    <li><strong>最长单词</strong>：找出词典中最长的单词，该单词是由词典中其他单词逐步添加一个字母组成的</li>
+                    <li><strong>替换字符串</strong>：给定一个字符串列表和一个句子，将句子中的衍生词替换为词根</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 实践练习 -->
+        <div id="practice" class="content">
+            <h2>实践练习</h2>
+            
+            <div class="concept-item">
+                <h3>练习1：实现字典类</h3>
+                <div class="example">
+                    <h4>题目描述</h4>
+                    <p>实现一个 Trie 类，包含以下方法：</p>
+                    <ul>
+                        <li>Trie()：初始化前缀树对象</li>
+                        <li>void insert(String word)：向前缀树中插入字符串 word</li>
+                        <li>boolean search(String word)：如果字符串 word 在前缀树中，返回 true；否则返回 false</li>
+                        <li>boolean startsWith(String prefix)：如果之前已经插入的字符串 word 的前缀之一为 prefix，返回 true；否则返回 false</li>
+                    </ul>
+                    
+                    <h4>示例</h4>
+                    <div class="code-block">
+                        Trie trie = new Trie();<br>
+                        trie.insert("apple");<br>
+                        trie.search("apple");   // 返回 true<br>
+                        trie.search("app");     // 返回 false<br>
+                        trie.startsWith("app"); // 返回 true<br>
+                        trie.insert("app");<br>
+                        trie.search("app");     // 返回 true
+                    </div>
+                    
+                    <h4>参考代码</h4>
+                    <div class="code-block">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;string&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        const int CHARSET = 26;<br>
+                        <br>
+                        struct TrieNode {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;bool isEnd;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;TrieNode* children[CHARSET];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;TrieNode() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isEnd = false;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; CHARSET; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;children[i] = nullptr;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        };<br>
+                        <br>
+                        class Trie {<br>
+                        private:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;TrieNode* root;<br>
+                        <br>
+                        public:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Trie() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root = new TrieNode();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;void insert(string word) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TrieNode* node = root;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (char c : word) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int index = c - 'a';<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (node-&gt;children[index] == nullptr) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node-&gt;children[index] = new TrieNode();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node = node-&gt;children[index];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node-&gt;isEnd = true;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;bool search(string word) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TrieNode* node = root;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (char c : word) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int index = c - 'a';<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (node-&gt;children[index] == nullptr) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node = node-&gt;children[index];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return node-&gt;isEnd;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;bool startsWith(string prefix) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TrieNode* node = root;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (char c : prefix) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int index = c - 'a';<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (node-&gt;children[index] == nullptr) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node = node-&gt;children[index];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        };<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Trie* trie = new Trie();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;trie-&gt;insert("apple");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; trie-&gt;search("apple") &lt;&lt; endl;   // 1 (true)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; trie-&gt;search("app") &lt;&lt; endl;     // 0 (false)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; trie-&gt;startsWith("app") &lt;&lt; endl; // 1 (true)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;trie-&gt;insert("app");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; trie-&gt;search("app") &lt;&lt; endl;     // 1 (true)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>练习2：单词替换</h3>
+                <div class="example">
+                    <h4>题目描述</h4>
+                    <p>在英语中，我们有一个叫做词根(root)的概念，可以词根后面跟着其他一些词组成另一个较长的单词——我们称这个词为继承词(successor)。例如，词根"an"，跟随单词"other"可以形成新单词"another"。</p>
+                    <p>现在，给定一个由许多词根组成的词典和一个句子，需要将句子中的所有继承词用词根替换掉。如果继承词有许多可以形成它的词根，则用最短的词根替换它。</p>
+                    
+                    <h4>示例</h4>
+                    <p>输入：dictionary = ["cat","bat","rat"], sentence = "the cattle was rattled by the battery"<br>
+                    输出："the cat was rat by the bat"</p>
+                    
+                    <h4>提示</h4>
+                    <p>这道题的关键在于：</p>
+                    <ol>
+                        <li>将所有词根插入到字典树中</li>
+                        <li>对句子中的每个单词，在字典树中查找最短的前缀</li>
+                        <li>如果找到前缀则替换，否则保留原单词</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 标签页切换功能
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+
+</body>
+</html>

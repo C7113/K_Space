@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>树的基础知识</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #5c6bc0;
+            --accent-color: #7e57c2;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --border: #e0e0e0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #7986cb;
+            --accent-color: #9575cd;
+            --background: #121212;
+            --card-bg: #1e1e1e;
+            --text: #f0f0f0;
+            --border: #444444;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--background);
+            background-image: var(--grid-pattern);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            gap: 5px;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: var(--transition);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
+        .content {
+            display: none;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 0 0 12px 12px;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid var(--border);
+            border-top: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .concept-item {
+            background: var(--card-bg);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .concept-item:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(74, 144, 226, 0.03);
+        }
+
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .example {
+            background: linear-gradient(to right, rgba(74, 144, 226, 0.05), transparent);
+            padding: 20px;
+            border-left: 5px solid var(--primary-color);
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text);
+            font-size: 0.95rem;
+            opacity: 0.8;
+            padding: 25px;
+            border-top: 1px solid var(--border);
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.7rem 1.2rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            transition: var(--transition);
+            background: transparent;
+        }
+
+        .return-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .priority-high {
+            color: #e53935;
+            font-weight: bold;
+        }
+
+        .priority-medium {
+            color: #fb8c00;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            color: #43a047;
+            font-weight: bold;
+        }
+
+        ul, ol {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .tree-diagram {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 10px;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-container {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-radius: 8px;
+                margin-bottom: 5px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🌳 树的基础知识</h1>
+            <p class="subtitle">—— 理解树形数据结构</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">📘 树的概念</button>
+            <button class="tab" onclick="openTab(event, 'binary-tree')">🔍 二叉树</button>
+            <button class="tab" onclick="openTab(event, 'traversal')">🔁 树的遍历</button>
+            <button class="tab" onclick="openTab(event, 'implementation')">💻 树的实现</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧩 实践应用</button>
+        </div>
+
+        <!-- 树的概念 -->
+        <div id="concept" class="content active">
+            <h2>树的基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是树</h3>
+                <p>树是一种非线性的数据结构，它是由n（n≥0）个有限节点组成一个具有层次关系的集合。把它叫做"树"是因为它看起来像一棵倒挂的树，也就是说它是根朝上，而叶朝下的。</p>
+                
+                <h4>树的特点</h4>
+                <ul>
+                    <li><strong>层次结构</strong>：树具有明显的层次关系</li>
+                    <li><strong>根节点</strong>：树有且仅有一个根节点</li>
+                    <li><strong>子节点</strong>：除根节点外，每个节点有零个或多个子节点</li>
+                    <li><strong>父节点</strong>：每个节点（除根节点）有且仅有一个父节点</li>
+                    <li><strong>叶子节点</strong>：没有子节点的节点称为叶子节点</li>
+                    <li><strong>路径</strong>：从一个节点到另一个节点的路径是唯一的</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>树的基本术语</h4>
+                    <ul>
+                        <li><strong>节点的度</strong>：一个节点含有的子树的个数称为该节点的度</li>
+                        <li><strong>树的度</strong>：一棵树中，最大的节点的度称为树的度</li>
+                        <li><strong>深度</strong>：从根节点到任意节点的路径长度称为该节点的深度</li>
+                        <li><strong>高度</strong>：从某节点到叶子节点的最长路径称为该节点的高度</li>
+                        <li><strong>层数</strong>：根节点在第1层，其他节点的层数等于其父节点的层数加1</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>树的结构示意图</h3>
+                <div class="tree-diagram">
+                    <pre>
+                                A(根节点)
+                              /   |   \
+                            B     C    D
+                          / | \       / \
+                         E  F  G     H   I
+                           / \
+                          J   K
+                    </pre>
+                </div>
+                <p>在这个树结构中：</p>
+                <ul>
+                    <li>A是根节点</li>
+                    <li>B、C、D是A的子节点</li>
+                    <li>E、F、G是B的子节点</li>
+                    <li>H、I是D的子节点</li>
+                    <li>E、J、K、G、C、H、I是叶子节点</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 二叉树 -->
+        <div id="binary-tree" class="content">
+            <h2>二叉树</h2>
+            <div class="concept-item">
+                <h3>二叉树的定义</h3>
+                <p>二叉树是每个节点最多只有两个子树的树结构，通常子树被称作"左子树"和"右子树"。二叉树常被用于实现二叉查找树和二叉堆。</p>
+                
+                <h4>二叉树的性质</h4>
+                <ul>
+                    <li>在二叉树的第i层上至多有2^(i-1)个结点(i≥1)</li>
+                    <li>深度为k的二叉树至多有2^k-1个结点(k≥1)</li>
+                    <li>对于任何一棵二叉树T，如果其终端结点数为n0，度为2的结点数为n2，则n0=n2+1</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>二叉树的类型</h4>
+                    <table>
+                        <tr>
+                            <th>类型</th>
+                            <th>特点</th>
+                            <th>示意图</th>
+                        </tr>
+                        <tr>
+                            <td>满二叉树</td>
+                            <td>除最后一层无任何子节点外，每一层上的所有结点都有两个子结点的二叉树</td>
+                            <td>
+                                <pre>
+                                  A
+                                /   \
+                               B     C
+                              / \   / \
+                             D   E F   G
+                                </pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>完全二叉树</td>
+                            <td>若设二叉树的高度为h，除第h层外，其它各层(1～h-1)的结点数都达到最大个数，第h层从左到右连续排列</td>
+                            <td>
+                                <pre>
+                                  A
+                                /   \
+                               B     C
+                              / \   /
+                             D   E F
+                                </pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>二叉搜索树</td>
+                            <td>左子树上所有结点的值均小于它的根结点的值，右子树上所有结点的值均大于它的根结点的值</td>
+                            <td>
+                                <pre>
+                                  4
+                                /   \
+                               2     6
+                              / \   / \
+                             1   3 5   7
+                                </pre>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 树的遍历 -->
+        <div id="traversal" class="content">
+            <h2>树的遍历</h2>
+            <div class="concept-item">
+                <h3>二叉树遍历方法</h3>
+                <p>遍历是对树的一种最基本的运算，所谓遍历二叉树，就是按一定的规则和顺序走遍二叉树的所有结点，使每一个结点都被访问一次，而且只被访问一次。</p>
+                
+                <h4>深度优先遍历</h4>
+                <ul>
+                    <li><strong>前序遍历</strong>：根节点 → 左子树 → 右子树</li>
+                    <li><strong>中序遍历</strong>：左子树 → 根节点 → 右子树</li>
+                    <li><strong>后序遍历</strong>：左子树 → 右子树 → 根节点</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>遍历示例</h4>
+                    <div class="tree-diagram">
+                        <pre>
+                              A
+                            /   \
+                           B     C
+                          / \   /
+                         D   E F
+                        </pre>
+                    </div>
+                    <p>对于上面的二叉树：</p>
+                    <ul>
+                        <li>前序遍历：A B D E C F</li>
+                        <li>中序遍历：D B E A F C</li>
+                        <li>后序遍历：D E B F C A</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>广度优先遍历（层序遍历）</h3>
+                <p>从树的根节点开始，从上到下逐层遍历，在同一层中，按从左到右的顺序对结点逐个访问。</p>
+                
+                <div class="example">
+                    <h4>层序遍历示例</h4>
+                    <div class="tree-diagram">
+                        <pre>
+                              A
+                            /   \
+                           B     C
+                          / \   /
+                         D   E F
+                        </pre>
+                    </div>
+                    <p>层序遍历结果：A B C D E F</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 树的实现 -->
+        <div id="implementation" class="content">
+            <h2>树的实现</h2>
+            <div class="concept-item">
+                <h3>二叉树的链式存储结构</h3>
+                <p>二叉树通常使用链式存储结构来实现，每个节点包含数据域和两个指针域，分别指向左子树和右子树。</p>
+                
+                <div class="example">
+                    <h4>二叉树节点定义</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        // 二叉树节点结构<br>
+                        struct TreeNode {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int data;           // 数据域<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;TreeNode* left;     // 左子树指针<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;TreeNode* right;    // 右子树指针<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 构造函数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;TreeNode(int value) : data(value), left(nullptr), right(nullptr) {}<br>
+                        };<br>
+                        <br>
+                        // 创建新节点<br>
+                        TreeNode* createNode(int value) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;TreeNode* node = new TreeNode(value);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return node;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>二叉树的基本操作</h3>
+                <p>二叉树的基本操作包括创建、插入、删除、查找和遍历等。</p>
+                
+                <div class="example">
+                    <h4>二叉树遍历实现</h4>
+                    <div class="code">
+                        // 前序遍历<br>
+                        void preorderTraversal(TreeNode* root) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (root != nullptr) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; root-&gt;data &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preorderTraversal(root-&gt;left);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preorderTraversal(root-&gt;right);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }<br>
+                        <br>
+                        // 中序遍历<br>
+                        void inorderTraversal(TreeNode* root) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (root != nullptr) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inorderTraversal(root-&gt;left);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; root-&gt;data &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inorderTraversal(root-&gt;right);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }<br>
+                        <br>
+                        // 后序遍历<br>
+                        void postorderTraversal(TreeNode* root) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (root != nullptr) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;postorderTraversal(root-&gt;left);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;postorderTraversal(root-&gt;right);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; root-&gt;data &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }<br>
+                        <br>
+                        // 层序遍历<br>
+                        #include &lt;queue&gt;<br>
+                        void levelOrderTraversal(TreeNode* root) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (root == nullptr) return;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;queue&lt;TreeNode*&gt; q;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;q.push(root);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (!q.empty()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TreeNode* current = q.front();<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.pop();<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; current-&gt;data &lt;&lt; " ";<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (current-&gt;left != nullptr)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(current-&gt;left);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (current-&gt;right != nullptr)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(current-&gt;right);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践应用 -->
+        <div id="practice" class="content">
+            <h2>实践应用</h2>
+            
+            <div class="example">
+                <h3>练习1：构建和遍历二叉树</h3>
+                <p>创建一个二叉树并实现各种遍历方法：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;queue&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    struct TreeNode {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int data;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TreeNode* left;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TreeNode* right;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TreeNode(int value) : data(value), left(nullptr), right(nullptr) {}<br>
+                    };<br>
+                    <br>
+                    // 插入节点<br>
+                    TreeNode* insertNode(TreeNode* root, int value) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (root == nullptr) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return new TreeNode(value);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (value &lt; root-&gt;data) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root-&gt;left = insertNode(root-&gt;left, value);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root-&gt;right = insertNode(root-&gt;right, value);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return root;<br>
+                    }<br>
+                    <br>
+                    // 前序遍历<br>
+                    void preorder(TreeNode* root) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (root != nullptr) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; root-&gt;data &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preorder(root-&gt;left);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preorder(root-&gt;right);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br>
+                    <br>
+                    // 中序遍历<br>
+                    void inorder(TreeNode* root) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (root != nullptr) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inorder(root-&gt;left);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; root-&gt;data &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inorder(root-&gt;right);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br>
+                    <br>
+                    // 后序遍历<br>
+                    void postorder(TreeNode* root) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (root != nullptr) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;postorder(root-&gt;left);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;postorder(root-&gt;right);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; root-&gt;data &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br>
+                    <br>
+                    // 层序遍历<br>
+                    void levelOrder(TreeNode* root) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (root == nullptr) return;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;queue&lt;TreeNode*&gt; q;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;q.push(root);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (!q.empty()) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TreeNode* current = q.front();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.pop();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; current-&gt;data &lt;&lt; " ";<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (current-&gt;left != nullptr)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(current-&gt;left);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (current-&gt;right != nullptr)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(current-&gt;right);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TreeNode* root = nullptr;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 构建二叉搜索树<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;root = insertNode(root, 50);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;insertNode(root, 30);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;insertNode(root, 70);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;insertNode(root, 20);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;insertNode(root, 40);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;insertNode(root, 60);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;insertNode(root, 80);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "前序遍历: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;preorder(root);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "中序遍历: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;inorder(root);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "后序遍历: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;postorder(root);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "层序遍历: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;levelOrder(root);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：计算二叉树的高度和节点数</h3>
+                <p>实现计算二叉树高度和节点数的函数：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;algorithm&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    struct TreeNode {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int data;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TreeNode* left;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TreeNode* right;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TreeNode(int value) : data(value), left(nullptr), right(nullptr) {}<br>
+                    };<br>
+                    <br>
+                    // 计算二叉树的高度<br>
+                    int getHeight(TreeNode* root) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (root == nullptr) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int leftHeight = getHeight(root-&gt;left);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int rightHeight = getHeight(root-&gt;right);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return max(leftHeight, rightHeight) + 1;<br>
+                    }<br>
+                    <br>
+                    // 计算二叉树的节点数<br>
+                    int getNodeCount(TreeNode* root) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (root == nullptr) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 1 + getNodeCount(root-&gt;left) + getNodeCount(root-&gt;right);<br>
+                    }<br>
+                    <br>
+                    // 判断是否为完全二叉树<br>
+                    bool isCompleteTree(TreeNode* root) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (root == nullptr) return true;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;queue&lt;TreeNode*&gt; q;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;q.push(root);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bool reachedEnd = false;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (!q.empty()) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TreeNode* current = q.front();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.pop();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (current == nullptr) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reachedEnd = true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (reachedEnd) return false;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(current-&gt;left);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q.push(current-&gt;right);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 创建一个简单的二叉树<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;//       1<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;//      / \<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;//     2   3<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;//    / \<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;//   4   5<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;TreeNode* root = new TreeNode(1);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;root-&gt;left = new TreeNode(2);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;root-&gt;right = new TreeNode(3);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;root-&gt;left-&gt;left = new TreeNode(4);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;root-&gt;left-&gt;right = new TreeNode(5);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "二叉树高度: " &lt;&lt; getHeight(root) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "节点数: " &lt;&lt; getNodeCount(root) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "是否为完全二叉树: " &lt;&lt; (isCompleteTree(root) ? "是" : "否") &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 理解树结构，掌握数据组织方法</p>
+        </footer>
+    </div>
+
+    <script src="../../scripts/theme-toggle.js"></script>
+    <script src="../../scripts/topic-nav.js"></script>
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

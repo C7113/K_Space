@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 运算符的秘密</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #007bff;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f8ff;
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0d6efd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧮 C++ 运算符的秘密</h1>
+            <p class="subtitle">—— 深入理解赋值、复合与特殊运算符 | 程老师主讲</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🚀 课程引入</button>
+            <button class="tab" onclick="openTab(event, 'assign')">➡️ 赋值运算符</button>
+            <button class="tab" onclick="openTab(event, 'compound')">➕ 复合运算符</button>
+            <button class="tab" onclick="openTab(event, 'special')">✨ 特殊运算符</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🎮 项目实践</button>
+        </div>
+
+        <!-- 课程引入 -->
+        <div id="intro" class="content active">
+            <h2>从基础到深入</h2>
+            <div class="concept-item">
+                <h3>程序运行结果预测</h3>
+                <p>以下程序的输出结果是多少？为什么？</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int a;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;float b = 1.3273;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;a = b;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; a &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p><strong>答案</strong>：输出 <code>1</code>。因为赋值时发生了<strong>自动类型转换</strong>，float 的 1.3273 被转换为 int 类型，小数部分被截断。</p>
+            </div>
+        </div>
+
+        <!-- 赋值运算符 -->
+        <div id="assign" class="content">
+            <h2>普通赋值运算符</h2>
+            <div class="concept-item">
+                <h3>自动类型转换</h3>
+                <p>当赋值运算符两边的数据类型不同时，系统会自动将右边的值转换为左边变量的类型。</p>
+                <table>
+                    <tr>
+                        <th>赋值语句</th>
+                        <th>右侧原始值</th>
+                        <th>左侧变量类型</th>
+                        <th>存储结果</th>
+                    </tr>
+                    <tr>
+                        <td>int num1 = 3.14;</td>
+                        <td>3.14 (float)</td>
+                        <td>int</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>float num2 = 20;</td>
+                        <td>20 (int)</td>
+                        <td>float</td>
+                        <td>20.0</td>
+                    </tr>
+                    <tr>
+                        <td>char s1 = 97;</td>
+                        <td>97 (int)</td>
+                        <td>char</td>
+                        <td>'a'</td>
+                    </tr>
+                    <tr>
+                        <td>int s2 = 'a';</td>
+                        <td>'a' (char)</td>
+                        <td>int</td>
+                        <td>97</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="concept-item">
+                <h3>嵌套赋值</h3>
+                <p>利用赋值运算符<strong>自右向左</strong>的结合性，可以实现多个变量同时赋值。</p>
+                <div class="code">
+                    // 嵌套赋值<br>
+                    int a, b, c;<br>
+                    a = b = c = 100; // 等价于 a = (b = (c = 100));
+                </div>
+                <p><strong>注意</strong>：嵌套赋值前，所有变量必须已声明，不能在赋值时声明变量。</p>
+            </div>
+        </div>
+
+        <!-- 复合运算符 -->
+        <div id="compound" class="content">
+            <h2>复合算术赋值运算符</h2>
+            <div class="concept-item">
+                <h3>代码简洁化</h3>
+                <p>复合赋值运算符是算术运算和赋值运算的结合，使代码更简洁。</p>
+                <table>
+                    <tr>
+                        <th>复合运算</th>
+                        <th>等价形式</th>
+                        <th>变量num结果 (初始100)</th>
+                    </tr>
+                    <tr>
+                        <td>num += 1</td>
+                        <td>num = num + 1</td>
+                        <td>101</td>
+                    </tr>
+                    <tr>
+                        <td>num -= 2</td>
+                        <td>num = num - 2</td>
+                        <td>98</td>
+                    </tr>
+                    <tr>
+                        <td>num *= 3</td>
+                        <td>num = num * 3</td>
+                        <td>300</td>
+                    </tr>
+                    <tr>
+                        <td>num /= 4</td>
+                        <td>num = num / 4</td>
+                        <td>25</td>
+                    </tr>
+                    <tr>
+                        <td>num %= 5</td>
+                        <td>num = num % 5</td>
+                        <td>0</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 特殊运算符 -->
+        <div id="special" class="content">
+            <h2>特殊运算符</h2>
+            <div class="example">
+                <h3>小括号运算符 ()</h3>
+                <p>用于改变运算优先级，明确表达式计算顺序。</p>
+                <div class="code">
+                    double res = ((1 + 2) * 3 - (5 - 4)) / 2;<br>
+                    // 计算过程：<br>
+                    // = (3 * 3 - 1) / 2<br>
+                    // = 8 / 2<br>
+                    // = 4
+                </div>
+            </div>
+            <div class="example">
+                <h3>逗号运算符 ,</h3>
+                <p>用于在一条语句中执行多个操作，整个表达式返回<strong>最后一个表达式的值</strong>。</p>
+                <div class="code">
+                    int a = 1, b = 2, c;<br>
+                    c = (a++, b++, a + b); // a=2, b=3, c=5<br>
+                    <br>
+                    // 常见应用场景：<br>
+                    // 1. for循环中初始化多个变量<br>
+                    for(int i = 0, j = 10; i < j; i++, j--) { ... }<br>
+                    <br>
+                    // 2. 宏定义中的链式操作<br>
+                    #define MIN_MAX(a, b, min, max) ((min) = (a) < (b) ? (a) : (b)), ((max) = (a) > (b) ? (a) : (b))<br>
+                    <br>
+                    // 3. 一行内执行多个赋值<br>
+                    res = num % 10, num /= 10; // 返回 num /= 10 的结果
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目实践 -->
+        <div id="practice" class="content">
+            <h2>🎯 项目实战：运算符应用</h2>
+
+            <div class="example">
+                <h3>项目1：机票打折</h3>
+                <p>输入原价和打折率，计算打折后价格并四舍五入到十位。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int x; double z;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; x &gt;&gt; z;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int price = (int)(x * z / 10 + 0.5) * 10; // 四舍五入到十位<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; price &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目2：数字对调</h3>
+                <p>将三位数的百位与个位对调。</p>
+                <div class="code">
+                    int num, a, b, c;<br>
+                    cin &gt;&gt; num;<br>
+                    a = num / 100;        // 百位<br>
+                    b = num / 10 % 10;    // 十位<br>
+                    c = num % 10;         // 个位<br>
+                    cout &lt;&lt; c * 100 + b * 10 + a &lt;&lt; endl; // 对调输出
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目3：细胞分裂</h3>
+                <p>细胞每次分裂数量翻倍，求第五次分裂后数量。</p>
+                <div class="code">
+                    int n;<br>
+                    cin &gt;&gt; n;<br>
+                    n *= 32; // 2^5 = 32<br>
+                    cout &lt;&lt; n &lt;&lt; endl;
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>项目4：分钱游戏</h3>
+                <p>三次分钱后三人钱数相同，求初始钱数。可采用逆推法或方程求解。</p>
+                <p>样例：输入 24，输出 13 7 4</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 程老师 | 掌握运算符，写出高效简洁代码</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

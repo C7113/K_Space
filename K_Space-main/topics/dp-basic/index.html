@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 动态规划基础</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🧮 C++ 动态规划基础</h1>
+            <p class="subtitle">—— 从记忆化搜索到状态转移</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">🔢 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'elements')">🧮 核心要素</button>
+            <button class="tab" onclick="openTab(event, 'approach')">🧮 解题方法</button>
+            <button class="tab" onclick="openTab(event, 'examples')">🧮 经典问题</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践练习</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>动态规划基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是动态规划</h3>
+                <p>动态规划（Dynamic Programming，简称DP）是一种通过把原问题分解为相对简单的子问题的方式求解复杂问题的方法。动态规划常常适用于有重叠子问题和最优子结构性质的问题。</p>
+                
+                <h4>动态规划的特点</h4>
+                <ul>
+                    <li><strong>最优子结构</strong>：问题的最优解包含子问题的最优解</li>
+                    <li><strong>重叠子问题</strong>：在求解过程中，很多子问题被多次计算</li>
+                    <li><strong>无后效性</strong>：某阶段状态一旦确定，就不受这个状态以后决策的影响</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>动态规划与分治法的区别</h3>
+                <p>动态规划和分治法都基于分解问题的思想，但它们有重要区别：</p>
+                <table>
+                    <tr>
+                        <th>比较维度</th>
+                        <th>分治法</th>
+                        <th>动态规划</th>
+                    </tr>
+                    <tr>
+                        <td>子问题关系</td>
+                        <td>相互独立</td>
+                        <td>相互重叠</td>
+                    </tr>
+                    <tr>
+                        <td>计算方式</td>
+                        <td>自顶向下递归</td>
+                        <td>自底向上递推</td>
+                    </tr>
+                    <tr>
+                        <td>存储需求</td>
+                        <td>通常不需要额外存储</td>
+                        <td>需要存储子问题的解</td>
+                    </tr>
+                    <tr>
+                        <td>时间复杂度</td>
+                        <td>可能指数级增长</td>
+                        <td>通过记忆化降低复杂度</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="concept-item">
+                <h3>动态规划的基本思想</h3>
+                <p>动态规划的基本思想是将待求解问题分解成若干个子问题，先求解子问题，然后从这些子问题的解得到原问题的解。这些子问题的关系可以用状态转移方程来描述。</p>
+            </div>
+        </div>
+
+        <!-- 核心要素 -->
+        <div id="elements" class="content">
+            <h2>动态规划核心要素</h2>
+            
+            <div class="concept-item">
+                <h3>状态定义</h3>
+                <p>状态是对问题求解过程中某一阶段的数学描述。状态的选择要满足无后效性，即给定当前状态，未来的发展不受过去状态的影响。</p>
+                
+                <div class="example">
+                    <h4>状态定义示例</h4>
+                    <p>以斐波那契数列为例：</p>
+                    <ul>
+                        <li><strong>状态</strong>：F(n) 表示第n个斐波那契数</li>
+                        <li><strong>状态转移方程</strong>：F(n) = F(n-1) + F(n-2)</li>
+                        <li><strong>边界条件</strong>：F(0) = 0, F(1) = 1</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>状态转移方程</h3>
+                <p>状态转移方程描述了当前状态与之前状态之间的关系，是动态规划的核心。</p>
+                
+                <div class="example">
+                    <h4>状态转移方程的建立步骤</h4>
+                    <ol>
+                        <li>确定问题的决策对象</li>
+                        <li>划分问题阶段</li>
+                        <li>定义各阶段的状态变量</li>
+                        <li>确定相邻阶段状态变量的递推关系</li>
+                        <li>确定初始条件和边界条件</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>边界条件</h3>
+                <p>边界条件是动态规划的初始状态，是递推过程的起点。</p>
+                
+                <div class="example">
+                    <h4>边界条件示例</h4>
+                    <p>在背包问题中：</p>
+                    <ul>
+                        <li>没有物品时，价值为0</li>
+                        <li>背包容量为0时，价值为0</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 解题方法 -->
+        <div id="approach" class="content">
+            <h2>动态规划解题方法</h2>
+            
+            <div class="concept-item">
+                <h3>记忆化搜索</h3>
+                <p>记忆化搜索是动态规划的一种实现方式，通过在递归过程中保存已经计算过的状态结果，避免重复计算。</p>
+                
+                <div class="example">
+                    <h4>记忆化搜索框架</h4>
+                    <div class="code">
+                        // 定义记忆化数组<br>
+                        int memo[MAX_N];<br>
+                        <br>
+                        int dp(int n) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 边界条件<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 1) return n;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 如果已经计算过，直接返回结果<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (memo[n] != -1) return memo[n];<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 递归计算并保存结果<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;memo[n] = dp(n-1) + dp(n-2);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return memo[n];<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>递推（自底向上）</h3>
+                <p>递推是另一种动态规划实现方式，从最小的子问题开始，逐步构建更大问题的解。</p>
+                
+                <div class="example">
+                    <h4>递推框架</h4>
+                    <div class="code">
+                        int dp[MAX_N];<br>
+                        <br>
+                        // 初始化边界条件<br>
+                        dp[0] = 0;<br>
+                        dp[1] = 1;<br>
+                        <br>
+                        // 从小到大计算每个状态<br>
+                        for (int i = 2; i &lt;= n; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;dp[i] = dp[i-1] + dp[i-2];<br>
+                        }<br>
+                        <br>
+                        // 返回最终结果<br>
+                        return dp[n];
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>动态规划解题步骤</h3>
+                <ol>
+                    <li><strong>定义状态</strong>：确定用什么参数表示问题的状态</li>
+                    <li><strong>确定状态转移方程</strong>：找出状态之间的递推关系</li>
+                    <li><strong>确定边界条件</strong>：找出递推的初始值</li>
+                    <li><strong>实现代码</strong>：选择记忆化搜索或递推实现</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 经典问题 -->
+        <div id="examples" class="content">
+            <h2>经典动态规划问题</h2>
+            
+            <div class="example">
+                <h3>问题1：斐波那契数列</h3>
+                <p>斐波那契数列是动态规划的入门问题，定义为：F(0)=0，F(1)=1，F(n)=F(n-1)+F(n-2)（n≥2）</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;cstring&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    const int MAX_N = 100;<br>
+                    int memo[MAX_N];<br>
+                    <br>
+                    // 记忆化搜索解法<br>
+                    int fib_memo(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 1) return n;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (memo[n] != -1) return memo[n];<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;memo[n] = fib_memo(n-1) + fib_memo(n-2);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return memo[n];<br>
+                    }<br>
+                    <br>
+                    // 递推解法<br>
+                    int fib_dp(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 1) return n;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int dp[n+1];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;dp[0] = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;dp[1] = 1;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 2; i &lt;= n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i] = dp[i-1] + dp[i-2];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return dp[n];<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 初始化记忆化数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;memset(memo, -1, sizeof(memo));<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n = 10;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "斐波那契数列第" &lt;&lt; n &lt;&lt; "项（记忆化搜索）: " &lt;&lt; fib_memo(n) &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "斐波那契数列第" &lt;&lt; n &lt;&lt; "项（递推）: " &lt;&lt; fib_dp(n) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>问题2：爬楼梯</h3>
+                <p>假设你正在爬楼梯。需要 n 阶你才能到达楼顶。每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int climbStairs(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt;= 2) return n;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// dp[i] 表示到达第 i 阶楼梯的方法数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int dp[n+1];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;dp[1] = 1;&nbsp;&nbsp;// 到达第1阶只有1种方法<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;dp[2] = 2;&nbsp;&nbsp;// 到达第2阶有2种方法<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 状态转移方程：dp[i] = dp[i-1] + dp[i-2]<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 到达第i阶可以从第(i-1)阶爬1步，或从第(i-2)阶爬2步<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 3; i &lt;= n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i] = dp[i-1] + dp[i-2];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return dp[n];<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n = 5;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "爬" &lt;&lt; n &lt;&lt; "阶楼梯有" &lt;&lt; climbStairs(n) &lt;&lt; "种方法" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践练习 -->
+        <div id="practice" class="content">
+            <h2>实践练习</h2>
+            
+            <div class="example">
+                <h3>练习1：最大子数组和</h3>
+                <p>给定一个整数数组，找出一个具有最大和的连续子数组（子数组最少包含一个元素）。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;algorithm&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int maxSubArray(vector&lt;int&gt;& nums) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// dp[i] 表示以第i个元素结尾的最大子数组和<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; dp(nums.size());<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;dp[0] = nums[0];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int maxSum = dp[0];<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 状态转移方程：<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// dp[i] = max(nums[i], dp[i-1] + nums[i])<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 要么自成一段，要么和前面的子数组连接<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; nums.size(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i] = max(nums[i], dp[i-1] + nums[i]);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxSum = max(maxSum, dp[i]);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return maxSum;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; nums = {-2, 1, -3, 4, -1, 2, 1, -5, 4};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最大子数组和: " &lt;&lt; maxSubArray(nums) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：打家劫舍</h3>
+                <p>你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。</p>
+                <p>给定一个代表每个房屋存放金额的非负整数数组，计算你不触动警报装置的情况下，一夜之内能够偷窃到的最高金额。</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;algorithm&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int rob(vector&lt;int&gt;& nums) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (nums.empty()) return 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (nums.size() == 1) return nums[0];<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// dp[i] 表示偷窃前i+1个房屋能获得的最大金额<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; dp(nums.size());<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;dp[0] = nums[0];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;dp[1] = max(nums[0], nums[1]);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 状态转移方程：<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// dp[i] = max(dp[i-1], dp[i-2] + nums[i])<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 要么不偷第i个房屋（dp[i-1]），要么偷第i个房屋（dp[i-2] + nums[i]）<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 2; i &lt; nums.size(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i] = max(dp[i-1], dp[i-2] + nums[i]);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return dp[nums.size() - 1];<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; nums = {2, 7, 9, 3, 1};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "能偷窃到的最高金额: " &lt;&lt; rob(nums) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习3：不同路径</h3>
+                <p>一个机器人位于一个 m x n 网格的左上角。机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角。问总共有多少条不同的路径？</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int uniquePaths(int m, int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// dp[i][j] 表示到达位置(i,j)的不同路径数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;int&gt;&gt; dp(m, vector&lt;int&gt;(n, 0));<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 初始化边界条件<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 第一行和第一列的路径数都为1<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; m; i++) dp[i][0] = 1;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; n; j++) dp[0][j] = 1;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 状态转移方程：<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// dp[i][j] = dp[i-1][j] + dp[i][j-1]<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 到达(i,j)可以从上方(i-1,j)或左方(i,j-1)过来<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; m; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 1; j &lt; n; j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i][j] = dp[i-1][j] + dp[i][j-1];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return dp[m-1][n-1];<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int m = 3, n = 7;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; m &lt;&lt; "x" &lt;&lt; n &lt;&lt; "网格的不同路径数: " &lt;&lt; uniquePaths(m, n) &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握动态规划，解决复杂优化问题</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

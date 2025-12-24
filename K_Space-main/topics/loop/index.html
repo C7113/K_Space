@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 循环结构</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <link rel="stylesheet" href="../../styles/topic.css">
+    <style>
+        .topic-header {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, var(--header-bg), var(--bg));
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            z-index: 2;
+        }
+
+        .topic-header h1 {
+            font-size: 2.2rem;
+            color: var(--text);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .topic-header h1 .icon {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            font-size: 2.8rem;
+        }
+
+        .topic-header h1:hover .icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .topic-header p {
+            font-size: 1.1rem;
+            margin-top: 0.25rem;
+            color: var(--text);
+            font-weight: 500;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(30deg);
+            animation: shimmer 3s infinite;
+        }
+
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25em 0.6em;
+            font-size: 0.75em;
+            font-weight: 600;
+            line-height: 1;
+            color: white;
+            background-color: var(--accent);
+            border-radius: 10rem;
+            margin-left: 0.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .breadcrumb {
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .topic-section {
+            margin: 3rem 0;
+        }
+
+        .topic-section:first-child {
+            margin-top: 0;
+        }
+
+        .topic-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .concept-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .concept-item:hover {
+            border-color: var(--accent-light);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .concept-item:hover::before {
+            opacity: 1;
+        }
+
+        .concept-item h3 {
+            color: var(--accent);
+            margin-top: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .concept-item h3::before {
+            content: '📘';
+            font-size: 1.2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: var(--accent);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+
+        .code-block {
+            background: var(--code-bg, #1e1e1e);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            overflow-x: auto;
+            color: var(--code-text, #d4d4d4);
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .code-title {
+            position: absolute;
+            top: 0;
+            right: 1rem;
+            background: #333;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0 0 8px 8px;
+            font-size: 0.8rem;
+            color: #fff;
+        }
+
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent);
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example h3 {
+            color: var(--accent);
+            margin-top: 0;
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .flowchart {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .flowchart img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .topic-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .tab-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="grid-pattern"></div>
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+    </div>
+
+    <div class="button-container">
+        <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+        <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">返回学习路径</button>
+        <button class="toggle-btn" onclick="window.location.href='../../index.htm'">回到首页</button>
+    </div>
+
+    <div class="topic-header shimmer">
+        <h1 class="hover-lift">
+            <span class="icon">🔄</span>
+            C++ 循环结构
+            <span class="badge">控制流</span>
+        </h1>
+        <p>掌握重复执行，让程序自动处理重复性任务</p>
+    </div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <nav class="breadcrumb">
+                <a href="../../index.htm">首页</a> → 
+                <a href="../../learning-path.html">学习路径</a> → 
+                循环结构
+            </nav>
+
+            <div class="tab-container">
+                <button class="tab active" onclick="openTab(event, 'while')">🔤 while循环</button>
+                <button class="tab" onclick="openTab(event, 'do-while')">🔤 do-while循环</button>
+                <button class="tab" onclick="openTab(event, 'for')">🔤 for循环</button>
+                <button class="tab" onclick="openTab(event, 'control')">🔤 循环控制</button>
+                <button class="tab" onclick="openTab(event, 'practice')">🧮 项目实践</button>
+            </div>
+
+            <!-- while循环 -->
+            <div id="while" class="content active">
+                <div class="topic-card">
+                    <h2>while循环</h2>
+                    <div class="concept-item">
+                        <h3>基本语法</h3>
+                        <p>while循环在条件为真时重复执行代码块：</p>
+                        <div class="code-block">
+                            <div class="code-title">语法</div>
+                            <pre><code class="language-cpp">while (条件表达式) {
+    // 当条件为真时重复执行的语句
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="concept-item">
+                        <h3>执行流程</h3>
+                        <div class="flowchart">
+                            <p>检查条件 → 条件为真 → 执行循环体 → 返回检查条件</p>
+                            <p>检查条件 → 条件为假 → 退出循环 → 执行循环后的语句</p>
+                        </div>
+                    </div>
+
+                    <div class="concept-item">
+                        <h3>示例代码</h3>
+                        <div class="code-block">
+                            <div class="code-title">C++</div>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int i = 1;
+    
+    while (i &lt;= 5) {
+        cout &lt;&lt; "第" &lt;&lt; i &lt;&lt; "次循环" &lt;&lt; endl;
+        i++;  // 更新循环变量，防止无限循环
+    }
+    
+    cout &lt;&lt; "循环结束" &lt;&lt; endl;
+    return 0;
+}</code></pre>
+                        </div>
+                        <p>输出结果：</p>
+                        <pre>第1次循环
+第2次循环
+第3次循环
+第4次循环
+第5次循环
+循环结束</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- do-while循环 -->
+            <div id="do-while" class="content">
+                <div class="topic-card">
+                    <h2>do-while循环</h2>
+                    <div class="concept-item">
+                        <h3>基本语法</h3>
+                        <p>do-while循环至少执行一次循环体，然后在条件为真时继续执行：</p>
+                        <div class="code-block">
+                            <div class="code-title">语法</div>
+                            <pre><code class="language-cpp">do {
+    // 至少执行一次的语句
+} while (条件表达式);</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="concept-item">
+                        <h3>执行流程</h3>
+                        <div class="flowchart">
+                            <p>执行循环体 → 检查条件 → 条件为真 → 返回执行循环体</p>
+                            <p>执行循环体 → 检查条件 → 条件为假 → 退出循环</p>
+                        </div>
+                    </div>
+
+                    <div class="concept-item">
+                        <h3>示例代码</h3>
+                        <div class="code-block">
+                            <div class="code-title">C++</div>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int number;
+    
+    do {
+        cout &lt;&lt; "请输入一个正数（输入0退出）: ";
+        cin &gt;&gt; number;
+        
+        if (number &gt; 0) {
+            cout &lt;&lt; "您输入的数是: " &lt;&lt; number &lt;&lt; endl;
+        } else if (number &lt; 0) {
+            cout &lt;&lt; "请输入正数！" &lt;&lt; endl;
+        }
+    } while (number != 0);
+    
+    cout &lt;&lt; "程序结束" &lt;&lt; endl;
+    return 0;
+}</code></pre>
+                        </div>
+                        <p>说明：无论用户第一次输入什么，循环体至少会执行一次。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- for循环 -->
+            <div id="for" class="content">
+                <div class="topic-card">
+                    <h2>for循环</h2>
+                    <div class="concept-item">
+                        <h3>基本语法</h3>
+                        <p>for循环通常用于已知循环次数的情况：</p>
+                        <div class="code-block">
+                            <div class="code-title">语法</div>
+                            <pre><code class="language-cpp">for (初始化表达式; 条件表达式; 更新表达式) {
+    // 循环体
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="concept-item">
+                        <h3>执行流程</h3>
+                        <div class="flowchart">
+                            <p>初始化 → 检查条件 → 条件为真 → 执行循环体 → 更新表达式 → 返回检查条件</p>
+                            <p>初始化 → 检查条件 → 条件为假 → 退出循环</p>
+                        </div>
+                    </div>
+
+                    <div class="concept-item">
+                        <h3>示例代码</h3>
+                        <div class="code-block">
+                            <div class="code-title">C++</div>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    // 计算1到10的和
+    int sum = 0;
+    
+    for (int i = 1; i &lt;= 10; i++) {
+        sum += i;
+        cout &lt;&lt; "当前数字: " &lt;&lt; i &lt;&lt; ", 累计和: " &lt;&lt; sum &lt;&lt; endl;
+    }
+    
+    cout &lt;&lt; "1到10的和是: " &lt;&lt; sum &lt;&lt; endl;
+    return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 循环控制 -->
+            <div id="control" class="content">
+                <div class="topic-card">
+                    <h2>循环控制语句</h2>
+                    <div class="concept-item">
+                        <h3>break语句</h3>
+                        <p>break语句用于立即跳出循环：</p>
+                        <div class="code-block">
+                            <div class="code-title">C++</div>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 1; i &lt;= 10; i++) {
+        if (i == 5) {
+            break;  // 当i等于5时跳出循环
+        }
+        cout &lt;&lt; i &lt;&lt; " ";
+    }
+    
+    cout &lt;&lt; "\n循环在5处结束" &lt;&lt; endl;
+    return 0;
+}</code></pre>
+                        </div>
+                        <p>输出结果：1 2 3 4</p>
+                    </div>
+
+                    <div class="concept-item">
+                        <h3>continue语句</h3>
+                        <p>continue语句用于跳过当前循环的剩余部分，直接进入下一次循环：</p>
+                        <div class="code-block">
+                            <div class="code-title">C++</div>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 1; i &lt;= 10; i++) {
+        if (i == 5) {
+            continue;  // 跳过i等于5的情况
+        }
+        cout &lt;&lt; i &lt;&lt; " ";
+    }
+    
+    cout &lt;&lt; "\n跳过了数字5" &lt;&lt; endl;
+    return 0;
+}</code></pre>
+                        </div>
+                        <p>输出结果：1 2 3 4 6 7 8 9 10</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 项目实践 -->
+            <div id="practice" class="content">
+                <div class="topic-card">
+                    <h2>🎯 项目实践</h2>
+                    <div class="example">
+                        <h3>项目：九九乘法表</h3>
+                        <p>使用嵌套循环打印九九乘法表：</p>
+                        <div class="code-block">
+                            <div class="code-title">C++</div>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+using namespace std;
+
+int main() {
+    for (int i = 1; i &lt;= 9; i++) {
+        for (int j = 1; j &lt;= i; j++) {
+            cout &lt;&lt; j &lt;&lt; "*" &lt;&lt; i &lt;&lt; "=" &lt;&lt; i * j &lt;&lt; "\t";
+        }
+        cout &lt;&lt; endl;
+    }
+    
+    return 0;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <h3>项目：猜数字游戏</h3>
+                        <p>编写一个猜数字游戏，用户有最多5次机会猜测1-100之间的随机数：</p>
+                        <div class="code-block">
+                            <div class="code-title">C++</div>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;ctime&gt;
+using namespace std;
+
+int main() {
+    srand(time(0));  // 初始化随机数种子
+    int secretNumber = rand() % 100 + 1;  // 生成1-100之间的随机数
+    int guess;
+    int attempts = 0;
+    const int maxAttempts = 5;
+    
+    cout &lt;&lt; "欢迎来到猜数字游戏！" &lt;&lt; endl;
+    cout &lt;&lt; "我想了一个1到100之间的数字，你有5次机会猜中它。" &lt;&lt; endl;
+    
+    do {
+        cout &lt;&lt; "请输入你的猜测（第" &lt;&lt; (attempts + 1) &lt;&lt; "次）: ";
+        cin &gt;&gt; guess;
+        attempts++;
+        
+        if (guess &gt; secretNumber) {
+            cout &lt;&lt; "太大了！" &lt;&lt; endl;
+        } else if (guess &lt; secretNumber) {
+            cout &lt;&lt; "太小了！" &lt;&lt; endl;
+        } else {
+            cout &lt;&lt; "恭喜你！猜中了！数字就是 " &lt;&lt; secretNumber &lt;&lt; endl;
+            cout &lt;&lt; "你用了 " &lt;&lt; attempts &lt;&lt; " 次机会。" &lt;&lt; endl;
+            break;
+        }
+        
+        if (attempts &gt;= maxAttempts && guess != secretNumber) {
+            cout &lt;&lt; "很遗憾，你没有猜中。正确答案是 " &lt;&lt; secretNumber &lt;&lt; endl;
+        }
+    } while (attempts &lt; maxAttempts && guess != secretNumber);
+    
+    return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <!-- 导航按钮将由topic-nav.js动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 C++课程 | 掌握循环结构，自动化重复任务</p>
+    </footer>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+
+        // 暗色模式切换
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (prefersDark) {
+            document.body.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '☀️ 切换亮色模式';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 切换暗色模式';
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ 切换亮色模式';
+            }
+        });
+        
+        // 添加随机移动效果到粒子
+        document.addEventListener('mousemove', function(e) {
+            const particles = document.querySelectorAll('.particle');
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            particles.forEach(particle => {
+                const rect = particle.getBoundingClientRect();
+                const particleX = rect.left + rect.width / 2;
+                const particleY = rect.top + rect.height / 2;
+                
+                const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+                const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+                const force = Math.min(500 / (distance * distance), 15);
+                
+                const translateX = Math.cos(angle) * force;
+                const translateY = Math.sin(angle) * force;
+                
+                particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+            });
+        });
+        
+        // 初始化页面导航
+        document.addEventListener('DOMContentLoaded', function() {
+            // 当前页面路径（相对于topics目录）
+            const currentPagePath = './loop/index.html';
+            initTopicNavigation(currentPagePath);
+        });
+    </script>
+    
+    <script src="../../scripts/topic-nav.js"></script>
+</body>
+</html>

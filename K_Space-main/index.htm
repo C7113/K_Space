@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>C++ 知识导航</title>
+  <link rel="stylesheet" href="./styles/base.css">
+  <link rel="stylesheet" href="./styles/animations.css">
+  <link rel="stylesheet" href="./styles/components.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        C++ 知识导航
+        <span class="badge">2025</span>
+      </h1>
+      <p>系统学习 C++ 编程语言 | <span class="path-arrow">基础</span> <span class="arrow">→</span> <span class="path-arrow">进阶</span> <span class="arrow">→</span> <span class="path-arrow">高级</span></p>
+    </div>
+  </header>
+
+  <!-- 按钮组放在header下方，间距更近 -->
+  <div class="button-container">
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+    <button class="toggle-btn" onclick="window.location.href='http://8.130.178.205/'">鲁班创客OJ</button>
+    <button class="toggle-btn" onclick="window.location.href='learning-path.html'">学习路径</button>
+    <button class="toggle-btn" onclick="window.location.href='exam-topics.html'">等级考试知识点</button>
+  </div>
+  <div class="container">
+
+    <!-- === 基础级别 === -->
+    <section class="level-section">
+      <h2 class="level-title">🥉 基础级别</h2>
+       <div class="topic-grid" id="beginnerGrid">
+        <div class="topic-card">
+          <h3>C++入门</h3>
+          <button class="toggle-btn" onclick="toggleDetails('l1')">展开详情</button>
+          <div class="details" id="l1">
+            <p><strong>内容：</strong>C++程序由头文件、命名空间、主函数和输出语句构成，通过#include引入库，using namespace std;使用标准命名空间，int main()作为程序入口，cout配合<<实现屏幕输出，endl用于换行。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l1/C++起始.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1000" target="_self">练习</a>
+          </div>
+        </div>
+
+        <div class="topic-card">
+          <h3>变量与数据类型</h3>
+          <button class="toggle-btn" onclick="toggleDetails('l2')">展开详情</button>
+          <div class="details" id="l2">
+            <p><strong>内容：</strong>讲解了C++中的变量概念、命名规则、基本数据类型（int、double等）、基本运算符以及使用cin进行输入的方法，并通过多个计算实例巩固了知识点。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l1/变量与数据类型.html" target="_self">知识点总结</a>
+            <!-- 确保基础级别按钮的链接格式如下（应该已经是这样了） -->
+            <a href="http://8.130.178.205/problem.php?id=1001" target="_self" rel="noopener noreferrer">练习</a>
+            </div>
+        </div>
+
+        <div class="topic-card">
+          <h3>浮点数</h3>
+          <button class="toggle-btn" onclick="toggleDetails('l3')">展开详情</button>
+          <div class="details" id="l3">
+            <p><strong>内容：</strong>浮点数是计算机中用于表示带小数部分的数值类型，常用double声明并可通过setprecision()控制小数位数。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l1/浮点型知识点总结.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1003" target="_self">练习</a>
+          </div>
+        </div>
+      <!-- 其余topic-card已隐藏，点击展开按钮显示 -->
+      <div class="topic-card hide">
+        <h3>算数运算符</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l4')">展开详情</button>
+        <div class="details" id="l4">
+          <p><strong>内容：</strong>算数运算符用于进行数学运算，包括加法、减法、乘法和除法等，常用的算数运算符有+、-、*、/。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/算数运算.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1003" target="_self">练习</a>
+        </div>
+      </div>
+
+      <div class="topic-card hide">
+        <h3>算数运算符进阶</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l5')">展开详情</button>
+        <div class="details" id="l5">
+          <p><strong>内容：</strong>算数运算符进阶包括取余运算符（%）、自增/自减运算符（++、--）、位运算符（&、|、^、~、<<、>>）等，用于处理更复杂的数学运算和位操作。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/算术运算符的秘密.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1022" target="_self">练习</a>
+        </div>
+      </div>
+
+      <div class="topic-card hide">
+        <h3>字符类型</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l6')">展开详情</button>
+        <div class="details" id="l6">
+          <p><strong>内容：</strong>字符类型用于表示单个字符，通常使用char类型。C++中的字符类型支持ASCII码和Unicode编码，能够处理多种语言的字符。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/字符类型.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1309" target="_self">练习</a>
+        </div>
+      </div>
+
+      <div class="topic-card hide">
+        <h3>格式化输出</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l7')">展开详情</button>
+        <div class="details" id="l7">
+          <p><strong>内容：</strong>格式化输出用于控制输出内容的显示格式，常用的有设置宽度、对齐方式、精度等。C++中可以使用iomanip库中的函数实现格式化输出。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/格式化输入输出.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1193" target="_self">练习</a>
+        </div>
+      </div>
+
+      <div class="topic-card hide">
+        <h3>分支结构</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l1-branch')">展开详情</button>
+        <div class="details" id="l1-branch">
+          <p><strong>内容：</strong>分支结构（选择结构）是程序实现"智能决策"的基础，通过if-else语句根据条件执行不同操作。包括单分支、双分支、多分支和嵌套if语句，配合关系运算符（<、<=、>、>=、==、!=）实现复杂的逻辑判断。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/分支结构.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1005" target="_self">练习</a>
+        </div>
+      </div>
+
+      
+
+      <div class="topic-card">
+        <h3>条件嵌套和三目运算</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l8')">展开详情</button>
+        <div class="details" id="l8">
+          <p><strong>内容：</strong>学习条件嵌套和三目运算符的用法，简化代码逻辑。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/条件嵌套和三目运算.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1023" target="_self">练习</a>
+        </div>
+      </div>
+
+      <div class="topic-card hide">
+        <h3>多重分支</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l1-multiple-branch')">展开详情</button>
+        <div class="details" id="l1-multiple-branch">
+          <p><strong>内容：</strong>掌握 if-else if-else 多重分支结构和 switch-case 语句，通过实际题目巩固知识，培养条件判断的逻辑思维能力。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/多重分支.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1221" target="_self">练习</a>
+        </div>
+      </div>
+
+      <div class="topic-card hide">
+        <h3>逻辑运算</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l1-logical-operations')">展开详情</button>
+        <div class="details" id="l1-logical-operations">
+          <p><strong>内容：</strong>掌握 C++ 中的三种基本逻辑运算符：逻辑与、逻辑或、逻辑非，理解真值表与短路求值机制，熟记逻辑运算符在 C++ 运算符优先级表中的位置。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/逻辑运算.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1007" target="_self">练习</a>
+        </div>
+      </div>
+
+      <div class="topic-card hide">
+        <h3>分支结构综合运用</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l1-branch-application')">展开详情</button>
+        <div class="details" id="l1-branch-application">
+          <p><strong>内容：</strong>深入理解和综合运用分支结构的各种形式，包括单分支、双分支、多重分支和嵌套分支，掌握逻辑运算符的使用和短路求值机制，学会优化复杂的条件判断逻辑。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/分支结构综合运用.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1225" target="_self">练习</a>
+        </div>
+      </div>
+
+      <div class="topic-card hide">
+        <h3>while循环</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l1-while-loop')">展开详情</button>
+        <div class="details" id="l1-while-loop">
+          <p><strong>内容：</strong>while循环是C++中的一种循环结构，用于在满足特定条件时重复执行代码块。掌握while循环的语法结构、循环条件的设置以及避免无限循环的方法。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/while循环.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1063" target="_self">练习</a>
+        </div>
+      </div>
+
+      <div class="topic-card hide">
+        <h3>计数循环</h3>
+        <button class="toggle-btn" onclick="toggleDetails('l1-counting-loop')">展开详情</button>
+        <div class="details" id="l1-counting-loop">
+          <p><strong>内容：</strong>计数循环是循环结构的一种特殊应用，通常用于执行固定次数的操作。掌握如何使用循环变量进行计数，实现for循环和其他计数模式。</p>
+        </div>
+        <div class="action-links">
+          <a href="./l1/计数循环.html" target="_self">知识点总结</a>
+          <a href="http://8.130.178.205/problem.php?id=1026" target="_self">练习</a>
+        </div>
+      </div>
+
+      <button class="expand-btn" onclick="toggleGridExpand(this)">展开更多</button>
+      </div>
+    </section>
+
+    <!-- === 进阶级别 === -->
+    <section class="level-section">
+      <h2 class="level-title">🥈 进阶级别</h2>
+      <div class="topic-grid" id="intermediateGrid">
+        <div class="topic-card">
+          <h3>自定义函数</h3>
+          <button class="toggle-btn" onclick="toggleDetails('p1')">展开详情</button>
+          <div class="details" id="p1">
+            <p><strong>内容：</strong>自定义函数是封装特定功能的代码块，通过定义返回值类型、函数名和参数实现代码复用与模块化编程。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l2/自定义函数.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1240" target="_self">练习</a>
+          </div>
+        </div>
+        <div class="topic-card">
+          <h3>函数返回值</h3>
+          <button class="toggle-btn" onclick="toggleDetails('p2')">展开详情</button>
+          <div class="details" id="p2">
+            <p><strong>内容：</strong>函数返回值是函数执行完毕后返回给调用者的结果，通过return语句指定返回值类型和值。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l2/函数返回值.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1240" target="_self">练习</a>
+          </div>
+        </div>
+        <div class="topic-card">
+          <h3>数组参数</h3>
+          <button class="toggle-btn" onclick="toggleDetails('p3')">展开详情</button>
+          <div class="details" id="p3">
+            <p><strong>内容：</strong>数组作为函数参数传递时实际上传递的是数组首元素的地址（即指针），函数内对数组的修改会直接影响原数组。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l2/数组参数.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1241" target="_self">练习</a>
+          </div>
+        </div>
+        <div class="topic-card">
+          <h3>排序魔法</h3>
+          <button class="toggle-btn" onclick="toggleDetails('p4')">展开详情</button>
+          <div class="details" id="p4">
+            <p><strong>内容：</strong>掌握冒泡排序和选择排序的手动实现，理解排序算法的核心逻辑，并学会使用STL的sort函数进行高效排序。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l2/排序魔法.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1242" target="_self">练习</a>
+          </div>
+        </div>
+        <div class="topic-card">
+          <h3>字典序</h3>
+          <button class="toggle-btn" onclick="toggleDetails('p5')">展开详情</button>
+          <div class="details" id="p5">
+            <p><strong>内容：</strong>掌握字符串的字典序比较规则和实现方法，理解字典序在排序和搜索中的应用。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l2/字典序.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1283" target="_self">练习</a>
+          </div>
+        </div>
+        <div class="topic-card">
+          <h3>结构体</h3>
+          <button class="toggle-btn" onclick="toggleDetails('p6')">展开详情</button>
+          <div class="details" id="p6">
+            <p><strong>内容：</strong>理解结构体的概念及其在组织复合数据中的作用，掌握结构体的声明、定义和初始化方法，学会创建结构体变量并访问其成员。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l2/结构体.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1066" target="_self">练习</a>
+          </div>
+        </div>
+
+        <div class="topic-card hide">
+          <h3>对象比较</h3>
+          <button class="toggle-btn" onclick="toggleDetails('p7')">展开详情</button>
+          <div class="details" id="p7">
+            <p><strong>内容：</strong>学习如何比较结构体和对象，掌握重载运算符实现对象比较的方法，理解const引用在比较函数中的应用，以及RAII资源管理原则。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l2/对象比较.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1067" target="_self">练习</a>
+          </div>
+        </div>
+        <div class="topic-card hide">
+          <h3>共用体</h3>
+          <button class="toggle-btn" onclick="toggleDetails('p8')">展开详情</button>
+          <div class="details" id="p8">
+            <p><strong>内容：</strong>共用体（Union）是一种特殊的数据类型，允许在相同的内存位置存储不同的数据类型，所有成员共享同一块内存空间，常用于内存优化和类型转换。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l2/共用体.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1068" target="_self">练习</a>
+          </div>
+        </div>
+        <div class="topic-card hide">
+          <h3>数据节点</h3>
+          <button class="toggle-btn" onclick="toggleDetails('p9')">展开详情</button>
+          <div class="details" id="p9">
+            <p><strong>内容：</strong>数据节点是数据结构中的基本组成单元，用于存储数据和指向其他节点的链接，是构建链表、树、图等复杂数据结构的基础。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l2/数据节点.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1069" target="_self">练习</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- === 高级别 === -->
+    <section class="level-section">
+      <h2 class="level-title">🥇 高级级别</h2>
+      <div class="topic-grid" id="advancedGrid">
+        <div class="topic-card">
+          <h3>模拟算法</h3>
+          <button class="toggle-btn" onclick="toggleDetails('templates')">展开详情</button>
+          <div class="details" id="templates">
+            <p><strong>内容：</strong>模拟算法是通过忠实复现题目规则、按步骤推演过程来解决问题的编程方法。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l3/模拟算法.html" target="_self">知识点总结</a>
+            <a href="exercises-templates.html" target="_self">练习</a>
+          </div>
+        </div>
+        <div class="topic-card">
+          <h3>哈希算法原理</h3>
+          <button class="toggle-btn" onclick="toggleDetails('hashing')">展开详情</button>
+          <div class="details" id="hashing">
+            <p><strong>内容：</strong>哈希算法是一种将输入数据映射为固定长度输出的算法，常用在数据存储和检索中。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l3/哈希算法原理.html" target="_self">知识点总结</a>
+            <a href="exercises-hashing.html" target="_self">练习</a>
+          </div>
+        </div>
+        <div class="topic-card">
+          <h3>分治算法</h3>
+          <button class="toggle-btn" onclick="toggleDetails('divide-conquer')">展开详情</button>
+          <div class="details" id="divide-conquer">
+            <p><strong>内容：</strong>分治算法是将一个规模较大的问题分解为若干个规模较小的相同问题，递归解决后合并结果的算法思想。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l3/分治算法.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1057" target="_self">练习</a>
+          </div>
+        </div>
+        <div class="topic-card">
+          <h3>分治算法进阶</h3>
+          <button class="toggle-btn" onclick="toggleDetails('divide-conquer-advanced')">展开详情</button>
+          <div class="details" id="divide-conquer-advanced">
+            <p><strong>内容：</strong>深入理解分治算法的核心思想，掌握分治的三步法则：分解 → 解决 → 合并，通过归并排序和快速排序两大经典案例掌握实现细节。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l3/分治算法进阶.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1299" target="_self">练习</a>
+          </div>
+        </div>
+
+        <div class="topic-card hide">
+          <h3>动态规划一</h3>
+          <button class="toggle-btn" onclick="toggleDetails('l3-dp1')">展开详情</button>
+          <div class="details" id="l3-dp1">
+            <p><strong>内容：</strong>学习动态规划的核心思想，掌握重叠子问题的识别和处理方法，理解记忆化搜索和动态规划表格法的区别与联系，能够应用动态规划解决简单的计数问题。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l3/动态规划一.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1129" target="_self">练习</a>
+          </div>
+        </div>
+        <div class="topic-card hide">
+          <h3>动态规划二</h3>
+          <button class="toggle-btn" onclick="toggleDetails('l3-dp2')">展开详情</button>
+          <div class="details" id="l3-dp2">
+            <p><strong>内容：</strong>深入学习动态规划算法，掌握更复杂的动态规划问题求解方法，包括状态转移方程的优化和空间复杂度的优化技巧。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l3/动态规划二.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1129" target="_self">练习</a>
+          </div>
+        </div>
+        <div class="topic-card hide">
+          <h3>动态规划三</h3>
+          <button class="toggle-btn" onclick="toggleDetails('l3-dp3')">展开详情</button>
+          <div class="details" id="l3-dp3">
+            <p><strong>内容：</strong>高级动态规划技术，包括区间动态规划、树形动态规划等高级应用，解决复杂算法问题。</p>
+          </div>
+          <div class="action-links">
+            <a href="./l3/动态规划三.html" target="_self">知识点总结</a>
+            <a href="http://8.130.178.205/problem.php?id=1130" target="_self">练习</a>
+          </div>
+        </div>
+
+      </div>
+    </section>  
+
+    <!-- === 竞赛题目（手动维护） === -->
+    <!-- 将下面的 .topic-card 复制到 #contestGrid 内来手动添加竞赛链接 -->
+    <section class="level-section" id="contest-area">
+      <h2 class="level-title">🏆 竞赛题目</h2>
+      <div class="topic-grid" id="contestGrid">
+        <div class="topic-card">
+          <h3>鲁班杯竞赛</h3>
+          <p class="details show"><strong>说明：</strong>竞赛题目与知识点汇总（示例）</p>
+          <div class="action-links">
+            <a href="./竞赛/基础知识练习.html" target="_self">基础知识练习</a>
+            <a href="./竞赛/竞赛题目知识点总结.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+    <p>提示：点击“展开详情”查看内容摘要，点击链接可跳转知识点总结!</p>
+  </footer>
+
+  <script>
+    // 展开/收起topic-grid中被隐藏的topic-card
+    // 统一为所有topic-grid设置展开/收起功能，且页面加载时自动处理
+    function toggleGridExpand(btn) {
+      const grid = btn.parentElement;
+      const cards = grid.querySelectorAll('.topic-card');
+      const isExpand = btn.textContent.includes('收起');
+      if(isExpand) {
+        cards.forEach(function(card, idx) {
+          if(idx > 3) card.classList.add('hide');
+          else card.classList.remove('hide');
+        });
+        btn.textContent = '展开更多';
+      } else {
+        cards.forEach(function(card) { card.classList.remove('hide'); });
+        btn.textContent = '收起';
+      }
+    }
+
+    // 页面加载时为所有topic-grid自动隐藏多余卡片并添加按钮
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.topic-grid').forEach(function(grid) {
+        const cards = grid.querySelectorAll('.topic-card');
+        let hasHidden = false;
+        cards.forEach(function(card, idx) {
+          if(idx > 3) {
+            card.classList.add('hide');
+            hasHidden = true;
+          } else {
+            card.classList.remove('hide');
+          }
+        });
+        const existBtn = grid.querySelector('.expand-btn');
+        if (cards.length > 4) {
+          if (!existBtn) {
+            const btn = document.createElement('button');
+            btn.className = 'expand-btn';
+            btn.textContent = '展开更多';
+            btn.onclick = function() { toggleGridExpand(this); };
+            grid.appendChild(btn);
+          }
+        } else if (existBtn) {
+          existBtn.remove(); // 如果卡片数减少到4个及以下，移除按钮
+        }
+      });
+    });
+    // ✅ 暗色模式切换
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+
+    // ✅ 展开/收起详情
+    function toggleDetails(id) {
+      const el = document.getElementById(id);
+      const btn = event.target;
+      const isShown = el.classList.toggle('show');
+      if (isShown) {
+        btn.textContent = '收起详情';
+      } else {
+        btn.textContent = '展开详情';
+      }
+    }
+    
+    // 添加随机移动效果到粒子
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+        
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+        
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+        
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

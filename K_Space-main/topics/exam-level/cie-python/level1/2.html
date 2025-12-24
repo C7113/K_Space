@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python一级 - 第2课：程序基本结构 - C++ 知识导航</title>
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/topic.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="stylesheet" href="/styles/animations.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        Python一级 第2课：程序基本结构
+        <span class="badge">基础入门</span>
+      </h1>
+      <p>理解程序基本逻辑模型 | 掌握输入输出函数 | 养成良好代码习惯</p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <a href="../index.html" class="toggle-btn">↩ 返回 CIE Python 考试首页</a>
+    <a href="../../../../exam-topics.html" class="toggle-btn">↩ 返回 等级考试知识点</a>
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+  </div>
+  
+  <div class="container">
+    <section class="topic-section">
+      <h2>知识点概览</h2>
+      <div class="knowledge-points">
+        <ul>
+          <li>理解程序的基本逻辑模型：输入 → 处理 → 输出</li>
+          <li>输入：input() 函数</li>
+          <li>输出：print() 函数</li>
+          <li>处理：变量赋值、简单计算</li>
+          <li>养成良好代码习惯：合理使用注释、正确使用缩进、字符串引号规范</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2>知识点详解</h2>
+      
+      <h3>1. 程序基本逻辑模型</h3>
+      <p>任何程序都可以抽象为三个基本步骤：输入 → 处理 → 输出</p>
+      
+      <div class="concept-card">
+        <h4>输入（Input）</h4>
+        <p>获取外部数据，通常来自用户的键盘输入或其他数据源。</p>
+      </div>
+      
+      <div class="concept-card">
+        <h4>处理（Process）</h4>
+        <p>对输入的数据进行计算、变换或逻辑判断等操作。</p>
+      </div>
+      
+      <div class="concept-card">
+        <h4>输出（Output）</h4>
+        <p>将处理结果展示给用户，通常是显示在屏幕上或保存到文件中。</p>
+      </div>
+      
+      <div class="example-code">
+# 程序基本结构示例
+# 输入：获取用户姓名和年龄
+name = input("请输入您的姓名：")
+age = input("请输入您的年龄：")
+
+# 处理：计算出生年份
+current_year = 2025
+birth_year = current_year - int(age)
+
+# 输出：显示结果
+print("您好，", name)
+print("您出生于", birth_year, "年")
+      </div>
+      
+      <h3>2. input() 函数详解</h3>
+      <p>input() 函数用于从用户那里获取输入数据。</p>
+      
+      <div class="concept-card">
+        <h4>基本语法</h4>
+        <div class="example-code">
+variable = input([prompt])
+        </div>
+        <p>参数说明：</p>
+        <ul>
+          <li>prompt（可选）：提示信息，显示给用户看</li>
+          <li>返回值：用户输入的内容（始终是字符串类型）</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h4>使用示例</h4>
+        <div class="example-code">
+# 不带提示信息的输入
+data = input()
+print("您输入的是：", data)
+
+# 带提示信息的输入
+name = input("请输入您的姓名：")
+print("您好，", name)
+        </div>
+      </div>
+      
+      <div class="concept-card warning">
+        <h4>重要提醒</h4>
+        <p>input() 函数返回的始终是字符串类型，即使输入的是数字也需要转换：</p>
+        <div class="example-code">
+# 错误示例
+age = input("请输入您的年龄：")  # 用户输入 18
+result = age + 5  # 结果是 "185" 而不是 23
+
+# 正确示例
+age = input("请输入您的年龄：")  # 用户输入 18
+age = int(age)  # 转换为整数
+result = age + 5  # 结果是 23
+        </div>
+      </div>
+      
+      <h3>3. print() 函数详解</h3>
+      <p>print() 函数用于向屏幕输出信息。</p>
+      
+      <div class="concept-card">
+        <h4>基本语法</h4>
+        <div class="example-code">
+<pre>print(value, ..., sep=' ', end='\n', file=sys.stdout, flush=False)</pre>
+        </div>
+        <p>常用参数：</p>
+        <ul>
+          <li>value,...：要输出的一个或多个值</li>
+          <li>sep：分隔符，默认为空格</li>
+          <li>end：结束符，默认为换行符</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h4>使用示例</h4>
+        <div class="example-code">
+<pre># 输出单个值
+print("Hello World!")
+
+# 输出多个值（默认用空格分隔）
+print("姓名：", "张三")
+
+# 自定义分隔符
+print("苹果", "香蕉", "橙子", sep=", ")
+
+# 自定义结束符（不换行）
+print("第一部分", end="")
+print("第二部分")
+# 输出：第一部分第二部分</pre>
+        </div>
+      </div>
+      
+      <h3>4. 良好代码习惯</h3>
+      
+      <div class="concept-card">
+        <h4>合理使用注释</h4>
+        <p>使用 # 符号添加单行注释，解释代码的作用：</p>
+        <div class="example-code">
+<pre># 计算矩形面积
+length = 10  # 长度
+width = 5    # 宽度
+area = length * width  # 面积 = 长 × 宽
+print("矩形面积为：", area)</pre>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>正确使用缩进</h4>
+        <p>Python 使用缩进来表示代码块，推荐使用 4 个空格：</p>
+        <div class="example-code">
+<pre># 正确的缩进
+if True:
+    print("这是正确的缩进")
+    print("同一代码块中的语句")
+
+# 错误的缩进（混用空格和制表符）
+if True:
+    print("使用空格")
+	print("使用制表符")  # 这里会出错</pre>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>字符串引号规范</h4>
+        <p>字符串必须用英文引号包围，可以使用单引号或双引号：</p>
+        <div class="example-code">
+<pre># 合法的字符串表示
+message1 = "Hello World"
+message2 = 'Hello World'
+message3 = "他说：'你好'"
+message4 = '她说："再见"'
+
+# 非法的字符串表示（中文引号）
+message5 = "你好"  # 错误：使用了中文引号</pre>
+        </div>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>示例演示</h2>
+      
+      <h3>示例1：个人信息收集程序</h3>
+      <div class="example-code">
+<pre># personal_info.py
+# 收集并显示用户的个人信息
+
+# 输入阶段
+print("=== 个人信息收集 ===")
+name = input("请输入您的姓名：")
+age = input("请输入您的年龄：")
+city = input("请输入您所在的城市：")
+
+# 处理和输出阶段
+print("\n=== 个人信息展示 ===")
+print("姓名：", name)
+print("年龄：", age)
+print("城市：", city)
+print("欢迎加入我们的社区！")</pre>
+      </div>
+      
+      <p>运行结果：</p>
+      <div class="example-code">
+<pre>=== 个人信息收集 ===
+请输入您的姓名：李雷
+请输入您的年龄：15
+请输入您所在的城市：北京
+
+=== 个人信息展示 ===
+姓名： 李雷
+年龄： 15
+城市： 北京
+欢迎加入我们的社区！</pre>
+      </div>
+      
+      <h3>示例2：简单计算器程序</h3>
+      <div class="example-code">
+<pre># calculator.py
+# 简单的加法计算器
+
+# 输入阶段
+print("=== 简单加法计算器 ===")
+num1 = input("请输入第一个数字：")
+num2 = input("请输入第二个数字：")
+
+# 处理阶段
+# 注意：需要将字符串转换为数字
+result = int(num1) + int(num2)
+
+# 输出阶段
+print("计算结果：", num1, "+", num2, "=", result)</pre>
+      </div>
+      
+      <p>运行结果：</p>
+      <div class="example-code">
+<pre>=== 简单加法计算器 ===
+请输入第一个数字：25
+请输入第二个数字：17
+计算结果： 25 + 17 = 42</pre>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>课堂练习</h2>
+      
+      <div class="exercise-card">
+        <h3>练习1：制作问候程序</h3>
+        <p>编写一个程序，要求用户输入姓名和爱好，然后输出个性化的问候语。</p>
+        <p>示例输出格式：</p>
+        <div class="example-code">
+<pre>请输入您的姓名：小明
+请输入您的爱好：编程
+
+您好，小明！
+了解到您喜欢编程，这是一个很有趣的爱好！
+希望您在学习过程中收获满满！</pre>
+        </div>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习2：矩形信息计算</h3>
+        <p>编写一个程序，让用户输入矩形的长度和宽度，然后计算并输出矩形的周长和面积。</p>
+        <p>提示：</p>
+        <ul>
+          <li>周长 = 2 × (长度 + 宽度)</li>
+          <li>面积 = 长度 × 宽度</li>
+        </ul>
+        <p>示例输出格式：</p>
+        <div class="example-code">
+<pre>请输入矩形的长度：10
+请输入矩形的宽度：5
+
+矩形信息：
+长度：10
+宽度：5
+周长：30
+面积：50</pre>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+  <div class="navigation-buttons">
+    <a href="1.html" class="nav-button">上一课：开发环境与工具</a>
+    <a href="3.html" class="nav-button next">下一课：变量与数据类型 ➔</a>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+  </footer>
+
+  <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+
+    // 粒子动画效果
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

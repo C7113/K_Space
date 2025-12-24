@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 对象比较</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #d63384;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #d63384;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #fdf7f8;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #d63384;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #d63384;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #fff5f7;
+        }
+        .code {
+            background: #2d3748;
+            color: #ffa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #fce4ec;
+            padding: 15px;
+            border-left: 5px solid #e91e63;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #ad1457;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .tip {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .caution {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .principle {
+            background: #f1f8e9;
+            border-left: 5px solid #7cb342;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ C++ 对象比较</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：张老师 | 爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🧭 从结构体到对象</button>
+            <button class="tab" onclick="openTab(event, 'constructor')">🏗️ 构造函数</button>
+            <button class="tab" onclick="openTab(event, 'destructor')">⚰️ 析构函数</button>
+            <button class="tab" onclick="openTab(event, 'overload')">🔁 函数重载</button>
+            <button class="tab" onclick="openTab(event, 'compare')">⚖️ 对象比较</button>
+            <button class="tab" onclick="openTab(event, 'project')">🤖 机器人项目实战</button>
+            <button class="tab" onclick="openTab(event, 'best')">✅ 最佳实践与补漏</button>
+        </div>
+
+        <!-- 引入：结构体 → 对象 -->
+        <div id="intro" class="content active">
+            <h2>🧭 从结构体到对象</h2>
+            <div class="concept-item">
+                <h3>结构体 = 数据容器 + 行为</h3>
+                <p>传统 C 风格结构体仅包含数据。C++ 允许在 struct/class 中定义<strong>成员函数</strong>，使其具备“行为”。</p>
+                <div class="code">
+struct Dog {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;string name;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int age;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 行为<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void bark() { cout << "汪！"; }<br>
+};
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>对象 = 结构体的具象化</h3>
+                <p>就像“机器人模型 A”和“模型 B”是同一设计图的两个实例，<code>Dog dog1("小黑", 2)</code> 和 <code>Dog dog2("小白", 3)</code> 是 <code>Dog</code> 类型的两个<strong>对象</strong>。</p>
+                <p>✅ 核心思想：<strong>封装</strong>（数据 + 操作绑定在一起）</p>
+            </div>
+        </div>
+
+        <!-- 构造函数 -->
+        <div id="constructor" class="content">
+            <h2>🏗️ 构造函数（Constructor）</h2>
+            <div class="concept-item">
+                <h3>作用：对象创建时自动初始化</h3>
+                <div class="code">
+struct Dog {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;string name;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int age;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 构造函数：名称与结构体相同<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Dog(string n, int a) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name = n;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;age = a;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout << "创建小狗：" << name << endl;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+};<br><br>
+Dog dog1("小黑", 2); // 自动调用构造函数
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>默认参数 & 成员初始化列表（补漏！）</h3>
+                <p>更高效、更安全的初始化方式：</p>
+                <div class="code">
+// 推荐：使用成员初始化列表
+Dog(string n, int a = 0) : name(n), age(a) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "创建小狗：" << name << endl;<br>
+}
+                </div>
+                <div class="tip">
+                    ✅ 初始化列表在对象构造前完成赋值，效率高于构造函数体内赋值（尤其对 const 或引用成员）。
+                </div>
+            </div>
+        </div>
+
+        <!-- 析构函数 -->
+        <div id="destructor" class="content">
+            <h2>⚰️ 析构函数（Destructor）</h2>
+            <div class="concept-item">
+                <h3>作用：对象销毁时自动清理资源</h3>
+                <div class="code">
+struct Dog {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;string name;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Dog(string n) : name(n) {}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 析构函数：~ + 结构体名<br>
+&nbsp;&nbsp;&nbsp;&nbsp;~Dog() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout << name << " 去汪星了！" << endl;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+};<br><br>
+{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Dog d("小黑");<br>
+} // 离开作用域，自动调用 ~Dog()
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>何时需要析构函数？（补漏！）</h3>
+                <ul>
+                    <li>动态分配内存（new/delete）</li>
+                    <li>打开文件、网络连接等系统资源</li>
+                    <li>打印日志或调试信息（如本例）</li>
+                </ul>
+                <div class="principle">
+                    💡 <strong>RAII 原则</strong>（Resource Acquisition Is Initialization）：资源的生命周期由对象管理。
+                </div>
+            </div>
+        </div>
+
+        <!-- 函数重载 -->
+        <div id="overload" class="content">
+            <h2>🔁 函数重载（Overloading）</h2>
+            <div class="concept-item">
+                <h3>同一函数名，不同参数</h3>
+                <p>编译器根据参数类型/数量自动选择匹配的函数。</p>
+                <div class="code">
+struct RemoteController {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int volume = 50;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 无参版本<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void volumeUp() { volume++; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 有参版本<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void volumeUp(int step) { volume += step; }<br>
+};<br><br>
+RemoteController rc;<br>
+rc.volumeUp();      // +1<br>
+rc.volumeUp(5);     // +5
+                </div>
+            </div>
+            <div class="caution">
+                ❌ 注意：仅返回值不同 <strong>不能</strong>构成重载！
+            </div>
+        </div>
+
+        <!-- 对象比较 -->
+        <div id="compare" class="content">
+            <h2>⚖️ 对象比较</h2>
+            <div class="concept-item">
+                <h3>按属性比较（PPT 原始方法）</h3>
+                <div class="code">
+// 添加 color 属性
+struct Dog {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;string name, color;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int age;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Dog(string n, string c, int a) : name(n), color(c), age(a) {}<br>
+};<br><br>
+// 比较函数（传值 → 效率低！）
+bool isSame(Dog d1, Dog d2) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return (d1.color == d2.color) && (d1.age == d2.age);<br>
+}
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>优化：使用 const 引用（补漏！）</h3>
+                <p>避免不必要的对象拷贝，提升性能：</p>
+                <div class="code">
+// 推荐写法
+bool isSame(const Dog& d1, const Dog& d2) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return d1.color == d2.color && d1.age == d2.age;<br>
+}
+                </div>
+                <div class="tip">
+                    ✅ 所有只读操作的对象参数，都应声明为 <code>const T&</code>。
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>扩展：重载 == 运算符（最佳实践）</h3>
+                <div class="code">
+// 全局函数（推荐）
+bool operator==(const Dog& lhs, const Dog& rhs) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return lhs.color == rhs.color && lhs.age == rhs.age;<br>
+}<br><br>
+// 使用
+if (dog1 == dog2) { ... }
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目实战 -->
+        <div id="project" class="content">
+            <h2>🤖 机器人项目实战</h2>
+            <div class="concept-item">
+                <h3>需求回顾</h3>
+                <ul>
+                    <li>属性：电量（battery，默认 100%）</li>
+                    <li>行为：移动（重载：move(步数) 和 move(方向)）</li>
+                    <li>销毁时提示“电量耗尽”</li>
+                    <li>支持比较两个机器人电量是否相同</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>完整实现（含优化）</h3>
+                <div class="code">
+struct Robot {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int battery;<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 构造函数（带默认值 + 初始化列表）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Robot(int b = 100) : battery(b) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout << "机器人启动，电量：" << battery << "%" << endl;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 析构函数<br>
+&nbsp;&nbsp;&nbsp;&nbsp;~Robot() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout << "电量耗尽！" << endl;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 重载移动<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void move(int steps) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;battery -= steps;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void move(string dir) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;battery -= 10;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 比较电量（优化：const 成员函数）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;bool hasSameBattery(const Robot& other) const {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return battery == other.battery;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+};
+                </div>
+                <div class="tip">
+                    ✅ 成员函数末尾加 <code>const</code> 表示“不修改对象状态”，允许被 const 对象调用。
+                </div>
+            </div>
+        </div>
+
+        <!-- 最佳实践 -->
+        <div id="best" class="content">
+            <h2>✅ 最佳实践与知识补漏</h2>
+            <div class="concept-item">
+                <h3>1. 构造函数不是必须的</h3>
+                <p>若未定义，编译器会生成<strong>默认构造函数</strong>（无参、不做任何事）。</p>
+                <p>但一旦定义了任何构造函数，默认构造函数就不再自动生成。</p>
+            </div>
+            <div class="concept-item">
+                <h3>2. 析构函数通常也不用手写</h3>
+                <p>若类只包含普通成员（如 int, string），编译器生成的析构函数足够。</p>
+                <p>只有涉及<strong>手动资源管理</strong>（如 new、文件句柄）时才需自定义。</p>
+            </div>
+            <div class="concept-item">
+                <h3>3. 比较函数设计原则</h3>
+                <ul>
+                    <li>优先考虑重载 <code>operator==</code>（符合直觉）</li>
+                    <li>参数使用 <code>const T&</code></li>
+                    <li>保持对称性、传递性</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>4. RAII 是 C++ 的核心思想</h3>
+                <p>“用对象管理资源” —— 构造时获取，析构时释放。这是避免内存泄漏的关键！</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++ 对象比较课程 | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

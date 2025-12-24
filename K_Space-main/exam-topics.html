@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>等级考试知识点 - C++ 知识导航</title>
+  <link rel="stylesheet" href="./styles/base.css">
+  <link rel="stylesheet" href="./styles/animations.css">
+  <link rel="stylesheet" href="./styles/components.css">
+  <style>
+    /* 等级考试页面专用样式 */
+    .exam-topic-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      min-height: 180px;
+      margin: 0 auto;
+      text-align: center;
+      align-self: center;
+      justify-self: center;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .exam-topic-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .exam-topic-card:hover {
+      border-color: var(--accent-light);
+      transform: translateY(-6px);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .exam-topic-card:hover::before {
+      opacity: 1;
+    }
+
+    .exam-topic-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, transparent 50%, var(--accent) 51%);
+      opacity: 0.04;
+      border-radius: 0 0 20px 0;
+      transition: opacity var(--transition);
+    }
+
+    .exam-topic-card:hover::after {
+      opacity: 0.08;
+    }
+
+    .exam-topic-card h3 {
+      font-size: 1.25rem;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .exam-topic-card h3::before {
+      content: '📚';
+      font-size: 1.25rem;
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+    .exam-details {
+      background: linear-gradient(to right, var(--section-bg), transparent);
+      padding: 0.9rem;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 0.9rem auto;
+      text-align: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    .exam-action-links {
+      margin-top: 0.8rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    .exam-action-links a {
+      display: inline-block;
+      margin: 0;
+      padding: 0.45rem 0.9rem;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      z-index: 2;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .exam-action-links a:hover {
+      background: #0b5ed7;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.35);
+    }
+
+    /* 卡片链接样式 */
+    .card-link {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .exam-topic-card h3,
+    .exam-topic-card .exam-details,
+    .exam-topic-card .exam-action-links {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* 展开按钮样式 */
+    .topic-grid .expand-btn {
+      grid-column: 1 / -1;
+      justify-self: center;
+      margin: 1rem auto;
+      padding: 0.5rem 1.2rem;
+      background: #6c757d;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: none;
+      transition: all 0.3s ease;
+      align-self: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 44px;
+      width: fit-content;
+    }
+
+    .topic-grid .expand-btn:hover {
+      background: #5a6268;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .topic-grid.has-more-than-four .expand-btn {
+      display: block;
+    }
+
+    .topic-grid.collapsible .exam-topic-card {
+      display: none;
+    }
+
+    .topic-grid.collapsible .exam-topic-card:nth-child(-n+4) {
+      display: flex;
+    }
+
+    .topic-grid.expanded .exam-topic-card {
+      display: flex;
+    }
+
+    .topic-grid.expanded .expand-btn::after {
+      content: ' 收起';
+    }
+  </style>
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">🏆</span>
+        等级考试知识点
+        <span class="badge">导航</span>
+      </h1>
+      <p>各类编程等级考试知识点整理 | <a href="index.htm" class="back-link">返回首页</a></p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+  </div>
+  
+  <div class="container">
+    <!-- === CIE等级考试 === -->
+    <section class="level-section">
+      <h2 class="level-title">📚 CIE等级考试</h2>
+      
+      <!-- CIE 图形化编程 -->
+      <h3 class="topic-subtitle">🧩 图形化编程</h3>
+      <div class="topic-grid collapsible has-more-than-four" id="cie-scratch-grid">
+        <div class="exam-topic-card">
+          <a href="cie/scratch/level1.html" class="card-link"></a>
+          <h3>1级</h3>
+          <p class="exam-details">CIE 图形化编程等级考试第1级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/scratch/level1.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/scratch/level2.html" class="card-link"></a>
+          <h3>2级</h3>
+          <p class="exam-details">CIE 图形化编程等级考试第2级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/scratch/level2.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/scratch/level3.html" class="card-link"></a>
+          <h3>3级</h3>
+          <p class="exam-details">CIE 图形化编程等级考试第3级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/scratch/level3.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/scratch/level4.html" class="card-link"></a>
+          <h3>4级</h3>
+          <p class="exam-details">CIE 图形化编程等级考试第4级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/scratch/level4.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/scratch/level5.html" class="card-link"></a>
+          <h3>5级</h3>
+          <p class="exam-details">CIE 图形化编程等级考试第5级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/scratch/level5.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/scratch/level6.html" class="card-link"></a>
+          <h3>6级</h3>
+          <p class="exam-details">CIE 图形化编程等级考试第6级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/scratch/level6.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        <button class="expand-btn" onclick="toggleGridExpand(this)">展开全部</button>
+      </div>
+      
+      <!-- CIE Python编程 -->
+      <h3 class="topic-subtitle">🐍 Python编程</h3>
+      <div class="topic-grid collapsible has-more-than-four" id="cie-python-grid">
+        <div class="exam-topic-card">
+          <a href="./topics/exam-level/cie-python/level1/1.html" class="card-link"></a>
+          <h3>1级</h3>
+          <p class="exam-details">CIE Python编程等级考试第1级知识点</p>
+          <div class="exam-action-links">
+            <a href="./topics/exam-level/cie-python/level1/1.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="./topics/exam-level/cie-python/level2/1.html" class="card-link"></a>
+          <h3>2级</h3>
+          <p class="exam-details">CIE Python编程等级考试第2级知识点</p>
+          <div class="exam-action-links">
+            <a href="./topics/exam-level/cie-python/level2/1.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/python/level3.html" class="card-link"></a>
+          <h3>3级</h3>
+          <p class="exam-details">CIE Python编程等级考试第3级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/python/level3.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/python/level4.html" class="card-link"></a>
+          <h3>4级</h3>
+          <p class="exam-details">CIE Python编程等级考试第4级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/python/level4.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/python/level5.html" class="card-link"></a>
+          <h3>5级</h3>
+          <p class="exam-details">CIE Python编程等级考试第5级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/python/level5.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/python/level6.html" class="card-link"></a>
+          <h3>6级</h3>
+          <p class="exam-details">CIE Python编程等级考试第6级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/python/level6.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        <button class="expand-btn" onclick="toggleGridExpand(this)">展开全部</button>
+      </div>
+      
+      <!-- CIE C++编程 -->
+      <h3 class="topic-subtitle">💻 C++编程</h3>
+      <div class="topic-grid collapsible has-more-than-four" id="cie-cpp-grid">
+        <div class="exam-topic-card">
+          <a href="cie/cpp/level1.html" class="card-link"></a>
+          <h3>1级</h3>
+          <p class="exam-details">CIE C++编程等级考试第1级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/cpp/level1.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/cpp/level2.html" class="card-link"></a>
+          <h3>2级</h3>
+          <p class="exam-details">CIE C++编程等级考试第2级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/cpp/level2.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/cpp/level3.html" class="card-link"></a>
+          <h3>3级</h3>
+          <p class="exam-details">CIE C++编程等级考试第3级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/cpp/level3.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/cpp/level4.html" class="card-link"></a>
+          <h3>4级</h3>
+          <p class="exam-details">CIE C++编程等级考试第4级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/cpp/level4.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/cpp/level5.html" class="card-link"></a>
+          <h3>5级</h3>
+          <p class="exam-details">CIE C++编程等级考试第5级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/cpp/level5.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="cie/cpp/level6.html" class="card-link"></a>
+          <h3>6级</h3>
+          <p class="exam-details">CIE C++编程等级考试第6级知识点</p>
+          <div class="exam-action-links">
+            <a href="cie/cpp/level6.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        <button class="expand-btn" onclick="toggleGridExpand(this)">展开全部</button>
+      </div>
+    </section>
+
+    <!-- === GESP等级考试 === -->
+    <section class="level-section">
+      <h2 class="level-title">🎓 GESP等级考试</h2>
+      <div class="topic-grid collapsible has-more-than-four" id="gesp-grid">
+        <div class="exam-topic-card">
+          <a href="gesp/level1.html" class="card-link"></a>
+          <h3>一级</h3>
+          <p class="exam-details">GESP编程能力等级考试一级知识点</p>
+          <div class="exam-action-links">
+            <a href="gesp/level1.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="gesp/level2.html" class="card-link"></a>
+          <h3>二级</h3>
+          <p class="exam-details">GESP编程能力等级考试二级知识点</p>
+          <div class="exam-action-links">
+            <a href="gesp/level2.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="gesp/level3.html" class="card-link"></a>
+          <h3>三级</h3>
+          <p class="exam-details">GESP编程能力等级考试三级知识点</p>
+          <div class="exam-action-links">
+            <a href="gesp/level3.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="gesp/level4.html" class="card-link"></a>
+          <h3>四级</h3>
+          <p class="exam-details">GESP编程能力等级考试四级知识点</p>
+          <div class="exam-action-links">
+            <a href="gesp/level4.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="gesp/level5.html" class="card-link"></a>
+          <h3>五级</h3>
+          <p class="exam-details">GESP编程能力等级考试五级知识点</p>
+          <div class="exam-action-links">
+            <a href="gesp/level5.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="gesp/level6.html" class="card-link"></a>
+          <h3>六级</h3>
+          <p class="exam-details">GESP编程能力等级考试六级知识点</p>
+          <div class="exam-action-links">
+            <a href="gesp/level6.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="gesp/level7.html" class="card-link"></a>
+          <h3>七级</h3>
+          <p class="exam-details">GESP编程能力等级考试七级知识点</p>
+          <div class="exam-action-links">
+            <a href="gesp/level7.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="gesp/level8.html" class="card-link"></a>
+          <h3>八级</h3>
+          <p class="exam-details">GESP编程能力等级考试八级知识点</p>
+          <div class="exam-action-links">
+            <a href="gesp/level8.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        <button class="expand-btn" onclick="toggleGridExpand(this)">展开全部</button>
+      </div>
+    </section>
+
+    <!-- === CSP-J/S === -->
+    <section class="level-section">
+      <h2 class="level-title">🎯 CSP-J/S</h2>
+      <div class="topic-grid">
+        <div class="exam-topic-card">
+          <a href="csp/j.html" class="card-link"></a>
+          <h3>CSP-J</h3>
+          <p class="exam-details">CSP-J入门级竞赛知识点</p>
+          <div class="exam-action-links">
+            <a href="csp/j.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+        
+        <div class="exam-topic-card">
+          <a href="csp/s.html" class="card-link"></a>
+          <h3>CSP-S</h3>
+          <p class="exam-details">CSP-S提高级竞赛知识点</p>
+          <div class="exam-action-links">
+            <a href="csp/s.html" target="_self">知识点总结</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+    <p>提示：点击"知识点总结"可跳转相应级别的知识点总结页面!</p>
+  </footer>
+
+  <script>
+    // ✅ 暗色模式切换
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+    
+    // 添加随机移动效果到粒子
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+        
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+        
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+        
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+    
+    // 展开/收起网格功能
+    function toggleGridExpand(button) {
+      const grid = button.parentElement;
+      const isExpanded = grid.classList.contains('expanded');
+      
+      if (isExpanded) {
+        grid.classList.remove('expanded');
+        button.textContent = '展开全部';
+      } else {
+        grid.classList.add('expanded');
+        button.textContent = '收起';
+      }
+    }
+    
+    // 初始化网格状态
+    document.addEventListener('DOMContentLoaded', function() {
+      // 检查每个collapsible网格是否有多于4个卡片
+      const collapsibleGrids = document.querySelectorAll('.topic-grid.collapsible');
+      collapsibleGrids.forEach(grid => {
+        const cards = grid.querySelectorAll('.exam-topic-card:not(.always-show)');
+        if (cards.length <= 4) {
+          grid.classList.remove('has-more-than-four');
+        } else {
+          grid.classList.add('has-more-than-four');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

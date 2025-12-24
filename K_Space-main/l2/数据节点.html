@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>数据节点：链表结构详解（C++）</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #7b1fa2;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #f3e5f5;
+        }
+        .tab.active {
+            background: #7b1fa2;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #7b1fa2;
+        }
+        .code {
+            background: #2d3748;
+            color: #e1bee7;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #f3e5f5;
+            padding: 15px;
+            border-left: 5px solid #9c27b0;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .caution {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .best-practice {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #f3e5f5;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ 数据节点：链表结构详解（C++）</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🎯 引入：数组 vs 链表</button>
+            <button class="tab" onclick="openTab(event, 'node')">📦 节点定义</button>
+            <button class="tab" onclick="openTab(event, 'singly')">🔗 单链表</button>
+            <button class="tab" onclick="openTab(event, 'doubly')">🔄 双链表</button>
+            <button class="tab" onclick="openTab(event, 'insert')">➕ 插入操作</button>
+            <button class="tab" onclick="openTab(event, 'delete')">➖ 删除操作</button>
+            <button class="tab" onclick="openTab(event, 'circular')">⭕ 循环链表</button>
+            <button class="tab" onclick="openTab(event, 'best')">✅ 最佳实践</button>
+        </div>
+
+        <!-- 引入 -->
+        <div id="intro" class="content active">
+            <h2>🎯 引入：你会选择哪种数据结构？</h2>
+            <div class="concept-item">
+                <h3>数组 vs 链表 对比</h3>
+                <table>
+                    <tr><th>特征</th><th>数组 Array</th><th>链表 Linked List</th></tr>
+                    <tr><td>内存布局</td><td>连续内存块</td><td>非连续（节点 + 指针）</td></tr>
+                    <tr><td>大小灵活性</td><td>固定长度（静态）</td><td>动态扩展/收缩</td></tr>
+                    <tr><td>访问特性</td><td>随机访问 O(1)</td><td>顺序访问 O(n)</td></tr>
+                    <tr><td>中间插入/删除</td><td>O(n)（需移动）</td><td>O(1)（已知位置）</td></tr>
+                    <tr><td>空间开销</td><td>仅数据</td><td>额外存储指针</td></tr>
+                    <tr><td>缓存友好性</td><td>高</td><td>低</td></tr>
+                </table>
+            </div>
+            <div class="example">
+                💡 思考：频繁插入删除？选链表。频繁随机访问？选数组。
+            </div>
+        </div>
+
+        <!-- 节点定义 -->
+        <div id="node" class="content">
+            <h2>📦 节点（Node）结构</h2>
+            <div class="concept-item">
+                <h3>单链表节点</h3>
+                <div class="code">
+struct Node {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int data;      // 货物（数据）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Node* next;   // 钩子（指针）<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 构造函数<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Node(int x) : data(x), next(nullptr) {}<br>
+};
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>双链表节点</h3>
+                <div class="code">
+struct DNode {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int data;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DNode* next;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DNode* prev;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DNode(int x) : data(x), next(nullptr), prev(nullptr) {}<br>
+};
+                </div>
+            </div>
+        </div>
+
+        <!-- 单链表 -->
+        <div id="singly" class="content">
+            <h2>🔗 单链表：手动创建与遍历</h2>
+            <div class="concept-item">
+                <h3>创建与正向遍历</h3>
+                <div class="code">
+Node* head = new Node(1);<br>
+head->next = new Node(2);<br>
+head->next->next = new Node(3);<br><br>
+
+// 正向遍历<br>
+Node* cur = head;<br>
+while (cur != nullptr) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << cur->data << " ";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cur = cur->next;<br>
+}
+                </div>
+            </div>
+            <div class="caution">
+                ⚠️ **内存泄漏**：使用 <code>new</code> 创建的节点必须用 <code>delete</code> 释放！
+            </div>
+        </div>
+
+        <!-- 双链表 -->
+        <div id="doubly" class="content">
+            <h2>🔄 双链表：双向遍历</h2>
+            <div class="concept-item">
+                <h3>创建与反向遍历</h3>
+                <div class="code">
+DNode* head = new DNode(1);<br>
+DNode* n1 = new DNode(2);<br>
+DNode* n2 = new DNode(3);<br><br>
+
+head->next = n1; n1->prev = head;<br>
+n1->next = n2; n2->prev = n1;<br><br>
+
+// 反向遍历（从尾部开始）<br>
+DNode* tail = n2;<br>
+while (tail != nullptr) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << tail->data << " ";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tail = tail->prev;<br>
+}
+                </div>
+            </div>
+            <div class="tip">
+                💡 双链表支持 O(1) 时间删除任意节点（若已知节点指针）。
+            </div>
+        </div>
+
+        <!-- 插入 -->
+        <div id="insert" class="content">
+            <h2>➕ 插入节点</h2>
+            <div class="concept-item">
+                <h3>在 n2 后插入 n4（单链表）</h3>
+                <div class="code">
+Node* n4 = new Node(5);<br>
+n4->next = n3;  // 新节点指向原后继<br>
+n2->next = n4;  // 前驱指向新节点
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>通用插入函数（头插法）</h3>
+                <div class="code">
+void insertAtHead(Node*& head, int val) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Node* newNode = new Node(val);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;newNode->next = head;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;head = newNode;<br>
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- 删除（补漏！） -->
+        <div id="delete" class="content">
+            <h2>➖ 删除节点（原 PPT 提问，此处补全）</h2>
+            <div class="concept-item">
+                <h3>删除指定值的节点（单链表）</h3>
+                <div class="code">
+void deleteNode(Node*& head, int key) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (!head) return;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (head->data == key) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Node* temp = head;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;head = head->next;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete temp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Node* cur = head;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;while (cur->next && cur->next->data != key)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cur = cur->next;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (cur->next) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Node* temp = cur->next;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cur->next = cur->next->next;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete temp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </div>
+            </div>
+            <div class="best-practice">
+                ✅ 使用 <strong>哨兵节点（Dummy Head）</strong> 可避免头节点特殊处理。
+            </div>
+        </div>
+
+        <!-- 循环链表 -->
+        <div id="circular" class="content">
+            <h2>⭕ 循环链表</h2>
+            <div class="concept-item">
+                <h3>构建：尾节点指向头</h3>
+                <div class="code">
+// 单向循环链表<br>
+Node* head = new Node(1);<br>
+Node* n1 = new Node(2);<br>
+Node* tail = new Node(3);<br><br>
+
+head->next = n1;<br>
+n1->next = tail;<br>
+tail->next = head; // 形成环
+                </div>
+            </div>
+            <div class="caution">
+                ❗ 遍历时必须设置终止条件（如计数或回到起点），否则无限循环！
+            </div>
+        </div>
+
+        <!-- 最佳实践 -->
+        <div id="best" class="content">
+            <h2>✅ 链表使用最佳实践</h2>
+            <div class="concept-item">
+                <h3>1. 内存管理</h3>
+                <p>每个 <code>new</code> 必须对应 <code>delete</code>，建议封装析构函数或使用智能指针（C++11+）。</p>
+            </div>
+            <div class="concept-item">
+                <h3>2. 边界处理</h3>
+                <p>空链表、单节点、头/尾操作需特别小心。使用<strong>哨兵节点</strong>可简化逻辑。</p>
+            </div>
+            <div class="concept-item">
+                <h3>3. 时间复杂度牢记</h3>
+                <ul>
+                    <li>访问第 i 个元素：O(n)</li>
+                    <li>在已知节点后插入：O(1)</li>
+                    <li>删除已知节点（双链表）：O(1)</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>4. 典型应用场景</h3>
+                <ul>
+                    <li>LRU 缓存（双链表 + 哈希表）</li>
+                    <li>浏览器前进/后退历史</li>
+                    <li>多项式表示（稀疏系数）</li>
+                    <li>内存不连续但需动态增删的场景</li>
+                </ul>
+            </div>
+            <div class="tip">
+                💡 C++ 标准库提供 <code>std::list</code>（双链表）和 <code>std::forward_list</code>（单链表），生产环境优先使用。
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 数据节点：链表结构详解（C++） | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

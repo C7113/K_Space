@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python一级 - 第8课：综合案例实战 - C++ 知识导航</title>
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/topic.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="stylesheet" href="/styles/animations.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        Python一级 第8课：综合案例实战
+        <span class="badge">项目实战</span>
+      </h1>
+      <p>整合前面所学知识 | 完成综合性项目 | 提升编程思维</p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <a href="../index.html" class="toggle-btn">↩ 返回 CIE Python 考试首页</a>
+    <a href="../../../../exam-topics.html" class="toggle-btn">↩ 返回 等级考试知识点</a>
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+  </div>
+  
+  <div class="container">
+    <section class="topic-section">
+      <h2>课程目标</h2>
+      <div class="knowledge-points">
+        <ul>
+          <li>综合运用前7节课所学的所有知识点</li>
+          <li>完成具有一定复杂度的综合性项目</li>
+          <li>培养解决实际问题的编程思维</li>
+          <li>提升代码组织和调试能力</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2>知识点回顾</h2>
+      
+      <div class="concept-card">
+        <h3>1. 开发环境与工具</h3>
+        <ul>
+          <li>熟悉IDLE的使用（Shell模式和File模式）</li>
+          <li>掌握新建、保存、运行程序的操作</li>
+          <li>遵循文件命名规范</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h3>2. 程序基本结构</h3>
+        <ul>
+          <li>理解输入→处理→输出的程序逻辑</li>
+          <li>熟练使用input()和print()函数</li>
+          <li>养成良好的代码习惯（注释、缩进、引号）</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h3>3. 变量与数据类型</h3>
+        <ul>
+          <li>理解变量的概念和命名规则</li>
+          <li>掌握int、float、str三种基本数据类型</li>
+          <li>避免使用Python关键字作为变量名</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h3>4. 运算符与表达式</h3>
+        <ul>
+          <li>掌握算术运算符（+、-、*、/、//、%、**）</li>
+          <li>理解运算优先级</li>
+          <li>能编写数学表达式解决问题</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h3>5. 输入与输出</h3>
+        <ul>
+          <li>掌握input()函数的使用</li>
+          <li>理解print()函数的各种用法</li>
+          <li>完成完整的I/O程序</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h3>6. 类型转换</h3>
+        <ul>
+          <li>掌握int()、float()、str()函数的使用</li>
+          <li>理解类型不匹配导致的错误</li>
+          <li>正确进行数据类型转换</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h3>7. Turtle图形编程</h3>
+        <ul>
+          <li>掌握turtle模块的导入和基本使用</li>
+          <li>熟悉基本绘图命令（forward、left、circle等）</li>
+          <li>能绘制基本图形（正方形、三角形、圆形等）</li>
+        </ul>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>综合项目实战</h2>
+      
+      <div class="concept-card">
+        <h3>项目1：学生成绩管理系统</h3>
+        <p>设计一个简单的学生成绩管理系统，可以录入学生信息和成绩，计算总分和平均分，并给出等级评价。</p>
+        
+        <h4>功能要求：</h4>
+        <ol>
+          <li>录入学生姓名</li>
+          <li>录入三门课程成绩（语文、数学、英语）</li>
+          <li>计算总分和平均分</li>
+          <li>根据平均分判断等级（优秀、良好、中等、及格、不及格）</li>
+          <li>输出完整的成绩单</li>
+        </ol>
+        
+        <div class="example-code">
+# student_grade_management.py
+# 学生成绩管理系统
+
+print("=" * 30)
+print("    欢迎使用学生成绩管理系统")
+print("=" * 30)
+
+# 录入学生信息
+name = input("请输入学生姓名：")
+
+print("\n--- 录入成绩 ---")
+chinese = float(input("请输入语文成绩："))
+math = float(input("请输入数学成绩："))
+english = float(input("请输入英语成绩："))
+
+# 计算总分和平均分
+total = chinese + math + english
+average = total / 3
+
+# 判断等级
+if average >= 90:
+    grade_level = "优秀"
+elif average >= 80:
+    grade_level = "良好"
+elif average >= 70:
+    grade_level = "中等"
+elif average >= 60:
+    grade_level = "及格"
+else:
+    grade_level = "不及格"
+
+# 输出成绩单
+print("\n" + "=" * 30)
+print("        学生成绩单")
+print("=" * 30)
+print(f"姓名：{name}")
+print("-" * 30)
+print(f"语文成绩：{chinese} 分")
+print(f"数学成绩：{math} 分")
+print(f"英语成绩：{english} 分")
+print("-" * 30)
+print(f"总分：{total} 分")
+print(f"平均分：{average:.2f} 分")
+print(f"等级：{grade_level}")
+print("=" * 30)
+
+# 给出鼓励或建议
+if average >= 90:
+    print(f"\n🎉 恭喜 {name}，成绩优秀！继续保持！")
+elif average >= 70:
+    print(f"\n👍 {name}，成绩不错！还有提升空间哦！")
+else:
+    print(f"\n💪 {name}，继续努力，相信你会进步的！")
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3>项目2：简易计算器</h3>
+        <p>设计一个支持基本运算的计算器，可以进行加、减、乘、除运算，并具有一定的容错能力。</p>
+        
+        <h4>功能要求：</h4>
+        <ol>
+          <li>用户输入两个数字</li>
+          <li>用户选择运算符（+、-、*、/）</li>
+          <li>进行相应的运算并输出结果</li>
+          <li>处理除零错误</li>
+          <li>处理非数字输入错误</li>
+        </ol>
+        
+        <div class="example-code">
+# simple_calculator_advanced.py
+# 简易计算器（加强版）
+
+print("=" * 30)
+print("      欢迎使用简易计算器")
+print("=" * 30)
+
+try:
+    # 输入两个数字
+    num1 = float(input("请输入第一个数字："))
+    operator = input("请输入运算符（+、-、*、/）：")
+    num2 = float(input("请输入第二个数字："))
+    
+    # 执行运算
+    if operator == "+":
+        result = num1 + num2
+        print(f"\n计算结果：{num1} + {num2} = {result}")
+    elif operator == "-":
+        result = num1 - num2
+        print(f"\n计算结果：{num1} - {num2} = {result}")
+    elif operator == "*":
+        result = num1 * num2
+        print(f"\n计算结果：{num1} * {num2} = {result}")
+    elif operator == "/":
+        if num2 != 0:
+            result = num1 / num2
+            print(f"\n计算结果：{num1} / {num2} = {result}")
+        else:
+            print("\n❌ 错误：除数不能为零！")
+    else:
+        print("\n❌ 错误：不支持的运算符！")
+        
+except ValueError:
+    print("\n❌ 错误：请输入有效的数字！")
+
+print("\n" + "=" * 30)
+print("        计算完成")
+print("=" * 30)
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3>项目3：几何图形绘制器</h3>
+        <p>使用turtle模块创建一个图形绘制器，用户可以选择绘制不同的几何图形。</p>
+        
+        <h4>功能要求：</h4>
+        <ol>
+          <li>显示可绘制的图形选项</li>
+          <li>用户选择要绘制的图形</li>
+          <li>根据选择绘制相应图形</li>
+          <li>设置适当的颜色和尺寸</li>
+        </ol>
+        
+        <div class="example-code">
+# geometric_shape_drawer.py
+# 几何图形绘制器
+
+import turtle
+
+def draw_square(pen, size):
+    """绘制正方形"""
+    pen.color("blue")
+    for _ in range(4):
+        pen.forward(size)
+        pen.left(90)
+
+def draw_triangle(pen, size):
+    """绘制三角形"""
+    pen.color("red")
+    for _ in range(3):
+        pen.forward(size)
+        pen.left(120)
+
+def draw_circle(pen, radius):
+    """绘制圆形"""
+    pen.color("green")
+    pen.circle(radius)
+
+def draw_star(pen, size):
+    """绘制五角星"""
+    pen.color("orange")
+    for _ in range(5):
+        pen.forward(size)
+        pen.right(144)
+
+def main():
+    # 创建窗口和海龟对象
+    window = turtle.Screen()
+    window.title("几何图形绘制器")
+    window.bgcolor("white")
+    window.setup(width=800, height=600)
+    
+    pen = turtle.Turtle()
+    pen.speed(3)
+    pen.pensize(3)
+    
+    # 显示菜单
+    print("=" * 30)
+    print("    欢迎使用几何图形绘制器")
+    print("=" * 30)
+    print("请选择要绘制的图形：")
+    print("1. 正方形")
+    print("2. 三角形")
+    print("3. 圆形")
+    print("4. 五角星")
+    print("5. 全部图形")
+    print("-" * 30)
+    
+    try:
+        choice = int(input("请输入选项（1-5）："))
+        
+        # 根据选择绘制图形
+        if choice == 1:
+            draw_square(pen, 100)
+        elif choice == 2:
+            draw_triangle(pen, 100)
+        elif choice == 3:
+            draw_circle(pen, 50)
+        elif choice == 4:
+            draw_star(pen, 100)
+        elif choice == 5:
+            # 绘制全部图形
+            pen.penup()
+            pen.goto(-300, 0)
+            pen.pendown()
+            draw_square(pen, 80)
+            
+            pen.penup()
+            pen.goto(-100, 0)
+            pen.pendown()
+            draw_triangle(pen, 80)
+            
+            pen.penup()
+            pen.goto(100, -50)
+            pen.pendown()
+            draw_circle(pen, 40)
+            
+            pen.penup()
+            pen.goto(250, 0)
+            pen.pendown()
+            draw_star(pen, 80)
+        else:
+            print("无效选项！")
+            
+    except ValueError:
+        print("请输入有效的数字选项！")
+    
+    # 完成绘制
+    pen.hideturtle()
+    turtle.done()
+
+# 运行主程序
+if __name__ == "__main__":
+    main()
+        </div>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>项目拓展练习</h2>
+      
+      <div class="exercise-card">
+        <h3>练习1：个人财务记录器</h3>
+        <p>设计一个简单的个人财务记录器，可以记录收入和支出，计算余额，并给出消费建议。</p>
+        <p>功能要求：</p>
+        <ul>
+          <li>录入初始余额</li>
+          <li>录入收入和支出项目</li>
+          <li>计算当前余额</li>
+          <li>根据余额给出消费建议</li>
+        </ul>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习2：单位换算器</h3>
+        <p>设计一个多单位换算器，支持长度、重量、温度等多种单位之间的换算。</p>
+        <p>功能要求：</p>
+        <ul>
+          <li>提供多种换算选项</li>
+          <li>用户选择换算类型</li>
+          <li>输入数值并进行换算</li>
+          <li>输出换算结果</li>
+        </ul>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习3：动画时钟</h3>
+        <p>使用turtle模块制作一个简单的动画时钟，显示时、分、秒针的移动。</p>
+        <p>功能要求：</p>
+        <ul>
+          <li>绘制时钟表盘</li>
+          <li>绘制时、分、秒针</li>
+          <li>实现指针的动态移动</li>
+          <li>添加数字标记</li>
+        </ul>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>课程总结</h2>
+      
+      <div class="concept-card">
+        <h3>Python一级核心知识点</h3>
+        <ul>
+          <li><strong>编程基础</strong>：理解程序的基本结构，掌握开发环境的使用</li>
+          <li><strong>数据处理</strong>：熟练使用变量、数据类型和运算符</li>
+          <li><strong>用户交互</strong>：掌握输入输出函数，能处理用户数据</li>
+          <li><strong>类型转换</strong>：理解数据类型转换的重要性及方法</li>
+          <li><strong>图形编程</strong>：学会使用turtle模块绘制基本图形</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card tip">
+        <h3>学习建议</h3>
+        <ul>
+          <li>多动手实践，通过编写代码加深理解</li>
+          <li>注重细节，养成良好的编程习惯</li>
+          <li>学会调试程序，解决遇到的问题</li>
+          <li>尝试修改示例代码，探索更多可能性</li>
+          <li>逐步挑战更复杂的项目，提升编程能力</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+  
+  <div class="navigation-buttons">
+    <a href="7.html" class="nav-button">上一课：Turtle图形编程基础</a>
+    <span></span>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+  </footer>
+
+  <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+
+    // 粒子动画效果
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 分治算法进阶</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #388e3c;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #388e3c;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #388e3c;
+        }
+        .code {
+            background: #2d3748;
+            color: #a5d6a7;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e8f5e9;
+            padding: 15px;
+            border-left: 5px solid #4caf50;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #1b5e20;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .principle {
+            background: #e8f5e9;
+            border-left: 5px solid #81c784;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #388e3c;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #e8f5e9;
+        }
+        .highlight {
+            background: #e8f5e9;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 C++ 分治算法进阶</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 主题：爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'outline')">📋 课程目录</button>
+            <button class="tab" onclick="openTab(event, 'concept')">🧠 分治思想与三步法则</button>
+            <button class="tab" onclick="openTab(event, 'merge-sort')">📚 归并排序详解</button>
+            <button class="tab" onclick="openTab(event, 'quick-sort')">⚡ 快速排序详解</button>
+            <button class="tab" onclick="openTab(event, 'complexity')">📊 时间复杂度分析</button>
+            <button class="tab" onclick="openTab(event, 'applications')">🧩 实际应用场景</button>
+        </div>
+
+        <!-- 课程目录 -->
+        <div id="outline" class="content active">
+            <h2>📋 本课核心内容</h2>
+            <ul style="font-size: 1.1em; line-height: 1.8;">
+                <li>深入理解<strong>分治（Divide and Conquer）</strong>算法的核心思想</li>
+                <li>掌握分治的<strong>三步法则</strong>：分解 → 解决 → 合并</li>
+                <li>通过<strong>归并排序</strong>和<strong>快速排序</strong>两大经典案例掌握实现细节</li>
+                <li>分析两种排序算法的<strong>时间/空间复杂度</strong>及适用场景</li>
+                <li>了解分治在实际问题中的拓展应用（如查找、最近点对等）</li>
+            </ul>
+            <div class="principle">
+                <strong>匠心理念：</strong>“大事化小，小事化了”——分治是解决复杂问题的哲学。
+            </div>
+        </div>
+
+        <!-- 分治思想与三步法则 -->
+        <div id="concept" class="content">
+            <h2>🧠 分治思想与三步法则</h2>
+            <div class="concept-item">
+                <h3>什么是分治算法？</h3>
+                <p><strong>分治算法</strong>是一种将大问题分解成若干个相同或相似的子问题，递归求解子问题，再将子问题的解合并为原问题解的策略。</p>
+                <p>✅ 适用于具有<strong>最优子结构</strong>和<strong>子问题重叠性不强</strong>的问题。</p>
+            </div>
+            <div class="concept-item">
+                <h3>三步法则</h3>
+                <table>
+                    <tr><th>步骤</th><th>说明</th></tr>
+                    <tr><td><strong>1. 分解（Divide）</strong></td><td>将原问题划分为若干个规模较小的子问题</td></tr>
+                    <tr><td><strong>2. 解决（Conquer）</strong></td><td>递归地求解各个子问题；若子问题足够小，则直接求解</td></tr>
+                    <tr><td><strong>3. 合并（Combine）</strong></td><td>将子问题的解合并成原问题的解</td></tr>
+                </table>
+            </div>
+            <div class="example">
+                <h3>类比理解：整理书架</h3>
+                <p>想象你有一堆厚度不同的书：<code>[8cm, 3cm, 2cm, 9cm, 7cm, 1cm, 5cm, 4cm]</code></p>
+                <ol>
+                    <li>选一本“基准书”（如 5cm）</li>
+                    <li>把比它薄的放左边，厚的放右边 → <code>[3,2,1,4] 5 [8,9,7]</code></li>
+                    <li>对左右两堆分别重复此过程，直到每堆只剩一本书</li>
+                </ol>
+                <p>这就是<strong>快速排序</strong>的分治思想！</p>
+            </div>
+        </div>
+
+        <!-- 归并排序详解 -->
+        <div id="merge-sort" class="content">
+            <h2>📚 归并排序（Merge Sort）</h2>
+            <div class="concept-item">
+                <h3>核心思想</h3>
+                <ul>
+                    <li>将数组不断二分，直到每个子数组只有一个元素（天然有序）</li>
+                    <li>然后逐层向上<strong>合并</strong>两个已排序的子数组</li>
+                </ul>
+                <p>✅ 稳定排序，时间复杂度始终为 O(n log n)</p>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code">
+// 主函数
+void mergeSort(vector<int>& arr, int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        mergeSort(arr, left, mid);          // 左半部分
+        mergeSort(arr, mid + 1, right);     // 右半部分
+        merge(arr, left, mid, right);       // 合并
+    }
+}
+
+// 合并函数
+void merge(vector<int>& arr, int left, int mid, int right) {
+    vector<int> L(arr.begin() + left, arr.begin() + mid + 1);
+    vector<int> R(arr.begin() + mid + 1, arr.begin() + right + 1);
+    
+    int i = 0, j = 0, k = left;
+    while (i < L.size() && j < R.size()) {
+        if (L[i] <= R[j]) arr[k++] = L[i++];
+        else arr[k++] = R[j++];
+    }
+    while (i < L.size()) arr[k++] = L[i++];
+    while (j < R.size()) arr[k++] = R[j++];
+}
+                </div>
+            </div>
+            <div class="tip">
+                <strong>注意：</strong>归并排序需要额外 O(n) 空间用于临时数组。
+            </div>
+        </div>
+
+        <!-- 快速排序详解 -->
+        <div id="quick-sort" class="content">
+            <h2>⚡ 快速排序（Quick Sort）</h2>
+            <div class="concept-item">
+                <h3>历史与地位</h3>
+                <p>由 Tony Hoare 于 1959 年提出，被誉为“<strong>二十世纪十大算法</strong>”之一，是实际应用中最快的通用排序算法。</p>
+            </div>
+            <div class="concept-item">
+                <h3>三步核心</h3>
+                <ol>
+                    <li><strong>选择基准（Pivot）</strong>：通常选首、尾或中间元素</li>
+                    <li><strong>分区（Partitioning）</strong>：将小于基准的放左边，大于的放右边</li>
+                    <li><strong>递归排序</strong>：对左右子数组分别快排</li>
+                </ol>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现（Lomuto 分区）</h3>
+                <div class="code">
+void quickSort(int arr[], int left, int right) {
+    if (left < right) {
+        int pivotIndex = partition(arr, left, right);
+        quickSort(arr, left, pivotIndex - 1);
+        quickSort(arr, pivotIndex + 1, right);
+    }
+}
+
+int partition(int arr[], int left, int right) {
+    int pivot = arr[right]; // 选最后一个为基准
+    int i = left - 1;
+    for (int j = left; j < right; j++) {
+        if (arr[j] <= pivot) {
+            swap(arr[++i], arr[j]);
+        }
+    }
+    swap(arr[i + 1], arr[right]);
+    return i + 1;
+}
+                </div>
+            </div>
+            <div class="example">
+                <h3>分区演示</h3>
+                <p>原始数组：<code>[8, 3, 2, 9, 7, 1, 5, 4]</code></p>
+                <p>以 4 为基准分区后：<code>[3, 2, 1, 4, 7, 9, 5, 8]</code></p>
+                <p>基准 4 被放到正确位置（索引 3），左边都 ≤4，右边都 >4。</p>
+            </div>
+        </div>
+
+        <!-- 时间复杂度分析 -->
+        <div id="complexity" class="content">
+            <h2>📊 时间复杂度分析</h2>
+            <div class="concept-item">
+                <h3>归并排序</h3>
+                <table>
+                    <tr><th>情况</th><th>时间复杂度</th><th>空间复杂度</th><th>稳定性</th></tr>
+                    <tr><td>最好</td><td>O(n log n)</td><td>O(n)</td><td>稳定 ✅</td></tr>
+                    <tr><td>平均</td><td>O(n log n)</td><td>O(n)</td><td>稳定 ✅</td></tr>
+                    <tr><td>最坏</td><td>O(n log n)</td><td>O(n)</td><td>稳定 ✅</td></tr>
+                </table>
+            </div>
+            <div class="concept-item">
+                <h3>快速排序</h3>
+                <table>
+                    <tr><th>情况</th><th>时间复杂度</th><th>空间复杂度</th><th>稳定性</th></tr>
+                    <tr><td>最好</td><td>O(n log n)</td><td>O(log n)</td><td>不稳定 ❌</td></tr>
+                    <tr><td>平均</td><td>O(n log n)</td><td>O(log n)</td><td>不稳定 ❌</td></tr>
+                    <tr><td>最坏</td><td>O(n²)</td><td>O(n)</td><td>不稳定 ❌</td></tr>
+                </table>
+                <p>⚠️ 最坏情况：每次选到最大/最小元素作基准（如已排序数组）</p>
+                <p>✅ 优化：随机选基准、三数取中等。</p>
+            </div>
+            <div class="tip">
+                <strong>选择建议：</strong>
+                <ul>
+                    <li>要稳定 → 选归并排序</li>
+                    <li>内存敏感 → 选快速排序（原地排序）</li>
+                    <li>数据量小 → 插入排序可能更快</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 实际应用场景 -->
+        <div id="applications" class="content">
+            <h2>🧩 实际应用场景</h2>
+            <div class="concept-item">
+                <h3>1. 大规模数据排序</h3>
+                <p>数据库、搜索引擎等底层大量使用快排/归并。</p>
+            </div>
+            <div class="concept-item">
+                <h3>2. 求第 K 小元素（Quickselect）</h3>
+                <p>基于快排的分区思想，平均 O(n) 时间找到第 K 小元素。</p>
+            </div>
+            <div class="concept-item">
+                <h3>3. 最近点对问题</h3>
+                <p>在二维平面上找距离最近的两个点，可用分治在 O(n log n) 内解决。</p>
+            </div>
+            <div class="concept-item">
+                <h3>4. 大整数乘法（Karatsuba 算法）</h3>
+                <p>将大数拆分成两半，用分治减少乘法次数。</p>
+            </div>
+            <div class="principle">
+                <strong>创新思维：</strong>分治不仅是算法，更是一种“化繁为简”的思维方式。掌握它，你就掌握了高效解决问题的钥匙。
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++ 分治算法进阶课程 | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+{
+  "meta": {
+    "title": "C++ 完整学习路径",
+    "version": "2.0",
+    "updated": "2025-10-31",
+    "description": "系统化的C++编程教学体系，从计算思维到竞赛应用"
+  },
+  "sections": [
+    {
+      "id": "module1",
+      "title": "编程启蒙与计算思维",
+      "description": "消除对编程的恐惧，理解编程的本质是解决问题",
+      "items": [
+        {
+          "id": "what-is-program",
+          "title": "什么是程序？",
+          "desc": "程序是指令的集合，生活中的程序例子（菜谱、乐高说明书）",
+          "link": "./topics/what-is-program/index.html",
+          "tags": ["启蒙", "概念"]
+        },
+        {
+          "id": "how-computer-works",
+          "title": "计算机如何工作？",
+          "desc": "输入->处理->输出(IPO模型)，算法概念，用流程图描述问题",
+          "link": "./topics/how-computer-works/index.html",
+          "tags": ["启蒙", "思维"]
+        },
+        {
+          "id": "first-experience",
+          "title": "编程环境初体验",
+          "desc": "IDE界面认识，编译和运行的概念，第一个Hello World程序",
+          "link": "./topics/first-experience/index.html",
+          "tags": ["工具", "实践"]
+        }
+      ]
+    },
+    {
+      "id": "module2",
+      "title": "C++语法基础",
+      "description": "掌握构建程序的基本零件",
+      "items": [
+        {
+          "id": "variables",
+          "title": "变量与数据类型",
+          "desc": "变量概念、核心数据类型(int/double/char/bool)、常量、命名规则",
+          "link": "./topics/variables-datatypes/index.html",
+          "tags": ["基础", "重点"]
+        },
+        {
+          "id": "operators",
+          "title": "运算符与表达式",
+          "desc": "算术运算符、关系运算符、逻辑运算符、运算符优先级",
+          "link": "./topics/operators-expressions/index.html",
+          "tags": ["基础", "重点"]
+        },
+        {
+          "id": "io-basics",
+          "title": "输入与输出",
+          "desc": "cout输出、cin输入、多个输入输出处理",
+          "link": "./topics/io-basics/index.html",
+          "tags": ["基础", "实践"]
+        }
+      ]
+    },
+    {
+      "id": "module3",
+      "title": "程序控制流",
+      "description": "让程序能根据情况做出决定和重复",
+      "items": [
+        {
+          "id": "sequence",
+          "title": "顺序结构",
+          "desc": "程序默认的执行顺序，语句的顺序执行",
+          "link": "./topics/sequence/index.html",
+          "tags": ["基础"]
+        },
+        {
+          "id": "branch",
+          "title": "分支结构",
+          "desc": "if语句、if-else语句、if-else if-else语句、switch-case语句",
+          "link": "./topics/branch/index.html",
+          "tags": ["基础", "重点"]
+        },
+        {
+          "id": "loop",
+          "title": "循环结构",
+          "desc": "for循环、while循环、do-while循环、循环控制",
+          "link": "./topics/loop/index.html",
+          "tags": ["基础", "重点"]
+        },
+        {
+          "id": "nested",
+          "title": "复合结构",
+          "desc": "嵌套if语句、循环嵌套、break和continue",
+          "link": "./topics/nested/index.html",
+          "tags": ["进阶", "重点"]
+        }
+      ]
+    },
+    {
+      "id": "module4",
+      "title": "数据组织与函数",
+      "description": "学会组织大量数据，并将代码模块化",
+      "items": [
+        {
+          "id": "array1d",
+          "title": "一维数组",
+          "desc": "数组概念、定义初始化、遍历、查找排序",
+          "link": "./topics/array1d/index.html",
+          "tags": ["基础", "重点"]
+        },
+        {
+          "id": "array2d",
+          "title": "二维数组",
+          "desc": "表格和矩阵概念、定义遍历、实际应用",
+          "link": "./topics/array2d/index.html",
+          "tags": ["进阶", "重点"]
+        },
+        {
+          "id": "string-ops",
+          "title": "字符串处理",
+          "desc": "string类型、常用操作、字符数组对比",
+          "link": "./topics/string-ops/index.html",
+          "tags": ["基础", "重点"]
+        },
+        {
+          "id": "function-basics",
+          "title": "函数基础",
+          "desc": "函数定义调用、参数传递、返回值",
+          "link": "./topics/function-basics/index.html",
+          "tags": ["基础", "重点"]
+        },
+        {
+          "id": "recursion",
+          "title": "递归初步",
+          "desc": "递归概念、终止条件、经典递归例题",
+          "link": "./topics/recursion/index.html",
+          "tags": ["进阶", "重点"]
+        }
+      ]
+    },
+    {
+      "id": "module5",
+      "title": "标准模板库与数据结构",
+      "description": "使用现成的高效工具，提升编程效率",
+      "items": [
+        {
+          "id": "stl-intro",
+          "title": "STL基础",
+          "desc": "STL概念、常用头文件、基本用法",
+          "link": "./topics/stl-intro/index.html",
+          "tags": ["进阶", "工具"]
+        },
+        {
+          "id": "containers",
+          "title": "常用容器",
+          "desc": "vector、stack、queue、priority_queue的使用",
+          "link": "./topics/containers/index.html",
+          "tags": ["进阶", "重点"]
+        },
+        {
+          "id": "algorithms",
+          "title": "常用算法",
+          "desc": "sort、find、binary_search等算法函数",
+          "link": "./topics/algorithms/index.html",
+          "tags": ["进阶", "重点"]
+        }
+      ]
+    },
+    {
+      "id": "module6",
+      "title": "算法思想与竞赛应用",
+      "description": "掌握解决问题的思维方法",
+      "items": [
+        {
+          "id": "enum-sim",
+          "title": "枚举与模拟",
+          "desc": "暴力破解、日期计算、游戏模拟",
+          "link": "./topics/enum-sim/index.html",
+          "tags": ["算法", "基础"]
+        },
+        {
+          "id": "greedy",
+          "title": "贪心算法",
+          "desc": "贪心策略、经典问题、局限性",
+          "link": "./topics/greedy/index.html",
+          "tags": ["算法", "重点"]
+        },
+        {
+          "id": "divide-conquer",
+          "title": "分治思想",
+          "desc": "分而治之、归并排序、快速排序",
+          "link": "./topics/divide-conquer/index.html",
+          "tags": ["算法", "重点"]
+        },
+        {
+          "id": "dp-basic",
+          "title": "动态规划基础",
+          "desc": "状态定义、状态转移、经典模型",
+          "link": "./topics/dp-basic/index.html",
+          "tags": ["算法", "进阶"]
+        },
+        {
+          "id": "search",
+          "title": "搜索算法",
+          "desc": "深度优先搜索(DFS)、广度优先搜索(BFS)",
+          "link": "./topics/search/index.html",
+          "tags": ["算法", "进阶"]
+        }
+      ]
+    },
+    {
+      "id": "module7",
+      "title": "等级考试知识点",
+      "description": "各类编程等级考试知识点整理",
+      "items": [
+        {
+          "id": "cie-scratch",
+          "title": "CIE 图形化编程",
+          "desc": "CIE 图形化编程等级考试知识点",
+          "link": "./topics/exam-level/cie-scratch/index.html",
+          "tags": ["考试", "CIE"]
+        },
+        {
+          "id": "cie-python",
+          "title": "CIE Python编程",
+          "desc": "CIE Python编程等级考试知识点",
+          "link": "./topics/exam-level/cie-python/index.html",
+          "tags": ["考试", "CIE"]
+        },
+        {
+          "id": "cie-cpp",
+          "title": "CIE C++编程",
+          "desc": "CIE C++编程等级考试知识点",
+          "link": "./topics/exam-level/cie-cpp/index.html",
+          "tags": ["考试", "CIE"]
+        },
+        {
+          "id": "gesp",
+          "title": "GESP等级考试",
+          "desc": "GESP编程能力等级考试知识点",
+          "link": "./topics/exam-level/gesp/index.html",
+          "tags": ["考试", "GESP"]
+        },
+        {
+          "id": "csp",
+          "title": "CSP-J/S等级考试",
+          "desc": "CSP-J/S等级考试知识点",
+          "link": "./topics/exam-level/csp/index.html",
+          "tags": ["考试", "CSP"]
+        }
+      ]
+    }
+  ]
+}

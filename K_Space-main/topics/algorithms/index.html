@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 常用算法</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #5c6bc0;
+            --accent-color: #7e57c2;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --border: #e0e0e0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --secondary-color: #7986cb;
+            --accent-color: #9575cd;
+            --background: #121212;
+            --card-bg: #1e1e1e;
+            --text: #f0f0f0;
+            --border: #444444;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--background);
+            background-image: var(--grid-pattern);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            gap: 5px;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: var(--transition);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
+        .content {
+            display: none;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 0 0 12px 12px;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid var(--border);
+            border-top: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .concept-item {
+            background: var(--card-bg);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .concept-item:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(74, 144, 226, 0.03);
+        }
+
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .example {
+            background: linear-gradient(to right, rgba(74, 144, 226, 0.05), transparent);
+            padding: 20px;
+            border-left: 5px solid var(--primary-color);
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text);
+            font-size: 0.95rem;
+            opacity: 0.8;
+            padding: 25px;
+            border-top: 1px solid var(--border);
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.7rem 1.2rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            transition: var(--transition);
+            background: transparent;
+        }
+
+        .return-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .priority-high {
+            color: #e53935;
+            font-weight: bold;
+        }
+
+        .priority-medium {
+            color: #fb8c00;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            color: #43a047;
+            font-weight: bold;
+        }
+
+        ul, ol {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-container {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-radius: 8px;
+                margin-bottom: 5px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>⚙️ C++ 常用算法</h1>
+            <p class="subtitle">—— 掌握STL算法的使用</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'searching')">🔍 查找算法</button>
+            <button class="tab" onclick="openTab(event, 'sorting')">📊 排序算法</button>
+            <button class="tab" onclick="openTab(event, 'modifying')">✏️ 修改算法</button>
+            <button class="tab" onclick="openTab(event, 'numeric')">🔢 数值算法</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧩 实践应用</button>
+        </div>
+
+        <!-- 查找算法 -->
+        <div id="searching" class="content active">
+            <h2>查找算法</h2>
+            <div class="concept-item">
+                <h3>find系列算法</h3>
+                <p>STL提供了多种查找算法，用于在容器中查找元素。</p>
+                
+                <h4>常用查找算法</h4>
+                <table>
+                    <tr>
+                        <th>算法</th>
+                        <th>功能</th>
+                        <th>时间复杂度</th>
+                    </tr>
+                    <tr>
+                        <td>find()</td>
+                        <td>查找第一个匹配元素</td>
+                        <td>O(n)</td>
+                    </tr>
+                    <tr>
+                        <td>find_if()</td>
+                        <td>查找满足条件的第一个元素</td>
+                        <td>O(n)</td>
+                    </tr>
+                    <tr>
+                        <td>find_if_not()</td>
+                        <td>查找不满足条件的第一个元素</td>
+                        <td>O(n)</td>
+                    </tr>
+                    <tr>
+                        <td>binary_search()</td>
+                        <td>二分查找（有序容器）</td>
+                        <td>O(log n)</td>
+                    </tr>
+                    <tr>
+                        <td>lower_bound()</td>
+                        <td>查找第一个不小于给定值的元素</td>
+                        <td>O(log n)</td>
+                    </tr>
+                    <tr>
+                        <td>upper_bound()</td>
+                        <td>查找第一个大于给定值的元素</td>
+                        <td>O(log n)</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>查找算法示例</h4>
+                    <div class="code">
+                        #include &lt;algorithm&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {1, 3, 5, 7, 9, 11, 13, 15};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用find查找元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;auto it = find(vec.begin(), vec.end(), 7);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (it != vec.end()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "找到元素7，位置: " &lt;&lt; (it - vec.begin()) &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "未找到元素7" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用find_if查找满足条件的元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;auto it2 = find_if(vec.begin(), vec.end(),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](int x) { return x &gt; 10; });<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (it2 != vec.end()) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "找到第一个大于10的元素: " &lt;&lt; *it2 &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 二分查找（要求容器已排序）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;bool found = binary_search(vec.begin(), vec.end(), 9);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "二分查找9: " &lt;&lt; (found ? "找到" : "未找到") &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用lower_bound和upper_bound<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;auto lower = lower_bound(vec.begin(), vec.end(), 8);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;auto upper = upper_bound(vec.begin(), vec.end(), 8);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "lower_bound(8): " &lt;&lt; *lower &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "upper_bound(8): " &lt;&lt; *upper &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>计数算法</h3>
+                <p>用于统计容器中满足条件的元素个数。</p>
+                
+                <table>
+                    <tr>
+                        <th>算法</th>
+                        <th>功能</th>
+                    </tr>
+                    <tr>
+                        <td>count()</td>
+                        <td>统计等于指定值的元素个数</td>
+                    </tr>
+                    <tr>
+                        <td>count_if()</td>
+                        <td>统计满足条件的元素个数</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>计数算法示例</h4>
+                    <div class="code">
+                        #include &lt;algorithm&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {1, 2, 2, 3, 2, 4, 2, 5};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 统计值为2的元素个数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int count2 = count(vec.begin(), vec.end(), 2);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "值为2的元素个数: " &lt;&lt; count2 &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 统计大于2的元素个数<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int countGreater2 = count_if(vec.begin(), vec.end(),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](int x) { return x &gt; 2; });<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "大于2的元素个数: " &lt;&lt; countGreater2 &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 排序算法 -->
+        <div id="sorting" class="content">
+            <h2>排序算法</h2>
+            <div class="concept-item">
+                <h3>排序算法概述</h3>
+                <p>STL提供了多种排序算法，可以对容器中的元素进行排序。</p>
+                
+                <h4>常用排序算法</h4>
+                <table>
+                    <tr>
+                        <th>算法</th>
+                        <th>功能</th>
+                        <th>时间复杂度</th>
+                        <th>稳定性</th>
+                    </tr>
+                    <tr>
+                        <td>sort()</td>
+                        <td>快速排序（通常）</td>
+                        <td>O(n log n)</td>
+                        <td>不稳定</td>
+                    </tr>
+                    <tr>
+                        <td>stable_sort()</td>
+                        <td>稳定排序</td>
+                        <td>O(n log n)</td>
+                        <td>稳定</td>
+                    </tr>
+                    <tr>
+                        <td>partial_sort()</td>
+                        <td>部分排序</td>
+                        <td>O(n log m)</td>
+                        <td>不稳定</td>
+                    </tr>
+                    <tr>
+                        <td>nth_element()</td>
+                        <td>第n小元素</td>
+                        <td>O(n)</td>
+                        <td>不稳定</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>排序算法示例</h4>
+                    <div class="code">
+                        #include &lt;algorithm&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {5, 2, 8, 1, 9, 3, 7, 4, 6};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 基本排序<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec1 = vec;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;sort(vec1.begin(), vec1.end());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "sort(): ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : vec1) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 降序排序<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec2 = vec;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;sort(vec2.begin(), vec2.end(), greater&lt;int&gt;());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "降序sort(): ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : vec2) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 自定义比较函数排序<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec3 = vec;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;sort(vec3.begin(), vec3.end(),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](int a, int b) { return abs(a - 5) &lt; abs(b - 5); });<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "按距离5的远近排序: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : vec3) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 稳定排序<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;pair&lt;int, int&gt;&gt; vec4 = {{1, 2}, {3, 1}, {1, 3}, {2, 2}};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stable_sort(vec4.begin(), vec4.end());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "稳定排序: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (auto p : vec4) cout &lt;&lt; "(" &lt;&lt; p.first &lt;&lt; "," &lt;&lt; p.second &lt;&lt; ") ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 部分排序（获取前4个最小元素）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec5 = vec;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;partial_sort(vec5.begin(), vec5.begin() + 4, vec5.end());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "部分排序(前4个): ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 4; i++) cout &lt;&lt; vec5[i] &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>相关操作算法</h3>
+                <p>与排序相关的其他算法。</p>
+                
+                <table>
+                    <tr>
+                        <th>算法</th>
+                        <th>功能</th>
+                    </tr>
+                    <tr>
+                        <td>is_sorted()</td>
+                        <td>检查是否已排序</td>
+                    </tr>
+                    <tr>
+                        <td>is_sorted_until()</td>
+                        <td>找到第一个未排序的位置</td>
+                    </tr>
+                    <tr>
+                        <td>reverse()</td>
+                        <td>反转元素顺序</td>
+                    </tr>
+                    <tr>
+                        <td>rotate()</td>
+                        <td>旋转元素</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>相关操作示例</h4>
+                    <div class="code">
+                        #include &lt;algorithm&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {1, 2, 3, 4, 5, 6, 7};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 检查是否已排序<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "是否已排序: " &lt;&lt; (is_sorted(vec.begin(), vec.end()) ? "是" : "否") &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 反转<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;reverse(vec.begin(), vec.end());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "反转后: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : vec) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 旋转（将第3个元素移到开头）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;rotate(vec.begin(), vec.begin() + 2, vec.end());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "旋转后: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : vec) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 修改算法 -->
+        <div id="modifying" class="content">
+            <h2>修改算法</h2>
+            <div class="concept-item">
+                <h3>拷贝和移动算法</h3>
+                <p>用于在容器之间拷贝或移动元素。</p>
+                
+                <table>
+                    <tr>
+                        <th>算法</th>
+                        <th>功能</th>
+                    </tr>
+                    <tr>
+                        <td>copy()</td>
+                        <td>拷贝元素</td>
+                    </tr>
+                    <tr>
+                        <td>copy_if()</td>
+                        <td>条件拷贝</td>
+                    </tr>
+                    <tr>
+                        <td>copy_n()</td>
+                        <td>拷贝n个元素</td>
+                    </tr>
+                    <tr>
+                        <td>move()</td>
+                        <td>移动元素</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>拷贝算法示例</h4>
+                    <div class="code">
+                        #include &lt;algorithm&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; source = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; dest(10);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 拷贝所有元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;copy(source.begin(), source.end(), dest.begin());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "拷贝后: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : dest) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 条件拷贝（只拷贝偶数）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; even_numbers(5);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;auto it = copy_if(source.begin(), source.end(), even_numbers.begin(),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](int x) { return x % 2 == 0; });<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;even_numbers.resize(distance(even_numbers.begin(), it));<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "偶数: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : even_numbers) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 拷贝前5个元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; first_five(5);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;copy_n(source.begin(), 5, first_five.begin());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "前5个元素: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : first_five) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>变换和填充算法</h3>
+                <p>用于变换元素或填充容器。</p>
+                
+                <table>
+                    <tr>
+                        <th>算法</th>
+                        <th>功能</th>
+                    </tr>
+                    <tr>
+                        <td>transform()</td>
+                        <td>变换元素</td>
+                    </tr>
+                    <tr>
+                        <td>fill()</td>
+                        <td>填充元素</td>
+                    </tr>
+                    <tr>
+                        <td>generate()</td>
+                        <td>生成元素</td>
+                    </tr>
+                    <tr>
+                        <td>replace()</td>
+                        <td>替换元素</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>变换算法示例</h4>
+                    <div class="code">
+                        #include &lt;algorithm&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {1, 2, 3, 4, 5};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 变换（每个元素平方）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; squares(vec.size());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;transform(vec.begin(), vec.end(), squares.begin(),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](int x) { return x * x; });<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "平方: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : squares) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 双容器变换（两容器对应元素相加）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec2 = {10, 20, 30, 40, 50};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; sum(vec.size());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;transform(vec.begin(), vec.end(), vec2.begin(), sum.begin(),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plus&lt;int&gt;());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "相加: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : sum) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 填充<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; filled(5);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;fill(filled.begin(), filled.end(), 42);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "填充: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : filled) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 替换<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; replaced = vec;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;replace(replaced.begin(), replaced.end(), 3, 99);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "替换3为99: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : replaced) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数值算法 -->
+        <div id="numeric" class="content">
+            <h2>数值算法</h2>
+            <div class="concept-item">
+                <h3>数值计算算法</h3>
+                <p>STL提供了专门用于数值计算的算法，定义在&lt;numeric&gt;头文件中。</p>
+                
+                <table>
+                    <tr>
+                        <th>算法</th>
+                        <th>功能</th>
+                    </tr>
+                    <tr>
+                        <td>accumulate()</td>
+                        <td>累加计算</td>
+                    </tr>
+                    <tr>
+                        <td>inner_product()</td>
+                        <td>内积计算</td>
+                    </tr>
+                    <tr>
+                        <td>partial_sum()</td>
+                        <td>部分和计算</td>
+                    </tr>
+                    <tr>
+                        <td>adjacent_difference()</td>
+                        <td>相邻差计算</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>数值算法示例</h4>
+                    <div class="code">
+                        #include &lt;numeric&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {1, 2, 3, 4, 5};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 累加<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int sum = accumulate(vec.begin(), vec.end(), 0);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "累加和: " &lt;&lt; sum &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 自定义累加操作（累乘）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int product = accumulate(vec.begin(), vec.end(), 1, multiplies&lt;int&gt;());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "累乘积: " &lt;&lt; product &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 内积<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec2 = {2, 3, 4, 5, 6};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int inner = inner_product(vec.begin(), vec.end(), vec2.begin(), 0);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "内积: " &lt;&lt; inner &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 部分和<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; partial(vec.size());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;partial_sum(vec.begin(), vec.end(), partial.begin());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "部分和: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : partial) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 相邻差<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; diff(vec.size());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;adjacent_difference(vec.begin(), vec.end(), diff.begin());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "相邻差: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : diff) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>随机_shuffle和sample</h3>
+                <p>用于随机化容器中的元素。</p>
+                
+                <table>
+                    <tr>
+                        <th>算法</th>
+                        <th>功能</th>
+                    </tr>
+                    <tr>
+                        <td>shuffle()</td>
+                        <td>随机打乱元素</td>
+                    </tr>
+                    <tr>
+                        <td>sample()</td>
+                        <td>随机采样</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>随机化算法示例</h4>
+                    <div class="code">
+                        #include &lt;algorithm&gt;<br>
+                        #include &lt;vector&gt;<br>
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;random&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; vec = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 随机打乱<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;random_device rd;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;mt19937 g(rd());<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;shuffle(vec.begin(), vec.end(), g);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "随机打乱: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : vec) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 随机采样（从中选取5个元素）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; sample_vec(5);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;sample(vec.begin(), vec.end(), sample_vec.begin(), 5, g);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "随机采样: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int x : sample_vec) cout &lt;&lt; x &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践应用 -->
+        <div id="practice" class="content">
+            <h2>实践应用</h2>
+            
+            <div class="example">
+                <h3>练习1：学生成绩分析系统</h3>
+                <p>使用STL算法分析学生成绩数据：</p>
+                <div class="code">
+                    #include &lt;algorithm&gt;<br>
+                    #include &lt;numeric&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;string&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    struct Student {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string name;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; scores;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Student(const string& n, const vector&lt;int&gt;& s) : name(n), scores(s) {}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double getAverage() const {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (scores.empty()) return 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return accumulate(scores.begin(), scores.end(), 0.0) / scores.size();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    };<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;Student&gt; students = {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"张三", {85, 92, 78, 96, 88}},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"李四", {90, 88, 95, 87, 92}},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"王五", {78, 85, 82, 90, 86}},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"赵六", {95, 98, 92, 97, 94}}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算每个学生的平均分<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;double&gt; averages;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;transform(students.begin(), students.end(), back_inserter(averages),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](const Student& s) { return s.getAverage(); });<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 找出平均分最高的学生<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;auto maxIt = max_element(averages.begin(), averages.end());<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int maxIndex = distance(averages.begin(), maxIt);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 统计平均分超过90分的学生人数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int excellentCount = count_if(averages.begin(), averages.end(),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](double avg) { return avg &gt;= 90; });<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出结果<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "学生成绩分析:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (size_t i = 0; i &lt; students.size(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; students[i].name &lt;&lt; ": 平均分 " &lt;&lt; averages[i] &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n最高分学生: " &lt;&lt; students[maxIndex].name <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; " (" &lt;&lt; averages[maxIndex] &lt;&lt; "分)" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "优秀学生人数: " &lt;&lt; excellentCount &lt;&lt; "人" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：文本词频统计</h3>
+                <p>使用STL算法统计文本中单词频率：</p>
+                <div class="code">
+                    #include &lt;algorithm&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;string&gt;<br>
+                    #include &lt;sstream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    struct WordCount {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string word;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int count;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;WordCount(const string& w, int c) : word(w), count(c) {}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bool operator&lt;(const WordCount& other) const {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return count &gt; other.count; // 按频率降序<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    };<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string text = "the quick brown fox jumps over the lazy dog the dog was really lazy and the fox was quick";<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 分词<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;string&gt; words;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;istringstream iss(text);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string word;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (iss &gt;&gt; word) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 转为小写<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transform(word.begin(), word.end(), word.begin(), ::tolower);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;words.push_back(word);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 排序以便统计<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;sort(words.begin(), words.end());<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 统计词频<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;WordCount&gt; wordCounts;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;auto it = words.begin();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (it != words.end()) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto nextIt = upper_bound(it, words.end(), *it);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int count = distance(it, nextIt);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wordCounts.emplace_back(*it, count);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;it = nextIt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 按频率排序<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;sort(wordCounts.begin(), wordCounts.end());<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出结果<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "词频统计结果:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (const auto& wc : wordCounts) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; wc.word &lt;&lt; ": " &lt;&lt; wc.count &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习3：数据过滤和处理</h3>
+                <p>使用STL算法过滤和处理数据：</p>
+                <div class="code">
+                    #include &lt;algorithm&gt;<br>
+                    #include &lt;vector&gt;<br>
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    struct Product {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string name;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double price;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int rating;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Product(const string& n, double p, int r) : name(n), price(p), rating(r) {}<br>
+                    };<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;Product&gt; products = {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"笔记本电脑", 5999.99, 4},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"手机", 3999.99, 5},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"平板电脑", 2999.99, 3},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"耳机", 299.99, 4},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"键盘", 199.99, 5},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"鼠标", 99.99, 3}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 筛选价格低于2000的产品<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;Product&gt; affordable;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;copy_if(products.begin(), products.end(), back_inserter(affordable),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](const Product& p) { return p.price &lt; 2000; });<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 对筛选结果按价格排序<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;sort(affordable.begin(), affordable.end(),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](const Product& a, const Product& b) { return a.price &lt; b.price; });<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 提取产品名称<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;vector&lt;string&gt; names(affordable.size());<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;transform(affordable.begin(), affordable.end(), names.begin(),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](const Product& p) { return p.name; });<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出结果<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "价格低于2000的产品:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (size_t i = 0; i &lt; affordable.size(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; names[i] &lt;&lt; ": " &lt;&lt; affordable[i].price &lt;&lt; "元" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算平均价格<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double total = accumulate(affordable.begin(), affordable.end(), 0.0,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[](double sum, const Product& p) { return sum + p.price; });<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double average = total / affordable.size();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n平均价格: " &lt;&lt; average &lt;&lt; "元" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握常用算法，高效处理数据</p>
+        </footer>
+    </div>
+
+    <script src="../../scripts/theme-toggle.js"></script>
+    <script src="../../scripts/topic-nav.js"></script>
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

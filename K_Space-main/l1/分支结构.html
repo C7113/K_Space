@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 分支结构与逻辑判断</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #d63384;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #d63384;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #fdf7f8;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #d63384;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #d63384;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #fff5f7;
+        }
+        .code {
+            background: #2d3748;
+            color: #ffa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #fce4ec;
+            padding: 15px;
+            border-left: 5px solid #e91e63;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #ad1457;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .tip {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .principle {
+            background: #f1f8e9;
+            border-left: 5px solid #7cb342;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 C++ 分支结构与逻辑判断</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：仲 | 主题：拍七令 · 爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🧭 引入问题</button>
+            <button class="tab" onclick="openTab(event, 'limit')">🚫 顺序结构的局限</button>
+            <button class="tab" onclick="openTab(event, 'branch')">🔀 分支结构</button>
+            <button class="tab" onclick="openTab(event, 'relation')">⚖️ 关系运算符</button>
+            <button class="tab" onclick="openTab(event, 'multi')">🧩 多分支与嵌套</button>
+            <button class="tab" onclick="openTab(event, 'project')">🧱 项目实战</button>
+            <button class="tab" onclick="openTab(event, 'bool')">BOOLEN 布尔历史</button>
+        </div>
+
+        <!-- 引入问题 -->
+        <div id="intro" class="content active">
+            <h2>🧭 课程核心问题</h2>
+            <div class="concept-item">
+                <h3>三大灵魂拷问</h3>
+                <ul>
+                    <li>顺序结构能够支撑所有的程序逻辑吗？</li>
+                    <li>谁可以解决“根据条件执行不同操作”的问题？</li>
+                    <li>它还能做什么？</li>
+                </ul>
+                <p>本课将揭示：**顺序结构 ≠ 万能**，必须引入**分支结构（选择结构）**才能实现真正的智能判断。</p>
+            </div>
+            <div class="concept-item">
+                <h3>课程精神</h3>
+                <p>贯穿始终的三大理念：<span class="highlight">爱心</span>（关注细节）、<span class="highlight">创新</span>（突破顺序思维）、<span class="highlight">匠心</span>（精雕细琢逻辑结构）。</p>
+            </div>
+        </div>
+
+        <!-- 顺序结构的局限 -->
+        <div id="limit" class="content">
+            <h2>🚫 顺序结构的极限</h2>
+            <div class="concept-item">
+                <h3>什么是顺序结构？</h3>
+                <p>程序从上到下依次执行语句，**没有跳跃、没有回头、没有选择**。就像一条笔直的流水线。</p>
+            </div>
+            <div class="concept-item">
+                <h3>经典反例：判断奇偶数</h3>
+                <p><strong>题目：</strong>给定一个整数 n，若为奇数输出 "odd"，若为偶数输出 "even"。</p>
+                <div class="example">
+                    <h3>仅用顺序结构？</h3>
+                    <p>无法实现！因为你不知道输入的是奇还是偶，必须先“判断”，再“选择”输出内容。</p>
+                    <p>✅ 结论：<strong>顺序结构无法处理需要条件判断的逻辑。</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分支结构 -->
+        <div id="branch" class="content">
+            <h2>🔀 分支结构（选择结构）</h2>
+            <div class="concept-item">
+                <h3>基本语法：if-else</h3>
+                <div class="code">
+if (判断条件) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 条件为真时执行<br>
+} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 条件为假时执行<br>
+}
+                </div>
+                <p>这是程序实现“智能决策”的基础。</p>
+            </div>
+            <div class="concept-item">
+                <h3>单分支（无 else）</h3>
+                <div class="code">
+if (判断条件) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 仅当条件成立时执行<br>
+}
+                </div>
+                <p>常用于**过滤特殊情况**，如输入合法性检查。</p>
+            </div>
+        </div>
+
+        <!-- 关系运算符 -->
+        <div id="relation" class="content">
+            <h2>⚖️ 关系运算符</h2>
+            <div class="concept-item">
+                <h3>运算符列表</h3>
+                <table>
+                    <tr><th>结合律</th><th>运算符</th><th>功能</th><th>用法示例</th></tr>
+                    <tr><td>左</td><td><code>&lt;</code></td><td>小于</td><td><code>a &lt; b</code></td></tr>
+                    <tr><td>左</td><td><code>&lt;=</code></td><td>小于等于</td><td><code>a &lt;= b</code></td></tr>
+                    <tr><td>左</td><td><code>&gt;</code></td><td>大于</td><td><code>a &gt; b</code></td></tr>
+                    <tr><td>左</td><td><code>&gt;=</code></td><td>大于等于</td><td><code>a &gt;= b</code></td></tr>
+                    <tr><td>左</td><td><code>==</code></td><td>等于</td><td><code>a == b</code></td></tr>
+                    <tr><td>左</td><td><code>!=</code></td><td>不等于</td><td><code>a != b</code></td></tr>
+                </table>
+            </div>
+            <div class="tip">
+                <strong>Tip：</strong>关系运算符比较两个表达式的大小关系，并返回 <code>bool</code> 类型值（<code>true</code> 或 <code>false</code>）。
+            </div>
+            <div class="tip">
+                <strong>重要提醒：</strong>除非比较对象本身就是布尔类型，否则不要将 <code>true</code> / <code>false</code> 作为关系运算的直接对象。
+                <br>❌ 错误示例：<code>if (x == true)</code>（应写为 <code>if (x)</code>）
+            </div>
+        </div>
+
+        <!-- 多分支与嵌套 -->
+        <div id="multi" class="content">
+            <h2>🧩 多分支与嵌套 if</h2>
+            <div class="concept-item">
+                <h3>多分支结构（if-else if-else）</h3>
+                <div class="code">
+if (条件1) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 执行块1<br>
+} else if (条件2) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 执行块2<br>
+} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 所有条件都不满足<br>
+}
+                </div>
+                <p>适用于多种互斥情况的判断，如成绩等级、正负零判断等。</p>
+            </div>
+            <div class="concept-item">
+                <h3>嵌套 if 语句</h3>
+                <p>在一个 if 代码块内部再写 if 语句。</p>
+                <div class="principle">
+                    <strong>嵌套基本原则：</strong>
+                    <ol>
+                        <li>先考虑**特殊情况**，用单分支提前过滤；</li>
+                        <li>对**普遍情况**，使用带 <code>else</code> 的完整分支；</li>
+                        <li><strong>嵌套层数不要超过 3 层</strong>；</li>
+                        <li>超过 3 层通常意味着存在更优算法或可重构逻辑。</li>
+                    </ol>
+                </div>
+                <div class="tip">
+                    <strong>警告：</strong>过深嵌套如同“叠叠乐”，会导致代码可读性差、维护困难、易出错。
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目实战 -->
+        <div id="project" class="content">
+            <h2>🧱 项目实战：分支结构应用</h2>
+            
+            <div class="concept-item">
+                <h3>1. 偶数判断</h3>
+                <p><strong>要求：</strong>输入正整数 a，若为偶数输出 "yes"，否则不输出。</p>
+                <div class="code">
+int a;<br>
+cin >> a;<br>
+if (a % 2 == 0) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << "yes" << endl;<br>
+}
+                </div>
+                <p>✅ 考察：单分支 + 取余运算判断奇偶。</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>2. 最大数输出</h3>
+                <p><strong>要求：</strong>输入三个整数，输出最大值。</p>
+                <div class="code">
+int a, b, c;<br>
+cin >> a >> b >> c;<br>
+if (a >= b && a >= c) cout << a;<br>
+else if (b >= a && b >= c) cout << b;<br>
+else cout << c;
+                </div>
+                <p>✅ 考察：多分支 + 逻辑与（<code>&&</code>）组合判断。</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>3. 判断数正负</h3>
+                <p><strong>要求：</strong>输入整数 N，输出 "positive" / "zero" / "negative"。</p>
+                <div class="code">
+long long N; // 注意范围 -10^9 ≤ N ≤ 10^9<br>
+cin >> N;<br>
+if (N > 0) cout << "positive";<br>
+else if (N == 0) cout << "zero";<br>
+else cout << "negative";
+                </div>
+                <p>✅ 考察：三路分支、边界值（零）处理。</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>4. 开灯问题（拍七令思想延伸）</h3>
+                <p><strong>背景：</strong>灯初始关闭，拉一次开，再拉关，如此往复。</p>
+                <p><strong>要求：</strong>输入拉灯次数 M（1 < M < 100），输出 1（亮）或 0（灭）。</p>
+                <div class="code">
+int M;<br>
+cin >> M;<br>
+if (M % 2 == 1) cout << 1;<br>
+else cout << 0;
+                </div>
+                <p>✅ 考察：奇偶判断的实际应用，隐含状态机思想。</p>
+                <div class="tip">
+                    <strong>拓展：</strong>“拍七令”游戏规则：从1开始报数，遇到7的倍数或含7的数字要拍手。这需要用到 <code>n % 7 == 0</code> 或 <code>n % 10 == 7</code> 等判断，是分支结构的经典场景。
+                </div>
+            </div>
+        </div>
+
+        <!-- 布尔历史 -->
+        <div id="bool" class="content">
+            <h2>BOOLEN 布尔的历史</h2>
+            <div class="concept-item">
+                <h3>乔治·布尔（George Boole）</h3>
+                <p>19世纪英国数学家，创立了<strong>布尔代数</strong>，为现代计算机逻辑奠定了数学基础。</p>
+                <p>在C++中，<code>bool</code> 类型只有两个值：<code>true</code>（真）和 <code>false</code>（假），是所有条件判断的基石。</p>
+                <div class="example">
+                    <h3>布尔值的本质</h3>
+                    <p>关系运算（如 <code>5 > 3</code>）的结果就是一个 <code>bool</code> 值（<code>true</code>）。</p>
+                    <p>if 语句的本质就是：<code>if (表达式返回 true)</code>。</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++ 分支结构课程 | 教师：仲 | 拍七令 · 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

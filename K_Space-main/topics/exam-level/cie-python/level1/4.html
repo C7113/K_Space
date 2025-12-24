@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python一级 - 第4课：运算符与表达式 - C++ 知识导航</title>
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/topic.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="stylesheet" href="/styles/animations.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        Python一级 第4课：运算符与表达式
+        <span class="badge">基础入门</span>
+      </h1>
+      <p>掌握算术运算符 | 理解运算优先级 | 编写数学表达式</p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <a href="../index.html" class="toggle-btn">↩ 返回 CIE Python 考试首页</a>
+    <a href="../../../../exam-topics.html" class="toggle-btn">↩ 返回 等级考试知识点</a>
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+  </div>
+  
+  <div class="container">
+    <section class="topic-section">
+      <h2>知识点概览</h2>
+      <div class="knowledge-points">
+        <ul>
+          <li>算术运算符：+（加）、-（减）、*（乘）、/（除，结果为浮点数）、//（整除）、%（取余）、**（幂运算）</li>
+          <li>运算优先级：括号()优先，幂**最高，然后是* / // %，最后是+ -</li>
+          <li>能编写简单数学表达式，如计算面积、周长、平均分等</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2>知识点详解</h2>
+      
+      <h3>1. 算术运算符</h3>
+      <p>Python提供了丰富的算术运算符来进行数学计算，以下是Python中常用的算术运算符：</p>
+      
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>运算符</th>
+            <th>描述</th>
+            <th>示例</th>
+            <th>结果</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>+</td>
+            <td>加法</td>
+            <td>5 + 3</td>
+            <td>8</td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td>减法</td>
+            <td>5 - 3</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>*</td>
+            <td>乘法</td>
+            <td>5 * 3</td>
+            <td>15</td>
+          </tr>
+          <tr>
+            <td>/</td>
+            <td>除法</td>
+            <td>5 / 2</td>
+            <td>2.5</td>
+          </tr>
+          <tr>
+            <td>//</td>
+            <td>整除</td>
+            <td>5 // 2</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>%</td>
+            <td>取余</td>
+            <td>5 % 2</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>**</td>
+            <td>幂运算</td>
+            <td>2 ** 3</td>
+            <td>8</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="concept-card">
+        <h4>加法运算符 (+)</h4>
+        <p>用于两个数相加，也可以用于字符串连接：</p>
+        <div class="example-code">
+# 数值相加
+result = 10 + 5
+print(result)  # 输出：15
+
+# 字符串连接
+greeting = "Hello" + " " + "World"
+print(greeting)  # 输出：Hello World
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>减法运算符 (-)</h4>
+        <p>用于两个数相减：</p>
+        <div class="example-code">
+result = 10 - 3
+print(result)  # 输出：7
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>乘法运算符 (*)</h4>
+        <p>用于两个数相乘，也可以用于字符串重复：</p>
+        <div class="example-code">
+# 数值相乘
+result = 6 * 7
+print(result)  # 输出：42
+
+# 字符串重复
+text = "Python" * 3
+print(text)  # 输出：PythonPythonPython
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>除法运算符 (/)</h4>
+        <p>用于两个数相除，结果总是浮点数：</p>
+        <div class="example-code">
+result = 7 / 2
+print(result)  # 输出：3.5
+print(type(result))  # 输出：&lt;class 'float'&gt;
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>整除运算符 (//)</h4>
+        <p>返回商的整数部分，向下取整：</p>
+        <div class="example-code">
+result = 7 // 2
+print(result)  # 输出：3
+
+# 负数情况
+result2 = -7 // 2
+print(result2)  # 输出：-4 (向下取整)
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>取余运算符 (%)</h4>
+        <p>返回除法的余数：</p>
+        <div class="example-code">
+result = 7 % 2
+print(result)  # 输出：1
+
+# 判断奇偶性
+number = 15
+if number % 2 == 0:
+    print(number, "是偶数")
+else:
+    print(number, "是奇数")
+# 输出：15 是奇数
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>幂运算符 (**)</h4>
+        <p>计算幂次方：</p>
+        <div class="example-code">
+# 计算平方
+square = 5 ** 2
+print(square)  # 输出：25
+
+# 计算立方
+cube = 3 ** 3
+print(cube)  # 输出：27
+
+# 计算平方根（1/2次方）
+sqrt_result = 16 ** 0.5
+print(sqrt_result)  # 输出：4.0
+        </div>
+      </div>
+      
+      <h3>2. 运算优先级</h3>
+      <p>当一个表达式中包含多个运算符时，Python按照一定的优先级顺序进行计算：</p>
+      
+      <div class="concept-card">
+        <h4>运算符优先级（从高到低）</h4>
+        <ol>
+          <li>括号：() - 最高优先级，可以改变运算顺序</li>
+          <li>幂运算：**</li>
+          <li>乘、除、整除、取余：*、/、//、%</li>
+          <li>加、减：+、-</li>
+        </ol>
+      </div>
+      
+      <div class="example-code">
+# 示例1：默认优先级
+result = 2 + 3 * 4
+print(result)  # 输出：14 (先算乘法，再算加法)
+
+# 示例2：使用括号改变优先级
+result = (2 + 3) * 4
+print(result)  # 输出：20 (先算括号内加法，再算乘法)
+
+# 示例3：复杂表达式
+result = 2 ** 3 * 4 + 10 / 2
+# 计算顺序：2**3(=8) -> 8*4(=32) -> 10/2(=5.0) -> 32+5.0(=37.0)
+print(result)  # 输出：37.0
+
+# 示例4：同级运算符从左到右计算
+result = 10 / 2 * 3
+# 计算顺序：10/2(=5.0) -> 5.0*3(=15.0)
+print(result)  # 输出：15.0
+      </div>
+      
+      <div class="concept-card tip">
+        <h4>记忆技巧</h4>
+        <p>可以使用 PEMDAS 来记忆运算优先级：</p>
+        <ul>
+          <li><strong>P</strong>arentheses（括号）</li>
+          <li><strong>E</strong>xponents（指数）</li>
+          <li><strong>M</strong>ultiplication（乘法）和<strong>D</strong>ivision（除法）- 从左到右</li>
+          <li><strong>A</strong>ddition（加法）和<strong>S</strong>ubtraction（减法）- 从左到右</li>
+        </ul>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>示例演示</h2>
+      
+      <h3>示例1：几何图形计算</h3>
+      <div class="example-code">
+# geometry_calculations.py
+# 几何图形计算示例
+
+import math
+
+print("=== 几何图形计算器 ===")
+
+# 计算圆的周长和面积
+radius = float(input("请输入圆的半径："))
+circle_perimeter = 2 * math.pi * radius  # 周长 = 2πr
+circle_area = math.pi * radius ** 2      # 面积 = πr²
+
+print("\n圆的计算结果：")
+print("半径：", radius)
+print("周长：", circle_perimeter)
+print("面积：", circle_area)
+
+# 计算矩形的周长和面积
+print("\n=== 矩形计算 ===")
+length = float(input("请输入矩形的长度："))
+width = float(input("请输入矩形的宽度："))
+rectangle_perimeter = 2 * (length + width)  # 周长 = 2(长+宽)
+rectangle_area = length * width              # 面积 = 长×宽
+
+print("\n矩形的计算结果：")
+print("长度：", length)
+print("宽度：", width)
+print("周长：", rectangle_perimeter)
+print("面积：", rectangle_area)
+
+# 计算三角形面积（海伦公式）
+print("\n=== 三角形计算 ===")
+a = float(input("请输入三角形第一条边长："))
+b = float(input("请输入三角形第二条边长："))
+c = float(input("请输入三角形第三条边长："))
+
+# 半周长
+s = (a + b + c) / 2
+# 海伦公式计算面积
+triangle_area = (s * (s - a) * (s - b) * (s - c)) ** 0.5
+
+print("\n三角形的计算结果：")
+print("三边长：", a, ",", b, ",", c)
+print("面积：", triangle_area)
+      </div>
+      
+      <h3>示例2：成绩统计计算</h3>
+      <div class="example-code">
+# grade_statistics.py
+# 成绩统计计算示例
+
+print("=== 学生成绩统计 ===")
+
+# 输入三门课程成绩
+chinese = float(input("请输入语文成绩："))
+math = float(input("请输入数学成绩："))
+english = float(input("请输入英语成绩："))
+
+# 计算总分和平均分
+total_score = chinese + math + english
+average_score = total_score / 3
+
+# 计算分数差值
+chinese_diff = chinese - average_score
+math_diff = math - average_score
+english_diff = english - average_score
+
+# 输出结果
+print("\n=== 成绩统计结果 ===")
+print("语文成绩：", chinese, "(与平均分差值:", chinese_diff, ")")
+print("数学成绩：", math, "(与平均分差值:", math_diff, ")")
+print("英语成绩：", english, "(与平均分差值:", english_diff, ")")
+print("总分：", total_score)
+print("平均分：", average_score)
+
+# 判断是否有科目不及格
+if chinese < 60 or math < 60 or english < 60:
+    print("注意：有科目成绩低于60分！")
+else:
+    print("恭喜：所有科目均及格！")
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>课堂练习</h2>
+      
+      <div class="exercise-card">
+        <h3>练习1：运算结果预测</h3>
+        <p>不使用计算机，预测以下表达式的结果：</p>
+        <div class="example-code">
+1. 10 + 5 * 2
+2. (10 + 5) * 2
+3. 2 ** 3 + 1
+4. 2 ** (3 + 1)
+5. 15 / 3 + 2.5
+6. 15 // 4
+7. 15 % 4
+8. 2 + 10 / 2 - 3
+        </div>
+        <details>
+          <summary>点击查看答案</summary>
+          <ol>
+            <li>10 + 5 * 2 = 10 + 10 = 20</li>
+            <li>(10 + 5) * 2 = 15 * 2 = 30</li>
+            <li>2 ** 3 + 1 = 8 + 1 = 9</li>
+            <li>2 ** (3 + 1) = 2 ** 4 = 16</li>
+            <li>15 / 3 + 2.5 = 5.0 + 2.5 = 7.5</li>
+            <li>15 // 4 = 3</li>
+            <li>15 % 4 = 3</li>
+            <li>2 + 10 / 2 - 3 = 2 + 5.0 - 3 = 4.0</li>
+          </ol>
+        </details>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习2：时间转换程序</h3>
+        <p>编写一个程序，用户输入总秒数，程序将其转换为小时、分钟和秒的形式。</p>
+        <p>例如：输入3661秒，应该输出1小时1分1秒</p>
+        <p>提示：使用整除(//)和取余(%)运算符</p>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+# time_converter.py
+total_seconds = int(input("请输入总秒数："))
+
+# 计算小时数
+hours = total_seconds // 3600
+# 计算剩余秒数
+remaining_seconds = total_seconds % 3600
+# 计算分钟数
+minutes = remaining_seconds // 60
+# 计算最终秒数
+seconds = remaining_seconds % 60
+
+print(f"{total_seconds} 秒等于 {hours} 小时 {minutes} 分钟 {seconds} 秒")
+          </div>
+        </details>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习3：数字分离程序</h3>
+        <p>编写一个程序，输入一个三位数，分别输出它的百位、十位和个位数字。</p>
+        <p>例如：输入456，输出 百位:4, 十位:5, 个位:6</p>
+        <p>提示：结合整除和取余运算符</p>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+# digit_separator.py
+number = int(input("请输入一个三位数："))
+
+# 提取各位数字
+hundreds = number // 100        # 百位数字
+tens = (number // 10) % 10      # 十位数字
+ones = number % 10              # 个位数字
+
+print(f"数字 {number} 的各位数字为：")
+print(f"百位：{hundreds}")
+print(f"十位：{tens}")
+print(f"个位：{ones}")
+          </div>
+        </details>
+      </div>
+    </section>
+  </div>
+  
+  <div class="navigation-buttons">
+    <a href="3.html" class="nav-button">上一课：变量与数据类型</a>
+    <a href="5.html" class="nav-button next">下一课：输入与输出 ➔</a>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+  </footer>
+
+  <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+
+    // 粒子动画效果
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

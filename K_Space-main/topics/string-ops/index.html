@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 字符串处理</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🔤 C++ 字符串处理</h1>
+            <p class="subtitle">—— 掌握C++中的字符串操作</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'string-type')">🔤 string类型</button>
+            <button class="tab" onclick="openTab(event, 'string-ops')">🧮 常用操作</button>
+            <button class="tab" onclick="openTab(event, 'char-array')">🔤 字符数组</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践应用</button>
+        </div>
+
+        <!-- string类型 -->
+        <div id="string-type" class="content active">
+            <h2>string类型</h2>
+            <div class="concept-item">
+                <h3>string类型的定义</h3>
+                <p><code>string</code>是C++标准库提供的字符串类型，需要包含<code>&lt;string&gt;</code>头文件：</p>
+                
+                <h4>string的定义方式</h4>
+                <div class="code">
+                    #include &lt;string&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    string str1;                 <span class="comment">// 空字符串</span><br>
+                    string str2 = "Hello";       <span class="comment">// 直接初始化</span><br>
+                    string str3("World");        <span class="comment">// 构造函数初始化</span><br>
+                    string str4(5, 'A');         <span class="comment">// 用5个'A'字符初始化</span><br>
+                    string str5(str2);           <span class="comment">// 拷贝初始化</span>
+                </div>
+                
+                <div class="example">
+                    <h4>string定义示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;string&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string str1;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string str2 = "Hello";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string str3("World");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string str4(5, 'A');<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string str5(str2);<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "str1: '" &lt;&lt; str1 &lt;&lt; "'" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "str2: " &lt;&lt; str2 &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "str3: " &lt;&lt; str3 &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "str4: " &lt;&lt; str4 &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "str5: " &lt;&lt; str5 &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>string的基本特性</h3>
+                <p><code>string</code>类型具有以下重要特性：</p>
+                
+                <h4>主要特性</h4>
+                <ul>
+                    <li><strong>动态大小</strong>：string的大小可以根据内容自动调整</li>
+                    <li><strong>自动内存管理</strong>：不需要手动管理内存</li>
+                    <li><strong>丰富的操作</strong>：提供大量字符串操作函数</li>
+                    <li><strong>类型安全</strong>：避免缓冲区溢出等问题</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>string动态特性示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;string&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string str = "Hello";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "初始字符串: " &lt;&lt; str &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "长度: " &lt;&lt; str.length() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 动态添加内容</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;str += " World";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "添加后: " &lt;&lt; str &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "新长度: " &lt;&lt; str.length() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 继续添加</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;str = str + "!";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "再次添加: " &lt;&lt; str &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最终长度: " &lt;&lt; str.length() &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 常用操作 -->
+        <div id="string-ops" class="content">
+            <h2>常用操作</h2>
+            <div class="concept-item">
+                <h3>string的常用操作函数</h3>
+                <p>string类型提供了丰富的成员函数用于字符串操作：</p>
+                
+                <h4>访问和修改操作</h4>
+                <table>
+                    <tr>
+                        <th>函数</th>
+                        <th>功能</th>
+                        <th>示例</th>
+                    </tr>
+                    <tr>
+                        <td>str[i]</td>
+                        <td>访问第i个字符</td>
+                        <td>str[0] 获取第一个字符</td>
+                    </tr>
+                    <tr>
+                        <td>str.at(i)</td>
+                        <td>安全访问第i个字符</td>
+                        <td>str.at(0) 获取第一个字符</td>
+                    </tr>
+                    <tr>
+                        <td>str.length()</td>
+                        <td>获取字符串长度</td>
+                        <td>str.length() 获取字符数</td>
+                    </tr>
+                    <tr>
+                        <td>str.size()</td>
+                        <td>获取字符串大小</td>
+                        <td>同length()</td>
+                    </tr>
+                    <tr>
+                        <td>str.empty()</td>
+                        <td>判断是否为空</td>
+                        <td>str.empty() 为空返回true</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>访问和修改操作示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;string&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string str = "Hello";<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 访问字符</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第一个字符: " &lt;&lt; str[0] &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最后一个字符: " &lt;&lt; str[str.length()-1] &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 修改字符</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;str[0] = 'h';<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "修改后: " &lt;&lt; str &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 字符串信息</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "长度: " &lt;&lt; str.length() &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "是否为空: " &lt;&lt; (str.empty() ? "是" : "否") &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>字符串拼接和查找</h3>
+                <p>string支持多种拼接和查找操作：</p>
+                
+                <h4>拼接操作</h4>
+                <table>
+                    <tr>
+                        <th>操作</th>
+                        <th>说明</th>
+                        <th>示例</th>
+                    </tr>
+                    <tr>
+                        <td>+</td>
+                        <td>连接两个字符串</td>
+                        <td>str1 + str2</td>
+                    </tr>
+                    <tr>
+                        <td>+=</td>
+                        <td>追加字符串</td>
+                        <td>str1 += str2</td>
+                    </tr>
+                    <tr>
+                        <td>append()</td>
+                        <td>追加字符串</td>
+                        <td>str.append(str2)</td>
+                    </tr>
+                </table>
+                
+                <h4>查找操作</h4>
+                <table>
+                    <tr>
+                        <th>函数</th>
+                        <th>功能</th>
+                        <th>示例</th>
+                    </tr>
+                    <tr>
+                        <td>find()</td>
+                        <td>查找子字符串</td>
+                        <td>str.find("Hello")</td>
+                    </tr>
+                    <tr>
+                        <td>rfind()</td>
+                        <td>反向查找子字符串</td>
+                        <td>str.rfind("o")</td>
+                    </tr>
+                    <tr>
+                        <td>substr()</td>
+                        <td>提取子字符串</td>
+                        <td>str.substr(2, 3)</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>拼接和查找示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;string&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string str1 = "Hello";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string str2 = "World";<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 字符串拼接</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string result = str1 + " " + str2;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "拼接结果: " &lt;&lt; result &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;result += "!";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "追加后: " &lt;&lt; result &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 字符串查找</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;size_t pos = result.find("World");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (pos != string::npos) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "找到 'World' 在位置: " &lt;&lt; pos &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "未找到 'World'" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 提取子字符串</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;string sub = result.substr(6, 5);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "子字符串: " &lt;&lt; sub &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 字符数组 -->
+        <div id="char-array" class="content">
+            <h2>字符数组</h2>
+            <div class="concept-item">
+                <h3>字符数组的定义</h3>
+                <p>字符数组是C语言风格的字符串表示方式，在C++中仍然可以使用：</p>
+                
+                <h4>字符数组的定义方式</h4>
+                <div class="code">
+                    char str1[] = "Hello";      <span class="comment">// 自动计算大小</span><br>
+                    char str2[10] = "Hello";    <span class="comment">// 指定大小</span><br>
+                    char str3[] = {'H','e','l','l','o','\0'};  <span class="comment">// 逐个初始化</span><br>
+                    char str4[10];              <span class="comment">// 未初始化</span>
+                </div>
+                
+                <h4>字符数组的特点</h4>
+                <ul>
+                    <li><strong>以'\0'结尾</strong>：C风格字符串必须以空字符结尾</li>
+                    <li><strong>固定大小</strong>：定义后大小不能改变</li>
+                    <li><strong>手动管理</strong>：需要小心处理内存和边界</li>
+                    <li><strong>兼容性好</strong>：与C语言库函数兼容</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>字符数组示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;cstring&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char str1[] = "Hello";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char str2[20] = "World";<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "str1: " &lt;&lt; str1 &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "str2: " &lt;&lt; str2 &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 获取长度</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "str1长度: " &lt;&lt; strlen(str1) &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 连接字符串</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;strcat(str1, " ");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;strcat(str1, str2);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "连接后: " &lt;&lt; str1 &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>常用字符数组函数</h3>
+                <p>处理字符数组需要包含<code>&lt;cstring&gt;</code>头文件：</p>
+                
+                <h4>常用函数</h4>
+                <table>
+                    <tr>
+                        <th>函数</th>
+                        <th>功能</th>
+                        <th>示例</th>
+                    </tr>
+                    <tr>
+                        <td>strlen()</td>
+                        <td>获取字符串长度</td>
+                        <td>strlen(str)</td>
+                    </tr>
+                    <tr>
+                        <td>strcpy()</td>
+                        <td>复制字符串</td>
+                        <td>strcpy(dest, src)</td>
+                    </tr>
+                    <tr>
+                        <td>strcat()</td>
+                        <td>连接字符串</td>
+                        <td>strcat(dest, src)</td>
+                    </tr>
+                    <tr>
+                        <td>strcmp()</td>
+                        <td>比较字符串</td>
+                        <td>strcmp(str1, str2)</td>
+                    </tr>
+                </table>
+                
+                <div class="example">
+                    <h4>字符数组函数示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        #include &lt;cstring&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char str1[50] = "Hello";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;char str2[] = "World";<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 字符串长度</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "str1长度: " &lt;&lt; strlen(str1) &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 复制字符串</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;strcpy(str1, str2);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "复制后str1: " &lt;&lt; str1 &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 连接字符串</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;strcpy(str1, "Hello");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;strcat(str1, " ");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;strcat(str1, str2);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "连接后str1: " &lt;&lt; str1 &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 比较字符串</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int result = strcmp(str1, "Hello World");<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (result == 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "字符串相等" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;} else if (result &lt; 0) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "str1小于比较字符串" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "str1大于比较字符串" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践应用 -->
+        <div id="practice" class="content">
+            <h2>实践应用</h2>
+            
+            <div class="example">
+                <h3>示例1：字符串反转</h3>
+                <p>实现一个字符串反转程序：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;string&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string str;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入一个字符串: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;getline(cin, str);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "原字符串: " &lt;&lt; str &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 反转字符串</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n = str.length();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n/2; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap(str[i], str[n-1-i]);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "反转后: " &lt;&lt; str &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>示例2：统计字符出现次数</h3>
+                <p>统计字符串中各字符出现的次数：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;string&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string str;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int count[256] = {0};  <span class="comment">// ASCII字符计数数组</span><br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入一个字符串: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;getline(cin, str);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 统计每个字符出现次数</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; str.length(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count[(unsigned char)str[i]]++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 输出结果</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "字符统计结果:" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 256; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (count[i] &gt; 0) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "'" &lt;&lt; (char)i &lt;&lt; "': " &lt;&lt; count[i] &lt;&lt; "次" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>示例3：密码验证</h3>
+                <p>实现一个简单的密码验证程序：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    #include &lt;string&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    bool isValidPassword(const string& password) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (password.length() &lt; 6) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;  <span class="comment">// 长度不足</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bool hasDigit = false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bool hasLetter = false;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; password.length(); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isdigit(password[i])) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hasDigit = true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (isalpha(password[i])) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hasLetter = true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return hasDigit && hasLetter;<br>
+                    }<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;string password;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入密码 (至少6位，包含字母和数字): ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;getline(cin, password);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (isValidPassword(password)) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "密码设置成功！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "密码不符合要求！" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握字符串处理，操作文本数据</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

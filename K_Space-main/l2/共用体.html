@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>共用体（Union）详解：C++ 内存共享机制</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #d32f2f;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #ffebee;
+        }
+        .tab.active {
+            background: #d32f2f;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #fdf7f8;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #d32f2f;
+        }
+        .code {
+            background: #2d3748;
+            color: #f8bbd0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #fce4ec;
+            padding: 15px;
+            border-left: 5px solid #e91e63;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .caution {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .best-practice {
+            background: #f1f8e9;
+            border-left: 5px solid #7cb342;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .memory-diagram {
+            text-align: center;
+            margin: 15px 0;
+            font-family: monospace;
+            background: #fff3e0;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ 共用体（Union）详解：C++ 内存共享机制</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🎯 什么是共用体？</button>
+            <button class="tab" onclick="openTab(event, 'syntax')">📜 声明与使用</button>
+            <button class="tab" onclick="openTab(event, 'vehicle')">🚗 车辆信息管理</button>
+            <button class="tab" onclick="openTab(event, 'grade')">📊 成绩统计</button>
+            <button class="tab" onclick="openTab(event, 'string')">🚫 为何不能用 string？</button>
+            <button class="tab" onclick="openTab(event, 'compare')">⚖️ vs 结构体</button>
+            <button class="tab" onclick="openTab(event, 'modern')">✨ 现代替代方案</button>
+            <button class="tab" onclick="openTab(event, 'best')">✅ 最佳实践</button>
+        </div>
+
+        <!-- 引入 -->
+        <div id="intro" class="content active">
+            <h2>🎯 什么是共用体（Union）？</h2>
+            <div class="concept-item">
+                <p><strong>共用体（union）</strong> 是一种特殊的数据类型，允许在<strong>同一块内存位置</strong>存储不同的数据类型。</p>
+                <p>与结构体（struct）不同：共用体的所有成员<strong>共享同一段内存</strong>，因此在任意时刻，只能有一个成员是有效的。</p>
+            </div>
+            <div class="example">
+                💡 应用场景：神秘宝箱（随机出金币或道具）、协议解析、硬件寄存器映射、节省内存。
+            </div>
+        </div>
+
+        <!-- 语法 -->
+        <div id="syntax" class="content">
+            <h2>📜 共用体声明与使用</h2>
+            <div class="concept-item">
+                <h3>基本语法</h3>
+                <div class="code">
+union Reward {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int coins;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;char item[20]; // C 风格字符串<br>
+};<br><br>
+Reward r;<br>
+r.coins = 100;        // 写入 coins<br>
+cout << r.coins;      // 读取 coins（正确）<br>
+// cout << r.item;    // ❌ 危险！此时 item 内容未定义
+                </div>
+            </div>
+            <div class="caution">
+                ⚠️ **重要**：写入一个成员后，其他成员的值是**未定义的**！必须由程序员自己跟踪当前有效的是哪个成员。
+            </div>
+        </div>
+
+        <!-- 车辆信息 -->
+        <div id="vehicle" class="content">
+            <h2>🚗 车辆信息管理（项目构建）</h2>
+            <div class="concept-item">
+                <h3>需求</h3>
+                <p>记录汽车（车牌+品牌）或自行车（编号+颜色），使用共用体节省内存。</p>
+            </div>
+            <div class="concept-item">
+                <h3>安全实现（带类型标签）</h3>
+                <div class="code">
+#include &lt;iostream&gt;<br>
+#include &lt;cstring&gt;<br>
+using namespace std;<br><br>
+struct Vehicle {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;char type; // 'A' 汽车, 'B' 自行车<br>
+&nbsp;&nbsp;&nbsp;&nbsp;union {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;struct { char plate[10]; char brand[20]; } car;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;struct { char id[10]; char color[10]; } bike;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} data;<br>
+};<br><br>
+// 使用示例见完整程序...
+                </div>
+            </div>
+            <div class="best-practice">
+                ✅ **最佳实践**：将共用体嵌入结构体，并添加一个“类型标签”（tag）字段，用于记录当前存储的是哪种数据。
+            </div>
+        </div>
+
+        <!-- 成绩统计 -->
+        <div id="grade" class="content">
+            <h2>📊 成绩统计（等级 or 分数）</h2>
+            <div class="concept-item">
+                <h3>需求</h3>
+                <p>成绩用 "best/good/poor" 或 0~100 分数表示，统计等级人数和分数平均分。</p>
+            </div>
+            <div class="concept-item">
+                <h3>实现思路</h3>
+                <ul>
+                    <li>不需要共用体存储每个成绩（因为输入时已知类型）</li>
+                    <li>但若要设计通用成绩类型，可如下定义：</li>
+                </ul>
+                <div class="code">
+struct Grade {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;bool isLevel;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;union {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char level[10]; // "best"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int score;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} value;<br>
+};
+                </div>
+            </div>
+            <div class="tip">
+                💡 本题更推荐直接用两个变量分别计数，无需复杂共用体。
+            </div>
+        </div>
+
+        <!-- string 问题 -->
+        <div id="string" class="content">
+            <h2>🚫 为什么共用体中不能直接使用 std::string？</h2>
+            <div class="concept-item">
+                <p><code>std::string</code> 是一个<strong>非平凡类型</strong>（non-trivial type）：</p>
+                <ul>
+                    <li>它有构造函数、析构函数、拷贝赋值运算符</li>
+                    <li>它内部动态管理堆内存（指针 + 长度 + 容量）</li>
+                </ul>
+                <p>而传统共用体要求所有成员具有<strong>平凡生命周期</strong>（即可以直接按位复制）。</p>
+            </div>
+            <div class="caution">
+                ❌ 如果强行放入 <code>std::string</code>，会导致：
+                <ul>
+                    <li>析构函数被错误调用（内存泄漏或 double-free）</li>
+                    <li>行为未定义（Undefined Behavior）</li>
+                </ul>
+            </div>
+            <div class="best-practice">
+                ✅ **解决方案**：
+                <ul>
+                    <li>使用 C 风格字符数组（<code>char name[20]</code>）</li>
+                    <li>或使用 C++17 的 <code>std::variant&lt;std::string, int&gt;</code>（类型安全）</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- vs 结构体 -->
+        <div id="compare" class="content">
+            <h2>⚖️ 共用体 vs 结构体</h2>
+            <div class="concept-item">
+                <h3>内存布局对比</h3>
+                <div class="memory-diagram">
+// struct Point { int x; double y; };<br>
+// 内存：[ x (4B) ][ padding (4B) ][ y (8B) ] → 总 16B<br><br>
+
+// union Data { int x; double y; };<br>
+// 内存：[ 最大成员的空间 (8B) ] → 总 8B
+                </div>
+            </div>
+            <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+                <tr style="background:#ffebee;">
+                    <th style="padding:10px; border:1px solid #ccc;">特性</th>
+                    <th style="padding:10px; border:1px solid #ccc;">结构体 (struct)</th>
+                    <th style="padding:10px; border:1px solid #ccc;">共用体 (union)</th>
+                </tr>
+                <tr>
+                    <td style="padding:10px; border:1px solid #ccc;">内存占用</td>
+                    <td style="padding:10px; border:1px solid #ccc;">所有成员之和（+对齐）</td>
+                    <td style="padding:10px; border:1px solid #ccc;">最大成员大小</td>
+                </tr>
+                <tr>
+                    <td style="padding:10px; border:1px solid #ccc;">成员有效性</td>
+                    <td style="padding:10px; border:1px solid #ccc;">所有成员同时有效</td>
+                    <td style="padding:10px; border:1px solid #ccc;">仅最后一个写入的成员有效</td>
+                </tr>
+                <tr>
+                    <td style="padding:10px; border:1px solid #ccc;">适用场景</td>
+                    <td style="padding:10px; border:1px solid #ccc;">组合数据（如学生信息）</td>
+                    <td style="padding:10px; border:1px solid #ccc;">互斥数据（如消息类型）</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 现代替代 -->
+        <div id="modern" class="content">
+            <h2>✨ 现代 C++ 替代方案：std::variant</h2>
+            <div class="concept-item">
+                <h3>C++17 引入 <code>std::variant</code></h3>
+                <p>它是类型安全的“共用体”，能自动跟踪当前活动类型，并正确调用构造/析构函数。</p>
+                <div class="code">
+#include &lt;variant&gt;<br>
+#include &lt;string&gt;<br><br>
+using Reward = std::variant&lt;int, std::string&gt;;<br><br>
+Reward r = 100;           // 存 int<br>
+r = std::string("Sword"); // 存 string，自动析构 int<br><br>
+// 安全访问：<br>
+if (std::holds_alternative&lt;int&gt;(r)) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cout << std::get&lt;int&gt;(r);<br>
+}
+                </div>
+            </div>
+            <div class="best-practice">
+                ✅ **推荐**：除非有严格内存限制或底层编程需求，否则优先使用 <code>std::variant</code>。
+            </div>
+        </div>
+
+        <!-- 最佳实践 -->
+        <div id="best" class="content">
+            <h2>✅ 共用体使用最佳实践</h2>
+            <div class="concept-item">
+                <h3>1. 始终配合“类型标签”使用</h3>
+                <p>将 union 嵌入 struct，并用一个字段记录当前有效成员。</p>
+            </div>
+            <div class="concept-item">
+                <h3>2. 避免非平凡类型</h3>
+                <p>不要在 union 中直接使用 <code>std::string</code>、<code>std::vector</code> 等。</p>
+            </div>
+            <div class="concept-item">
+                <h3>3. 明确应用场景</h3>
+                <ul>
+                    <li>网络/文件协议解析（不同消息类型）</li>
+                    <li>硬件寄存器映射（同一地址不同解读）</li>
+                    <li>极致内存优化（嵌入式系统）</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>4. 考虑现代替代品</h3>
+                <p>C++17 起，优先考虑 <code>std::variant</code>；C++11 起可用 <code>boost::variant</code>。</p>
+            </div>
+            <div class="caution">
+                ❗ 共用体是强大但危险的工具，误用会导致难以调试的内存错误！
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 共用体（Union）详解：C++ 内存共享机制 | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

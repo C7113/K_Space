@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python二级 - 第2课：循环结构 - C++ 知识导航</title>
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/topic.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="stylesheet" href="/styles/animations.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        Python二级 第2课：循环结构
+        <span class="badge">重复执行</span>
+      </h1>
+      <p>掌握for循环和while循环 | 理解循环控制语句 | 应用循环解决实际问题</p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <a href="../index.html" class="toggle-btn">↩ 返回 CIE Python 考试首页</a>
+    <a href="../../../../exam-topics.html" class="toggle-btn">↩ 返回 等级考试知识点</a>
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+  </div>
+  
+  <div class="container">
+    <section class="topic-section">
+      <h2>知识点概览</h2>
+      <div class="knowledge-points">
+        <ul>
+          <li>for循环：遍历序列（如range、列表、字符串等）</li>
+          <li>while循环：当条件为真时重复执行代码块</li>
+          <li>循环控制语句：break（跳出循环）、continue（跳过本次循环）</li>
+          <li>嵌套循环：在一个循环内部使用另一个循环</li>
+          <li>循环应用：累加、计数、遍历等常见场景</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2>知识点详解</h2>
+      
+      <h3>1. for循环</h3>
+      <p>for循环用于遍历序列中的每一个元素，如数字序列、列表、字符串等。</p>
+      
+      <div class="concept-card">
+        <h4>基本语法</h4>
+        <div class="example-code">
+<pre>for 变量 in 序列:
+    语句块</pre>
+        </div>
+        <p>要点：</p>
+        <ul>
+          <li>变量用于存储序列中的当前元素</li>
+          <li>序列可以是range()函数生成的数字序列、列表、字符串等</li>
+          <li>语句块需要缩进</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h4>range()函数</h4>
+        <p>range()函数用于生成数字序列：</p>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>用法</th>
+              <th>说明</th>
+              <th>示例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>range(stop)</td>
+              <td>从0开始到stop-1</td>
+              <td>range(5) → 0,1,2,3,4</td>
+            </tr>
+            <tr>
+              <td>range(start, stop)</td>
+              <td>从start开始到stop-1</td>
+              <td>range(2, 6) → 2,3,4,5</td>
+            </tr>
+            <tr>
+              <td>range(start, stop, step)</td>
+              <td>从start开始到stop-1，步长为step</td>
+              <td>range(0, 10, 2) → 0,2,4,6,8</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="concept-card">
+        <h4>示例：打印数字序列</h4>
+        <div class="example-code">
+<pre># 打印0到4
+for i in range(5):
+    print(i)</pre>
+        </div>
+        <p>运行结果：</p>
+        <div class="example-code">
+<pre>0
+1
+2
+3
+4</pre>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>示例：计算累加和</h4>
+        <div class="example-code">
+<pre># 计算1到100的累加和
+sum = 0
+for i in range(1, 101):
+    sum += i
+print(f"1到100的累加和是：{sum}")</pre>
+        </div>
+        <p>运行结果：</p>
+        <div class="example-code">
+<pre>1到100的累加和是：5050</pre>
+        </div>
+      </div>
+      
+      <h3>2. while循环</h3>
+      <p>while循环在条件为真时重复执行代码块。</p>
+      
+      <div class="concept-card">
+        <h4>基本语法</h4>
+        <div class="example-code">
+<pre>while 条件:
+    语句块</pre>
+        </div>
+        <p>要点：</p>
+        <ul>
+          <li>条件为真时执行语句块</li>
+          <li>每次循环后重新检查条件</li>
+          <li>必须确保条件最终变为假，否则会形成无限循环</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h4>示例：倒计时</h4>
+        <div class="example-code">
+<pre># 倒计时
+count = 10
+while count > 0:
+    print(count)
+    count -= 1
+print("时间到！")</pre>
+        </div>
+        <p>运行结果：</p>
+        <div class="example-code">
+<pre>10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+时间到！</pre>
+        </div>
+      </div>
+      
+      <h3>3. 循环控制语句</h3>
+      <p>循环控制语句用于改变循环的执行流程。</p>
+      
+      <div class="concept-card">
+        <h4>break语句</h4>
+        <p>break语句用于立即跳出循环，不再执行循环中剩余的代码。</p>
+        <div class="example-code">
+<pre># 用户输入验证
+while True:
+    password = input("请输入密码：")
+    if password == "123456":
+        print("密码正确，登录成功！")
+        break
+    else:
+        print("密码错误，请重新输入！")</pre>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h4>continue语句</h4>
+        <p>continue语句用于跳过当前循环的剩余部分，直接进入下一次循环。</p>
+        <div class="example-code">
+<pre># 打印1到10之间的奇数
+for i in range(1, 11):
+    if i % 2 == 0:
+        continue
+    print(i)</pre>
+        </div>
+        <p>运行结果：</p>
+        <div class="example-code">
+<pre>1
+3
+5
+7
+9</pre>
+        </div>
+      </div>
+      
+      <h3>4. 嵌套循环</h3>
+      <p>在一个循环内部可以包含另一个循环，这就是嵌套循环。</p>
+      
+      <div class="concept-card">
+        <h4>示例：打印九九乘法表</h4>
+        <div class="example-code">
+<pre># 打印九九乘法表
+for i in range(1, 10):
+    for j in range(1, i+1):
+        print(f"{j}×{i}={i*j}", end="  ")
+    print()  # 换行</pre>
+        </div>
+        <p>运行结果：</p>
+        <div class="example-code">
+<pre>1×1=1  
+1×2=2  2×2=4  
+1×3=3  2×3=6  3×3=9  
+1×4=4  2×4=8  3×4=12  4×4=16  
+1×5=5  2×5=10  3×5=15  4×5=20  5×5=25  
+1×6=6  2×6=12  3×6=18  4×6=24  5×6=30  6×6=36  
+1×7=7  2×7=14  3×7=21  4×7=28  5×7=35  6×7=42  7×7=49  
+1×8=8  2×8=16  3×8=24  4×8=32  5×8=40  6×8=48  7×8=56  8×8=64  
+1×9=9  2×9=18  3×9=27  4×9=36  5×9=45  6×9=54  7×9=63  8×9=72  9×9=81</pre>
+        </div>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>示例演示</h2>
+      
+      <h3>示例1：猜数字游戏</h3>
+      <div class="example-code">
+<pre># 猜数字游戏
+import random
+
+number = random.randint(1, 100)
+attempts = 0
+
+print("我想了一个1到100之间的数字，你能猜出来吗？")
+
+while True:
+    guess = int(input("请输入你的猜测："))
+    attempts += 1
+    
+    if guess < number:
+        print("太小了！")
+    elif guess > number:
+        print("太大了！")
+    else:
+        print(f"恭喜你！答案就是{number}，你总共猜了{attempts}次。")
+        break</pre>
+      </div>
+      
+      <h3>示例2：列表遍历</h3>
+      <div class="example-code">
+<pre># 遍历学生名单
+students = ["张三", "李四", "王五", "赵六", "钱七"]
+
+print("班级学生名单：")
+for i, student in enumerate(students, 1):
+    print(f"{i}. {student}")
+
+# 计算平均成绩
+scores = [85, 92, 78, 96, 88]
+total = 0
+for score in scores:
+    total += score
+average = total / len(scores)
+print(f"平均成绩：{average:.2f}")</pre>
+      </div>
+      
+      <p>运行结果：</p>
+      <div class="example-code">
+<pre>班级学生名单：
+1. 张三
+2. 李四
+3. 王五
+4. 赵六
+5. 钱七
+平均成绩：87.80</pre>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>课堂练习</h2>
+      
+      <div class="exercise-card">
+        <h3>练习1：计算阶乘</h3>
+        <p>编写一个程序，计算用户输入数字的阶乘（n! = 1×2×3×...×n）。</p>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+<pre># 计算阶乘
+n = int(input("请输入一个正整数："))
+factorial = 1
+
+for i in range(1, n+1):
+    factorial *= i
+
+print(f"{n}的阶乘是：{factorial}")</pre>
+          </div>
+        </details>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习2：寻找质数</h3>
+        <p>编写一个程序，找出1到100之间的所有质数。</p>
+        <p>质数是只能被1和自身整除的大于1的自然数。</p>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+<pre># 寻找1到100之间的质数
+print("1到100之间的质数有：")
+
+for num in range(2, 101):
+    is_prime = True
+    for i in range(2, int(num ** 0.5) + 1):
+        if num % i == 0:
+            is_prime = False
+            break
+    if is_prime:
+        print(num, end=" ")
+
+print()  # 换行</pre>
+          </div>
+        </details>
+      </div>
+    </section>
+  </div>
+  
+  <div class="navigation-buttons">
+    <a href="1.html" class="nav-button">上一课：分支结构</a>
+    <a href="3.html" class="nav-button next">下一课：字符串操作 ➔</a>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+  </footer>
+
+  <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+
+    // 粒子动画效果
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

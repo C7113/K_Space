@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 排序魔法：从冒泡到效率</title>
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/animations.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/topic.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #d32f2f;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #d32f2f;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #fff8f8;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #d32f2f;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #d32f2f;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #ffeaea;
+        }
+        .code {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #ffebee;
+            padding: 15px;
+            border-left: 5px solid #f44336;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #c62828;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .principle {
+            background: #f1f8e9;
+            border-left: 5px solid #7cb342;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .complexity {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .complexity h4 {
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✨ C++ 排序魔法</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 主题：爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'outline')">📋 课程目录</button>
+            <button class="tab" onclick="openTab(event, 'intro')">🏔️ 知识引入</button>
+            <button class="tab" onclick="openTab(event, 'bubble-select')">🧼 冒泡与选择排序</button>
+            <button class="tab" onclick="openTab(event, 'stl-sort')">⚡ STL sort 使用</button>
+            <button class="tab" onclick="openTab(event, 'projects')">🧩 项目实战</button>
+            <button class="tab" onclick="openTab(event, 'efficiency')">⏱️ 排序效率对比</button>
+        </div>
+
+        <!-- 课程目录 -->
+        <div id="outline" class="content active">
+            <h2>📋 本课目标</h2>
+            <ul style="font-size: 1.1em; line-height: 1.8;">
+                <li>理解排序算法的核心逻辑</li>
+                <li>能手动模拟并编写<strong>冒泡排序</strong>与<strong>选择排序</strong>的 C++ 代码</li>
+                <li>掌握 <code>std::sort</code> 的基本用法（升序/降序/自定义比较）</li>
+                <li>通过实践反思算法效率的意义，激发对程序优化的兴趣</li>
+            </ul>
+            <div class="principle">
+                <strong>匠心理念：</strong>排序不仅是技术，更是思维的艺术 —— 从"能用"到"高效"，是程序员的成长之路。
+            </div>
+        </div>
+
+        <!-- 知识引入 -->
+        <div id="intro" class="content">
+            <h2>🏔️ 世界高峰排序问题</h2>
+            <div class="concept-item">
+                <h3>原始数据</h3>
+                <table>
+                    <tr><th>山峰名称（中文）</th><th>英文名称</th><th>海拔高度（米）</th></tr>
+                    <tr><td>洛子峰</td><td>Lhotse</td><td>8,516</td></tr>
+                    <tr><td>珠穆朗玛峰</td><td>Mount Everest</td><td>8,848.86</td></tr>
+                    <tr><td>乔戈里峰</td><td>K2</td><td>8,611</td></tr>
+                    <tr><td>道拉吉利峰</td><td>Dhaulagiri I</td><td>8,167</td></tr>
+                    <tr><td>南迦帕尔巴特峰</td><td>Nanga Parbat</td><td>8,126</td></tr>
+                    <tr><td>干城章嘉峰</td><td>Kangchenjunga</td><td>8,586</td></tr>
+                    <tr><td>卓奥友峰</td><td>Cho Oyu</td><td>8,188</td></tr>
+                    <tr><td>安纳普尔纳峰</td><td>Annapurna I</td><td>8,091</td></tr>
+                    <tr><td>马纳斯鲁峰</td><td>Manaslu</td><td>8,163</td></tr>
+                    <tr><td>马卡鲁峰</td><td>Makalu</td><td>8,485</td></tr>
+                </table>
+            </div>
+            <div class="concept-item">
+                <h3>需求：输出前三高峰</h3>
+                <p>两种思路：</p>
+                <ol>
+                    <li><strong>全排序 + 取前3</strong>：先对整个列表降序排序，再输出前三个。</li>
+                    <li><strong>一次遍历 + 三变量</strong>：动态维护当前最高、次高、第三高。</li>
+                </ol>
+                <p>本课重点学习第一种方法，并引出排序算法。</p>
+            </div>
+        </div>
+
+        <!-- 冒泡与选择排序 -->
+        <div id="bubble-select" class="content">
+            <h2>🧼 手写排序：冒泡 & 选择</h2>
+
+            <div class="concept-item">
+                <h3>冒泡排序（Bubble Sort）</h3>
+                <p>核心思想：重复遍历数组，比较相邻元素，若顺序错误则交换。每轮将最大值"冒泡"到末尾。</p>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">void bubbleSort(int arr[], int size) {
+    for (int i = 0; i &lt; size - 1; i++) {
+        for (int j = 0; j &lt; size - 1 - i; j++) {
+            if (arr[j] > arr[j + 1]) {
+                // 交换
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}</code></pre>
+                </div>
+                <p>✅ 填空答案：<code>size - 1</code>，<code>size - 1 - i</code>，<code>></code></p>
+            </div>
+
+            <div class="concept-item">
+                <h3>选择排序（Selection Sort）</h3>
+                <p>核心思想：每轮从未排序部分选出最小（或最大）元素，放到已排序部分末尾。</p>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">void selectionSort(int arr[], int size) {
+    for (int i = 0; i &lt; size - 1; i++) {
+        int minIdx = i;
+        for (int j = i + 1; j &lt; size; j++) {
+            if (arr[j] &lt; arr[minIdx])
+                minIdx = j;
+        }
+        // 交换 arr[i] 和 arr[minIdx]
+        int temp = arr[i];
+        arr[i] = arr[minIdx];
+        arr[minIdx] = temp;
+    }
+}</code></pre>
+                </div>
+                <p>✅ 特点：交换次数少（最多 n-1 次），但比较次数多。</p>
+            </div>
+
+            <div class="tip">
+                <strong>手动模拟建议：</strong>用纸笔对 [5, 3, 8, 1, 2] 分别执行冒泡和选择排序，加深理解。
+            </div>
+        </div>
+
+        <!-- STL sort 使用 -->
+        <div id="stl-sort" class="content">
+            <h2>⚡ 使用 std::sort</h2>
+            <div class="concept-item">
+                <h3>基础用法（升序）</h3>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+int main() {
+    int arr[] = {5, 3, 8, 1, 2};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    sort(arr, arr + n); // 默认升序
+    for (int x : arr) cout &lt;&lt; x &lt;&lt; " ";
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>降序排序</h3>
+                <p>方法一：使用 <code>greater&lt;T&gt;()</code></p>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">#include &lt;functional&gt; // 需要此头文件
+sort(heights, heights + n, greater&lt;double&gt;());</code></pre>
+                </div>
+                <p>方法二：自定义比较函数</p>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">bool cmp(int x, int y) {
+    return x > y; // 降序
+}
+sort(heights, heights + n, cmp);</code></pre>
+                </div>
+                <div class="tip">
+                    <strong>注意：</strong>自定义函数中，若返回 <code>true</code>，表示 <code>x</code> 应排在 <code>y</code> 前面。
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目实战 -->
+        <div id="projects" class="content">
+            <h2>🧩 项目实战</h2>
+
+            <div class="concept-item">
+                <h3>1. 奇数单增序列</h3>
+                <p><strong>任务：</strong>从输入序列中提取所有奇数，按升序输出。</p>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+int main() {
+    int num[1001], n, x, len = 0;
+    cin >> n;
+    for (int i = 0; i &lt; n; i++) {
+        cin >> x;
+        if (x % 2 == 1) num[len++] = x;
+    }
+    sort(num, num + len);
+    for (int i = 0; i &lt; len; i++) {
+        cout &lt;&lt; num[i];
+        if (i != len - 1) cout &lt;&lt; ",";
+    }
+    return 0;
+}</code></pre>
+                </div>
+                <p>✅ 注意：输出格式要求逗号分隔，最后一个不加逗号。</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>2. 6084 问题（重排最大最小差）</h3>
+                <p><strong>任务：</strong>将四位数重组成最大数和最小数，输出差值。</p>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">string s = to_string(n);
+sort(s.begin(), s.end()); // 升序 → 最小
+int minVal = stoi(s);
+reverse(s.begin(), s.end()); // 降序 → 最大
+int maxVal = stoi(s);
+cout &lt;&lt; maxVal - minVal &lt;&lt; endl;</code></pre>
+                </div>
+                <p>✅ 考察：字符串与数字转换、排序应用。</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>3. 整数 ABC</h3>
+                <p><strong>任务：</strong>输入三个数和一个字符串（如 "CAB"），按字符串指示顺序输出对应值。</p>
+                <div class="code-block">
+                    <div class="code-title">C++</div>
+                    <pre><code class="language-cpp">int a[3]; cin >> a[0] >> a[1] >> a[2];
+sort(a, a + 3); // a[0]=A(最小), a[1]=B, a[2]=C(最大)
+string s; cin >> s;
+for (char c : s) {
+    if (c == 'A') cout &lt;&lt; a[0] &lt;&lt; " ";
+    if (c == 'B') cout &lt;&lt; a[1] &lt;&lt; " ";
+    if (c == 'C') cout &lt;&lt; a[2] &lt;&lt; " ";
+}</code></pre>
+                </div>
+                <p>✅ 关键：先排序确定 A/B/C 对应关系。</p>
+            </div>
+        </div>
+
+        <!-- 排序效率 -->
+        <div id="efficiency" class="content">
+            <h2>⏱️ 排序效率对比</h2>
+            <div class="complexity">
+                <h4>时间复杂度分析</h4>
+                <p><strong>冒泡排序 / 选择排序：</strong> O(n²)</p>
+                <p><strong>std::sort（通常为快排/内省排序）：</strong> O(n log n)</p>
+            </div>
+            <div class="concept-item">
+                <h3>性能差距有多大？</h3>
+                <table>
+                    <tr><th>n</th><th>冒泡 (n²)</th><th>sort (n log n)</th><th>倍数差距</th></tr>
+                    <tr><td>1,000</td><td>1,000,000</td><td>~10,000</td><td>≈100 倍</td></tr>
+                    <tr><td>100,000</td><td>10,000,000,000</td><td>~1,700,000</td><td>≈5,800 倍</td></tr>
+                </table>
+                <p>✅ 结论：对于大规模数据（如 10 万条），<code>std::sort</code> 远快于手写 O(n²) 算法。</p>
+            </div>
+            <div class="principle">
+                <strong>创新思维：</strong>
+                <ul>
+                    <li>不要重复造轮子：STL 的 <code>sort</code> 经过高度优化，通常比手写更快更安全。</li>
+                    <li>理解复杂度：O(n²) 在 n 较大时不可接受，O(n log n) 是实用排序的底线。</li>
+                    <li>选择合适工具：竞赛/工程中优先使用 <code>std::sort</code>，教学/理解原理时手写算法。</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++ 排序魔法课程 | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

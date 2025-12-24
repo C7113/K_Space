@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 分治算法详解</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #2e7d32;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #2e7d32;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f1f8e9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        .code {
+            background: #2d3748;
+            color: #81c784;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e8f5e8;
+            padding: 15px;
+            border-left: 5px solid #4caf50;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #1b5e20;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .principle {
+            background: #f1f8e9;
+            border-left: 5px solid #7cb342;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #2e7d32;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f1f8e9;
+        }
+        .highlight {
+            background: #e8f5e8;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧩 C++ 分治算法（Divide and Conquer）</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 主题：爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'outline')">📋 课程目录</button>
+            <button class="tab" onclick="openTab(event, 'concept')">🧠 分治思想与三步法则</button>
+            <button class="tab" onclick="openTab(event, 'examples')">🔍 经典案例解析</button>
+            <button class="tab" onclick="openTab(event, 'merge-sort')">🔀 归并排序详解</button>
+            <button class="tab" onclick="openTab(event, 'recognizer')">🛠️ 分治算法识别器</button>
+            <button class="tab" onclick="openTab(event, 'tips')">💡 应用场景与复杂度分析</button>
+        </div>
+
+        <!-- 课程目录 -->
+        <div id="outline" class="content active">
+            <h2>📋 本课核心内容</h2>
+            <ul style="font-size: 1.1em; line-height: 1.8;">
+                <li>理解<strong>分治算法</strong>的核心思想与适用条件</li>
+                <li>掌握分治的<strong>三步法则</strong>：分解 → 解决 → 合并</li>
+                <li>通过“找最大值”和“归并排序”两个典型例子深入实践</li>
+                <li>学会使用“<strong>分治算法识别器</strong>”判断问题是否适合分治</li>
+                <li>了解分治的时间复杂度优势（如 O(n log n) vs O(n²)）</li>
+            </ul>
+            <div class="principle">
+                <strong>匠心理念：</strong>将复杂问题化整为零，是解决大规模计算问题的经典范式。
+            </div>
+        </div>
+
+        <!-- 分治思想与三步法则 -->
+        <div id="concept" class="content">
+            <h2>🧠 分治思想与三步法则</h2>
+            <div class="concept-item">
+                <h3>什么是分治算法？</h3>
+                <p><strong>定义：</strong>将一个难以直接解决的大问题，<strong>递归地</strong>分解为若干个与原问题结构相同、规模更小的子问题，直到子问题足够简单可直接求解，再将子问题的解<strong>合并</strong>成原问题的解。</p>
+            </div>
+            <div class="concept-item">
+                <h3>三步法则（Divide-Conquer-Combine）</h3>
+                <ol>
+                    <li><strong>分解（Divide）</strong>：将原问题划分为若干子问题；</li>
+                    <li><strong>解决（Conquer）</strong>：递归求解各子问题（若子问题足够小则直接求解）；</li>
+                    <li><strong>合并（Combine）</strong>：将子问题的解组合成原问题的解。</li>
+                </ol>
+                <div class="tip">
+                    <strong>关键特征：</strong>子问题是<strong>相互独立</strong>且<strong>结构相同</strong>的。
+                </div>
+            </div>
+            <div class="example">
+                <h3>类比理解</h3>
+                <p>想象你要统计一个大礼堂里的人数：</p>
+                <ul>
+                    <li>❌ 挨个数：O(n)，效率低；</li>
+                    <li>✅ 分治法：把礼堂分成左右两半，让两边各自统计，最后相加。每半再继续分……直到只剩1人直接返回1。</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 经典案例解析 -->
+        <div id="examples" class="content">
+            <h2>🔍 经典案例解析</h2>
+
+            <div class="concept-item">
+                <h3>案例1：在数组中找最大值</h3>
+                <p><strong>思路：</strong>将数组对半分，分别找左右最大值，再取两者较大者。</p>
+                <div class="code">
+int findMax(int arr[], int l, int r) {
+    // 递归边界：只有一个元素
+    if (l == r) return arr[l];
+    
+    // 1. 分解
+    int mid = (l + r) / 2;
+    
+    // 2. 解决（递归）
+    int left_max = findMax(arr, l, mid);
+    int right_max = findMax(arr, mid + 1, r);
+    
+    // 3. 合并
+    return max(left_max, right_max);
+}
+                </div>
+                <p>✅ 时间复杂度：O(n)，空间复杂度：O(log n)（递归栈）</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>案例2：计算 1 到 n 的和（能否分治？）</h3>
+                <p>可以！但非最优（有公式 O(1)），仅作练习：</p>
+                <div class="code">
+int sum(int l, int r) {
+    if (l == r) return l;
+    int mid = (l + r) / 2;
+    return sum(l, mid) + sum(mid + 1, r);
+}
+                </div>
+                <p>✅ 验证了分治三要素：<br>
+                - 能分 ✔️<br>
+                - 能合 ✔️（加法）<br>
+                - 有底 ✔️（l == r）</p>
+            </div>
+        </div>
+
+        <!-- 归并排序详解 -->
+        <div id="merge-sort" class="content">
+            <h2>🔀 归并排序（Merge Sort）</h2>
+            <div class="concept-item">
+                <h3>为什么需要归并排序？</h3>
+                <p>对比冒泡排序（O(n²)）：
+                <ul>
+                    <li>n = 10,000 时，冒泡 ≈ 1 亿次操作</li>
+                    <li>归并排序 ≈ 14 万次操作（快上千倍！）</li>
+                </ul>
+                <p>✅ 归并排序是<strong>稳定</strong>且<strong>时间复杂度始终为 O(n log n)</strong> 的高效排序算法。</p>
+            </div>
+            <div class="concept-item">
+                <h3>归并排序的分治实现</h3>
+                <div class="code">
+void mergeSort(int arr[], int l, int r) {
+    if (l >= r) return; // 递归边界
+    
+    int mid = (l + r) / 2;
+    mergeSort(arr, l, mid);       // 排左半
+    mergeSort(arr, mid + 1, r);   // 排右半
+    merge(arr, l, mid, r);        // 合并
+}
+                </div>
+                <p>核心在于 <code>merge</code> 函数：将两个<strong>已排序</strong>的子数组合并为一个有序数组。</p>
+            </div>
+            <div class="example">
+                <h3>合并过程模拟</h3>
+                <p>左手：{2, 5, 8}，右手：{1, 3, 9}</p>
+                <p>👉 比较两端最小值，取小者放入结果，重复直至一方为空，再追加剩余部分。</p>
+                <p>结果：{1, 2, 3, 5, 8, 9}</p>
+                <div class="tip">
+                    <strong>合并复杂度：</strong>O(n)，总复杂度 T(n) = 2T(n/2) + O(n) → O(n log n)
+                </div>
+            </div>
+        </div>
+
+        <!-- 分治算法识别器 -->
+        <div id="recognizer" class="content">
+            <h2>🛠️ 分治算法识别器</h2>
+            <p>当你遇到一个新问题，问自己以下三个问题：</p>
+            <div class="concept-item">
+                <h3>1. 能分吗？</h3>
+                <p>问题能否被拆成几个<strong>结构相同</strong>、<strong>规模更小</strong>的子问题？</p>
+                <p>✅ 例：找最大值、排序、二分查找</p>
+                <p>❌ 反例：斐波那契数列（子问题重叠，更适合动态规划）</p>
+            </div>
+            <div class="concept-item">
+                <h3>2. 能合吗？</h3>
+                <p>子问题的解能否<strong>高效合并</strong>成原问题的解？</p>
+                <p>✅ 例：max(left, right)、merge(left_arr, right_arr)</p>
+                <p>❌ 反例：某些图问题，子图解无法简单合并</p>
+            </div>
+            <div class="concept-item">
+                <h3>3. 有底吗？</h3>
+                <p>是否存在明确的<strong>递归终止条件</strong>（最小子问题）？</p>
+                <p>✅ 例：数组长度为1、区间 l ≥ r</p>
+            </div>
+            <div class="example">
+                <h3>练习判断</h3>
+                <table>
+                    <tr><th>问题</th><th>适合分治？</th><th>理由</th></tr>
+                    <tr><td>计算 1+2+...+100</td><td>✅</td><td>能分、能合（加法）、有底</td></tr>
+                    <tr><td>在有序数组中查找某数</td><td>✅（二分查找）</td><td>每次舍弃一半，无需合并</td></tr>
+                    <tr><td>斐波那契数列 F(n)=F(n-1)+F(n-2)</td><td>⚠️ 不推荐</td><td>子问题大量重复，应改用 DP 或记忆化</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 应用场景与复杂度分析 -->
+        <div id="tips" class="content">
+            <h2>💡 应用场景与复杂度分析</h2>
+            <div class="concept-item">
+                <h3>典型应用场景</h3>
+                <ul>
+                    <li>排序算法：归并排序、快速排序</li>
+                    <li>查找算法：二分查找</li>
+                    <li>数学计算：大整数乘法、快速幂</li>
+                    <li>几何问题：最近点对</li>
+                    <li>树/图遍历：DFS 本质也是分治思想</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>时间复杂度分析（主定理）</h3>
+                <p>对于递推式：<code>T(n) = a·T(n/b) + f(n)</code></p>
+                <ul>
+                    <li>归并排序：a=2, b=2, f(n)=O(n) → T(n) = O(n log n)</li>
+                    <li>二分查找：a=1, b=2, f(n)=O(1) → T(n) = O(log n)</li>
+                </ul>
+                <div class="tip">
+                    <strong>注意：</strong>分治不一定比迭代快！需考虑常数因子和问题特性。
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>分治 vs 动态规划</h3>
+                <table>
+                    <tr><th>特性</th><th>分治</th><th>动态规划</th></tr>
+                    <tr><td>子问题关系</td><td>相互独立</td><td>重叠子问题</td></tr>
+                    <tr><td>是否记忆</td><td>否</td><td>是（避免重复计算）</td></tr>
+                    <tr><td>典型问题</td><td>归并排序</td><td>斐波那契、背包问题</td></tr>
+                </table>
+            </div>
+            <div class="principle">
+                <strong>创新思维：</strong>分治不仅是算法，更是一种“分而治之”的工程哲学——模块化、解耦、递归思维。
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++ 分治算法课程 | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

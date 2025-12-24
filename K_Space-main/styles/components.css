@@ -1,0 +1,395 @@
+/* 组件与布局 */
+header {
+  background: var(--header-bg);
+  padding: calc(var(--spacing) * 2) var(--spacing);
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  margin-bottom: calc(var(--spacing) * 2);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.header-content { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; padding: 0.5rem 0; }
+
+header h1 { font-size: 2.2rem; color: var(--text); font-weight: 700; margin-bottom: 0.75rem; position: relative; display: inline-flex; align-items: center; gap: 0.5rem; }
+header h1 .icon { display: inline-block; transition: transform 0.3s ease; }
+header h1:hover .icon { transform: rotate(15deg) scale(1.1); }
+
+.badge { animation: float 3s ease-in-out infinite; }
+header .icon { display: inline-block; font-size: 2.8rem; margin-right: 0.3rem; }
+
+header p { font-size: 1.1rem; margin-top: 0.25rem; color: var(--text); font-weight: 500; opacity: 0.9; display: flex; align-items: center; justify-content: center; gap: 0.4rem; flex-wrap: wrap; }
+
+.path-arrow { color: var(--accent); font-weight: 600; padding: 0.15rem 0.6rem; border-radius: 16px; background: rgba(52, 152, 219, 0.1); transition: all var(--transition); font-size: 0.95rem; }
+.path-arrow:hover { background: rgba(52, 152, 219, 0.2); transform: translateY(-2px); }
+
+.arrow { color: var(--accent); opacity: 0.6; font-weight: bold; animation: bounce 2s infinite; }
+
+/* 各级别 section */
+.level-section { display: flex; flex-direction: column; align-items: flex-start; margin: 4rem auto; max-width: var(--max-width); padding: 0 var(--spacing); }
+.level-section:first-child { margin-top: 2rem; }
+.level-section:last-child { margin-bottom: 2rem; }
+
+.theme-toggle { display: block; margin: 1rem auto 2rem; padding: 0.6rem 1.2rem; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95rem; font-weight: 500; }
+
+.level-title { font-size: 1.6rem; color: var(--text); margin-bottom: 1.6rem; padding-bottom: 0.6rem; position: relative; display: inline-block; font-weight: 600; text-align: left; margin-left: 0; }
+.level-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 120px; height: 3px; background: linear-gradient(90deg, var(--accent), transparent); border-radius: 3px; }
+
+.topic-subtitle { font-size: 1.2rem; color: var(--text); margin: 1.6rem 0 0.8rem 0; padding-bottom: 0.35rem; position: relative; font-weight: 500; text-align: left; width: 100%; }
+.topic-subtitle::after { content: ''; position: absolute; bottom: 0; left: 0; width: 80px; height: 2px; background: linear-gradient(90deg, var(--accent-light), transparent); border-radius: 2px; }
+
+.topic-grid { 
+  display: grid; 
+  gap: 1.2rem; 
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+  position: relative; 
+  margin-top: 1.5rem; 
+  max-width: 1200px; 
+  margin-left: auto; 
+  margin-right: auto; 
+  justify-items: center; 
+  justify-content: center; 
+  align-items: center; 
+  place-items: center; 
+}
+
+.topic-grid.collapsible .topic-card { display: none; }
+.topic-grid.collapsible .topic-card:nth-child(-n+4) { display: flex; }
+.topic-grid.collapsible .topic-card.always-show { display: flex; }
+
+.topic-grid .expand-btn {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin: 0.4rem auto;
+  padding: 0.4rem 1rem;
+  background: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: none;
+  transition: all 0.3s ease;
+  align-self: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.topic-grid .expand-btn {
+  display: block;
+}
+
+#beginnerGrid .topic-card.hide ~ .expand-btn,
+#intermediateGrid .topic-card.hide ~ .expand-btn,
+#advancedGrid .topic-card.hide ~ .expand-btn {
+  display: block !important;
+}
+
+.topic-grid .expand-btn:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.topic-grid.has-more-than-four .expand-btn {
+  display: block !important;
+}
+
+.topic-grid.expanded .topic-card {
+  display: flex;
+}
+
+.topic-grid.expanded .expand-btn::after {
+  content: ' 收起';
+}
+#beginnerGrid, #intermediateGrid, #advancedGrid { 
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+}
+
+.topic-grid:has(.topic-card:hover) .topic-card:not(:hover) { opacity: 0.75; transform: scale(0.98); }
+
+#contestGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; padding: 0; max-width: 900px; }
+#contestGrid .topic-card { scroll-snap-align: start; margin: 0; }
+#contestGrid::-webkit-scrollbar { height: 8px; }
+#contestGrid::-webkit-scrollbar-track { background: var(--border); border-radius: 4px; }
+#contestGrid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+.topic-card.hide { display: none; }
+
+.topic-card { 
+  background: var(--card-bg); 
+  border: 1px solid var(--border); 
+  border-radius: 10px; 
+  padding: 1.25rem; 
+  transition: all 0.3s ease; 
+  position: relative; 
+  overflow: hidden; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 0.8rem; 
+  min-height: 180px; 
+  margin: 0 auto; 
+  text-align: center; 
+  align-self: center; 
+  justify-self: center; 
+  cursor: pointer;
+  width: 100%;
+}
+
+.topic-card::before { 
+  content: ''; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  height: 4px; 
+  background: linear-gradient(90deg, var(--accent), var(--accent-light)); 
+  opacity: 0; 
+  transition: opacity 0.3s ease; 
+}
+
+.topic-card:hover { 
+  border-color: var(--accent-light); 
+  transform: translateY(-6px); 
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1); 
+}
+
+.topic-card:hover::before { 
+  opacity: 1; 
+}
+
+.topic-card::after { 
+  content: ''; 
+  position: absolute; 
+  bottom: 0; 
+  right: 0; 
+  width: 120px; 
+  height: 120px; 
+  background: linear-gradient(135deg, transparent 50%, var(--accent) 51%); 
+  opacity: 0.04; 
+  border-radius: 0 0 20px 0; 
+  transition: opacity var(--transition); 
+}
+
+.topic-card:hover::after { 
+  opacity: 0.08; 
+}
+
+.topic-card h3 { 
+  font-size: 1.25rem; 
+  color: var(--accent); 
+  margin-bottom: 0.6rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 0.5rem; 
+  position: relative; 
+  z-index: 2;
+}
+
+.topic-card h3::before { 
+  content: '📚'; 
+  font-size: 1.25rem; 
+  opacity: 0.85; 
+  transform: translateY(-1px); 
+}
+
+.details { 
+  background: linear-gradient(to right, var(--section-bg), transparent); 
+  padding: 0.9rem; 
+  border-radius: 8px; 
+  border-left: 3px solid var(--accent); 
+  font-size: 0.9rem; 
+  line-height: 1.5; 
+  margin: 0.9rem auto; 
+  display: none; 
+  transform-origin: top; 
+  transition: all var(--transition); 
+  opacity: 0; 
+  text-align: center; 
+  z-index: 2;
+  position: relative;
+}
+
+.details[style*="display: block"] { 
+  opacity: 1; 
+  animation: slideDown 0.3s ease-out; 
+}
+
+.action-links { 
+  margin-top: 0.8rem; 
+  display: flex; 
+  gap: 0.5rem; 
+  flex-wrap: wrap; 
+  align-items: center; 
+  justify-content: center; 
+  z-index: 2;
+  position: relative;
+}
+
+.action-links a { 
+  display: inline-block; 
+  margin: 0; 
+  padding: 0.45rem 0.9rem; 
+  background: var(--accent); 
+  color: white; 
+  text-decoration: none; 
+  border-radius: 5px; 
+  font-size: 0.85rem; 
+  z-index: 2;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.action-links a:hover {
+  background: #0b5ed7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.35);
+}
+
+footer { text-align: center; padding: 2.5rem 1rem; margin-top: 4rem; color: var(--text); opacity: 0.7; font-size: 0.95rem; border-top: 1px solid var(--border); position: relative; overflow: hidden; }
+footer::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 200px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+
+.hover-lift { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.hover-lift:hover { transform: translateY(-4px); }
+.hover-glow { transition: all 0.3s ease; }
+.hover-glow:hover { box-shadow: 0 0 20px rgba(52, 152, 219, 0.3); }
+
+.pulse { animation: pulse 2s infinite; }
+
+.badge { display: inline-block; padding: 0.25em 0.6em; font-size: 0.75em; font-weight: 600; line-height: 1; color: white; background-color: var(--accent); border-radius: 10rem; margin-left: 0.5rem; }
+
+.shimmer { position: relative; overflow: hidden; }
+.shimmer::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); transform: rotate(30deg); animation: shimmer 3s infinite; }
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .topic-grid { 
+    grid-template-columns: 1fr; 
+    gap: 1.5rem; 
+  }
+  header { 
+    padding: 2.5rem 1.25rem; 
+  }
+  header h1 { 
+    font-size: 2.2rem; 
+  }
+  .level-title { 
+    font-size: 1.8rem; 
+    margin-bottom: 1.8rem; 
+  }
+  .topic-card { 
+    padding: 1.5rem; 
+  }
+  .container { 
+    padding: 0 1.25rem; 
+    margin: 2rem auto; 
+  }
+  .button-container { 
+    padding: 0 1.25rem; 
+  }
+  .theme-toggle { 
+    padding: 0.6rem 1.2rem; 
+    font-size: 1rem; 
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 { 
+    font-size: 2rem; 
+  }
+  header p { 
+    font-size: 1.1rem; 
+  }
+  .level-title { 
+    font-size: 1.6rem; 
+  }
+  .topic-card { 
+    padding: 1.25rem; 
+  }
+  .action-links { 
+    flex-direction: column; 
+  }
+  .action-links a { 
+    width: 100%; 
+    text-align: center; 
+  }
+}
+
+/* 将之前的内联样式移动到此处 */
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem auto;
+  padding: 0 var(--spacing);
+  flex-wrap: wrap;
+  max-width: none;
+}
+
+/* 通过添加 .show 类来控制 details 的显示（替代内联 style="display:block"） */
+.details.show {
+  display: block;
+  opacity: 1;
+  animation: slideDown 0.3s ease-out;
+}
+
+.toggle-btn { 
+  background: transparent; 
+  color: var(--accent); 
+  border: 2px solid var(--accent); 
+  padding: 0.6rem 1.2rem; 
+  border-radius: 8px; 
+  cursor: pointer; 
+  font-size: 0.95rem; 
+  font-weight: 500; 
+  transition: all var(--transition); 
+  position: relative; 
+  overflow: hidden; 
+  z-index: 1; 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px; /* 确保按钮足够大，便于点击 */
+}
+
+.toggle-btn::before { 
+  content: ''; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 0; 
+  height: 100%; 
+  background: var(--accent); 
+  z-index: -1; 
+  transition: width var(--transition); 
+}
+
+.toggle-btn:hover { 
+  color: white; 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.toggle-btn:hover::before { 
+  width: 100%; 
+}
+
+/* 顶部导航按钮特殊样式 */
+.button-container .toggle-btn {
+  margin: 0 0.25rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  min-height: 44px;
+}

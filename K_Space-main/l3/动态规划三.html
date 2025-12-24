@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>动态规划（三）：二维网格 DP</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            color: #01579b;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #0277bd;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #01579b;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #b3e5fc;
+        }
+        .tab.active {
+            background: #0277bd;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #e1f5fe;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #0277bd;
+        }
+        .code {
+            background: #0d47a1;
+            color: #81d4fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #29b6f6;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .caution {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .best-practice {
+            background: #fff8e1;
+            border-left: 5px solid #ffb300;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #b3e5fc;
+        }
+        .dp-table {
+            font-family: monospace;
+            text-align: center;
+            margin: 10px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ 动态规划（三）：二维网格 DP</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🌐 从一维到二维</button>
+            <button class="tab" onclick="openTab(event, 'paths')">🧭 不同路径</button>
+            <button class="tab" onclick="openTab(event, 'minsum')">📉 最小路径和</button>
+            <button class="tab" onclick="openTab(event, 'framework')">🧱 二维 DP 框架</button>
+            <button class="tab" onclick="openTab(event, 'obstacle')">🚧 带障碍物路径</button>
+            <button class="tab" onclick="openTab(event, 'reconstruct')">🗺️ 路径重建</button>
+            <button class="tab" onclick="openTab(event, 'space')">🌀 空间优化</button>
+            <button class="tab" onclick="openTab(event, 'pitfalls')">⚠️ 常见陷阱</button>
+        </div>
+
+        <!-- 从一维到二维 -->
+        <div id="intro" class="content active">
+            <h2>🌐 从一维到二维：进入“面”的世界</h2>
+            <div class="concept-item">
+                <h3>思维拓展</h3>
+                <p>一维 DP：状态由一个索引决定（如 `dp[i]`）。<br>
+                二维 DP：状态由两个索引决定（如 `dp[i][j]`），通常用于网格、矩阵、字符串匹配等问题。</p>
+            </div>
+            <div class="example">
+                💡 想象你是一个探险家，在 m×n 的网格迷宫中，只能向右或向下走。如何找到最佳路径？
+            </div>
+            <div class="concept-item">
+                <h3>二维 DP 的特点</h3>
+                <ul>
+                    <li>状态维度增加 → 依赖关系更复杂</li>
+                    <li>需要初始化两个边界（第一行 + 第一列）</li>
+                    <li>空间复杂度 O(mn)，但常可优化至 O(n)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 不同路径 -->
+        <div id="paths" class="content">
+            <h2>🧭 不同路径（Unique Paths）</h2>
+            <div class="concept-item">
+                <h3>问题描述</h3>
+                <p>机器人位于 m×n 网格左上角，每次只能向右或向下移动一步，求到达右下角的不同路径数。</p>
+            </div>
+            <div class="concept-item">
+                <h3>状态定义与转移</h3>
+                <p><code>dp[i][j]</code> = 从 (0,0) 到 (i,j) 的路径数<br>
+                转移方程：<code>dp[i][j] = dp[i-1][j] + dp[i][j-1]</code></p>
+                <p>边界条件：<br>
+                - 第一行：`dp[0][j] = 1`（只能一直向右）<br>
+                - 第一列：`dp[i][0] = 1`（只能一直向下）</p>
+            </div>
+            <div class="code">
+int uniquePaths(int m, int n) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;int&gt;&gt; dp(m, vector&lt;int&gt;(n, 0));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; m; i++) dp[i][0] = 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; n; j++) dp[0][j] = 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; m; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 1; j &lt; n; j++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i][j] = dp[i-1][j] + dp[i][j-1];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return dp[m-1][n-1];<br>
+}
+            </div>
+        </div>
+
+        <!-- 最小路径和 -->
+        <div id="minsum" class="content">
+            <h2>📉 最小路径和（Minimum Path Sum）</h2>
+            <div class="concept-item">
+                <h3>问题描述</h3>
+                <p>给定非负整数网格，找出从左上到右下路径，使数字总和最小。</p>
+            </div>
+            <div class="concept-item">
+                <h3>状态转移</h3>
+                <p><code>dp[i][j]</code> = 到达 (i,j) 的最小路径和<br>
+                转移方程：<code>dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i][j]</code></p>
+                <p>边界初始化：<br>
+                - `dp[0][0] = grid[0][0]`<br>
+                - 第一行：`dp[0][j] = dp[0][j-1] + grid[0][j]`<br>
+                - 第一列：`dp[i][0] = dp[i-1][0] + grid[i][0]`</p>
+            </div>
+            <div class="code">
+int minPathSum(vector&lt;vector&lt;int&gt;&gt;& grid) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int m = grid.size(), n = grid[0].size();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;int&gt;&gt; dp(m, vector&lt;int&gt;(n));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp[0][0] = grid[0][0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 1; j &lt; n; j++) dp[0][j] = dp[0][j-1] + grid[0][j];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; m; i++) dp[i][0] = dp[i-1][0] + grid[i][0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; m; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 1; j &lt; n; j++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i][j];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return dp[m-1][n-1];<br>
+}
+            </div>
+        </div>
+
+        <!-- 二维DP框架 -->
+        <div id="framework" class="content">
+            <h2>🧱 二维 DP 通用解题框架</h2>
+            <div class="concept-item">
+                <h3>四步法</h3>
+                <ol>
+                    <li><strong>定义状态</strong>：`dp[i][j]` 表示什么？</li>
+                    <li><strong>初始化边界</strong>：第一行、第一列（或使用虚拟行列）</li>
+                    <li><strong>状态转移</strong>：当前状态如何由子状态推导？</li>
+                    <li><strong>返回结果</strong>：通常是 `dp[m-1][n-1]`</li>
+                </ol>
+            </div>
+            <div class="code">
+// 通用模板<br>
+int solveGridDP(int m, int n) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 1. 创建 DP 表<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;int&gt;&gt; dp(m, vector&lt;int&gt;(n, 0));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 2. 初始化边界<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; m; i++) dp[i][0] = ...;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; n; j++) dp[0][j] = ...;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 3. 填充 DP 表<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; m; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 1; j &lt; n; j++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i][j] = 转移方程(...);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 4. 返回结果<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return dp[m-1][n-1];<br>
+}
+            </div>
+        </div>
+
+        <!-- 带障碍物路径（补漏！） -->
+        <div id="obstacle" class="content">
+            <h2>🚧 带障碍物的不同路径</h2>
+            <div class="concept-item">
+                <h3>问题扩展</h3>
+                <p>网格中某些格子是障碍物（值为 1），不能通过。求路径数。</p>
+            </div>
+            <div class="concept-item">
+                <h3>关键修改</h3>
+                <ul>
+                    <li>若 `grid[i][j] == 1`，则 `dp[i][j] = 0`</li>
+                    <li>边界初始化时，遇到障碍物后所有后续格子路径数为 0</li>
+                </ul>
+            </div>
+            <div class="code">
+int uniquePathsWithObstacles(vector&lt;vector&lt;int&gt;&gt;& obstacleGrid) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (obstacleGrid[0][0] == 1) return 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int m = obstacleGrid.size(), n = obstacleGrid[0].size();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;vector&lt;int&gt;&gt; dp(m, vector&lt;int&gt;(n, 0));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp[0][0] = 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 初始化第一行<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 1; j &lt; n; j++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[0][j] = (obstacleGrid[0][j] == 0) ? dp[0][j-1] : 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 初始化第一列<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; m; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i][0] = (obstacleGrid[i][0] == 0) ? dp[i-1][0] : 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; m; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 1; j &lt; n; j++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (obstacleGrid[i][j] == 1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i][j] = 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i][j] = dp[i-1][j] + dp[i][j-1];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return dp[m-1][n-1];<br>
+}
+            </div>
+        </div>
+
+        <!-- 路径重建（补漏！） -->
+        <div id="reconstruct" class="content">
+            <h2>🗺️ 路径重建：如何输出具体路径？</h2>
+            <div class="concept-item">
+                <h3>方法：反向追踪</h3>
+                <p>从终点 `(m-1, n-1)` 开始，根据 DP 表反向选择来源：<br>
+                - 如果 `dp[i][j] == dp[i-1][j] + grid[i][j]`，说明来自上方<br>
+                - 否则来自左方</p>
+            </div>
+            <div class="tip">
+                💡 需要额外存储决策信息，或在回溯时重新计算。
+            </div>
+            <div class="code">
+// 伪代码：重建最小路径<br>
+vector&lt;pair&lt;int,int&gt;&gt; path;<br>
+int i = m-1, j = n-1;<br>
+while (i > 0 || j > 0) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;path.push_back({i, j});<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (i == 0) j--;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;else if (j == 0) i--;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;else if (dp[i-1][j] &lt; dp[i][j-1]) i--; // 来自上方<br>
+&nbsp;&nbsp;&nbsp;&nbsp;else j--; // 来自左方<br>
+}<br>
+path.push_back({0,0});<br>
+reverse(path.begin(), path.end());
+            </div>
+        </div>
+
+        <!-- 空间优化 -->
+        <div id="space" class="content">
+            <h2>🌀 空间优化：从 O(mn) 到 O(n)</h2>
+            <div class="concept-item">
+                <h3>核心思想</h3>
+                <p>计算 `dp[i][j]` 时，只依赖上一行 `dp[i-1][j]` 和当前行左边 `dp[i][j-1]`。<br>
+                因此可用一维数组 `dp[j]` 模拟。</p>
+            </div>
+            <div class="concept-item">
+                <h3>不同路径的空间优化</h3>
+                <div class="code">
+int uniquePaths_opt(int m, int n) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; dp(n, 1); // 第一行全是1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; m; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 1; j &lt; n; j++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[j] = dp[j] + dp[j-1]; // dp[j] 是上一行，dp[j-1] 是当前行左边<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return dp[n-1];<br>
+}
+                </div>
+            </div>
+            <div class="best-practice">
+                ✅ **注意**：内层循环必须从左到右，才能保证 `dp[j-1]` 已更新为当前行的值。
+            </div>
+        </div>
+
+        <!-- 常见陷阱 -->
+        <div id="pitfalls" class="content">
+            <h2>⚠️ 二维 DP 常见陷阱</h2>
+            <div class="caution">
+                <h3>1. 边界初始化不完整</h3>
+                <p>忘记初始化第一行或第一列，导致后续计算错误。</p>
+            </div>
+            <div class="caution">
+                <h3>2. 索引越界</h3>
+                <p>循环从 i=0 开始，却访问 `dp[i-1][j]`。</p>
+            </div>
+            <div class="caution">
+                <h3>3. 空间优化方向错误</h3>
+                <p>在背包类问题中需从右到左，但在网格路径中需从左到右！</p>
+            </div>
+            <div class="tip">
+                💡 **调试技巧**：打印 DP 表格，验证小规模案例（如 2x2, 3x3）。
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 动态规划（三）：二维网格 DP | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

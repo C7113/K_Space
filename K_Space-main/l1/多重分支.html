@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 多重分支结构详解</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #0288d1;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #0288d1;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f0f9ff;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #0288d1;
+        }
+        .code {
+            background: #2d3748;
+            color: #64b5f6;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0277bd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .principle {
+            background: #f1f8e9;
+            border-left: 5px solid #7cb342;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #0288d1;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f9ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔀 C++ 多重分支结构</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 主题：爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'outline')">📋 课程目录</button>
+            <button class="tab" onclick="openTab(event, 'if-else')">🧩 if-else 多重分支</button>
+            <button class="tab" onclick="openTab(event, 'switch')">🎛️ switch 语句</button>
+            <button class="tab" onclick="openTab(event, 'projects')">🧩 综合项目实战</button>
+            <button class="tab" onclick="openTab(event, 'tips')">💡 编程技巧与注意事项</button>
+            <button class="tab" onclick="openTab(event, 'extend')">📚 知识扩展</button>
+        </div>
+
+        <!-- 课程目录 -->
+        <div id="outline" class="content active">
+            <h2>📋 本课核心内容</h2>
+            <ul style="font-size: 1.1em; line-height: 1.8;">
+                <li>掌握 <code>if-else if-else</code> 多重分支结构</li>
+                <li>理解并熟练使用 <code>switch-case</code> 语句</li>
+                <li>通过多个实际题目（后天星期、月份天数、成绩等级、计算器）巩固知识</li>
+                <li>了解布尔类型（bool）的历史与应用</li>
+                <li>培养条件判断的逻辑思维能力</li>
+            </ul>
+            <div class="principle">
+                <strong>匠心理念：</strong>分支结构是程序“智能决策”的基础，精准的条件设计决定代码的健壮性。
+            </div>
+        </div>
+
+        <!-- if-else 多重分支 -->
+        <div id="if-else" class="content">
+            <h2>🧩 if-else 多重分支</h2>
+            <div class="concept-item">
+                <h3>语法结构</h3>
+                <div class="code">
+if (条件1) {
+    // 语句1
+} else if (条件2) {
+    // 语句2
+} else if (条件3) {
+    // 语句3
+} else {
+    // 默认语句
+}
+                </div>
+                <p>✅ 特点：按顺序判断，一旦某个条件为真，执行对应语句后跳出整个结构。</p>
+            </div>
+            <div class="example">
+                <h3>应用场景：成绩等级</h3>
+                <p>风之巅小学规定：<br>
+                - ≥90 → A<br>
+                - 70≤ &lt;90 → B<br>
+                - 60≤ &lt;70 → C<br>
+                - &lt;60 → D</p>
+                <div class="code">
+int score; cin >> score;
+if (score >= 90) cout << "A";
+else if (score >= 70) cout << "B";
+else if (score >= 60) cout << "C";
+else cout << "D";
+                </div>
+                <p>⚠️ 注意：条件顺序很重要！必须从高到低判断。</p>
+            </div>
+        </div>
+
+        <!-- switch 语句 -->
+        <div id="switch" class="content">
+            <h2>🎛️ switch 语句</h2>
+            <div class="concept-item">
+                <h3>语法结构</h3>
+                <div class="code">
+switch (变量) {
+    case 值1:
+        语句1;
+        break;
+    case 值2:
+        语句2;
+        break;
+    // ... 更多 case
+    default:
+        默认语句;
+}
+                </div>
+                <p>✅ 要求：<code>变量</code> 必须是<strong>整型</strong>（<code>int</code>, <code>char</code> 等），不能是浮点数或字符串。</p>
+            </div>
+            <div class="concept-item">
+                <h3>关键规则</h3>
+                <ul>
+                    <li><code>case</code> 后必须是常量表达式（如 1, 'A'）</li>
+                    <li>匹配成功后，从该 <code>case</code> 开始执行，直到遇到 <code>break</code> 或结尾</li>
+                    <li>若无匹配项，则执行 <code>default</code>（可选）</li>
+                    <li><strong>忘记写 <code>break</code> 会导致“穿透”（fall-through）</strong>，通常是非预期行为</li>
+                </ul>
+            </div>
+            <div class="example">
+                <h3>十二生肖选择器（示例）</h3>
+                <p>输入年份，输出属相（简化版）：</p>
+                <div class="code">
+int year; cin >> year;
+int z = (year - 1900) % 12;
+switch (z) {
+    case 0: cout << "鼠"; break;
+    case 1: cout << "牛"; break;
+    case 2: cout << "虎"; break;
+    // ... 其他
+    default: cout << "未知";
+}
+                </div>
+            </div>
+            <div class="tip">
+                <strong>最佳实践：</strong>每个 <code>case</code> 结尾都写 <code>break</code>，除非你明确需要 fall-through。
+            </div>
+        </div>
+
+        <!-- 综合项目实战 -->
+        <div id="projects" class="content">
+            <h2>🧩 综合项目实战</h2>
+
+            <div class="concept-item">
+                <h3>1. 后天是星期几？</h3>
+                <p><strong>输入：</strong>1~7（1=周一）<br><strong>输出：</strong>后天对应的中文星期（如“五”）</p>
+                <div class="code">
+// 方法一：if-else
+if (d == 6) cout << "一";
+else if (d == 7) cout << "二";
+else cout << "一二三四五六日"[d + 1]; // 字符串索引技巧
+
+// 方法二：switch
+switch (d) {
+    case 6: cout << "一"; break;
+    case 7: cout << "二"; break;
+    default: cout << "一二三四五六日"[d + 1];
+}
+                </div>
+                <p>✅ 核心：处理循环（7→1，6→7→1）</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>2. 这个月有几天？</h3>
+                <p><strong>输入：</strong>年份 y，月份 m<br><strong>输出：</strong>该月天数（考虑闰年）</p>
+                <div class="code">
+bool isLeap = (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
+if (m == 2) {
+    cout << (isLeap ? 29 : 28);
+} else if (m == 4 || m == 6 || m == 9 || m == 11) {
+    cout << 30;
+} else {
+    cout << 31;
+}
+                </div>
+                <p>✅ 考察：复合条件判断、闰年规则</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>3. 简单计算器</h3>
+                <p><strong>输入：</strong>两个整数 + 操作符（+ - * /）<br><strong>输出：</strong>结果 或 错误信息</p>
+                <div class="code">
+int a, b; char op;
+cin >> a >> b >> op;
+
+if (op == '+') cout << a + b;
+else if (op == '-') cout << a - b;
+else if (op == '*') cout << a * b;
+else if (op == '/') {
+    if (b == 0) cout << "Divided by zero!";
+    else cout << a / b;
+} else {
+    cout << "Invalid operator!";
+}
+                </div>
+                <p>✅ 注意：除零检查、无效操作符处理</p>
+                <p>🔍 也可用 <code>switch(op)</code> 实现（因为 <code>char</code> 是整型）</p>
+            </div>
+        </div>
+
+        <!-- 编程技巧与注意事项 -->
+        <div id="tips" class="content">
+            <h2>💡 编程技巧与注意事项</h2>
+            <div class="concept-item">
+                <h3>if vs switch 如何选择？</h3>
+                <table>
+                    <tr><th>场景</th><th>推荐结构</th></tr>
+                    <tr><td>判断范围（如 score ≥ 90）</td><td><code>if-else if</code></td></tr>
+                    <tr><td>精确匹配离散值（如菜单选项、星期）</td><td><code>switch</code></td></tr>
+                    <tr><td>条件复杂（涉及多个变量）</td><td><code>if</code></td></tr>
+                    <tr><td>需要字符串匹配</td><td><code>if</code>（C++14前不支持 string 的 switch）</td></tr>
+                </table>
+            </div>
+            <div class="concept-item">
+                <h3>常见错误</h3>
+                <ul>
+                    <li>在 <code>switch</code> 中使用浮点数或字符串</li>
+                    <li>忘记写 <code>break</code> 导致逻辑错误</li>
+                    <li><code>if</code> 条件顺序错误（如先判断 score ≥ 60 再判断 ≥90）</li>
+                    <li>未处理边界情况（如除零、无效输入）</li>
+                </ul>
+            </div>
+            <div class="tip">
+                <strong>调试建议：</strong>对分支程序，务必测试所有可能路径（包括异常路径）。
+            </div>
+        </div>
+
+        <!-- 知识扩展 -->
+        <div id="extend" class="content">
+            <h2>📚 知识扩展：布尔类型（bool）</h2>
+            <div class="concept-item">
+                <h3>历史背景</h3>
+                <p>布尔代数由英国数学家乔治·布尔（George Boole）于19世纪提出，奠定了现代计算机逻辑的基础。</p>
+                <p>C++ 中的 <code>bool</code> 类型只有两个值：<code>true</code>（真）和 <code>false</code>（假）。</p>
+            </div>
+            <div class="concept-item">
+                <h3>在分支中的应用</h3>
+                <div class="code">
+bool isEven = (n % 2 == 0);
+if (isEven) {
+    cout << "偶数";
+} else {
+    cout << "奇数";
+}
+
+// 或直接用于条件
+if (n % 2 == 0) { ... }
+                </div>
+                <p>✅ 优势：提高代码可读性，逻辑更清晰。</p>
+            </div>
+            <div class="principle">
+                <strong>创新思维：</strong>将复杂条件封装为布尔函数，如：
+                <div class="code">
+bool isValidOperator(char c) {
+    return c == '+' || c == '-' || c == '*' || c == '/';
+}
+                </div>
+                可使主逻辑更简洁。
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++ 多重分支课程 | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

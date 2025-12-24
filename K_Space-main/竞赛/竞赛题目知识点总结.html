@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>“鲁班杯”C++竞赛知识点总结</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #007bff;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f8ff;
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0d6efd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .difficulty {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            color: white;
+            display: inline-block;
+            margin: 0 5px;
+        }
+        .easy { background: #28a745; }
+        .medium { background: #ffc107; color: #000; }
+        .hard { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏆 “鲁班杯”C++编程挑战赛</h1>
+            <p class="subtitle">—— 知识点系统总结 | 2025年10月29日</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🎯 考试概览</button>
+            <button class="tab" onclick="openTab(event, 'basic')">🔧 基础语法</button>
+            <button class="tab" onclick="openTab(event, 'control')">⚙️ 控制结构</button>
+            <button class="tab" onclick="openTab(event, 'loop')">🔁 循环结构</button>
+            <button class="tab" onclick="openTab(event, 'array')">📦 数组与字符串</button>
+            <button class="tab" onclick="openTab(event, 'function')">🧩 函数与算法</button>
+            <button class="tab" onclick="openTab(event, 'summary')">📊 总结分析</button>
+        </div>
+
+        <!-- 考试概览 -->
+        <div id="intro" class="content active">
+            <h2>📝 竞赛整体分析</h2>
+            <div class="concept-item">
+                <h3>考试基本信息</h3>
+                <ul>
+                    <li><strong>竞赛名称</strong>：“鲁班杯”C++编程挑战赛</li>
+                    <li><strong>题量与分值</strong>：共50题，满分100分</li>
+                    <li><strong>题型分布</strong>：
+                        <ul>
+                            <li>选择题：35题，每题2分，共70分</li>
+                            <li>判断题：15题，每题2分，共30分</li>
+                        </ul>
+                    </li>
+                    <li><strong>考试时长</strong>：60分钟</li>
+                    <li><strong>核心考察方向</strong>：C++语言基础、程序逻辑、数据类型、控制结构、数组与函数</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>知识点分布</h3>
+                <table>
+                    <tr>
+                        <th>知识点</th>
+                        <th>选择题数量</th>
+                        <th>判断题数量</th>
+                        <th>总分值</th>
+                    </tr>
+                    <tr>
+                        <td>计算机基础</td>
+                        <td>2</td>
+                        <td>0</td>
+                        <td>4分</td>
+                    </tr>
+                    <tr>
+                        <td>数据类型与常量</td>
+                        <td>3</td>
+                        <td>1</td>
+                        <td>8分</td>
+                    </tr>
+                    <tr>
+                        <td>变量与标识符</td>
+                        <td>3</td>
+                        <td>1</td>
+                        <td>8分</td>
+                    </tr>
+                    <tr>
+                        <td>运算符与表达式</td>
+                        <td>5</td>
+                        <td>2</td>
+                        <td>14分</td>
+                    </tr>
+                    <tr>
+                        <td>控制结构 (if/switch)</td>
+                        <td>8</td>
+                        <td>3</td>
+                        <td>22分</td>
+                    </tr>
+                    <tr>
+                        <td>循环结构 (for/while)</td>
+                        <td>6</td>
+                        <td>2</td>
+                        <td>16分</td>
+                    </tr>
+                    <tr>
+                        <td>数组与字符串</td>
+                        <td>4</td>
+                        <td>3</td>
+                        <td>14分</td>
+                    </tr>
+                    <tr>
+                        <td>函数与算法</td>
+                        <td>4</td>
+                        <td>3</td>
+                        <td>14分</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 基础语法 -->
+        <div id="basic" class="content">
+            <h2>🔧 C++基础语法核心</h2>
+            
+            <div class="concept-item">
+                <h3><span class="keyword">数据类型</span> 与 <span class="keyword">常量</span></h3>
+                <p>C++中基本数据类型决定了变量的存储方式和取值范围。</p>
+                <table>
+                    <tr><th>类型</th><th>说明</th><th>示例</th></tr>
+                    <tr><td>int</td><td>整型</td><td>7, -3, 0</td></tr>
+                    <tr><td>double</td><td>双精度浮点型（默认）</td><td>7.0, 3.14159</td></tr>
+                    <tr><td>float</td><td>单精度浮点型</td><td>7.0f</td></tr>
+                    <tr><td>bool</td><td>布尔型</td><td>true, false</td></tr>
+                    <tr><td>char</td><td>字符型</td><td>'A', '1'</td></tr>
+                </table>
+                <div class="example">
+                    <h3>💡 常量类型判断</h3>
+                    <p>常量 <code>7.0</code> 默认是 <code>double</code> 类型，不是 <code>float</code> 或 <code>int</code>。</p>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3><span class="keyword">变量</span> 与 <span class="keyword">标识符</span></h3>
+                <p>变量是程序中用于存储数据的命名内存位置。</p>
+                <ul>
+                    <li>变量必须先定义后使用</li>
+                    <li>变量名必须是合法的标识符</li>
+                    <li>标识符规则：
+                        <ul>
+                            <li>以字母或下划线开头</li>
+                            <li>只能包含字母、数字、下划线</li>
+                            <li>不能是关键字</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="example">
+                    <h3>✅ 合法标识符</h3>
+                    <p><code>x321</code>, <code>_x321</code>, <code>x321_</code></p>
+                    <h3>❌ 非法标识符</h3>
+                    <p><code>0x321</code>（以数字开头）</p>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3><span class="keyword">关键字</span></h3>
+                <p>关键字是C++语言保留的、具有特殊含义的单词，不能用作标识符。</p>
+                <p>常见关键字：<code>int</code>, <code>for</code>, <code>do</code>, <code>if</code>, <code>else</code>, <code>while</code>, <code>switch</code>, <code>case</code>, <code>break</code>, <code>return</code> 等。</p>
+                <div class="example">
+                    <h3>⚠️ 注意</h3>
+                    <p><code>cout</code> 是标准库中的对象，不是C++语言的关键字。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 控制结构 -->
+        <div id="control" class="content">
+            <h2>⚙️ 控制结构详解</h2>
+
+            <div class="concept-item">
+                <h3><span class="keyword">if</span> 语句</h3>
+                <p>用于条件判断，控制程序分支执行。</p>
+                <div class="code">
+if (condition) {
+    // 条件为真时执行
+} else {
+    // 条件为假时执行
+}
+                </div>
+                <div class="example">
+                    <h3>前置/后置运算符</h3>
+                    <p><code>--a</code> 先减1再使用，<code>b++</code> 先使用再加1。</p>
+                    <p>例如：<code>if (--a > b++)</code> 中，<code>a</code> 先减1，<code>b</code> 使用原值比较，之后再加1。</p>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3><span class="keyword">switch</span> 语句</h3>
+                <p>多分支选择结构，常用于枚举值或固定选项。</p>
+                <ul>
+                    <li><code>case</code> 后必须是常量表达式</li>
+                    <li>通常使用 <code>break</code> 防止“穿透”</li>
+                    <li><code>default</code> 子句的 <code>break</code> 可省略（但建议保留）</li>
+                    <li><code>case</code> 后可以没有语句（空分支）</li>
+                </ul>
+                <div class="example">
+                    <h3>📌 重要规则</h3>
+                    <p>各 <code>case</code> 和 <code>default</code> 子句的顺序不影响结果（只要包含 <code>break</code>）。</p>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3><span class="keyword">逻辑运算符</span></h3>
+                <table>
+                    <tr><th>运算符</th><th>说明</th><th>示例</th></tr>
+                    <tr><td>&&</td><td>逻辑与（AND）</td><td>true && false → false</td></tr>
+                    <tr><td>||</td><td>逻辑或（OR）</td><td>true || false → true</td></tr>
+                    <tr><td>!</td><td>逻辑非（NOT）</td><td>!true → false</td></tr>
+                </table>
+                <div class="example">
+                    <h3>💡 短路求值</h3>
+                    <p><code>&&</code>：左操作数为假则不计算右操作数<br>
+                       <code>||</code>：左操作数为真则不计算右操作数</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 循环结构 -->
+        <div id="loop" class="content">
+            <h2>🔁 循环结构精讲</h2>
+
+            <div class="concept-item">
+                <h3><span class="keyword">for</span> 循环</h3>
+                <p>用于已知循环次数的场景。</p>
+                <div class="code">
+for (int i = 0; i < n; i++) {
+    // 循环体
+}
+                </div>
+                <div class="example">
+                    <h3>循环次数分析</h3>
+                    <p><code>for (int i = 6; i < 0; --i)</code> 的循环条件 <code>i < 0</code> 初始不成立，循环0次，与其他循环不同。</p>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3><span class="keyword">while</span> 循环</h3>
+                <p>在条件为真时重复执行循环体。</p>
+                <div class="code">
+while (condition) {
+    // 循环体
+}
+                </div>
+                <div class="example">
+                    <h3>📌 经典应用：累加奇数</h3>
+                    <p>计算1到9的奇数和：</p>
+                    <div class="code">
+int n = 1, sum = 0;<br>
+while (n < 10) {<br>
+    if (n % 2 != 0) sum += n;<br>
+    ++n;<br>
+}<br>
+// sum = 1+3+5+7+9 = 25
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3><span class="keyword">嵌套循环</span></h3>
+                <p>循环中包含另一个循环，常用于二维操作。</p>
+                <div class="example">
+                    <h3>输出 * 的数量</h3>
+                    <p>外层循环3次，内层循环4次，共输出 <code>3 * 4 = 12</code> 个 '*'。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数组与字符串 -->
+        <div id="array" class="content">
+            <h2>📦 数组与字符串</h2>
+
+            <div class="concept-item">
+                <h3><span class="keyword">一维数组</span></h3>
+                <ul>
+                    <li>在内存中连续存放</li>
+                    <li>长度定义后不可动态扩充</li>
+                    <li>下标从0开始，最后一个元素下标为 <code>长度-1</code></li>
+                    <li>元素类型必须相同</li>
+                </ul>
+                <div class="example">
+                    <h3>内存地址计算</h3>
+                    <p>首地址为A，每个元素占2字节，则第5个元素 <code>a[4]</code> 的地址为 <code>A + 4 * 2 = A + 8</code>。</p>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3><span class="keyword">二维数组</span></h3>
+                <p>逻辑上是表格，内存中按行连续存储。</p>
+                <div class="code">
+int a[5][10]; // 5行10列
+                </div>
+                <div class="example">
+                    <h3>二维数组输入</h3>
+                    <p>正确方式是双重循环，逐个输入元素：</p>
+                    <div class="code">
+for(int i = 0; i < 5; i++)<br>
+    for(int j = 0; j < 10; j++)<br>
+        cin >> a[i][j];
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3><span class="keyword">字符串处理</span></h3>
+                <p>C风格字符串以 <code>'\0'</code> 结尾的字符数组。</p>
+                <ul>
+                    <li><code>"A"</code> 是字符串（含2字符：<code>'A'</code>, <code>'\0'</code>）</li>
+                    <li><code>'A'</code> 是单个字符</li>
+                    <li>不能用 <code>=</code> 赋值字符串数组</li>
+                    <li>拼接使用 <code>strcat()</code>，复制使用 <code>strcpy()</code></li>
+                </ul>
+                <div class="example">
+                    <h3>字符串拼接示例</h3>
+                    <div class="code">
+char a[4] = "ABC", b[4] = "123";<br>
+char d[8] = "";<br>
+strcat(d, a); // d = "ABC"<br>
+strcat(d, b); // d = "ABC123"<br>
+cout << d; // 输出 ABC123
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 函数与算法 -->
+        <div id="function" class="content">
+            <h2>🧩 函数与算法</h2>
+
+            <div class="concept-item">
+                <h3><span class="keyword">函数基础</span></h3>
+                <ul>
+                    <li>每个C++程序必须有且只有一个 <code>main()</code> 函数</li>
+                    <li>程序从 <code>main()</code> 开始执行</li>
+                    <li>函数可以返回 <code>void</code>（无返回值）</li>
+                    <li>调用函数时，实参与形参的个数、顺序、类型应一致</li>
+                    <li>参数传递方式不全是“按值传递”，还有“按引用传递”</li>
+                </ul>
+            </div>
+
+            <div class="concept-item">
+                <h3><span class="keyword">变量交换</span></h3>
+                <p>交换两个变量的值是经典问题。</p>
+                <div class="code">
+// 正确方法1：使用临时变量<br>
+int tmp = a;<br>
+a = b;<br>
+b = tmp;<br><br>
+// 正确方法2：使用标准库函数<br>
+swap(a, b);
+                </div>
+                <div class="example">
+                    <h3>❌ 常见错误</h3>
+                    <p><code>a = b; b = a;</code> 会导致两个变量都变成b的值。</p>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3><span class="keyword">经典算法</span></h3>
+                <div class="example">
+                    <h3>冒泡排序</h3>
+                    <p>每趟将未排序部分的最大值“冒泡”到末尾。</p>
+                    <p>对 <code>5,6,2,4,3,1,7</code> 排序：</p>
+                    <ol>
+                        <li>第一趟后：...6,7</li>
+                        <li>第二趟后：...5,6,7</li>
+                    </ol>
+                </div>
+
+                <div class="example">
+                    <h3>最小公倍数 (LCM)</h3>
+                    <p>12 和 8 的最小公倍数是 24。</p>
+                    <p>计算方法：LCM(a,b) = (a * b) / GCD(a,b)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 总结分析 -->
+        <div id="summary" class="content">
+            <h2>📊 总结与备考建议</h2>
+            <div class="concept-item">
+                <h3>核心考点总结</h3>
+                <ol>
+                    <li><strong>基础扎实</strong>：数据类型、变量、标识符、关键字是基石。</li>
+                    <li><strong>逻辑清晰</strong>：if、switch、循环的执行流程必须熟练。</li>
+                    <li><strong>细节把控</strong>：前置/后置运算符、短路求值、内存地址计算等易错点。</li>
+                    <li><strong>数组理解</strong>：内存布局、下标、字符串操作是重点。</li>
+                    <li><strong>算法思维</strong>：掌握冒泡排序、最小公倍数等基础算法。</li>
+                </ol>
+            </div>
+            <div class="concept-item">
+                <h3>备考建议</h3>
+                <ul>
+                    <li>熟练掌握C++基本语法，多写代码验证。</li>
+                    <li>重点练习控制结构和循环的嵌套使用。</li>
+                    <li>理解数组在内存中的存储方式。</li>
+                    <li>动手实现交换变量、排序等经典算法。</li>
+                    <li>注意区分C++与C的输入输出（cin/cout vs scanf/printf）。</li>
+                    <li>仔细审题，特别是“不正确”、“不能”等否定词。</li>
+                </ul>
+            </div>
+            <div class="example">
+                <h3>🎉 祝您在“鲁班杯”竞赛中取得优异成绩！</h3>
+                <p>扎实基础，冷静分析，发挥最佳水平！</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 “鲁班杯”C++编程挑战赛 | 知识点总结 | 2025年10月29日</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python二级 - 第1课：分支结构 - C++ 知识导航</title>
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/topic.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="stylesheet" href="/styles/animations.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">📘</span>
+        Python二级 第1课：分支结构
+        <span class="badge">条件控制</span>
+      </h1>
+      <p>掌握单分支、双分支和多分支结构 | 理解条件表达式 | 应用分支解决实际问题</p>
+    </div>
+  </header>
+
+  <div class="button-container">
+    <a href="../index.html" class="toggle-btn">↩ 返回 CIE Python 考试首页</a>
+    <a href="../../../../exam-topics.html" class="toggle-btn">↩ 返回 等级考试知识点</a>
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+  </div>
+  
+  <div class="container">
+    <section class="topic-section">
+      <h2>知识点概览</h2>
+      <div class="knowledge-points">
+        <ul>
+          <li>单分支结构 (if)：根据条件执行代码块</li>
+          <li>双分支结构 (if-else)：根据条件在两个代码块中选择执行</li>
+          <li>多分支结构 (if-elif-else)：根据多个条件选择执行不同的代码块</li>
+          <li>条件表达式：比较运算符、逻辑运算符的使用</li>
+          <li>嵌套分支：在分支结构内部使用其他分支结构</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2>知识点详解</h2>
+      
+      <h3>1. 单分支结构 (if)</h3>
+      <p>单分支结构是最简单的条件控制结构，只有在条件为真时才执行代码块。</p>
+      
+      <div class="concept-card">
+        <h4>基本语法</h4>
+        <div class="example-code">
+<pre>if 条件:
+    语句块</pre>
+        </div>
+        <p>要点：</p>
+        <ul>
+          <li>条件为真(True)时执行语句块</li>
+          <li>条件为假(False)时跳过语句块</li>
+          <li>语句块需要缩进(通常4个空格)</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h4>示例：判断成绩是否合格</h4>
+        <div class="example-code">
+<pre># 判断成绩是否合格
+score = float(input("请输入成绩："))
+if score >= 60:
+    print("恭喜你，成绩合格！")
+    print("继续努力，争取更好成绩！")
+print("程序结束")</pre>
+        </div>
+        <p>运行结果（输入75）：</p>
+        <div class="example-code">
+<pre>请输入成绩：75
+恭喜你，成绩合格！
+继续努力，争取更好成绩！
+程序结束</pre>
+        </div>
+      </div>
+      
+      <h3>2. 双分支结构 (if-else)</h3>
+      <p>双分支结构根据条件的真假选择执行两个代码块中的一个。</p>
+      
+      <div class="concept-card">
+        <h4>基本语法</h4>
+        <div class="example-code">
+<pre>if 条件:
+    语句块1
+else:
+    语句块2</pre>
+        </div>
+        <p>要点：</p>
+        <ul>
+          <li>条件为真时执行语句块1</li>
+          <li>条件为假时执行语句块2</li>
+          <li>两个语句块都需要缩进</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h4>示例：判断奇偶数</h4>
+        <div class="example-code">
+<pre># 判断奇偶数
+number = int(input("请输入一个整数："))
+if number % 2 == 0:
+    print(f"{number} 是偶数")
+else:
+    print(f"{number} 是奇数")
+print("程序结束")</pre>
+        </div>
+        <p>运行结果（输入8）：</p>
+        <div class="example-code">
+<pre>请输入一个整数：8
+8 是偶数
+程序结束</pre>
+        </div>
+      </div>
+      
+      <h3>3. 多分支结构 (if-elif-else)</h3>
+      <p>多分支结构可以根据多个条件选择执行不同的代码块。</p>
+      
+      <div class="concept-card">
+        <h4>基本语法</h4>
+        <div class="example-code">
+<pre>if 条件1:
+    语句块1
+elif 条件2:
+    语句块2
+elif 条件3:
+    语句块3
+...
+else:
+    语句块N</pre>
+        </div>
+        <p>要点：</p>
+        <ul>
+          <li>依次检查条件，执行第一个为真的条件对应的语句块</li>
+          <li>如果没有条件为真，则执行else语句块（如果有）</li>
+          <li>elif可以有多个，else最多只有一个且必须在最后</li>
+        </ul>
+      </div>
+      
+      <div class="concept-card">
+        <h4>示例：成绩等级评定</h4>
+        <div class="example-code">
+<pre># 成绩等级评定
+score = float(input("请输入成绩："))
+
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+elif score >= 70:
+    grade = "C"
+elif score >= 60:
+    grade = "D"
+else:
+    grade = "E"
+
+print(f"你的成绩等级是：{grade}")</pre>
+        </div>
+        <p>运行结果（输入85）：</p>
+        <div class="example-code">
+<pre>请输入成绩：85
+你的成绩等级是：B</pre>
+        </div>
+      </div>
+      
+      <h3>4. 条件表达式</h3>
+      <p>条件结构依赖于条件表达式，这些表达式的结果是布尔值(True或False)。</p>
+      
+      <div class="concept-card">
+        <h4>比较运算符</h4>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>运算符</th>
+              <th>含义</th>
+              <th>示例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>==</td>
+              <td>等于</td>
+              <td>5 == 5 结果为 True</td>
+            </tr>
+            <tr>
+              <td>!=</td>
+              <td>不等于</td>
+              <td>5 != 3 结果为 True</td>
+            </tr>
+            <tr>
+              <td>&lt;</td>
+              <td>小于</td>
+              <td>3 &lt; 5 结果为 True</td>
+            </tr>
+            <tr>
+              <td>&lt;=</td>
+              <td>小于等于</td>
+              <td>5 &lt;= 5 结果为 True</td>
+            </tr>
+            <tr>
+              <td>&gt;</td>
+              <td>大于</td>
+              <td>7 &gt; 5 结果为 True</td>
+            </tr>
+            <tr>
+              <td>&gt;=</td>
+              <td>大于等于</td>
+              <td>5 &gt;= 5 结果为 True</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="concept-card">
+        <h4>逻辑运算符</h4>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>运算符</th>
+              <th>含义</th>
+              <th>示例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>and</td>
+              <td>与运算</td>
+              <td>5 &gt; 3 and 2 &lt; 4 结果为 True</td>
+            </tr>
+            <tr>
+              <td>or</td>
+              <td>或运算</td>
+              <td>5 &gt; 3 or 2 &gt; 4 结果为 True</td>
+            </tr>
+            <tr>
+              <td>not</td>
+              <td>非运算</td>
+              <td>not (5 &lt; 3) 结果为 True</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <h3>5. 嵌套分支</h3>
+      <p>在一个分支结构内部可以包含另一个分支结构，这就是嵌套分支。</p>
+      
+      <div class="concept-card">
+        <h4>示例：登录验证系统</h4>
+        <div class="example-code">
+<pre># 登录验证系统
+username = input("请输入用户名：")
+password = input("请输入密码：")
+
+if username == "admin":
+    if password == "123456":
+        print("登录成功！欢迎管理员！")
+    else:
+        print("密码错误！")
+else:
+    print("用户名不存在！")</pre>
+        </div>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>示例演示</h2>
+      
+      <h3>示例1：简单计算器</h3>
+      <div class="example-code">
+<pre># 简单计算器
+print("简单计算器")
+print("1. 加法")
+print("2. 减法")
+
+choice = input("请选择操作(1/2)：")
+
+if choice == "1":
+    num1 = float(input("请输入第一个数字："))
+    num2 = float(input("请输入第二个数字："))
+    result = num1 + num2
+    print(f"结果：{num1} + {num2} = {result}")
+elif choice == "2":
+    num1 = float(input("请输入第一个数字："))
+    num2 = float(input("请输入第二个数字："))
+    result = num1 - num2
+    print(f"结果：{num1} - {num2} = {result}")
+else:
+    print("无效的选择！")</pre>
+      </div>
+      
+      <p>运行结果（选择1，输入5和3）：</p>
+      <div class="example-code">
+<pre>简单计算器
+1. 加法
+2. 减法
+请选择操作(1/2)：1
+请输入第一个数字：5
+请输入第二个数字：3
+结果：5.0 + 3.0 = 8.0</pre>
+      </div>
+      
+      <h3>示例2：年龄分组</h3>
+      <div class="example-code">
+<pre># 年龄分组
+age = int(input("请输入您的年龄："))
+
+if age < 0:
+    print("年龄不能为负数！")
+elif age <= 12:
+    print("你是儿童")
+elif age <= 17:
+    print("你是青少年")
+elif age <= 59:
+    print("你是成年人")
+else:
+    print("你是老年人")</pre>
+      </div>
+      
+      <p>运行结果（输入25）：</p>
+      <div class="example-code">
+<pre>请输入您的年龄：25
+你是成年人</pre>
+      </div>
+    </section>
+    
+    <section class="topic-section">
+      <h2>课堂练习</h2>
+      
+      <div class="exercise-card">
+        <h3>练习1：闰年判断</h3>
+        <p>编写一个程序，判断用户输入的年份是否为闰年。</p>
+        <p>闰年判断规则：</p>
+        <ul>
+          <li>能被4整除但不能被100整除的年份是闰年</li>
+          <li>能被400整除的年份是闰年</li>
+        </ul>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+<pre># 闰年判断
+year = int(input("请输入年份："))
+
+if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
+    print(f"{year}年是闰年")
+else:
+    print(f"{year}年不是闰年")</pre>
+          </div>
+        </details>
+      </div>
+      
+      <div class="exercise-card">
+        <h3>练习2：BMI指数计算</h3>
+        <p>编写一个程序，根据用户输入的身高和体重计算BMI指数，并给出健康建议。</p>
+        <p>BMI计算公式：BMI = 体重(kg) / 身高(m)²</p>
+        <p>健康标准：</p>
+        <ul>
+          <li>BMI < 18.5：偏瘦</li>
+          <li>18.5 ≤ BMI < 24：正常</li>
+          <li>24 ≤ BMI < 28：偏胖</li>
+          <li>BMI ≥ 28：肥胖</li>
+        </ul>
+        <details>
+          <summary>参考代码</summary>
+          <div class="example-code">
+<pre># BMI指数计算
+height = float(input("请输入身高(米)："))
+weight = float(input("请输入体重(公斤)："))
+
+bmi = weight / (height ** 2)
+print(f"您的BMI指数是：{bmi:.2f}")
+
+if bmi < 18.5:
+    print("您的体重偏瘦，请注意营养")
+elif bmi < 24:
+    print("您的体重正常，继续保持")
+elif bmi < 28:
+    print("您的体重偏胖，请注意锻炼")
+else:
+    print("您的体重肥胖，请注意减肥")</pre>
+          </div>
+        </details>
+      </div>
+    </section>
+  </div>
+  
+  <div class="navigation-buttons">
+    <span></span>
+    <a href="2.html" class="nav-button next">下一课：循环结构 ➔</a>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+  </footer>
+
+  <script>
+    // 主题切换功能
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+
+    // 粒子动画效果
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

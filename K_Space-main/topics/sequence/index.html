@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 顺序结构</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <link rel="stylesheet" href="../../styles/topic.css">
+    <style>
+        .topic-header {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, var(--header-bg), var(--bg));
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            z-index: 2;
+        }
+
+        .topic-header h1 {
+            font-size: 2.2rem;
+            color: var(--text);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .topic-header h1 .icon {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            font-size: 2.8rem;
+        }
+
+        .topic-header h1:hover .icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .topic-header p {
+            font-size: 1.1rem;
+            margin-top: 0.25rem;
+            color: var(--text);
+            font-weight: 500;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(30deg);
+            animation: shimmer 3s infinite;
+        }
+
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25em 0.6em;
+            font-size: 0.75em;
+            font-weight: 600;
+            line-height: 1;
+            color: white;
+            background-color: var(--accent);
+            border-radius: 10rem;
+            margin-left: 0.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .breadcrumb {
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .topic-section {
+            margin: 3rem 0;
+        }
+
+        .topic-section:first-child {
+            margin-top: 0;
+        }
+
+        .topic-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .concept-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .concept-item:hover {
+            border-color: var(--accent-light);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .concept-item:hover::before {
+            opacity: 1;
+        }
+
+        .concept-item h3 {
+            color: var(--accent);
+            margin-top: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .concept-item h3::before {
+            content: '📘';
+            font-size: 1.2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: var(--accent);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+
+        .code-block {
+            background: var(--code-bg, #1e1e1e);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            overflow-x: auto;
+            color: var(--code-text, #d4d4d4);
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .code-title {
+            position: absolute;
+            top: 0;
+            right: 1rem;
+            background: #333;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0 0 8px 8px;
+            font-size: 0.8rem;
+            color: #fff;
+        }
+
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent);
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example h3 {
+            color: var(--accent);
+            margin-top: 0;
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .topic-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .tab-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="grid-pattern"></div>
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+    </div>
+
+    <div class="button-container">
+        <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+        <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">返回学习路径</button>
+        <button class="toggle-btn" onclick="window.location.href='../../index.htm'">回到首页</button>
+    </div>
+
+    <div class="topic-header shimmer">
+        <h1 class="hover-lift">
+            <span class="icon">➡️</span>
+            C++ 顺序结构
+            <span class="badge">控制流</span>
+        </h1>
+        <p>理解程序执行的基本顺序</p>
+    </div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <nav class="breadcrumb">
+                <a href="../../index.htm">首页</a> → 
+                <a href="../../learning-path.html">学习路径</a> → 
+                顺序结构
+            </nav>
+
+            <div class="tab-container">
+                <button class="tab active" onclick="openTab(event, 'concept')">📚 概念理解</button>
+                <button class="tab" onclick="openTab(event, 'examples')">📝 代码示例</button>
+                <button class="tab" onclick="openTab(event, 'practice')">🧮 项目实践</button>
+            </div>
+
+            <!-- 概念理解 -->
+            <div id="concept" class="content active">
+                <div class="topic-card">
+                    <h2>顺序结构概念</h2>
+                    <div class="concept-item">
+                        <h3>什么是顺序结构</h3>
+                        <p>顺序结构是程序中最基本的执行结构，程序会按照代码书写的顺序，从上到下依次执行每一条语句，没有分支，没有循环。</p>
+                        <div class="example">
+                            <h4>生活中的例子</h4>
+                            <p>泡茶的过程就是一个典型的顺序结构：</p>
+                            <ol>
+                                <li>烧水</li>
+                                <li>准备茶叶</li>
+                                <li>将热水倒入茶杯</li>
+                                <li>放入茶叶</li>
+                                <li>等待几分钟</li>
+                                <li>茶水泡好</li>
+                            </ol>
+                            <p>每一步都必须按顺序执行，不能跳过任何一步，也不能颠倒顺序。</p>
+                        </div>
+                    </div>
+
+                    <div class="concept-item">
+                        <h3>顺序结构的特点</h3>
+                        <ul>
+                            <li><strong>单入口单出口</strong>：程序从第一条语句开始，按顺序执行到最后一条语句结束</li>
+                            <li><strong>无分支</strong>：不会根据条件判断执行不同的语句</li>
+                            <li><strong>无循环</strong>：不会重复执行某段代码</li>
+                            <li><strong>执行路径唯一</strong>：每次运行程序，执行的路径都是相同的</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 代码示例 -->
+            <div id="examples" class="content">
+                <div class="topic-card">
+                    <h2>顺序结构代码示例</h2>
+                    <div class="concept-item">
+                        <h3>基本顺序结构</h3>
+                        <p>下面是一个简单的顺序结构程序示例：</p>
+                        <div class="code-block">
+                            <div class="code-title">C++</div>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "程序开始执行" &lt;&lt; endl;
+    
+    int a = 10;
+    int b = 20;
+    int sum = a + b;
+    
+    cout &lt;&lt; "a = " &lt;&lt; a &lt;&lt; endl;
+    cout &lt;&lt; "b = " &lt;&lt; b &lt;&lt; endl;
+    cout &lt;&lt; "a + b = " &lt;&lt; sum &lt;&lt; endl;
+    
+    cout &lt;&lt; "程序执行结束" &lt;&lt; endl;
+    
+    return 0;
+}</code></pre>
+                        </div>
+                        <p>程序执行流程：</p>
+                        <ol>
+                            <li>输出"程序开始执行"</li>
+                            <li>定义变量a并赋值为10</li>
+                            <li>定义变量b并赋值为20</li>
+                            <li>计算a和b的和，存储在sum变量中</li>
+                            <li>输出变量a的值</li>
+                            <li>输出变量b的值</li>
+                            <li>输出sum的值</li>
+                            <li>输出"程序执行结束"</li>
+                            <li>程序结束</li>
+                        </ol>
+                    </div>
+
+                    <div class="concept-item">
+                        <h3>输入输出顺序结构</h3>
+                        <p>结合输入输出的顺序结构示例：</p>
+                        <div class="code-block">
+                            <div class="code-title">C++</div>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int length, width, area;
+    
+    cout &lt;&lt; "请输入长方形的长: ";
+    cin &gt;&gt; length;
+    
+    cout &lt;&lt; "请输入长方形的宽: ";
+    cin &gt;&gt; width;
+    
+    area = length * width;
+    
+    cout &lt;&lt; "长方形的面积是: " &lt;&lt; area &lt;&lt; endl;
+    
+    return 0;
+}</code></pre>
+                        </div>
+                        <p>执行步骤：</p>
+                        <ol>
+                            <li>提示用户输入长方形的长</li>
+                            <li>读取用户输入的长度值</li>
+                            <li>提示用户输入长方形的宽</li>
+                            <li>读取用户输入的宽度值</li>
+                            <li>计算面积</li>
+                            <li>输出计算结果</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 项目实践 -->
+            <div id="practice" class="content">
+                <div class="topic-card">
+                    <h2>🎯 项目实践</h2>
+                    <div class="example">
+                        <h3>项目：计算圆的周长和面积</h3>
+                        <p>编写一个程序，让用户输入圆的半径，然后计算并输出圆的周长和面积。</p>
+                        <p>公式：</p>
+                        <ul>
+                            <li>周长 = 2 × π × 半径</li>
+                            <li>面积 = π × 半径²</li>
+                        </ul>
+                        <div class="code-block">
+                            <div class="code-title">C++</div>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+using namespace std;
+
+int main() {
+    double radius, perimeter, area;
+    const double PI = 3.14159;
+    
+    cout &lt;&lt; "请输入圆的半径: ";
+    cin &gt;&gt; radius;
+    
+    perimeter = 2 * PI * radius;
+    area = PI * radius * radius;
+    
+    cout &lt;&lt; fixed &lt;&lt; setprecision(2);
+    cout &lt;&lt; "圆的周长是: " &lt;&lt; perimeter &lt;&lt; endl;
+    cout &lt;&lt; "圆的面积是: " &lt;&lt; area &lt;&lt; endl;
+    
+    return 0;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <h3>项目：商品价格计算</h3>
+                        <p>编写一个程序，输入商品单价和数量，计算总价，并输出购买信息。</p>
+                        <div class="code-block">
+                            <div class="code-title">C++</div>
+                            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+using namespace std;
+
+int main() {
+    string productName;
+    double price;
+    int quantity;
+    double total;
+    
+    cout &lt;&lt; "请输入商品名称: ";
+    getline(cin, productName);
+    
+    cout &lt;&lt; "请输入商品单价: ";
+    cin &gt;&gt; price;
+    
+    cout &lt;&lt; "请输入商品数量: ";
+    cin &gt;&gt; quantity;
+    
+    total = price * quantity;
+    
+    cout &lt;&lt; fixed &lt;&lt; setprecision(2);
+    cout &lt;&lt; "\n=== 购物清单 ===" &lt;&lt; endl;
+    cout &lt;&lt; "商品名称: " &lt;&lt; productName &lt;&lt; endl;
+    cout &lt;&lt; "商品单价: " &lt;&lt; price &lt;&lt; "元" &lt;&lt; endl;
+    cout &lt;&lt; "购买数量: " &lt;&lt; quantity &lt;&lt; "件" &lt;&lt; endl;
+    cout &lt;&lt; "应付金额: " &lt;&lt; total &lt;&lt; "元" &lt;&lt; endl;
+    
+    return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <!-- 导航按钮将由topic-nav.js动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 C++课程 | 掌握顺序结构，理解程序执行基础</p>
+    </footer>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+
+        // 暗色模式切换
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (prefersDark) {
+            document.body.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '☀️ 切换亮色模式';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 切换暗色模式';
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ 切换亮色模式';
+            }
+        });
+        
+        // 添加随机移动效果到粒子
+        document.addEventListener('mousemove', function(e) {
+            const particles = document.querySelectorAll('.particle');
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            particles.forEach(particle => {
+                const rect = particle.getBoundingClientRect();
+                const particleX = rect.left + rect.width / 2;
+                const particleY = rect.top + rect.height / 2;
+                
+                const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+                const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+                const force = Math.min(500 / (distance * distance), 15);
+                
+                const translateX = Math.cos(angle) * force;
+                const translateY = Math.sin(angle) * force;
+                
+                particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+            });
+        });
+        
+        // 初始化页面导航
+        document.addEventListener('DOMContentLoaded', function() {
+            // 当前页面路径（相对于topics目录）
+            const currentPagePath = './sequence/index.html';
+            initTopicNavigation(currentPagePath);
+        });
+    </script>
+    
+    <script src="../../scripts/topic-nav.js"></script>
+</body>
+</html>

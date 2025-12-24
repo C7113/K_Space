@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++ 一维数组</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: var(--section-bg);
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text);
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: var(--section-bg);
+            border-radius: 0 0 10px 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: var(--card-bg);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid var(--border);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: var(--accent);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: linear-gradient(to right, var(--section-bg), transparent);
+            padding: 15px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text);
+            font-size: 0.9em;
+            opacity: 0.7;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .return-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .priority-low {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+        <div class="grid-pattern"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🔢 C++ 一维数组</h1>
+            <p class="subtitle">—— 高效组织和处理批量数据</p>
+        </header>
+
+        <a href="../../learning-path.html" class="return-link">🔙 返回学习路径</a>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">🔢 基本概念</button>
+            <button class="tab" onclick="openTab(event, 'definition')">📋 定义与初始化</button>
+            <button class="tab" onclick="openTab(event, 'traverse')">🔄 数组遍历</button>
+            <button class="tab" onclick="openTab(event, 'search')">🔍 查找操作</button>
+            <button class="tab" onclick="openTab(event, 'sort')">📊 排序操作</button>
+            <button class="tab" onclick="openTab(event, 'examples')">🧮 应用示例</button>
+            <button class="tab" onclick="openTab(event, 'practice')">🧮 实践练习</button>
+        </div>
+
+        <!-- 基本概念 -->
+        <div id="concept" class="content active">
+            <h2>一维数组基本概念</h2>
+            <div class="concept-item">
+                <h3>什么是一维数组</h3>
+                <p>一维数组是相同数据类型元素的有序集合，这些元素在内存中连续存储，并通过索引（下标）来访问。</p>
+                
+                <h4>一维数组的特点</h4>
+                <ul>
+                    <li><strong>同质性</strong>：数组中的所有元素必须是相同的数据类型</li>
+                    <li><strong>有序性</strong>：数组中的元素按照线性顺序排列</li>
+                    <li><strong>连续性</strong>：数组元素在内存中连续存储</li>
+                    <li><strong>索引访问</strong>：通过下标（索引）访问数组元素，下标从0开始</li>
+                    <li><strong>固定大小</strong>：数组一旦定义，大小就固定不变</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>一维数组示意图</h4>
+                    <div class="code">
+                        数组名: scores<br>
+                        索引:   0&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;4<br>
+                        元素: [85][92][78][96][88]<br>
+                        地址: 连续的内存地址
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>一维数组的重要性</h3>
+                <p>一维数组是程序设计中处理批量数据的基础工具，它使程序能够高效地组织和操作大量同类型数据。</p>
+                
+                <h4>学习一维数组的意义</h4>
+                <ul>
+                    <li><strong>批量数据处理</strong>：能够同时处理多个同类型数据</li>
+                    <li><strong>简化代码</strong>：避免定义大量独立变量</li>
+                    <li><strong>提高效率</strong>：通过循环结构高效处理数据</li>
+                    <li><strong>为后续学习打基础</strong>：算法设计、数据结构等都依赖于数组</li>
+                </ul>
+            </div>
+            
+            <div class="concept-item">
+                <h3>数组与普通变量的比较</h3>
+                <p>数组与普通变量在使用上有显著区别：</p>
+                
+                <h4>对比表格</h4>
+                <table>
+                    <tr>
+                        <th>比较项</th>
+                        <th>普通变量</th>
+                        <th>一维数组</th>
+                    </tr>
+                    <tr>
+                        <td>存储数据量</td>
+                        <td>只能存储一个数据</td>
+                        <td>可以存储多个同类型数据</td>
+                    </tr>
+                    <tr>
+                        <td>访问方式</td>
+                        <td>直接通过变量名访问</td>
+                        <td>通过索引访问各个元素</td>
+                    </tr>
+                    <tr>
+                        <td>内存分配</td>
+                        <td>分配一个内存单元</td>
+                        <td>分配连续的多个内存单元</td>
+                    </tr>
+                    <tr>
+                        <td>使用场景</td>
+                        <td>处理单个数据</td>
+                        <td>处理批量同类型数据</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 定义与初始化 -->
+        <div id="definition" class="content">
+            <h2>数组定义与初始化</h2>
+            
+            <div class="concept-item">
+                <h3>一维数组的定义</h3>
+                <p>在C++中，一维数组的定义需要指定数据类型、数组名和数组大小。</p>
+                
+                <div class="example">
+                    <h4>一维数组定义语法</h4>
+                    <div class="code">
+                        数据类型 数组名[数组大小];
+                    </div>
+                    
+                    <h4>一维数组定义示例</h4>
+                    <div class="code">
+                        int scores[5];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 定义包含5个整数的数组<br>
+                        double heights[10];&nbsp;&nbsp;// 定义包含10个双精度浮点数的数组<br>
+                        char letters[26];&nbsp;&nbsp;&nbsp;&nbsp;// 定义包含26个字符的数组
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>一维数组的初始化</h3>
+                <p>数组可以在定义时进行初始化，也可以在定义后逐个赋值。</p>
+                
+                <div class="example">
+                    <h4>完全初始化</h4>
+                    <div class="code">
+                        int numbers[5] = {10, 20, 30, 40, 50};&nbsp;&nbsp;// 定义时完全初始化<br>
+                        int ages[] = {18, 19, 20, 21, 22};&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 自动推断数组大小
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>部分初始化</h4>
+                    <div class="code">
+                        int values[5] = {1, 2, 3};&nbsp;&nbsp;// 前3个元素初始化为1,2,3，后2个元素自动初始化为0<br>
+                        int data[5] = {0};&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 所有元素都初始化为0
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>定义后赋值</h4>
+                    <div class="code">
+                        int scores[5];<br>
+                        scores[0] = 85;&nbsp;&nbsp;// 为第1个元素赋值<br>
+                        scores[1] = 92;&nbsp;&nbsp;// 为第2个元素赋值<br>
+                        scores[2] = 78;&nbsp;&nbsp;// 为第3个元素赋值<br>
+                        scores[3] = 96;&nbsp;&nbsp;// 为第4个元素赋值<br>
+                        scores[4] = 88;&nbsp;&nbsp;// 为第5个元素赋值
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>数组下标（索引）</h3>
+                <p>数组下标用于访问数组中的特定元素，需要注意以下几点：</p>
+                
+                <h4>下标的重要特性</h4>
+                <ul>
+                    <li><strong>从0开始</strong>：数组的第一个元素下标为0</li>
+                    <li><strong>连续递增</strong>：数组元素的下标是连续的整数</li>
+                    <li><strong>范围限制</strong>：下标范围从0到数组大小减1</li>
+                    <li><strong>越界风险</strong>：访问超出范围的下标会导致未定义行为</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>数组下标示例</h4>
+                    <div class="code">
+                        int arr[5] = {10, 20, 30, 40, 50};<br>
+                        // arr[0] = 10 (第一个元素)<br>
+                        // arr[1] = 20 (第二个元素)<br>
+                        // arr[2] = 30 (第三个元素)<br>
+                        // arr[3] = 40 (第四个元素)<br>
+                        // arr[4] = 50 (第五个元素)<br>
+                        // arr[5] ??? (越界访问，危险!)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数组遍历 -->
+        <div id="traverse" class="content">
+            <h2>数组遍历</h2>
+            
+            <div class="concept-item">
+                <h3>使用for循环遍历数组</h3>
+                <p>for循环是最常用的数组遍历方式，通过控制循环变量作为数组下标。</p>
+                
+                <div class="example">
+                    <h4>正向遍历数组</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int scores[5] = {85, 92, 78, 96, 88};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用for循环遍历数组<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 5; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第" &lt;&lt; i + 1 &lt;&lt; "个成绩: " &lt;&lt; scores[i] &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h4>计算数组元素总和</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int numbers[5] = {10, 20, 30, 40, 50};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int sum = 0;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 遍历数组并累加<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 5; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += numbers[i];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "数组元素总和: " &lt;&lt; sum &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>使用while循环遍历数组</h3>
+                <p>while循环也可以用于遍历数组，但需要手动控制循环变量。</p>
+                
+                <div class="example">
+                    <h4>while循环遍历示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int values[5] = {5, 10, 15, 20, 25};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int i = 0;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 使用while循环遍历数组<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (i &lt; 5) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; values[i] &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i++;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 查找操作 -->
+        <div id="search" class="content">
+            <h2>数组查找操作</h2>
+            
+            <div class="concept-item">
+                <h3>线性查找（顺序查找）</h3>
+                <p>线性查找是最简单的查找算法，逐个比较数组元素直到找到目标值或遍历完所有元素。</p>
+                
+                <div class="example">
+                    <h4>线性查找示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int numbers[10] = {34, 78, 21, 95, 12, 67, 45, 89, 56, 33};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int target = 95;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int position = -1;&nbsp;&nbsp;// -1表示未找到<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 线性查找<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 10; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (numbers[i] == target) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;position = i;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;&nbsp;&nbsp;// 找到后立即退出循环<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (position != -1) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "找到了! " &lt;&lt; target &lt;&lt; " 在数组的第 " &lt;&lt; position + 1 &lt;&lt; " 个位置" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "未找到 " &lt;&lt; target &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>查找最大值和最小值</h3>
+                <p>通过遍历数组可以找到其中的最大值和最小值。</p>
+                
+                <div class="example">
+                    <h4>查找最大值和最小值示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int scores[7] = {85, 92, 78, 96, 88, 91, 83};<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int max = scores[0];&nbsp;&nbsp;// 假设第一个元素是最大值<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int min = scores[0];&nbsp;&nbsp;// 假设第一个元素是最小值<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 遍历数组查找最大值和最小值<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; 7; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (scores[i] &gt; max) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max = scores[i];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (scores[i] &lt; min) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min = scores[i];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最高分: " &lt;&lt; max &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最低分: " &lt;&lt; min &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 排序操作 -->
+        <div id="sort" class="content">
+            <h2>数组排序操作</h2>
+            
+            <div class="concept-item">
+                <h3>冒泡排序</h3>
+                <p>冒泡排序是一种简单的排序算法，通过重复遍历数组，比较相邻元素并交换位置来实现排序。</p>
+                
+                <div class="example">
+                    <h4>冒泡排序示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int numbers[6] = {64, 34, 25, 12, 22, 11};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 冒泡排序（升序）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 5; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 每一轮将最大值"冒泡"到末尾<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; 5 - i; j++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (numbers[j] &gt; numbers[j + 1]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 交换相邻元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int temp = numbers[j];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers[j] = numbers[j + 1];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers[j + 1] = temp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 输出排序后的数组<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "排序后的数组: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 6; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; numbers[i] &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-item">
+                <h3>选择排序</h3>
+                <p>选择排序通过重复查找未排序部分的最小元素，并将其放到已排序部分的末尾。</p>
+                
+                <div class="example">
+                    <h4>选择排序示例</h4>
+                    <div class="code">
+                        #include &lt;iostream&gt;<br>
+                        using namespace std;<br>
+                        <br>
+                        int main() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int numbers[6] = {64, 34, 25, 12, 22, 11};<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 选择排序（升序）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 5; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 在未排序部分查找最小元素<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int minIndex = i;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = i + 1; j &lt; 6; j++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (numbers[j] &lt; numbers[minIndex]) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minIndex = j;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 将最小元素放到当前位置<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (minIndex != i) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int temp = numbers[i];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers[i] = numbers[minIndex];<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numbers[minIndex] = temp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;// 输出排序后的数组<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "排序后的数组: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 6; i++) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; numbers[i] &lt;&lt; " ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 应用示例 -->
+        <div id="examples" class="content">
+            <h2>一维数组应用示例</h2>
+            
+            <div class="example">
+                <h3>示例1：学生成绩统计</h3>
+                <p>使用数组存储和处理学生成绩数据：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int scores[10];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n = 10;&nbsp;&nbsp;// 学生人数<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输入学生成绩<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "请输入10个学生的成绩: " &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "第" &lt;&lt; i + 1 &lt;&lt; "个学生: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; scores[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 计算总分和平均分<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int sum = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += scores[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;double average = (double)sum / n;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 查找最高分和最低分<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int max = scores[0], min = scores[0];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (scores[i] &gt; max) max = scores[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (scores[i] &lt; min) min = scores[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 统计各等级人数<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int excellent = 0, good = 0, fair = 0, poor = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (scores[i] &gt;= 90) excellent++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else if (scores[i] &gt;= 80) good++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else if (scores[i] &gt;= 70) fair++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else poor++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出统计结果<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\n=== 成绩统计结果 ===" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "总分: " &lt;&lt; sum &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "平均分: " &lt;&lt; average &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最高分: " &lt;&lt; max &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "最低分: " &lt;&lt; min &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "优秀(90-100): " &lt;&lt; excellent &lt;&lt; "人" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "良好(80-89): " &lt;&lt; good &lt;&lt; "人" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "中等(70-79): " &lt;&lt; fair &lt;&lt; "人" &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "不及格(0-69): " &lt;&lt; poor &lt;&lt; "人" &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>示例2：数组元素去重</h3>
+                <p>编写程序去除数组中的重复元素：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int numbers[10] = {1, 2, 2, 3, 4, 4, 5, 6, 6, 7};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int unique[10];&nbsp;&nbsp;// 存储去重后的元素<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int count = 0;&nbsp;&nbsp;&nbsp;// 去重后元素的个数<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 去重算法<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; 10; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 检查当前元素是否已经在unique数组中<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bool isDuplicate = false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j &lt; count; j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (numbers[i] == unique[j]) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isDuplicate = true;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 如果不是重复元素，则添加到unique数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!isDuplicate) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unique[count] = numbers[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出去重后的数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "去重后的数组: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; count; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; unique[i] &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践练习 -->
+        <div id="practice" class="content">
+            <h2>实践练习</h2>
+            
+            <div class="example">
+                <h3>练习1：数组逆序</h3>
+                <p>编写程序将数组中的元素逆序排列：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 在此处添加代码<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int arr[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n = 10;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出原数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "原数组: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; arr[i] &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 逆序算法（首尾交换）<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n / 2; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int temp = arr[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arr[i] = arr[n - 1 - i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arr[n - 1 - i] = temp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出逆序后的数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "逆序后: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; arr[i] &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习2：查找第二大元素</h3>
+                <p>编写程序查找数组中第二大的元素：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 在此处添加代码<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int numbers[8] = {34, 78, 21, 95, 12, 67, 45, 89};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n = 8;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 初始化最大值和第二大值<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int first = numbers[0];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int second = numbers[0];<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 找到数组中的最大值<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (numbers[i] &gt; first) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;first = numbers[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 找到第二大值<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (numbers[i] &gt; second && numbers[i] &lt; first) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;second = numbers[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "数组中第二大的元素是: " &lt;&lt; second &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="example">
+                <h3>练习3：数组循环移位</h3>
+                <p>编写程序将数组元素向右循环移位k位：</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br>
+                    <br>
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 在此处添加代码<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int arr[7] = {1, 2, 3, 4, 5, 6, 7};<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n = 7;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int k = 3;&nbsp;&nbsp;// 向右移位3位<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出原数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "原数组: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; arr[i] &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 循环移位算法<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 1. 先将整个数组逆序<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n / 2; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int temp = arr[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arr[i] = arr[n - 1 - i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arr[n - 1 - i] = temp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 2. 将前k个元素逆序<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; k / 2; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int temp = arr[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arr[i] = arr[k - 1 - i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arr[k - 1 - i] = temp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 3. 将后n-k个元素逆序<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = k; i &lt; k + (n - k) / 2; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int temp = arr[i];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arr[i] = arr[n - 1 - (i - k)];<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arr[n - 1 - (i - k)] = temp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;// 输出移位后的数组<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "右移" &lt;&lt; k &lt;&lt; "位后: ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; arr[i] &lt;&lt; " ";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 掌握一维数组，高效处理批量数据</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

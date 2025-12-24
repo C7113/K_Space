@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识点标题 - C++ 基础知识</title>
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/animations.css">
+    <link rel="stylesheet" href="../../styles/components.css">
+    <link rel="stylesheet" href="../../styles/topic.css">
+    <style>
+        .topic-header {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, var(--header-bg), var(--bg));
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            z-index: 2;
+        }
+
+        .topic-header h1 {
+            font-size: 2.2rem;
+            color: var(--text);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .topic-header h1 .icon {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            font-size: 2.8rem;
+        }
+
+        .topic-header h1:hover .icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .topic-header p {
+            font-size: 1.1rem;
+            margin-top: 0.25rem;
+            color: var(--text);
+            font-weight: 500;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(30deg);
+            animation: shimmer 3s infinite;
+        }
+
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25em 0.6em;
+            font-size: 0.75em;
+            font-weight: 600;
+            line-height: 1;
+            color: white;
+            background-color: var(--accent);
+            border-radius: 10rem;
+            margin-left: 0.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .breadcrumb {
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .topic-section {
+            margin: 3rem 0;
+        }
+
+        .topic-section:first-child {
+            margin-top: 0;
+        }
+
+        .topic-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .concept-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .concept-card:hover {
+            border-color: var(--accent-light);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .concept-card:hover::before {
+            opacity: 1;
+        }
+
+        .concept-card h3 {
+            color: var(--accent);
+            margin-top: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .concept-card h3::before {
+            content: '📘';
+            font-size: 1.2rem;
+        }
+
+        .feature-list {
+            list-style-type: none;
+            margin: 1rem 0;
+            padding-left: 0;
+        }
+
+        .feature-list li {
+            position: relative;
+            padding-left: 1.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: var(--code-bg, #1e1e1e);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            overflow-x: auto;
+            color: var(--code-text, #d4d4d4);
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .code-title {
+            position: absolute;
+            top: 0;
+            right: 1rem;
+            background: #333;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0 0 8px 8px;
+            font-size: 0.8rem;
+            color: #fff;
+        }
+
+        .tip-box {
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            background: var(--section-bg);
+            border-radius: 0 8px 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .topic-header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="grid-pattern"></div>
+        <div class="gradient-blob"></div>
+        <div class="gradient-blob"></div>
+    </div>
+
+    <div class="button-container">
+        <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+        <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">返回学习路径</button>
+        <button class="toggle-btn" onclick="window.location.href='../../index.htm'">回到首页</button>
+    </div>
+
+    <div class="topic-header shimmer">
+        <h1 class="hover-lift">
+            <span class="icon">📘</span>
+            知识点标题
+            <span class="badge">知识点类型</span>
+        </h1>
+        <p>知识点简短描述</p>
+    </div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <nav class="breadcrumb">
+                <a href="../../index.htm">首页</a> → 
+                <a href="../../learning-path.html">学习路径</a> → 
+                知识点标题
+            </nav>
+
+            <section class="topic-section">
+                <div class="topic-card">
+                    <h2>知识点标题</h2>
+                    <p>知识点内容描述</p>
+                    
+                    <div class="concept-card">
+                        <h3>核心概念</h3>
+                        <ul class="feature-list">
+                            <li>概念1</li>
+                            <li>概念2</li>
+                            <li>概念3</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="topic-section">
+                <div class="topic-card">
+                    <h2>代码示例</h2>
+                    <p>相关代码示例说明</p>
+                    
+                    <div class="code-block">
+                        <div class="code-title">C++</div>
+                        <pre><code class="language-cpp">// 示例代码
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    // 代码内容
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="topic-section">
+                <div class="topic-card">
+                    <h2>动手实践</h2>
+                    <div class="practice-block">
+                        <h3>🎯 练习任务</h3>
+                        <p>练习任务描述</p>
+                        <div class="tip-box">
+                            <p><strong>提示：</strong> 练习提示信息</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="nav-buttons">
+                <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">
+                    ← 返回学习路径
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 C++ 学习路径 | 程老师</p>
+    </footer>
+
+    <script>
+        // 暗色模式切换
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (prefersDark) {
+            document.body.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '☀️ 切换亮色模式';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 切换暗色模式';
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ 切换亮色模式';
+            }
+        });
+        
+        // 添加随机移动效果到粒子
+        document.addEventListener('mousemove', function(e) {
+            const particles = document.querySelectorAll('.particle');
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            particles.forEach(particle => {
+                const rect = particle.getBoundingClientRect();
+                const particleX = rect.left + rect.width / 2;
+                const particleY = rect.top + rect.height / 2;
+                
+                const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+                const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+                const force = Math.min(500 / (distance * distance), 15);
+                
+                const translateX = Math.cos(angle) * force;
+                const translateY = Math.sin(angle) * force;
+                
+                particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+            });
+        });
+        
+        // 初始化页面导航
+        document.addEventListener('DOMContentLoaded', function() {
+            // 当前页面路径（相对于topics目录）
+            const currentPagePath = './[topic-directory]/index.html';
+            initTopicNavigation(currentPagePath);
+        });
+    </script>
+    
+    <script src="../../scripts/topic-nav.js"></script>
+</body>
+</html>

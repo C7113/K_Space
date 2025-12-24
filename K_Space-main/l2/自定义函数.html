@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>C++自定义函数学习</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #007bff;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e9ecef;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f0f8ff;
+        }
+        .code {
+            background: #2d3748;
+            color: #aef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #0d6efd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .comment {
+            color: #6ca06c;
+            font-style: italic;
+        }
+        .keyword {
+            color: #ff9800;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔧 C++ 自定义函数学习</h1>
+            <p class="subtitle">—— 掌握代码复用的利器 | 程老师主讲</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">🧠 概念引入</button>
+            <button class="tab" onclick="openTab(event, 'syntax')">📊 语法结构</button>
+            <button class="tab" onclick="openTab(event, 'params')">🔄 参数与调用</button>
+            <button class="tab" onclick="openTab(event, 'practice')">📄 项目实践</button>
+        </div>
+
+        <!-- 概念引入 -->
+        <div id="concept" class="content active">
+            <h2>函数的本质与作用</h2>
+            <div class="concept-item">
+                <h3>数学中的函数</h3>
+                <p>在数学中，如果对于任意一个自变量 <span class="highlight">x</span> 都有唯一确定的因变量 <span class="highlight">y</span> 与之对应，则称 <span class="highlight">y</span> 是 <span class="highlight">x</span> 的函数。这种“输入→处理→输出”的思想正是编程中函数的核心。</p>
+            </div>
+            <div class="concept-item">
+                <h3>编程中的函数</h3>
+                <p>函数是一个实现特定功能的代码块，也称为“子程序”。它有入口（参数）和出口（返回值），通过调用实现代码复用，让程序结构更清晰。</p>
+            </div>
+            <div class="concept-item">
+                <h3>生活中的类比</h3>
+                <p>想象一个“炒菜机”：你放入食材（<span class="highlight">实参</span>），机器进行处理（<span class="highlight">函数体</span>），最后输出菜肴（<span class="highlight">返回值</span>）。不同的食材（参数）可以做出不同的菜（结果）。</p>
+            </div>
+        </div>
+
+        <!-- 语法结构 -->
+        <div id="syntax" class="content">
+            <h2>C++ 自定义函数的语法结构</h2>
+            <table>
+                <tr>
+                    <th>组成部分</th>
+                    <th>说明</th>
+                    <th>示例</th>
+                </tr>
+                <tr>
+                    <td>返回值类型</td>
+                    <td>函数执行后返回的数据类型，如 int, double, void（无返回值）</td>
+                    <td><code>int</code>, <code>void</code></td>
+                </tr>
+                <tr>
+                    <td>函数名</td>
+                    <td>函数的标识符，遵循变量命名规则，应见名知意</td>
+                    <td><code>sum</code>, <code>isPrime</code></td>
+                </tr>
+                <tr>
+                    <td>形式参数表</td>
+                    <td>函数接收的输入，可为空，多个参数用逗号分隔</td>
+                    <td><code>(int a, int b)</code></td>
+                </tr>
+                <tr>
+                    <td>函数体</td>
+                    <td>大括号 {} 内的执行语句，完成具体功能</td>
+                    <td><code>{ return a + b; }</code></td>
+                </tr>
+            </table>
+
+            <div class="code">
+                返回值类型 函数名(形式参数表)<br>
+                {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;// 函数体（执行语句）<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;return 返回值; // 若返回值类型为 void 可省略<br>
+                }
+            </div>
+        </div>
+
+        <!-- 参数与调用 -->
+        <div id="params" class="content">
+            <h2>形参、实参与函数调用</h2>
+            <div class="example">
+                <h3>形式参数（形参）</h3>
+                <p>定义函数时使用的参数，是虚拟变量，用于接收调用时传入的值。</p>
+                <div class="code">
+                    void printSquare(<span class="highlight">int n</span>) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; n * n &lt;&lt; endl;<br>
+                    }
+                </div>
+                <p>这里的 <code>n</code> 就是形参。</p>
+            </div>
+
+            <div class="example">
+                <h3>实际参数（实参）</h3>
+                <p>调用函数时传入的具体值，可以是常量、变量、表达式等。</p>
+                <div class="code">
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int x = 5;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;printSquare(<span class="highlight">x</span>);   // x 是实参<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;printSquare(<span class="highlight">10</span>);  // 10 是实参<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p>调用时，实参的值会传递给形参。</p>
+            </div>
+
+            <div class="example">
+                <h3>函数声明与定义位置</h3>
+                <p>若自定义函数写在 <code>main()</code> 函数之后，需在上方先进行声明。</p>
+                <div class="code">
+                    // 函数声明<br>
+                    int add(int a, int b);<br><br>
+
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; add(3, 4);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }<br><br>
+
+                    // 函数定义<br>
+                    int add(int a, int b) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return a + b;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目实践 -->
+        <div id="practice" class="content">
+            <h2>🎯 典型项目代码示例</h2>
+
+            <div class="example">
+                <h3>1. 完全数判断</h3>
+                <p>找出 N 以内的所有完全数（因子之和等于自身）</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br><br>
+
+                    // 判断是否为完全数<br>
+                    bool isPerfect(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int sum = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt; n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (n % i == 0) sum += i;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return sum == n;<br>
+                    }<br><br>
+
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n; cin &gt;&gt; n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i &lt;= n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isPerfect(i)) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; i &lt;&lt; " :";<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = 1; j &lt; i; j++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (i % j == 0) cout &lt;&lt; " " &lt;&lt; j;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; endl;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p><strong>输入：</strong>10</p>
+                <p><strong>输出：</strong>6 : 1 2 3</p>
+            </div>
+
+            <div class="example">
+                <h3>2. 统计数字7的出现次数</h3>
+                <p>统计 [L, R] 范围内所有整数中数字7出现的总次数</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br><br>
+
+                    // 统计一个数中7的个数<br>
+                    int countSeven(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int cnt = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (n % 10 == 7) cnt++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n /= 10;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return cnt;<br>
+                    }<br><br>
+
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int L, R, total = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; L &gt;&gt; R;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = L; i &lt;= R; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;total += countSeven(i);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; total;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p><strong>输入：</strong>60 80</p>
+                <p><strong>输出：</strong>12</p>
+            </div>
+
+            <div class="example">
+                <h3>3. 素数回文数个数</h3>
+                <p>求 11 到 n 之间既是素数又是回文数的整数个数</p>
+                <div class="code">
+                    #include &lt;iostream&gt;<br>
+                    using namespace std;<br><br>
+
+                    // 判断是否为素数<br>
+                    bool isPrime(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (n &lt; 2) return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 2; i * i &lt;= n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (n % i == 0) return false;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+                    }<br><br>
+
+                    // 判断是否为回文数<br>
+                    bool isPalindrome(int n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int original = n, reversed = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;while (n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reversed = reversed * 10 + n % 10;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n /= 10;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return original == reversed;<br>
+                    }<br><br>
+
+                    int main() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;int n, cnt = 0;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cin &gt;&gt; n;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;for (int i = 11; i &lt;= n; i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isPrime(i) && isPalindrome(i)) cnt++;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; cnt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+                    }
+                </div>
+                <p><strong>输入：</strong>23</p>
+                <p><strong>输出：</strong>1</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 C++课程 | 程老师 | 掌握自定义函数的编程艺术</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

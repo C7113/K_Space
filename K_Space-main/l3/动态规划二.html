@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>动态规划（二）：从记忆化到空间优化</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #e64a19;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #ffecb3;
+        }
+        .tab.active {
+            background: #e64a19;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #fdf6e3;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #e64a19;
+        }
+        .code {
+            background: #2d3748;
+            color: #ffcc80;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #fff8e1;
+            padding: 15px;
+            border-left: 5px solid #ffb300;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .caution {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .best-practice {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #ffecb3;
+        }
+        .dp-table {
+            font-family: monospace;
+            text-align: center;
+            margin: 10px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ 动态规划（二）：从记忆化到空间优化</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'memo2dp')">🔄 记忆化 → DP</button>
+            <button class="tab" onclick="openTab(event, 'robber')">🏠 打家劫舍</button>
+            <button class="tab" onclick="openTab(event, 'stairs')">🪜 最小花费爬楼梯</button>
+            <button class="tab" onclick="openTab(event, 'rolling')">🌀 滚动数组</button>
+            <button class="tab" onclick="openTab(event, 'state')">🧠 状态定义对比</button>
+            <button class="tab" onclick="openTab(event, 'template')">🧩 通用转化模板</button>
+            <button class="tab" onclick="openTab(event, 'pitfalls')">⚠️ 常见陷阱</button>
+            <button class="tab" onclick="openTab(event, 'summary')">📊 问题分类总结</button>
+        </div>
+
+        <!-- 记忆化转DP -->
+        <div id="memo2dp" class="content active">
+            <h2>🔄 从记忆化搜索到动态规划</h2>
+            <div class="concept-item">
+                <h3>核心思想：自底向上填表</h3>
+                <p>记忆化是“自顶向下 + 缓存”，DP 是“自底向上 + 迭代”。两者本质相同，但 DP 避免了递归开销。</p>
+            </div>
+            <div class="concept-item">
+                <h3>n=5 时的 DP 表格填充</h3>
+                <table class="dp-table">
+                    <tr><th>i</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+                    <tr><td>dp[i]</td><td>1</td><td>1</td><td>2</td><td>4</td><td>7</td><td>13</td></tr>
+                </table>
+                <p>状态转移：<code>dp[i] = dp[i-1] + dp[i-2] + dp[i-3]</code></p>
+            </div>
+            <div class="code">
+// 动态规划版本<br>
+int saveMoneyDP(int n) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (n == 0) return 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; dp(n+1);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp[0] = 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (n >= 1) dp[1] = 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (n >= 2) dp[2] = 2;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 3; i <= n; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i] = dp[i-1] + dp[i-2] + dp[i-3];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return dp[n];<br>
+}
+            </div>
+        </div>
+
+        <!-- 打家劫舍 -->
+        <div id="robber" class="content">
+            <h2>🏠 打家劫舍：有选择的 DP</h2>
+            <div class="concept-item">
+                <h3>问题分析</h3>
+                <p>不能偷相邻房屋 → 对每个房子，有两种选择：<br>
+                - 偷：金额 = <code>nums[i] + dp[i-2]</code><br>
+                - 不偷：金额 = <code>dp[i-1]</code></p>
+            </div>
+            <div class="concept-item">
+                <h3>两种状态定义</h3>
+                <ul>
+                    <li><strong>定义1</strong>：`dp[i]` = 偷到第 i 个房子（索引 i）的最大金额</li>
+                    <li><strong>定义2</strong>：`dp[i]` = 前 i 个房子能偷到的最大金额</li>
+                </ul>
+            </div>
+            <div class="code">
+// 定义1：dp[i] 表示偷到第 i 个房子<br>
+int rob(vector&lt;int&gt;& nums) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (nums.empty()) return 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (nums.size() == 1) return nums[0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; dp(nums.size());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp[0] = nums[0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp[1] = max(nums[0], nums[1]);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 2; i &lt; nums.size(); i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i] = max(dp[i-1], dp[i-2] + nums[i]);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return dp.back();<br>
+}
+            </div>
+        </div>
+
+        <!-- 最小花费爬楼梯 -->
+        <div id="stairs" class="content">
+            <h2>🪜 最小花费爬楼梯</h2>
+            <div class="concept-item">
+                <h3>问题理解</h3>
+                <p>可以从索引 0 或 1 开始，目标是到达 `n`（即 `cost` 数组末尾之后）。<br>
+                `dp[i]` = 到达第 i 阶的最小花费。</p>
+            </div>
+            <div class="concept-item">
+                <h3>状态转移</h3>
+                <p>要到达第 i 阶，可以从 i-1 或 i-2 阶上来：<br>
+                <code>dp[i] = min(dp[i-1], dp[i-2]) + cost[i]</code></p>
+            </div>
+            <div class="code">
+int minCostClimbingStairs(vector&lt;int&gt;& cost) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int n = cost.size();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (n == 1) return cost[0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; dp(n);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp[0] = cost[0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp[1] = cost[1];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 2; i &lt; n; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i] = min(dp[i-1], dp[i-2]) + cost[i];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return min(dp[n-1], dp[n-2]); // 可从倒数第一或第二阶跳到顶<br>
+}
+            </div>
+        </div>
+
+        <!-- 滚动数组 -->
+        <div id="rolling" class="content">
+            <h2>🌀 滚动数组：O(1) 空间优化</h2>
+            <div class="concept-item">
+                <h3>核心思想</h3>
+                <p>如果状态转移只依赖前 1~2 个状态，就不需要整个 DP 数组，只需几个变量滚动更新。</p>
+            </div>
+            <div class="concept-item">
+                <h3>打家劫舍的空间优化</h3>
+                <div class="code">
+int rob_optimized(vector&lt;int&gt;& nums) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (nums.empty()) return 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (nums.size() == 1) return nums[0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int prev2 = nums[0];         // dp[i-2]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int prev1 = max(nums[0], nums[1]); // dp[i-1]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 2; i &lt; nums.size(); i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int current = max(prev1, prev2 + nums[i]);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prev2 = prev1;   // 滚动<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prev1 = current;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return prev1;<br>
+}
+                </div>
+            </div>
+            <div class="tip">
+                💡 想象你在玩一个游戏，只需要记住前两步的得分，不需要记住所有历史得分。
+            </div>
+        </div>
+
+        <!-- 状态定义对比 -->
+        <div id="state" class="content">
+            <h2>🧠 两种状态定义深入对比</h2>
+            <table>
+                <tr>
+                    <th>定义方式</th>
+                    <th>公式</th>
+                    <th>优点</th>
+                    <th>缺点</th>
+                    <th>适合场景</th>
+                </tr>
+                <tr>
+                    <td><code>dp[i]</code> 表示偷到第 i 个房子</td>
+                    <td><code>dp[i] = max(dp[i-1], dp[i-2]+nums[i])</code></td>
+                    <td>直观，直接对应数组索引</td>
+                    <td>需要处理 n=1 的特殊情况</td>
+                    <td>大多数简单问题</td>
+                </tr>
+                <tr>
+                    <td><code>dp[i]</code> 表示前 i 个房子</td>
+                    <td><code>dp[i] = max(dp[i-1], dp[i-2]+nums[i-1])</code></td>
+                    <td>统一，dp[0]=0 处理边界</td>
+                    <td>dp 索引与数组索引差 1</td>
+                    <td>复杂问题或统一框架</td>
+                </tr>
+            </table>
+            <div class="best-practice">
+                ✅ **建议**：初学者用第一种；追求代码统一性可用第二种。
+            </div>
+        </div>
+
+        <!-- 通用模板 -->
+        <div id="template" class="content">
+            <h2>🧩 从记忆化到 DP 的通用转化模板</h2>
+            <div class="concept-item">
+                <h3>记忆化搜索模板</h3>
+                <div class="code">
+int solveMemo(参数, vector&lt;int&gt;& memo) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (基础条件) return 基础值;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (memo[状态] != 特殊值) return memo[状态];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int result = 根据子问题计算;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;memo[状态] = result;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return result;<br>
+}
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>动态规划模板</h3>
+                <div class="code">
+int solveDP(参数) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vector&lt;int&gt; dp(状态数量, 初始值);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp[基础状态] = 基础值; // 初始化<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 起始; i &lt;= 目标; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i] = 根据 dp[子状态] 计算;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return dp[目标状态];<br>
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- 常见陷阱 -->
+        <div id="pitfalls" class="content">
+            <h2>⚠️ 动态规划常见陷阱</h2>
+            <div class="caution">
+                <h3>1. 边界条件遗漏</h3>
+                <p>如 `n=0`, `n=1` 未处理，导致数组越界。</p>
+            </div>
+            <div class="caution">
+                <h3>2. 初始化错误</h3>
+                <p>如 `dp[0]` 应为 1 却设为 0，导致后续全错。</p>
+            </div>
+            <div class="caution">
+                <h3>3. 状态定义模糊</h3>
+                <p>不清楚 `dp[i]` 到底代表什么，导致转移方程写错。</p>
+            </div>
+            <div class="tip">
+                💡 **调试技巧**：手动计算小规模案例（如 n=3），打印 DP 表格验证。
+            </div>
+        </div>
+
+        <!-- 问题分类 -->
+        <div id="summary" class="content">
+            <h2>📊 动态规划问题分类总结</h2>
+            <table>
+                <tr>
+                    <th>问题类型</th>
+                    <th>状态定义</th>
+                    <th>状态转移</th>
+                    <th>关键特征</th>
+                </tr>
+                <tr>
+                    <td>计数类（爬楼梯）</td>
+                    <td><code>dp[i]</code>: 到第 i 阶的方法数</td>
+                    <td><code>dp[i] = dp[i-1] + dp[i-2]</code></td>
+                    <td>求方案总数</td>
+                </tr>
+                <tr>
+                    <td>最值类（打家劫舍）</td>
+                    <td><code>dp[i]</code>: 前 i 个房子的最大金额</td>
+                    <td><code>dp[i] = max(dp[i-1], dp[i-2]+nums[i])</code></td>
+                    <td>有"选择"，求最优值</td>
+                </tr>
+                <tr>
+                    <td>花费类（最小花费爬楼梯）</td>
+                    <td><code>dp[i]</code>: 到第 i 阶的最小花费</td>
+                    <td><code>dp[i] = min(dp[i-1], dp[i-2]) + cost[i]</code></td>
+                    <td>每个状态有代价</td>
+                </tr>
+            </table>
+            <div class="best-practice">
+                ✅ **思考步骤**：<br>
+                1. 明确状态含义<br>
+                2. 写出转移方程<br>
+                3. 处理边界<br>
+                4. 考虑空间优化
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 动态规划（二）：从记忆化到空间优化 | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>

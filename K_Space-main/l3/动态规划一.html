@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>动态规划 一</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: #1e88e5;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e3f2fd;
+        }
+        .tab.active {
+            background: #1e88e5;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f5fbff;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #1e88e5;
+        }
+        .code {
+            background: #2d3748;
+            color: #64b5f6;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #1e88e5;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .table-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .table-comparison th,
+        .table-comparison td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+        .table-comparison th {
+            background: #1e88e5;
+            color: white;
+        }
+        .table-comparison tr:nth-child(even) {
+            background: #f1f8fe;
+        }
+        .complexity {
+            background: #fff8e1;
+            padding: 10px 15px;
+            border-left: 5px solid #ffa000;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .principle {
+            background: #e8f5e9;
+            padding: 10px 15px;
+            border-left: 5px solid #4caf50;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .caution {
+            background: #ffebee;
+            padding: 10px 15px;
+            border-left: 5px solid #f44336;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ 动态规划 一</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🎯 课程目标</button>
+            <button class="tab" onclick="openTab(event, 'problem1')">💰 储蓄罐问题</button>
+            <button class="tab" onclick="openTab(event, 'memo')">🧠 记忆化搜索</button>
+            <button class="tab" onclick="openTab(event, 'dp')">📊 DP 表格法</button>
+            <button class="tab" onclick="openTab(event, 'climb')">🧱 爬楼梯问题</button>
+            <button class="tab" onclick="openTab(event, 'compare')">🔄 方法对比</button>
+            <button class="tab" onclick="openTab(event, 'essence')">💎 核心思想补漏</button>
+        </div>
+
+        <!-- 课程目标 -->
+        <div id="intro" class="content active">
+            <h2>🎯 课程目标</h2>
+            <ul>
+                <li>理解动态规划解决<strong>重叠子问题</strong>的核心思想</li>
+                <li>掌握<strong>记忆化搜索</strong>（Memoization）的基本方法</li>
+                <li>学会使用<strong>动态规划表格</strong>（DP Table）自底向上解决问题</li>
+                <li>能够识别简单问题中的重复计算模式</li>
+            </ul>
+            <div class="principle">
+                💡 <strong>动态规划不是算法，而是一种思想</strong> —— 将复杂问题分解为更小的子问题，并存储子问题的解以避免重复计算。
+            </div>
+        </div>
+
+        <!-- 储蓄罐问题 -->
+        <div id="problem1" class="content">
+            <h2>💰 储蓄罐问题</h2>
+            <div class="concept-item">
+                <h3>问题描述</h3>
+                <p>小明每天可存 1 元、2 元或 3 元。问：存到 <code>n</code> 元有多少种不同的方式？</p>
+            </div>
+            <div class="concept-item">
+                <h3>递归关系推导</h3>
+                <p>最后一步可能是存了 1、2 或 3 元：</p>
+                <div class="code">
+f(n) = f(n-1) + f(n-2) + f(n-3)
+                </div>
+                <p>边界条件：</p>
+                <div class="code">
+f(0) = 1 &nbsp;&nbsp;// 存 0 元有 1 种方式（什么都不做）<br>
+f(n) = 0 &nbsp;&nbsp;// 当 n &lt; 0
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>暴力递归实现（指数时间）</h3>
+                <div class="code">
+int saveMoney(int n) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (n == 0) return 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (n &lt; 0) return 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return saveMoney(n-1) + saveMoney(n-2) + saveMoney(n-3);<br>
+}
+                </div>
+                <div class="caution">
+                    ❌ 当 n=30 时，调用次数 > 100 万次！存在大量重复计算。
+                </div>
+            </div>
+        </div>
+
+        <!-- 记忆化搜索 -->
+        <div id="memo" class="content">
+            <h2>🧠 记忆化搜索（Top-down）</h2>
+            <div class="concept-item">
+                <h3>核心思想</h3>
+                <p>在递归过程中，用数组（<code>memo</code>）记录已计算过的 <code>f(k)</code>，下次直接返回，避免重复。</p>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code">
+int saveMoneyMemo(int n, vector<int>& memo) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (n == 0) return 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (n &lt; 0) return 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (memo[n] != -1) return memo[n]; // 已计算<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int ways = saveMoneyMemo(n-1, memo) +<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;saveMoneyMemo(n-2, memo) +<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;saveMoneyMemo(n-3, memo);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;memo[n] = ways;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ways;<br>
+}
+                </div>
+            </div>
+            <div class="complexity">
+                ⏱️ 时间复杂度：O(n) &nbsp;&nbsp;|&nbsp;&nbsp; 空间复杂度：O(n)
+            </div>
+        </div>
+
+        <!-- DP 表格法 -->
+        <div id="dp" class="content">
+            <h2>📊 动态规划表格法（Bottom-up）</h2>
+            <div class="concept-item">
+                <h3>核心思想</h3>
+                <p>从最小的子问题开始（如 f(0), f(1), f(2)），逐步填表直到 f(n)。</p>
+                <p>✅ 避免递归栈开销，效率更高。</p>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现（储蓄罐）</h3>
+                <div class="code">
+int saveMoneyDP(int n) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (n == 0) return 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vector<int> dp(n+1, 0);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp[0] = 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i <= n; i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[i] = dp[i-1];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (i >= 2) dp[i] += dp[i-2];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (i >= 3) dp[i] += dp[i-3];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return dp[n];<br>
+}
+                </div>
+            </div>
+            <div class="principle">
+                🔑 <strong>DP 三要素</strong>：<br>
+                1. <strong>最优子结构</strong>：问题的最优解包含子问题的最优解<br>
+                2. <strong>重叠子问题</strong>：子问题会被多次求解<br>
+                3. <strong>无后效性</strong>：当前状态只与之前状态有关，与如何到达无关
+            </div>
+        </div>
+
+        <!-- 爬楼梯问题 -->
+        <div id="climb" class="content">
+            <h2>🧱 爬楼梯问题</h2>
+            <div class="concept-item">
+                <h3>问题描述</h3>
+                <p>楼梯有 <code>n</code> 阶，每次可爬 1 或 2 阶。问：有多少种不同爬法？</p>
+            </div>
+            <div class="concept-item">
+                <h3>递推关系</h3>
+                <div class="code">
+f(n) = f(n-1) + f(n-2)<br>
+f(1) = 1, f(2) = 2
+                </div>
+                <p>⚠️ 注意：这本质上是<strong>斐波那契数列</strong>的变种！</p>
+            </div>
+            <div class="concept-item">
+                <h3>三种解法对比</h3>
+                <ul>
+                    <li><strong>暴力递归</strong>：简洁但慢（O(2^n)）</li>
+                    <li><strong>记忆化搜索</strong>：快（O(n)），但有递归开销</li>
+                    <li><strong>DP 表格</strong>：最快最稳（O(n) 时间，O(n) 空间）</li>
+                </ul>
+                <div class="tip">
+                    💡 进阶：可用两个变量代替整个数组（<strong>空间优化</strong> → O(1) 空间）。
+                </div>
+            </div>
+        </div>
+
+        <!-- 方法对比 -->
+        <div id="compare" class="content">
+            <h2>🔄 记忆化搜索 vs DP 表格</h2>
+            <table class="table-comparison">
+                <thead>
+                    <tr>
+                        <th>特点</th>
+                        <th>记忆化搜索（Memoization）</th>
+                        <th>动态规划表格（DP Table）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>方向</td>
+                        <td>自顶向下（Top-down）</td>
+                        <td>自底向上（Bottom-up）</td>
+                    </tr>
+                    <tr>
+                        <td>实现</td>
+                        <td>递归 + 记忆数组</td>
+                        <td>循环 + DP 数组</td>
+                    </tr>
+                    <tr>
+                        <td>优点</td>
+                        <td>思路直接，容易理解</td>
+                        <td>效率高，避免递归栈溢出</td>
+                    </tr>
+                    <tr>
+                        <td>缺点</td>
+                        <td>递归深度可能受限（栈溢出）</td>
+                        <td>需明确计算顺序</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="principle">
+                🧠 <strong>选择建议</strong>：<br>
+                - 初学者：先写记忆化搜索理清状态转移<br>
+                - 性能敏感/大 n：优先 DP 表格 + 空间优化
+            </div>
+        </div>
+
+        <!-- 核心思想补漏 -->
+        <div id="essence" class="content">
+            <h2>💎 动态规划核心思想补漏</h2>
+            <div class="concept-item">
+                <h3>1. 为什么需要 DP？</h3>
+                <p>当问题具有<strong>重叠子问题</strong>时，暴力递归会指数级重复计算。DP 通过“空间换时间”解决此问题。</p>
+            </div>
+            <div class="concept-item">
+                <h3>2. 如何识别 DP 问题？</h3>
+                <ul>
+                    <li>求“最多/最少/总共有多少种”</li>
+                    <li>问题可分解为规模更小的同类子问题</li>
+                    <li>子问题答案可被复用</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>3. 通用解题步骤</h3>
+                <ol>
+                    <li>定义状态（如 <code>dp[i]</code> 表示什么）</li>
+                    <li>写出状态转移方程</li>
+                    <li>确定初始状态和边界条件</li>
+                    <li>选择实现方式（记忆化 or DP 表）</li>
+                    <li>考虑空间优化（滚动数组等）</li>
+                </ol>
+            </div>
+            <div class="concept-item">
+                <h3>4. 空间优化示例（爬楼梯）</h3>
+                <div class="code">
+int climbStairs(int n) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (n <= 2) return n;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int a = 1, b = 2, c;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 3; i <= n; i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c = a + b;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a = b;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b = c;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return b;<br>
+}
+                </div>
+                <div class="complexity">
+                    ⏱️ 时间：O(n) &nbsp;&nbsp;|&nbsp;&nbsp; 空间：O(1)
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 动态规划 一 | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            const contents = document.getElementsByClassName("content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = contents[i].className.replace(" active", "");
+            }
+
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).className += " active";
+        }
+    </script>
+</body>
+</html>
