@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>计数循环 - C++ 知识点总结</title>
+  <link rel="stylesheet" href="../../styles/base.css">
+  <link rel="stylesheet" href="../../styles/animations.css">
+  <link rel="stylesheet" href="../../styles/components.css">
+  <link rel="stylesheet" href="../../styles/topic.css">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="grid-pattern"></div>
+    <div class="gradient-blob"></div>
+    <div class="gradient-blob"></div>
+  </div>
+  <header>
+    <div class="header-content shimmer">
+      <h1 class="hover-lift">
+        <span class="icon pulse">🔢</span>
+        计数循环
+        <span class="badge">循环结构</span>
+      </h1>
+      <p>系统学习 C++ 计数循环 | <span class="path-arrow">基础</span> <span class="arrow">→</span> <span class="path-arrow">进阶</span> <span class="arrow">→</span> <span class="path-arrow">高级</span></p>
+    </div>
+  </header>
+
+  <!-- 按钮组放在header下方，间距更近 -->
+  <div class="button-container">
+    <button class="toggle-btn" id="themeToggle">🌙 切换暗色模式</button>
+    <button class="toggle-btn" onclick="window.location.href='../../learning-path.html'">学习路径</button>
+    <button class="toggle-btn" onclick="window.location.href='../../exam-topics.html'">等级考试知识点</button>
+  </div>
+
+  <div class="container">
+    <section class="topic-section">
+      <h2 class="section-title">计数循环概述</h2>
+      <div class="content-block">
+        <p>计数循环是循环结构的一种特殊应用，通常用于执行固定次数的操作。在C++中，计数循环最常用的是for循环，但也包括使用while循环实现的计数功能。</p>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2 class="section-title">for循环语法结构</h2>
+      <div class="content-block">
+        <pre><code>for (初始化表达式; 条件表达式; 更新表达式) {
+    // 循环体语句
+}</code></pre>
+        <p>for循环的执行流程：</p>
+        <ol>
+          <li>执行初始化表达式（只执行一次）</li>
+          <li>判断条件表达式的值</li>
+          <li>如果条件为真(true)，则执行循环体语句</li>
+          <li>执行更新表达式</li>
+          <li>重复步骤2-4，直到条件为假(false)时结束循环</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2 class="section-title">基本示例</h2>
+      <div class="content-block">
+        <p>使用for循环输出1到10的数字：</p>
+        <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 1; i <= 10; i++) {  // 初始化; 条件; 更新
+        cout << i << " ";
+    }
+    
+    return 0;
+}</code></pre>
+        <p>运行结果：1 2 3 4 5 6 7 8 9 10</p>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2 class="section-title">计数循环的三要素</h2>
+      <div class="content-block">
+        <p>for循环的三要素在括号内的三个部分中明确体现：</p>
+        <ol>
+          <li><strong>初始化</strong>：int i = 1（设置计数器初始值）</li>
+          <li><strong>循环条件</strong>：i <= 10（决定是否继续循环）</li>
+          <li><strong>更新操作</strong>：i++（每次循环后更新计数器）</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2 class="section-title">while实现计数循环</h2>
+      <div class="content-block">
+        <p>使用while循环实现相同功能：</p>
+        <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int i = 1;        // 初始化
+    
+    while (i <= 10) { // 循环条件
+        cout << i << " ";
+        i++;          // 更新操作
+    }
+    
+    return 0;
+}</code></pre>
+        <p>两种方式功能相同，但for循环语法更简洁。</p>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2 class="section-title">计数循环应用示例</h2>
+      <div class="content-block">
+        <p>计算1到n的和（使用for循环）：</p>
+        <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n, sum = 0;
+    
+    cout << "请输入一个正整数n: ";
+    cin >> n;
+    
+    for (int i = 1; i <= n; i++) {
+        sum += i;  // 累加
+    }
+    
+    cout << "1到" << n << "的和为: " << sum << endl;
+    
+    return 0;
+}</code></pre>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2 class="section-title">嵌套计数循环</h2>
+      <div class="content-block">
+        <p>打印n×n的乘法表：</p>
+        <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    
+    cout << "请输入n值: ";
+    cin >> n;
+    
+    for (int i = 1; i <= n; i++) {           // 外层循环控制行
+        for (int j = 1; j <= i; j++) {       // 内层循环控制列
+            cout << i << "*" << j << "=" << i*j << " ";
+        }
+        cout << endl;                        // 换行
+    }
+    
+    return 0;
+}</code></pre>
+      </div>
+    </section>
+
+    <section class="topic-section">
+      <h2 class="section-title">计数循环的常见模式</h2>
+      <div class="content-block">
+        <ul>
+          <li><strong>正向计数</strong>：for(int i = 1; i <= n; i++)</li>
+          <li><strong>反向计数</strong>：for(int i = n; i >= 1; i--)</li>
+          <li><strong>步长计数</strong>：for(int i = 0; i <= n; i += 2) // 只处理偶数</li>
+          <li><strong>范围计数</strong>：for(int i = start; i <= end; i++)</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2025 C++ 知识导航 | 程老师</p>
+    <p>提示：计数循环是编程中最常用的循环模式，掌握for循环语法可让代码更简洁易读！</p>
+  </footer>
+
+  <script>
+    // ✅ 暗色模式切换
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (prefersDark) {
+      document.body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ 切换亮色模式';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 切换暗色模式';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ 切换亮色模式';
+      }
+    });
+    
+    // 添加随机移动效果到粒子
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      
+      particles.forEach(particle => {
+        const rect = particle.getBoundingClientRect();
+        const particleX = rect.left + rect.width / 2;
+        const particleY = rect.top + rect.height / 2;
+        
+        const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+        const distance = Math.hypot(mouseX - particleX, mouseY - particleY);
+        const force = Math.min(500 / (distance * distance), 15);
+        
+        const translateX = Math.cos(angle) * force;
+        const translateY = Math.sin(angle) * force;
+        
+        particle.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
+    });
+  </script>
+</body>
+</html>
