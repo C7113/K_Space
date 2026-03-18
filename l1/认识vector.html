@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>认识Vector - C++标准容器</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #7c4dff, #b388ff);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #f3e5f5;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #7c4dff, #b388ff);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f4ff;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #7c4dff;
+        }
+        /* 优化的代码块样式 */
+        .code-block {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3e3e3e;
+        }
+        .code-lang {
+            color: #888;
+            font-size: 0.85em;
+        }
+        .code-copy {
+            background: #4a4a4a;
+            color: #ccc;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.3s;
+        }
+        .code-copy:hover {
+            background: #5a5a5a;
+            color: white;
+        }
+        .code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            padding-left: 50px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 0;
+            line-height: 1.6;
+            font-size: 0.95em;
+            white-space: pre;
+        }
+        .code .line-num {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 35px;
+            padding: 15px 10px;
+            text-align: right;
+            color: #5a5a5a;
+            background: #252525;
+            user-select: none;
+            line-height: 1.6;
+            font-size: 0.85em;
+        }
+        /* 语法高亮 */
+        .code .keyword { color: #569cd6; }
+        .code .type { color: #4ec9b0; }
+        .code .string { color: #ce9178; }
+        .code .number { color: #b5cea8; }
+        .code .comment { color: #6a9955; }
+        .code .function { color: #dcdcaa; }
+        .code .operator { color: #d4d4d4; }
+        .code .include { color: #c586c0; }
+
+        .example {
+            background: #f3e5f5;
+            padding: 15px;
+            border-left: 5px solid #7c4dff;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffa000;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .caution {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .best-practice {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .ppt-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .ppt-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        ul {
+            line-height: 1.8;
+        }
+        li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ 认识Vector - C++标准容器</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+            <a href="../materials/vector.pptx" class="ppt-link" download>📥 下载PPT课件</a>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🎯 课程导入</button>
+            <button class="tab" onclick="openTab(event, 'concept')">📚 什么是Vector?</button>
+            <button class="tab" onclick="openTab(event, 'syntax')">📜 常用语法</button>
+            <button class="tab" onclick="openTab(event, 'delete')">❌ 删除元素</button>
+            <button class="tab" onclick="openTab(event, 'insert')">➕ 插入元素</button>
+            <button class="tab" onclick="openTab(event, 'shift')">🔄 数组平移</button>
+        </div>
+
+        <!-- 课程导入 -->
+        <div id="intro" class="content active">
+            <h2>🎯 课程导入</h2>
+            <div class="concept-item">
+                <h3>问题引入：数组的困境</h3>
+                <p>之前我们学习的<strong>数组</strong>有一个明显的缺点：大小固定不变。</p>
+                <div class="example">
+                    💡 比如我们定义一个大小为10的数组：<br>
+                    <code style="background:#f0f0f0;padding:2px 6px;border-radius:3px;">int a[10];</code>
+                    <br>一旦定义，就不能再添加或删除元素了！
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>如何解决？</h3>
+                <p>C++ 为我们提供了强大的<strong>标准模板库(STL)</strong>，其中包含了很多实用的<strong>容器</strong>。</p>
+                <div class="tip">
+                    📦 <strong>容器</strong>可以理解成能够存放数据的"动态数组"，可以随时添加或删除元素。
+                </div>
+                <p>常见的容器有：<code style="background:#e8f5e9;padding:2px 6px;border-radius:3px;">vector</code>、<code style="background:#e8f5e9;padding:2px 6px;border-radius:3px;">stack</code>、<code style="background:#e8f5e9;padding:2px 6px;border-radius:3px;">queue</code>、<code style="background:#e8f5e9;padding:2px 6px;border-radius:3px;">map</code>、<code style="background:#e8f5e9;padding:2px 6px;border-radius:3px;">set</code>等。</p>
+            </div>
+        </div>
+
+        <!-- Vector概念 -->
+        <div id="concept" class="content">
+            <h2>📚 什么是Vector?</h2>
+            <div class="concept-item">
+                <h3>Vector 的定义</h3>
+                <p><strong>向量(Vector)</strong>是一个封装了<strong>动态大小数组</strong>的顺序容器。</p>
+                <div class="example">
+                    💡 简单来说：<strong>Vector = 可以自动伸缩的数组</strong>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>Vector 的特点</h3>
+                <ul>
+                    <li>📏 <strong>大小可变</strong>：可以随时添加或删除元素</li>
+                    <li>📦 <strong>通用性强</strong>：可以存放各种类型的数据</li>
+                    <li>⚡ <strong>使用方便</strong>：无需关心底层实现细节</li>
+                </ul>
+            </div>
+            <div class="tip">
+                🆚 <strong>对比数组和Vector：</strong><br>
+                数组：大小固定 → <code style="background:#f0f0f0;padding:2px 6px;border-radius:3px;">int a[10];</code><br>
+                Vector：大小可变 → <code style="background:#e8f5e9;padding:2px 6px;border-radius:3px;">vector&lt;int&gt; a;</code>
+            </div>
+        </div>
+
+        <!-- 常用语法 -->
+        <div id="syntax" class="content">
+            <h2>📜 Vector 常用语法</h2>
+            <div class="concept-item">
+                <h3>头文件</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span><span class="include">#include</span> <span class="string">&lt;vector&gt;</span></div>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>基本定义</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span><span class="comment">// 定义一个存放int类型的向量</span>
+<span class="line-num">2</span><span class="type">vector</span><<span class="type">int</span>> v;
+<span class="line-num">3</span>
+<span class="line-num">4</span><span class="comment">// 定义一个存放double类型的向量</span>
+<span class="line-num">5</span><span class="type">vector</span><<span class="type">double</span>> v2;
+<span class="line-num">6</span>
+<span class="line-num">7</span><span class="comment">// 定义一个长度为5的向量（初始化为0）</span>
+<span class="line-num">8</span><span class="type">vector</span><<span class="type">int</span>> v3(<span class="number">5</span>);</div>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>常用操作</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span>v.push_back(x);     <span class="comment">// 在末尾添加元素x</span>
+<span class="line-num">2</span>v.pop_back();       <span class="comment">// 删除末尾元素</span>
+<span class="line-num">3</span>v.size();           <span class="comment">// 返回向量大小</span>
+<span class="line-num">4</span>v.empty();          <span class="comment">// 判断是否为空</span>
+<span class="line-num">5</span>v[i];               <span class="comment">// 访问第i个元素（从0开始）</span>
+<span class="line-num">6</span>v.insert(pos, x);   <span class="comment">// 在pos位置插入元素x</span>
+<span class="line-num">7</span>v.erase(pos);       <span class="comment">// 删除pos位置的元素</span>
+<span class="line-num">8</span>v.clear();          <span class="comment">// 清空所有元素</span></div>
+                </div>
+            </div>
+            <div class="best-practice">
+                ✅ <strong>注意：</strong>vector下标从0开始，就像数组一样！
+            </div>
+        </div>
+
+        <!-- 删除元素 -->
+        <div id="delete" class="content">
+            <h2>❌ 项目一：删除第x个位置的元素</h2>
+            <div class="concept-item">
+                <h3>题目描述</h3>
+                <p>把一个数组的第x个位置的元素删除掉</p>
+                <div class="example">
+                    <strong>输入：</strong><br>
+                    第一行有一个整数n (n ≤ 10)<br>
+                    第二行有n个整数<br>
+                    第三行有一个整数x，为要删除的位置<br><br>
+                    <strong>输出：</strong><br>
+                    更新后的数组<br><br>
+                    <strong>输入样例：</strong><br>
+                    5<br>
+                    1 2 3 4 5<br>
+                    3<br><br>
+                    <strong>输出样例：</strong><br>
+                    1 2 4 5
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>思路分析</h3>
+                <ul>
+                    <li>使用 <code style="background:#f3e5f5;padding:2px 6px;border-radius:3px;">vector&lt;int&gt;</code> 存储数据</li>
+                    <li>删除第x个位置 → 使用 <code style="background:#fff8e1;padding:2px 6px;border-radius:3px;">v.erase(v.begin() + x - 1)</code></li>
+                    <li>注意：位置是从1开始的，但下标是从0开始的</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="line-num"> 2</span><span class="include">#include</span> <span class="string">&lt;vector&gt;</span>
+<span class="line-num"> 3</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 4</span>
+<span class="line-num"> 5</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 6</span>    <span class="type">int</span> n, x;
+<span class="line-num"> 7</span>    cin >> n;
+<span class="line-num"> 8</span>
+<span class="line-num"> 9</span>    <span class="type">vector</span><<span class="type">int</span>> v;
+<span class="line-num">10</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">11</span>        <span class="type">int</span> num;
+<span class="line-num">12</span>        cin >> num;
+<span class="line-num">13</span>        v.push_back(num);
+<span class="line-num">14</span>    }
+<span class="line-num">15</span>
+<span class="line-num">16</span>    cin >> x;
+<span class="line-num">17</span>
+<span class="line-num">18</span>    <span class="comment">// 删除第x个位置的元素（下标是x-1）</span>
+<span class="line-num">19</span>    v.erase(v.begin() + x - <span class="number">1</span>);
+<span class="line-num">20</span>
+<span class="line-num">21</span>    <span class="comment">// 输出结果</span>
+<span class="line-num">22</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < v.size(); i++) {
+<span class="line-num">23</span>        cout << v[i];
+<span class="line-num">24</span>        <span class="keyword">if</span> (i < v.size() - <span class="number">1</span>) cout << <span class="string">" "</span>;
+<span class="line-num">25</span>    }
+<span class="line-num">26</span>
+<span class="line-num">27</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">28</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 插入元素 -->
+        <div id="insert" class="content">
+            <h2>➕ 项目二：在第x个位置插入新数y</h2>
+            <div class="concept-item">
+                <h3>题目描述</h3>
+                <p>在一个数组的第x个位置插入一个新的数y</p>
+                <div class="example">
+                    <strong>输入：</strong><br>
+                    第一行有一个整数n (5 ≤ n ≤ 10)<br>
+                    第二行有n个整数<br>
+                    第三行有一个整数x，为要插入的位置<br>
+                    第四行有一个整数y，为要插入的数<br><br>
+                    <strong>输入样例：</strong><br>
+                    5<br>
+                    7 2 3 4 5<br>
+                    2<br>
+                    9<br><br>
+                    <strong>输出样例：</strong><br>
+                    7 9 2 3 4 5
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>思路分析</h3>
+                <ul>
+                    <li>使用 <code style="background:#f3e5f5;padding:2px 6px;border-radius:3px;">vector&lt;int&gt;</code> 存储数据</li>
+                    <li>在第x个位置插入y → 使用 <code style="background:#fff8e1;padding:2px 6px;border-radius:3px;">v.insert(v.begin() + x - 1, y)</code></li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="line-num"> 2</span><span class="include">#include</span> <span class="string">&lt;vector&gt;</span>
+<span class="line-num"> 3</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 4</span>
+<span class="line-num"> 5</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 6</span>    <span class="type">int</span> n, x, y;
+<span class="line-num"> 7</span>    cin >> n;
+<span class="line-num"> 8</span>
+<span class="line-num"> 9</span>    <span class="type">vector</span><<span class="type">int</span>> v;
+<span class="line-num">10</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">11</span>        <span class="type">int</span> num;
+<span class="line-num">12</span>        cin >> num;
+<span class="line-num">13</span>        v.push_back(num);
+<span class="line-num">14</span>    }
+<span class="line-num">15</span>
+<span class="line-num">16</span>    cin >> x >> y;
+<span class="line-num">17</span>
+<span class="line-num">18</span>    <span class="comment">// 在第x个位置插入y（下标是x-1）</span>
+<span class="line-num">19</span>    v.insert(v.begin() + x - <span class="number">1</span>, y);
+<span class="line-num">20</span>
+<span class="line-num">21</span>    <span class="comment">// 输出结果</span>
+<span class="line-num">22</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < v.size(); i++) {
+<span class="line-num">23</span>        cout << v[i];
+<span class="line-num">24</span>        <span class="keyword">if</span> (i < v.size() - <span class="number">1</span>) cout << <span class="string">" "</span>;
+<span class="line-num">25</span>    }
+<span class="line-num">26</span>
+<span class="line-num">27</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">28</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数组平移 -->
+        <div id="shift" class="content">
+            <h2>🔄 项目三：数组平移</h2>
+            <div class="concept-item">
+                <h3>题目描述</h3>
+                <p>将数组中第一个元素移到数组末尾，其余数据依次往前平移一个位置</p>
+                <div class="example">
+                    <strong>输入：</strong><br>
+                    第一行为数组元素个数<br>
+                    第二行为n个小于1800的正整数<br><br>
+                    <strong>输入样例：</strong><br>
+                    10<br>
+                    1 2 3 4 5 6 7 8 9 10<br><br>
+                    <strong>输出样例：</strong><br>
+                    2 3 4 5 6 7 8 9 10 1
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>思路分析</h3>
+                <ul>
+                    <li>保存第一个元素的值</li>
+                    <li>从第二个元素开始，依次往前移动</li>
+                    <li>最后把保存的值放到末尾</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="line-num"> 2</span><span class="include">#include</span> <span class="string">&lt;vector&gt;</span>
+<span class="line-num"> 3</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 4</span>
+<span class="line-num"> 5</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 6</span>    <span class="type">int</span> n;
+<span class="line-num"> 7</span>    cin >> n;
+<span class="line-num"> 8</span>
+<span class="line-num"> 9</span>    <span class="type">vector</span><<span class="type">int</span>> v;
+<span class="line-num">10</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">11</span>        <span class="type">int</span> num;
+<span class="line-num">12</span>        cin >> num;
+<span class="line-num">13</span>        v.push_back(num);
+<span class="line-num">14</span>    }
+<span class="line-num">15</span>
+<span class="line-num">16</span>    <span class="comment">// 保存第一个元素</span>
+<span class="line-num">17</span>    <span class="type">int</span> first = v[<span class="number">0</span>];
+<span class="line-num">18</span>
+<span class="line-num">19</span>    <span class="comment">// 从第二个元素开始往前移</span>
+<span class="line-num">20</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n - <span class="number">1</span>; i++) {
+<span class="line-num">21</span>        v[i] = v[i + <span class="number">1</span>];
+<span class="line-num">22</span>    }
+<span class="line-num">23</span>
+<span class="line-num">24</span>    <span class="comment">// 把第一个元素放到最后</span>
+<span class="line-num">25</span>    v[n - <span class="number">1</span>] = first;
+<span class="line-num">26</span>
+<span class="line-num">27</span>    <span class="comment">// 输出结果</span>
+<span class="line-num">28</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">29</span>        cout << v[i];
+<span class="line-num">30</span>        <span class="keyword">if</span> (i < n - <span class="number">1</span>) cout << <span class="string">" "</span>;
+<span class="line-num">31</span>    }
+<span class="line-num">32</span>
+<span class="line-num">33</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">34</span>}</div>
+                </div>
+            </div>
+            <div class="tip">
+                💡 <strong>另一种思路：</strong>使用push_back和erase组合<br>
+                <code style="background:#fff8e1;padding:2px 6px;border-radius:3px;">v.push_back(v[0]); v.erase(v.begin());</code>
+            </div>
+        </div>
+
+        <footer>
+            <p>❤️ 爱心 · 创新 · 匠心 | 程老师 C++ 课程</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+
+        function copyCode(btn) {
+            var codeBlock = btn.closest('.code-block');
+            var code = codeBlock.querySelector('.code').innerText;
+            // 移除行号
+            code = code.replace(/^\d+\s*/gm, '');
+            navigator.clipboard.writeText(code).then(function() {
+                btn.textContent = '✓ 已复制';
+                setTimeout(function() {
+                    btn.textContent = '📋 复制';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

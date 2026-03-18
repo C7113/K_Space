@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>认识数组 - C++基础</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #1976d2, #2196f3);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #e3f2fd;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #1976d2, #2196f3);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f5fbff;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        /* 优化的代码块样式 */
+        .code-block {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3e3e3e;
+        }
+        .code-lang {
+            color: #888;
+            font-size: 0.85em;
+        }
+        .code-copy {
+            background: #4a4a4a;
+            color: #ccc;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.3s;
+        }
+        .code-copy:hover {
+            background: #5a5a5a;
+            color: white;
+        }
+        .code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            padding-left: 50px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 0;
+            line-height: 1.6;
+            font-size: 0.95em;
+            white-space: pre;
+        }
+        .code .line-num {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 35px;
+            padding: 15px 10px;
+            text-align: right;
+            color: #5a5a5a;
+            background: #252525;
+            user-select: none;
+            line-height: 1.6;
+            font-size: 0.85em;
+        }
+        /* 语法高亮 */
+        .code .keyword { color: #569cd6; }
+        .code .type { color: #4ec9b0; }
+        .code .string { color: #ce9178; }
+        .code .number { color: #b5cea8; }
+        .code .comment { color: #6a9955; }
+        .code .function { color: #dcdcaa; }
+        .code .operator { color: #d4d4d4; }
+        .code .include { color: #c586c0; }
+
+        .example {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #1976d2;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffa000;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .caution {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .best-practice {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .ppt-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .ppt-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        ul {
+            line-height: 1.8;
+        }
+        li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ 认识数组 - C++基础</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+            <a href="../materials/数组.pptx" class="ppt-link" download>📥 下载PPT课件</a>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🎯 课程导入</button>
+            <button class="tab" onclick="openTab(event, 'concept')">📚 什么是数组？</button>
+            <button class="tab" onclick="openTab(event, 'define')">📜 定义数组</button>
+            <button class="tab" onclick="openTab(event, 'access')">🔍 访问元素</button>
+            <button class="tab" onclick="openTab(event, 'modify')">✏️ 修改元素</button>
+            <button class="tab" onclick="openTab(event, 'traverse')">🔄 遍历数组</button>
+            <button class="tab" onclick="openTab(event, 'bubble')">🫧 冒泡排序</button>
+        </div>
+
+        <!-- 课程导入 -->
+        <div id="intro" class="content active">
+            <h2>🎯 课程导入</h2>
+            <div class="concept-item">
+                <h3>问题引入</h3>
+                <p>学校委托我们制作一个用于统计<strong>班级人数</strong>的程序。</p>
+                <div class="example">
+                    💡 如果有5个班级，我们需要定义5个变量：<br>
+                    <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">int class1, class2, class3, class4, class5;</code>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>更高效的方法</h3>
+                <p>如果需要统计全校30个班级的人数呢？定义30个变量太麻烦了！</p>
+                <div class="tip">
+                    📦 解决方案：使用<strong>数组</strong>来存储多个相同类型的数据！
+                </div>
+            </div>
+        </div>
+
+        <!-- 数组概念 -->
+        <div id="concept" class="content">
+            <h2>📚 什么是数组？</h2>
+            <div class="concept-item">
+                <h3>数组的定义</h3>
+                <p><strong>数组</strong>是用于存储多个<strong>相同类型</strong>数据的<strong>有序</strong>集合。</p>
+            </div>
+            <div class="concept-item">
+                <h3>数组的特点</h3>
+                <ul>
+                    <li>📏 <strong>大小固定</strong>：创建时指定大小，不能改变</li>
+                    <li>🔢 <strong>类型统一</strong>：所有元素必须是相同类型</li>
+                    <li>📍 <strong>索引有序</strong>：元素按顺序存储，通过索引访问</li>
+                </ul>
+            </div>
+            <div class="example">
+                💡 就像一排编号的柜子，每个柜子有一个编号（索引），里面存放物品（数据）。
+            </div>
+            <div class="concept-item">
+                <h3>数组示例</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span><span class="comment">// 班级人数统计: classStu[5]</span>
+<span class="line-num">2</span><span class="type">int</span> classStu[<span class="number">5</span>] = {<span class="number">35</span>, <span class="number">42</span>, <span class="number">38</span>, <span class="number">40</span>, <span class="number">45</span>};
+<span class="line-num">3</span>
+<span class="line-num">4</span>classStu[<span class="number">0</span>];  <span class="comment">// 第一个元素，值为35</span>
+<span class="line-num">5</span>classStu[<span class="number">1</span>];  <span class="comment">// 第二个元素，值为42</span>
+<span class="line-num">6</span>classStu[<span class="number">4</span>];  <span class="comment">// 第五个元素，值为45</span></div>
+                </div>
+            </div>
+            <div class="tip">
+                ⚠️ <strong>注意：</strong>C++中数组索引从<strong>0</strong>开始！
+            </div>
+        </div>
+
+        <!-- 定义数组 -->
+        <div id="define" class="content">
+            <h2>📜 如何定义数组？</h2>
+            <div class="concept-item">
+                <h3>基本语法</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span><span class="type">数据类型</span> <span class="type">数组名</span>[<span class="type">元素个数</span>];</div>
+                </div>
+                <ul>
+                    <li><strong>数据类型</strong>：int, double, char 等</li>
+                    <li><strong>数组名</strong>：符合命名规则的标识符</li>
+                    <li><strong>元素个数</strong>：必须是常量或常量表达式</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>定义示例</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span><span class="comment">// 定义一个能存5个整数的数组</span>
+<span class="line-num">2</span><span class="type">int</span> classStu[<span class="number">5</span>];
+<span class="line-num">3</span>
+<span class="line-num">4</span><span class="comment">// 定义数组的同时初始化</span>
+<span class="line-num">5</span><span class="type">int</span> scores[<span class="number">5</span>] = {<span class="number">90</span>, <span class="number">85</span>, <span class="number">78</span>, <span class="number">92</span>, <span class="number">88</span>};
+<span class="line-num">6</span>
+<span class="line-num">7</span><span class="comment">// 初始化时可以省略数组长度，系统会自动推断</span>
+<span class="line-num">8</span><span class="type">int</span> nums[] = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>};  <span class="comment">// 长度为5</span>
+<span class="line-num">9</span>
+<span class="line-num">10</span><span class="comment">// 定义浮点型数组</span>
+<span class="line-num">11</span><span class="type">double</span> prices[<span class="number">3</span>] = {<span class="number">19.9</span>, <span class="number">29.9</span>, <span class="number">39.9</span>};</div>
+                </div>
+            </div>
+            <div class="caution">
+                ⚠️ <strong>注意：</strong>数组大小必须是常量，如 <code style="background:#ffebee;padding:2px 6px;border-radius:3px;">int a[10];</code> 可以，但 <code style="background:#ffebee;padding:2px 6px;border-radius:3px;">int n=10; int a[n];</code> 不行！（C++标准不支持）
+            </div>
+        </div>
+
+        <!-- 访问元素 -->
+        <div id="access" class="content">
+            <h2>🔍 如何访问数组元素？</h2>
+            <div class="concept-item">
+                <h3>访问语法</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span><span class="type">数组名</span>[<span class="type">索引</span>]</div>
+                </div>
+                <p>索引是一个整数，表示元素的位置（从0开始）。</p>
+            </div>
+            <div class="concept-item">
+                <h3>访问示例</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span><span class="type">int</span> classStu[<span class="number">5</span>] = {<span class="number">35</span>, <span class="number">42</span>, <span class="number">38</span>, <span class="number">40</span>, <span class="number">45</span>};
+<span class="line-num">2</span>
+<span class="line-num">3</span><span class="comment">// 访问各个元素</span>
+<span class="line-num">4</span>classStu[<span class="number">0</span>];  <span class="comment">// 第一个元素，值为35</span>
+<span class="line-num">5</span>classStu[<span class="number">1</span>];  <span class="comment">// 第二个元素，值为42</span>
+<span class="line-num">6</span>classStu[<span class="number">4</span>];  <span class="comment">// 第五个元素，值为45</span>
+<span class="line-num">7</span>
+<span class="line-num">8</span><span class="comment">// 输出所有元素</span>
+<span class="line-num">9</span><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < <span class="number">5</span>; i++) {
+<span class="line-num">10</span>    cout << classStu[i] << <span class="string">" "</span>;
+<span class="line-num">11</span>}</div>
+                </div>
+            </div>
+            <div class="tip">
+                💡 <strong>小技巧：</strong>数组长度为n时，索引范围是 <strong>0 ~ n-1</strong>
+            </div>
+        </div>
+
+        <!-- 修改元素 -->
+        <div id="modify" class="content">
+            <h2>✏️ 如何修改数组元素？</h2>
+            <div class="concept-item">
+                <h3>赋值语法</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span><span class="type">数组名</span>[<span class="type">索引</span>] = <span class="type">值</span>;</div>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>修改示例</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span><span class="type">int</span> classStu[<span class="number">5</span>] = {<span class="number">35</span>, <span class="number">42</span>, <span class="number">38</span>, <span class="number">40</span>, <span class="number">45</span>};
+<span class="line-num">2</span>
+<span class="line-num">3</span><span class="comment">// 修改第一个班级的人数为50人</span>
+<span class="line-num">4</span>classStu[<span class="number">0</span>] = <span class="number">50</span>;
+<span class="line-num">5</span>
+<span class="line-num">6</span><span class="comment">// 把第三个元素改为60</span>
+<span class="line-num">7</span>classStu[<span class="number">2</span>] = <span class="number">60</span>;</div>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>完整示例</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 5</span>    <span class="type">int</span> classStu[<span class="number">5</span>] = {<span class="number">35</span>, <span class="number">42</span>, <span class="number">38</span>, <span class="number">40</span>, <span class="number">45</span>};
+<span class="line-num"> 6</span>
+<span class="line-num"> 7</span>    cout << <span class="string">"原始: "</span>;
+<span class="line-num"> 8</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < <span class="number">5</span>; i++) {
+<span class="line-num"> 9</span>        cout << classStu[i] << <span class="string">" "</span>;
+<span class="line-num">10</span>    }
+<span class="line-num">11</span>    cout << endl;
+<span class="line-num">12</span>
+<span class="line-num">13</span>    <span class="comment">// 修改第3个班级的人数为50</span>
+<span class="line-num">14</span>    classStu[<span class="number">2</span>] = <span class="number">50</span>;
+<span class="line-num">15</span>
+<span class="line-num">16</span>    cout << <span class="string">"修改后: "</span>;
+<span class="line-num">17</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < <span class="number">5</span>; i++) {
+<span class="line-num">18</span>        cout << classStu[i] << <span class="string">" "</span>;
+<span class="line-num">19</span>    }
+<span class="line-num">20</span>
+<span class="line-num">21</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">22</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 遍历数组 -->
+        <div id="traverse" class="content">
+            <h2>🔄 如何遍历数组？</h2>
+            <div class="concept-item">
+                <h3>使用循环遍历</h3>
+                <p>通常使用 <code style="background:#e3f2fd;padding:2px 6px;border-radius:3px;">for</code> 循环来遍历数组的所有元素。</p>
+            </div>
+            <div class="concept-item">
+                <h3>示例：输出成绩</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 5</span>    <span class="type">int</span> n;
+<span class="line-num"> 6</span>    cin >> n;
+<span class="line-num"> 7</span>
+<span class="line-num"> 8</span>    <span class="type">int</span> scores[<span class="number">100</span>];  <span class="comment">// 定义足够大的数组</span>
+<span class="line-num"> 9</span>
+<span class="line-num">10</span>    <span class="comment">// 输入n个成绩</span>
+<span class="line-num">11</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">12</span>        cin >> scores[i];
+<span class="line-num">13</span>    }
+<span class="line-num">14</span>
+<span class="line-num">15</span>    <span class="comment">// 输出所有成绩</span>
+<span class="line-num">16</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">17</span>        cout << scores[i] << <span class="string">" "</span>;
+<span class="line-num">18</span>    }
+<span class="line-num">19</span>
+<span class="line-num">20</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">21</span>}</div>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>实战：统计优秀人数</h3>
+                <div class="example">
+                    <strong>题目：</strong>输入n个人的成绩，统计成绩优秀（≥90分）的人数。<br>
+                    <strong>输入：</strong>第一行n，第二行n个成绩<br>
+                    <strong>输出：</strong>优秀人数
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 5</span>    <span class="type">int</span> n, count = <span class="number">0</span>;
+<span class="line-num"> 6</span>    cin >> n;
+<span class="line-num"> 7</span>
+<span class="line-num"> 8</span>    <span class="type">int</span> scores[<span class="number">100</span>];
+<span class="line-num"> 9</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">10</span>        cin >> scores[i];
+<span class="line-num">11</span>    }
+<span class="line-num">12</span>
+<span class="line-num">13</span>    <span class="comment">// 统计优秀人数</span>
+<span class="line-num">14</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">15</span>        <span class="keyword">if</span> (scores[i] >= <span class="number">90</span>) {
+<span class="line-num">16</span>            count++;
+<span class="line-num">17</span>        }
+<span class="line-num">18</span>    }
+<span class="line-num">19</span>
+<span class="line-num">20</span>    cout << count << endl;
+<span class="line-num">21</span>
+<span class="line-num">22</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">23</span>}</div>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>实战：输出奇数和偶数</h3>
+                <div class="example">
+                    <strong>题目：</strong>输入n个整数，分别输出奇数和偶数。<br>
+                    <strong>输入：</strong>第一行n，第二行n个整数<br>
+                    <strong>输出：</strong>第一行奇数，第二行偶数
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 5</span>    <span class="type">int</span> n;
+<span class="line-num"> 6</span>    cin >> n;
+<span class="line-num"> 7</span>
+<span class="line-num"> 8</span>    <span class="type">int</span> nums[<span class="number">30</span>];
+<span class="line-num"> 9</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">10</span>        cin >> nums[i];
+<span class="line-num">11</span>    }
+<span class="line-num">12</span>
+<span class="line-num">13</span>    <span class="comment">// 先输出奇数</span>
+<span class="line-num">14</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">15</span>        <span class="keyword">if</span> (nums[i] % <span class="number">2</span> == <span class="number">1</span>) {
+<span class="line-num">16</span>            cout << <span class="string">" "</span> << nums[i];
+<span class="line-num">17</span>        }
+<span class="line-num">18</span>    }
+<span class="line-num">19</span>    cout << endl;
+<span class="line-num">20</span>
+<span class="line-num">21</span>    <span class="comment">// 再输出偶数</span>
+<span class="line-num">22</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">23</span>        <span class="keyword">if</span> (nums[i] % <span class="number">2</span> == <span class="number">0</span>) {
+<span class="line-num">24</span>            cout << <span class="string">" "</span> << nums[i];
+<span class="line-num">25</span>        }
+<span class="line-num">26</span>    }
+<span class="line-num">27</span>
+<span class="line-num">28</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">29</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 冒泡排序 -->
+        <div id="bubble" class="content">
+            <h2>🫧 冒泡排序</h2>
+            <div class="concept-item">
+                <h3>什么是冒泡排序？</h3>
+                <p><strong>冒泡排序</strong>是一种简单的排序算法，通过反复交换相邻元素，把最大的元素"冒泡"到数组末尾。</p>
+            </div>
+            <div class="example">
+                💡 就像水底的气泡向上冒一样，最大的元素会逐渐移动到数组最后面。
+            </div>
+            <div class="concept-item">
+                <h3>排序过程演示</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span><span class="comment">// 原始: 5 3 8 1 2</span>
+<span class="line-num">2</span>
+<span class="line-num">3</span><span class="comment">// 第1轮: 3 5 1 2 8  (8冒到最后)</span>
+<span class="line-num">4</span><span class="comment">// 第2轮: 3 1 2 5 8  (5移到前面)</span>
+<span class="line-num">5</span><span class="comment">// 第3轮: 1 2 3 5 8  (3移到前面)</span>
+<span class="line-num">6</span><span class="comment">// 第4轮: 1 2 3 5 8  (已完成)</span></div>
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 5</span>    <span class="type">int</span> n = <span class="number">10</span>;
+<span class="line-num"> 6</span>    <span class="type">int</span> a[] = {<span class="number">69</span>, <span class="number">80</span>, <span class="number">90</span>, <span class="number">100</span>, <span class="number">70</span>, <span class="number">89</span>, <span class="number">59</span>, <span class="number">73</span>, <span class="number">95</span>, <span class="number">85</span>};
+<span class="line-num"> 7</span>
+<span class="line-num"> 8</span>    <span class="comment">// 冒泡排序</span>
+<span class="line-num"> 9</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n - <span class="number">1</span>; i++) {
+<span class="line-num">10</span>        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j < n - <span class="number">1</span> - i; j++) {
+<span class="line-num">11</span>            <span class="keyword">if</span> (a[j] > a[j + <span class="number">1</span>]) {
+<span class="line-num">12</span>                <span class="comment">// 交换相邻元素</span>
+<span class="line-num">13</span>                <span class="type">int</span> temp = a[j];
+<span class="line-num">14</span>                a[j] = a[j + <span class="number">1</span>];
+<span class="line-num">15</span>                a[j + <span class="number">1</span>] = temp;
+<span class="line-num">16</span>            }
+<span class="line-num">17</span>        }
+<span class="line-num">18</span>    }
+<span class="line-num">19</span>
+<span class="line-num">20</span>    <span class="comment">// 输出排序结果</span>
+<span class="line-num">21</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">22</span>        cout << a[i] << <span class="string">" "</span>;
+<span class="line-num">23</span>    }
+<span class="line-num">24</span>
+<span class="line-num">25</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">26</span>}</div>
+                </div>
+            </div>
+            <div class="tip">
+                💡 <strong>如何从大到小排序？</strong>把 <code style="background:#fff8e1;padding:2px 6px;border-radius:3px;">if (a[j] > a[j + 1])</code> 改成 <code style="background:#fff8e1;padding:2px 6px;border-radius:3px;">if (a[j] < a[j + 1])</code> 即可！
+            </div>
+        </div>
+
+        <footer>
+            <p>❤️ 爱心 · 创新 · 匠心 | 程老师 C++ 课程</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+
+        function copyCode(btn) {
+            var codeBlock = btn.closest('.code-block');
+            var code = codeBlock.querySelector('.code').innerText;
+            // 移除行号
+            code = code.replace(/^\d+\s*/gm, '');
+            navigator.clipboard.writeText(code).then(function() {
+                btn.textContent = '✓ 已复制';
+                setTimeout(function() {
+                    btn.textContent = '📋 复制';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
