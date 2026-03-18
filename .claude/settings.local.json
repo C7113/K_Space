@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \":*)",
+      "WebFetch(domain:8.130.178.205)",
+      "Bash(curl -s \"http://8.130.178.205/\")",
+      "Bash(curl -s \"http://8.130.178.205/problemset.html\")",
+      "Bash(curl -s \"http://8.130.178.205/problemset.php\")",
+      "Bash(curl -s \"http://8.130.178.205/problemset.php?search=vector\")"
+    ]
+  }
+}
