@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>进制转换与位运算 - CSP强化课程</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 { margin: 0; font-size: 2.2em; }
+        .subtitle { font-size: 1.1em; opacity: 0.9; }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover { background: #e8f5e9; }
+        .tab.active {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f0f9f4;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .content.active { display: block; }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 { margin-top: 0; color: #11998e; }
+        .code-block {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3e3e3e;
+        }
+        .code-lang { color: #888; font-size: 0.85em; }
+        .code-copy {
+            background: #4a4a4a;
+            color: #ccc;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            padding-left: 50px;
+            font-family: 'Consolas', monospace;
+            overflow-x: auto;
+            margin: 0;
+            line-height: 1.6;
+            white-space: pre;
+        }
+        .code .line-num {
+            position: absolute;
+            left: 0;
+            width: 35px;
+            padding: 15px 10px;
+            text-align: right;
+            color: #5a5a5a;
+            background: #252525;
+            user-select: none;
+            line-height: 1.6;
+        }
+        .code .keyword { color: #569cd6; }
+        .code .include { color: #c586c0; }
+        .code .string { color: #ce9178; }
+        .code .comment { color: #6a9955; }
+        .example {
+            background: #e8f5e9;
+            padding: 15px;
+            border-left: 5px solid #11998e;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffa000;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .caution {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .best-practice {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer { text-align: center; margin-top: 30px; color: #666; font-size: 0.9em; }
+        .ppt-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ 进制转换与位运算 - CSP强化课程</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+            <a href="../materials/进制转换与位运算.pptx" class="ppt-link" download>📥 下载PPT课件</a>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'convert')">🔄 进制转换</button>
+            <button class="tab" onclick="openTab(event, 'complement')">🔢 补码</button>
+            <button class="tab" onclick="openTab(event, 'bitop')">⚡ 位运算</button>
+            <button class="tab" onclick="openTab(event, 'trick')">🎯 位运算技巧</button>
+        </div>
+
+        <!-- 进制转换 -->
+        <div id="convert" class="content active">
+            <h2>🔄 进制转换</h2>
+            <div class="concept-item">
+                <h3>其他进制 → 十进制：按权展开法</h3>
+                <div class="example">
+                    (1011)₂ = 1×2³ + 0×2² + 1×2¹ + 1×2⁰ = 8 + 0 + 2 + 1 = 11<br>
+                    (A)₁₆ = 1×16¹ + 10×16⁰ = 16 + 10 = 26
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>十进制 → 其他进制：除基取余法</h3>
+                <p>13 ÷ 2 = 6 ... 1</p>
+                <p>6 ÷ 2 = 3 ... 0</p>
+                <p>3 ÷ 2 = 1 ... 1</p>
+                <p>1 ÷ 2 = 0 ... 1</p>
+                <div class="example">
+                    13的二进制：倒序取余 → 1101
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>二进制 ↔ 八/十六进制：分组法</h3>
+                <p>二进制每3位一组（八进制），每4位一组（十六进制）</p>
+                <div class="example">
+                    1011 0110 → 十六进制：B6
+                </div>
+            </div>
+            <div class="tip">
+                📝 <strong>真题</strong>：八进制数32.1对应的十进制数是？
+            </div>
+        </div>
+
+        <!-- 补码 -->
+        <div id="complement" class="content">
+            <h2>🔢 补码</h2>
+            <div class="concept-item">
+                <h3>为什么需要补码？</h3>
+                <p>为了让计算机只用"加法"就能做减法，简化硬件电路，提高运算速度。</p>
+            </div>
+            <div class="concept-item">
+                <h3>三码对比</h3>
+                <ul>
+                    <li><strong>原码</strong>：最高位=符号位，其余=数值</li>
+                    <li><strong>反码</strong>：正数=原码，负数=符号位不变，其余按位取反</li>
+                    <li><strong>补码</strong>：正数=原码，负数=反码+1</li>
+                </ul>
+            </div>
+            <div class="best-practice">
+                📚 <strong>记忆口诀</strong>：<br>
+                正数三码同一形<br>
+                负数符号永不改<br>
+                反码只把数值反<br>
+                补码反码再加一
+            </div>
+            <div class="concept-item">
+                <h3>ASCII码规律</h3>
+                <ul>
+                    <li>'0'-'9'：连续，值48-57</li>
+                    <li>'A'-'Z'：连续，值65-90</li>
+                    <li>'a'-'z'：连续，值97-122</li>
+                    <li>大小写转换：相差32</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 位运算 -->
+        <div id="bitop" class="content">
+            <h2>⚡ 位运算</h2>
+            <div class="concept-item">
+                <h3>基本位运算符</h3>
+                <ul>
+                    <li><strong>&</strong>：按位与</li>
+                    <li><strong>|</strong>：按位或</li>
+                    <li><strong>^</strong>：按位异或</li>
+                    <li><strong><<</strong>：左移</li>
+                    <li><strong>>></strong>：右移</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>常用场景</h3>
+                <div class="example">
+                    判断奇偶：<br>
+                    普通：if (n % 2 == 1)<br>
+                    位运算：if (n & 1)<br><br>
+
+                    乘以2^k：n << k<br>
+                    除以2^k：n >> k
+                </div>
+            </div>
+        </div>
+
+        <!-- 位运算技巧 -->
+        <div id="trick" class="content">
+            <h2>🎯 位运算技巧</h2>
+            <div class="concept-item">
+                <h3>必背技巧：n & (n-1)</h3>
+                <p>作用：消除二进制中最低位的1</p>
+                <div class="example">
+                    n = 12 (1100)<br>
+                    n-1 = 11 (1011)<br>
+                    n & (n-1) = 1000 (8)
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>统计1的个数</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span><span class="type">int</span> <span class="function">countOnes</span>(<span class="type">int</span> n) {
+<span class="line-num">2</span>    <span class="type">int</span> count = <span class="number">0</span>;
+<span class="line-num">3</span>    <span class="keyword">while</span> (n > <span class="number">0</span>) {
+<span class="line-num">4</span>        n = n & (n - <span class="number">1</span>);  <span class="comment">// 核心技巧</span>
+<span class="line-num">5</span>        count++;
+<span class="line-num">6</span>    }
+<span class="line-num">7</span>    <span class="keyword">return</span> count;
+<span class="line-num">8</span>}</div>
+                </div>
+            </div>
+            <div class="caution">
+                ⚠️ <strong>易错点</strong>：<br>
+                if (n & 1 == 1) ❌ 优先级错误！<br>
+                if ((n & 1) == 1) ✅
+            </div>
+        </div>
+
+        <footer>
+            <p>❤️ 爱心 · 创新 · 匠心 | 程老师 C++ 课程</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+        function copyCode(btn) {
+            var codeBlock = btn.closest('.code-block');
+            var code = codeBlock.querySelector('.code').innerText;
+            code = code.replace(/^\d+\s*/gm, '');
+            navigator.clipboard.writeText(code).then(function() {
+                btn.textContent = '✓ 已复制';
+                setTimeout(function() { btn.textContent = '📋 复制'; }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

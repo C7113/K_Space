@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>减治算法 - C++算法基础</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 { margin: 0; font-size: 2.2em; }
+        .subtitle { font-size: 1.1em; opacity: 0.9; }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover { background: #e8e8e8; }
+        .tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .content.active { display: block; }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 { margin-top: 0; color: #667eea; }
+        .code-block {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3e3e3e;
+        }
+        .code-lang { color: #888; font-size: 0.85em; }
+        .code-copy {
+            background: #4a4a4a;
+            color: #ccc;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.3s;
+        }
+        .code-copy:hover { background: #5a5a5a; color: white; }
+        .code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            padding-left: 50px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 0;
+            line-height: 1.6;
+            font-size: 0.95em;
+            white-space: pre;
+        }
+        .code .line-num {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 35px;
+            padding: 15px 10px;
+            text-align: right;
+            color: #5a5a5a;
+            background: #252525;
+            user-select: none;
+            line-height: 1.6;
+            font-size: 0.85em;
+        }
+        .code .keyword { color: #569cd6; }
+        .code .type { color: #4ec9b0; }
+        .code .string { color: #ce9178; }
+        .code .number { color: #b5cea8; }
+        .code .comment { color: #6a9955; }
+        .code .function { color: #dcdcaa; }
+        .code .operator { color: #d4d4d4; }
+        .code .include { color: #c586c0; }
+        .example {
+            background: #e8e8f0;
+            padding: 15px;
+            border-left: 5px solid #667eea;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffa000;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .caution {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .best-practice {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer { text-align: center; margin-top: 30px; color: #666; font-size: 0.9em; }
+        .ppt-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .ppt-link:hover { background: rgba(255,255,255,0.3); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ 减治算法 - C++算法基础</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+            <a href="../materials/减治算法.pptx" class="ppt-link" download>📥 下载PPT课件</a>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🎯 课程导入</button>
+            <button class="tab" onclick="openTab(event, 'concept')">📚 减治算法思想</button>
+            <button class="tab" onclick="openTab(event, 'factorial')">🔢 阶乘计算</button>
+            <button class="tab" onclick="openTab(event, 'binary')">🔍 二分查找</button>
+            <button class="tab" onclick="openTab(event, 'highprec')">➕ 高精度加法</button>
+            <button class="tab" onclick="openTab(event, 'compare')">⚖️ 减治vs分治</button>
+        </div>
+
+        <!-- 课程导入 -->
+        <div id="intro" class="content active">
+            <h2>🎯 课程导入</h2>
+            <div class="concept-item">
+                <h3>经典问题：假币问题</h3>
+                <p>假设你面前有12枚硬币，其中有一枚是假币。假币和真币的重量不同，但你不知道假币比真币轻还是重。你有一个天平，但只能使用三次。如何找出这枚假币？</p>
+            </div>
+            <div class="tip">
+                💡 <strong>减治算法</strong>的核心思想是：逐步减小问题规模，将复杂问题转化为简单子问题解决。
+            </div>
+        </div>
+
+        <!-- 减治算法概念 -->
+        <div id="concept" class="content">
+            <h2>📚 减治算法思想</h2>
+            <div class="concept-item">
+                <h3>什么是减治算法？</h3>
+                <p><strong>减治算法</strong>通过逐步减小问题规模，将复杂问题转化为简单子问题解决。</p>
+            </div>
+            <div class="concept-item">
+                <h3>减治算法的关键步骤</h3>
+                <ol>
+                    <li><strong>逐步减小问题规模</strong>：每次处理一个子问题，直到问题易于求解</li>
+                    <li><strong>解决简化后的子问题</strong>：获取中间结果</li>
+                    <li><strong>合并结果</strong>：得到原问题的解</li>
+                </ol>
+            </div>
+            <div class="concept-item">
+                <h3>减治算法的优势</h3>
+                <ul>
+                    <li>✅ 降低问题复杂度，减少计算量</li>
+                    <li>✅ 适用于多种问题，如查找、排序、数值计算等</li>
+                    <li>✅ 提高算法效率，优化程序性能</li>
+                </ul>
+            </div>
+            <div class="example">
+                💡 <strong>典型应用：</strong>
+                <ul>
+                    <li>二分查找：每次将搜索范围减半</li>
+                    <li>阶乘计算：n! = n × (n-1)!</li>
+                    <li>高精度加法：从低位逐位相加</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 阶乘计算 -->
+        <div id="factorial" class="content">
+            <h2>🔢 阶乘计算</h2>
+            <div class="concept-item">
+                <h3>问题描述</h3>
+                <p>计算一个整数的阶乘，结果可能非常大。例如，计算 20!，结果为 2432902008176640000，普通整数类型无法存储。</p>
+            </div>
+            <div class="concept-item">
+                <h3>算法思想</h3>
+                <p>从 1 开始逐步乘以每个整数，直到目标整数。例如，计算 5!：</p>
+                <div class="example">
+                    1 × 2 = 2<br>
+                    2 × 3 = 6<br>
+                    6 × 4 = 24<br>
+                    24 × 5 = 120
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现（递归）</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="comment">// 递归函数计算阶乘</span>
+<span class="line-num"> 5</span><span class="type">int</span> <span class="function">factorial</span>(<span class="type">int</span> n) {
+<span class="line-num"> 6</span>    <span class="keyword">if</span> (n == <span class="number">0</span>) {
+<span class="line-num"> 7</span>        <span class="keyword">return</span> <span class="number">1</span>;  <span class="comment">// 0的阶乘定义为1</span>
+<span class="line-num"> 8</span>    } <span class="keyword">else</span> {
+<span class="line-num"> 9</span>        <span class="keyword">return</span> n * <span class="function">factorial</span>(n - <span class="number">1</span>);  <span class="comment">// 递归调用</span>
+<span class="line-num">10</span>    }
+<span class="line-num">11</span>}
+<span class="line-num">12</span>
+<span class="line-num">13</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num">14</span>    <span class="type">int</span> number;
+<span class="line-num">15</span>    cin >> number;
+<span class="line-num">16</span>    cout << <span class="function">factorial</span>(number) << endl;
+<span class="line-num">17</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">18</span>}</div>
+                </div>
+            </div>
+            <div class="caution">
+                ⚠️ <strong>注意：</strong>当n较大时，普通int类型会溢出！需要使用高精度算法（字符串或数组存储）。
+            </div>
+        </div>
+
+        <!-- 二分查找 -->
+        <div id="binary" class="content">
+            <h2>🔍 二分查找</h2>
+            <div class="concept-item">
+                <h3>问题描述</h3>
+                <p>在有序数组中查找特定元素，要求高效定位。</p>
+            </div>
+            <div class="concept-item">
+                <h3>算法思想</h3>
+                <p>每次将数组分成两半，根据中间值与目标值比较，缩小搜索范围。</p>
+                <div class="example">
+                    💡 例如，查找数字 5，在数组 [1, 3, 5, 7, 9] 中：<br>
+                    第一次：中间值 5 = 目标，直接找到！
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="type">int</span> <span class="function">binarySearch</span>(<span class="type">int</span> arr[], <span class="type">int</span> l, <span class="type">int</span> r, <span class="type">int</span> x) {
+<span class="line-num"> 2</span>    <span class="keyword">while</span> (l <= r) {
+<span class="line-num"> 3</span>        <span class="type">int</span> m = l + (r - l) / <span class="number">2</span>;  <span class="comment">// 防止溢出</span>
+<span class="line-num"> 4</span>        <span class="keyword">if</span> (arr[m] == x)
+<span class="line-num"> 5</span>            <span class="keyword">return</span> m;  <span class="comment">// 找到目标</span>
+<span class="line-num"> 6</span>        <span class="keyword">if</span> (arr[m] < x)
+<span class="line-num"> 7</span>            l = m + <span class="number">1</span>;  <span class="comment">// 在右半部分查找</span>
+<span class="line-num"> 8</span>        <span class="keyword">else</span>
+<span class="line-num"> 9</span>            r = m - <span class="number">1</span>;  <span class="comment">// 在左半部分查找</span>
+<span class="line-num">10</span>    }
+<span class="line-num">11</span>    <span class="keyword">return</span> -<span class="number">1</span>;  <span class="comment">// 未找到</span>
+<span class="line-num">12</span>}</div>
+                </div>
+            </div>
+            <div class="tip">
+                💡 <strong>时间复杂度：</strong>O(log n)，每次查找范围减半！
+            </div>
+        </div>
+
+        <!-- 高精度加法 -->
+        <div id="highprec" class="content">
+            <h2>➕ 高精度加法</h2>
+            <div class="concept-item">
+                <h3>问题描述</h3>
+                <p>计算两个大整数的和，超出普通整数范围。例如，计算两个 100 位数字的和。</p>
+            </div>
+            <div class="concept-item">
+                <h3>算法思想</h3>
+                <ol>
+                    <li>从最低位开始逐位相加</li>
+                    <li>注意进位处理</li>
+                    <li>最后反转结果字符串</li>
+                </ol>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="type">string</span> <span class="function">highPrecisionAdd</span>(<span class="type">string</span> num1, <span class="type">string</span> num2) {
+<span class="line-num"> 2</span>    <span class="keyword">if</span> (num1.length() < num2.length())
+<span class="line-num"> 3</span>        swap(num1, num2);
+<span class="line-num"> 4</span>
+<span class="line-num"> 5</span>    <span class="type">string</span> result = <span class="string">""</span>;
+<span class="line-num"> 6</span>    <span class="type">int</span> len1 = num1.length();
+<span class="line-num"> 7</span>    <span class="type">int</span> len2 = num2.length();
+<span class="line-num"> 8</span>    <span class="type">int</span> diff = len1 - len2;
+<span class="line-num"> 9</span>    <span class="type">int</span> carry = <span class="number">0</span>;
+<span class="line-num">10</span>
+<span class="line-num">11</span>    <span class="keyword">for</span> (<span class="type">int</span> i = len2 - <span class="number">1</span>; i >= <span class="number">0</span>; i--) {
+<span class="line-num">12</span>        <span class="type">int</span> sum = (num1[i + diff] - <span class="string">'0'</span>) + (num2[i] - <span class="string">'0'</span>) + carry;
+<span class="line-num">13</span>        result.push_back((sum % <span class="number">10</span>) + <span class="string">'0'</span>);
+<span class="line-num">14</span>        carry = sum / <span class="number">10</span>;
+<span class="line-num">15</span>    }
+<span class="line-num">16</span>
+<span class="line-num">17</span>    <span class="keyword">for</span> (<span class="type">int</span> i = diff - <span class="number">1</span>; i >= <span class="number">0</span>; i--) {
+<span class="line-num">18</span>        <span class="type">int</span> sum = (num1[i] - <span class="string">'0'</span>) + carry;
+<span class="line-num">19</span>        result.push_back((sum % <span class="number">10</span>) + <span class="string">'0'</span>);
+<span class="line-num">20</span>        carry = sum / <span class="number">10</span>;
+<span class="line-num">21</span>    }
+<span class="line-num">22</span>
+<span class="line-num">23</span>    <span class="keyword">if</span> (carry > <span class="number">0</span>)
+<span class="line-num">24</span>        result.push_back(carry + <span class="string">'0'</span>);
+<span class="line-num">25</span>
+<span class="line-num">26</span>    reverse(result.begin(), result.end());
+<span class="line-num">27</span>    <span class="keyword">return</span> result;
+<span class="line-num">28</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 减治vs分治 -->
+        <div id="compare" class="content">
+            <h2>⚖️ 减治算法 vs 分治算法</h2>
+            <div class="concept-item">
+                <h3>减治算法</h3>
+                <ul>
+                    <li>逐步减小问题规模，每次处理一个子问题</li>
+                    <li>例如：二分查找、高精度加法</li>
+                    <li>分解方式：问题规模逐渐变小</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>分治算法</h3>
+                <ul>
+                    <li>将问题分解为多个独立子问题，分别求解</li>
+                    <li>例如：归并排序、快速排序</li>
+                    <li>分解方式：问题分解为多个子问题</li>
+                </ul>
+            </div>
+            <div class="best-practice">
+                ✅ <strong>总结：</strong>减治是"化繁为简"，分治是"化整为零"
+            </div>
+        </div>
+
+        <footer>
+            <p>❤️ 爱心 · 创新 · 匠心 | 程老师 C++ 课程</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+        function copyCode(btn) {
+            var codeBlock = btn.closest('.code-block');
+            var code = codeBlock.querySelector('.code').innerText;
+            code = code.replace(/^\d+\s*/gm, '');
+            navigator.clipboard.writeText(code).then(function() {
+                btn.textContent = '✓ 已复制';
+                setTimeout(function() { btn.textContent = '📋 复制'; }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

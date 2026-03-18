@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>数据强化 - CSP强化课程</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 { margin: 0; font-size: 2.2em; }
+        .subtitle { font-size: 1.1em; opacity: 0.9; }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover { background: #e8f5e9; }
+        .tab.active {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f0f9f4;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .content.active { display: block; }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 { margin-top: 0; color: #11998e; }
+        .code-block {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3e3e3e;
+        }
+        .code-lang { color: #888; font-size: 0.85em; }
+        .code-copy {
+            background: #4a4a4a;
+            color: #ccc;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            padding-left: 50px;
+            font-family: 'Consolas', monospace;
+            overflow-x: auto;
+            margin: 0;
+            line-height: 1.6;
+            white-space: pre;
+        }
+        .code .line-num {
+            position: absolute;
+            left: 0;
+            width: 35px;
+            padding: 15px 10px;
+            text-align: right;
+            color: #5a5a5a;
+            background: #252525;
+            user-select: none;
+            line-height: 1.6;
+        }
+        .code .keyword { color: #569cd6; }
+        .code .type { color: #4ec9b0; }
+        .code .include { color: #c586c0; }
+        .code .string { color: #ce9178; }
+        .code .comment { color: #6a9955; }
+        .example {
+            background: #e8f5e9;
+            padding: 15px;
+            border-left: 5px solid #11998e;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffa000;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .best-practice {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer { text-align: center; margin-top: 30px; color: #666; font-size: 0.9em; }
+        .ppt-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ 数据强化 - CSP强化课程</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+            <a href="../materials/数组强化.pptx" class="ppt-link" download>📥 下载PPT课件</a>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'prefix')">📊 前缀和</button>
+            <button class="tab" onclick="openTab(event, 'diff')">📝 差分数组</button>
+            <button class="tab" onclick="openTab(event, 'window')">🪟 滑动窗口</button>
+        </div>
+
+        <!-- 前缀和 -->
+        <div id="prefix" class="content active">
+            <h2>📊 前缀和</h2>
+            <div class="concept-item">
+                <h3>问题场景</h3>
+                <p>有一个长度为 n 的数组，q 次查询，每次查询区间 [l, r] 的元素之和。</p>
+            </div>
+            <div class="concept-item">
+                <h3>前缀和原理</h3>
+                <p>prefix[i] = prefix[i-1] + a[i]</p>
+                <div class="example">
+                    💡 预先计算好"累计总分表"，查询时只需做一次减法。
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="type">vector</span><<span class="type">long long</span>> prefix;
+<span class="line-num"> 2</span>
+<span class="line-num"> 3</span><span class="type">void</span> <span class="function">build</span>(<span class="type">vector</span><<span class="type">int</span>>& nums) {
+<span class="line-num"> 4</span>    <span class="type">int</span> n = nums.size();
+<span class="line-num"> 5</span>    prefix.resize(n + <span class="number">1</span>, <span class="number">0</span>);
+<span class="line-num"> 6</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i <= n; i++) {
+<span class="line-num"> 7</span>        prefix[i] = prefix[i-<span class="number">1</span>] + nums[i-<span class="number">1</span>];
+<span class="line-num"> 8</span>    }
+<span class="line-num"> 9</span>}
+<span class="line-num">10</span>
+<span class="line-num">11</span><span class="comment">// 查询区间 [l, r]（1-based）</span>
+<span class="line-num">12</span><span class="type">long long</span> <span class="function">query</span>(<span class="type">int</span> l, <span class="type">int</span> r) {
+<span class="line-num">13</span>    <span class="keyword">return</span> prefix[r] - prefix[l-<span class="number">1</span>];
+<span class="line-num">14</span>}</div>
+                </div>
+            </div>
+            <div class="tip">
+                💡 <strong>核心思想：</strong>空间换时间，预处理后每次查询 O(1)
+            </div>
+        </div>
+
+        <!-- 差分数组 -->
+        <div id="diff" class="content">
+            <h2>📝 差分数组</h2>
+            <div class="concept-item">
+                <h3>问题场景</h3>
+                <p>给数组区间 [l, r] 内的所有元素加上/减去一个值，重复多次操作。</p>
+            </div>
+            <div class="concept-item">
+                <h3>差分原理</h3>
+                <ul>
+                    <li>定义：diff[i] = a[i] - a[i-1]</li>
+                    <li>修改：diff[l] += val, diff[r+1] -= val</li>
+                    <li>还原：对 diff 做前缀和即可恢复 a</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="type">vector</span><<span class="type">int</span>> diff;
+<span class="line-num"> 2</span>
+<span class="line-num"> 3</span><span class="comment">// 区间 [l, r] 加 val</span>
+<span class="line-num"> 4</span><span class="type">void</span> <span class="function">update</span>(<span class="type">int</span> l, <span class="type">int</span> r, <span class="type">int</span> val) {
+<span class="line-num"> 5</span>    diff[l] += val;
+<span class="line-num"> 6</span>    diff[r + <span class="number">1</span>] -= val;
+<span class="line-num"> 7</span>}
+<span class="line-num"> 8</span>
+<span class="line-num"> 9</span><span class="comment">// 还原数组</span>
+<span class="line-num">10</span><span class="type">void</span> <span class="function">restore</span>() {
+<span class="line-num">11</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i < diff.size(); i++) {
+<span class="line-num">12</span>        diff[i] += diff[i - <span class="number">1</span>];
+<span class="line-num">13</span>    }
+<span class="line-num">14</span>}</div>
+                </div>
+            </div>
+            <div class="best-practice">
+                ✅ <strong>应用场景：</strong>区间修改 + 区间查询
+            </div>
+        </div>
+
+        <!-- 滑动窗口 -->
+        <div id="window" class="content">
+            <h2>🪟 滑动窗口</h2>
+            <div class="concept-item">
+                <h3>问题场景</h3>
+                <p>有一个长为 n 的序列 a，以及一个大小为 k 的窗口。求每次滑动后窗口中的最小值和最大值。</p>
+            </div>
+            <div class="concept-item">
+                <h3>单调队列原理</h3>
+                <ul>
+                    <li>队尾维护单调性</li>
+                    <li>求最小值：保持递增队列</li>
+                    <li>求最大值：保持递减队列</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="comment">// 求滑动窗口最小值</span>
+<span class="line-num"> 2</span><span class="type">deque</span><<span class="type">int</span>> dq;  <span class="comment">// 存储下标</span>
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">void</span> <span class="function">get_min</span>(<span class="type">int</span> k) {
+<span class="line-num"> 5</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i <= n; i++) {
+<span class="line-num"> 6</span>        <span class="comment">// 维护单调性：弹出比当前大的</span>
+<span class="line-num"> 7</span>        <span class="keyword">while</span> (!dq.empty() && a[dq.back()] > a[i]) {
+<span class="line-num"> 8</span>            dq.pop_back();
+<span class="line-num"> 9</span>        }
+<span class="line-num">10</span>        dq.push_back(i);
+<span class="line-num">11</span>
+<span class="line-num">12</span>        <span class="comment">// 移除窗口外的元素</span>
+<span class="line-num">13</span>        <span class="keyword">if</span> (dq.front() <= i - k) dq.pop_front();
+<span class="line-num">14</span>
+<span class="line-num">15</span>        <span class="keyword">if</span> (i >= k) {
+<span class="line-num">16</span>            cout << a[dq.front()] << <span class="string">" "</span>;
+<span class="line-num">17</span>        }
+<span class="line-num">18</span>    }
+<span class="line-num">19</span>}</div>
+                </div>
+            </div>
+            <div class="tip">
+                💡 <strong>时间复杂度：</strong>O(n)，每个元素最多进出队列一次
+            </div>
+        </div>
+
+        <footer>
+            <p>❤️ 爱心 · 创新 · 匠心 | 程老师 C++ 课程</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+        function copyCode(btn) {
+            var codeBlock = btn.closest('.code-block');
+            var code = codeBlock.querySelector('.code').innerText;
+            code = code.replace(/^\d+\s*/gm, '');
+            navigator.clipboard.writeText(code).then(function() {
+                btn.textContent = '✓ 已复制';
+                setTimeout(function() { btn.textContent = '📋 复制'; }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

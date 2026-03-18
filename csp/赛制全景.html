@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>CSP赛制全景 - CSP强化课程</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 { margin: 0; font-size: 2.2em; }
+        .subtitle { font-size: 1.1em; opacity: 0.9; }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover { background: #e8f5e9; }
+        .tab.active {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f0f9f4;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .content.active { display: block; }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 { margin-top: 0; color: #11998e; }
+        .code-block {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3e3e3e;
+        }
+        .code-lang { color: #888; font-size: 0.85em; }
+        .code-copy {
+            background: #4a4a4a;
+            color: #ccc;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            padding-left: 50px;
+            font-family: 'Consolas', monospace;
+            overflow-x: auto;
+            margin: 0;
+            line-height: 1.6;
+            white-space: pre;
+        }
+        .code .line-num {
+            position: absolute;
+            left: 0;
+            width: 35px;
+            padding: 15px 10px;
+            text-align: right;
+            color: #5a5a5a;
+            background: #252525;
+            user-select: none;
+            line-height: 1.6;
+        }
+        .code .keyword { color: #569cd6; }
+        .code .include { color: #c586c0; }
+        .code .string { color: #ce9178; }
+        .example {
+            background: #e8f5e9;
+            padding: 15px;
+            border-left: 5px solid #11998e;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #fff8e1;
+            border-left: 5px solid #ffa000;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer { text-align: center; margin-top: 30px; color: #666; font-size: 0.9em; }
+        .ppt-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>❤️ CSP赛制全景 - CSP强化课程</h1>
+            <p class="subtitle">—— 课程：C++ | 教师：程老师 | 爱心 · 创新 · 匠心</p>
+            <a href="../materials/赛制全景.pptx" class="ppt-link" download>📥 下载PPT课件</a>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'intro')">🎯 CSP入门</button>
+            <button class="tab" onclick="openTab(event, 'memory')">💾 位与字节</button>
+            <button class="tab" onclick="openTab(event, 'file')">📁 文件操作</button>
+        </div>
+
+        <!-- CSP入门 -->
+        <div id="intro" class="content active">
+            <h2>🎯 CSP入门</h2>
+            <div class="concept-item">
+                <h3>CSP比赛简介</h3>
+                <p>CSP（计算机软件能力认证）是中国计算机学会主办的软件能力认证考试，分为CSP-J（入门级）和CSP-S（提高级）。</p>
+            </div>
+            <div class="concept-item">
+                <h3>比赛赛制</h3>
+                <ul>
+                    <li>⚙️ <strong>评测方式</strong>：机考，自动评测</li>
+                    <li>📝 <strong>题目类型</strong>：选择题 + 编程题</li>
+                    <li>⏰ <strong>时间限制</strong>：各地区不同</li>
+                </ul>
+            </div>
+            <div class="tip">
+                💡 提醒：CSP复赛需要文件读写！不会文件操作 = 输出为空 = 0分！
+            </div>
+        </div>
+
+        <!-- 位与字节 -->
+        <div id="memory" class="content">
+            <h2>💾 位与字节</h2>
+            <div class="concept-item">
+                <h3>存储单位</h3>
+                <ul>
+                    <li><strong>位（bit）</strong>：最小单位，0 或 1</li>
+                    <li><strong>字节（Byte）</strong>：基本单位，1 Byte = 8 bits</li>
+                    <li>1KB = 1024B，1MB = 1024KB，1GB = 1024MB</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>int类型存储范围</h3>
+                <p>32位int类型的存储范围是：</p>
+                <div class="example">
+                    <strong>-2147483648 ~ +2147483647</strong>
+                </div>
+                <p>无符号整数（unsigned int）：0 ~ 4294967295</p>
+            </div>
+            <div class="tip">
+                📝 <strong>真题回顾</strong>：<br>
+                1. 在计算机中，数据存储容量最小的单位是？<br>
+                2. 32位int类型能表示的最大值接近？
+            </div>
+        </div>
+
+        <!-- 文件操作 -->
+        <div id="file" class="content">
+            <h2>📁 文件操作</h2>
+            <div class="concept-item">
+                <h3>为什么需要文件操作？</h3>
+                <p>没有文件操作 = 程序读不到数据 = 输出为空 = <strong>0分</strong></p>
+            </div>
+            <div class="concept-item">
+                <h3>文件读写方法</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num">1</span><span class="include">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="line-num">2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num">3</span>
+<span class="line-num">4</span><span class="keyword">int</span> <span class="function">main</span>() {
+<span class="line-num">5</span>    <span class="comment">// 【关键步骤】文件重定向</span>
+<span class="line-num">6</span>    freopen(<span class="string">"input.txt"</span>, <span class="string">"r"</span>, stdin);   <span class="comment">// 读入</span>
+<span class="line-num">7</span>    freopen(<span class="string">"output.txt"</span>, <span class="string">"w"</span>, stdout); <span class="comment">// 输出</span>
+<span class="line-num">8</span>
+<span class="line-num">9</span>    <span class="comment">// 正常写代码...</span>
+<span class="line-num">10</span>
+<span class="line-num">11</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">12</span>}</div>
+                </div>
+            </div>
+            <div class="tip">
+                ⚠️ <strong>注意：</strong>文件操作在本地测试时不会显示输入输出，需要在评测系统中运行！
+            </div>
+        </div>
+
+        <footer>
+            <p>❤️ 爱心 · 创新 · 匠心 | 程老师 C++ 课程</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+        function copyCode(btn) {
+            var codeBlock = btn.closest('.code-block');
+            var code = codeBlock.querySelector('.code').innerText;
+            code = code.replace(/^\d+\s*/gm, '');
+            navigator.clipboard.writeText(code).then(function() {
+                btn.textContent = '✓ 已复制';
+                setTimeout(function() { btn.textContent = '📋 复制'; }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
