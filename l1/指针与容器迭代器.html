@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>指针与容器迭代器 - C++进阶</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #7c4dff, #b388ff);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #f3e5f5;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #7c4dff, #b388ff);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f9f4ff;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #7c4dff;
+        }
+        .code-block {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3d3d3d;
+        }
+        .code-lang {
+            color: #4ec9b0;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .code-copy {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background 0.3s;
+        }
+        .code-copy:hover {
+            background: #1177bb;
+        }
+        .code {
+            padding: 15px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #d4d4d4;
+            white-space: pre;
+        }
+        .line-num {
+            display: inline-block;
+            width: 35px;
+            color: #858585;
+            text-align: right;
+            padding-right: 15px;
+            user-select: none;
+        }
+        .keyword { color: #569cd6; }
+        .type { color: #4ec9b0; }
+        .function { color: #dcdcaa; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+        .comment { color: #6a9955; }
+        .include { color: #c586c0; }
+        .example {
+            background: #f5f5f5;
+            padding: 15px;
+            border-left: 4px solid #7c4dff;
+            border-radius: 0 5px 5px 0;
+            margin: 10px 0;
+        }
+        .tip {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #2196f3;
+            border-radius: 0 5px 5px 0;
+            margin: 15px 0;
+        }
+        .practice-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin: 10px 5px 10px 0;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .practice-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(238, 90, 36, 0.4);
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #7c4dff;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>指针与容器迭代器</h1>
+            <p class="subtitle">❤️ 爱心 · 创新 · 匠心 | C++ 进阶课程</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'pointer')">📌 指针基础</button>
+            <button class="tab" onclick="openTab(event, 'iterator')">🔄 迭代器</button>
+            <button class="tab" onclick="openTab(event, 'project1')">📊 项目一</button>
+            <button class="tab" onclick="openTab(event, 'project2')">📊 项目二</button>
+            <button class="tab" onclick="openTab(event, 'project3')">📊 项目三</button>
+            <button class="tab" onclick="openTab(event, 'practice')">📝 配套练习</button>
+        </div>
+
+        <!-- 指针基础 -->
+        <div id="pointer" class="content active">
+            <h2>📌 指针基础</h2>
+            <div class="concept-item">
+                <h3>什么是指针？</h3>
+                <p>指针是一种特殊的数据类型，它存储的是另一个变量的<strong>内存地址</strong>。通过指针，我们可以间接访问和修改目标变量的值。</p>
+                <div class="example">
+                    <strong>内存地址概念：</strong><br>
+                    每个变量在内存中都有一个唯一的地址，就像每个房子都有一个门牌号一样。指针就是记录这个"门牌号"的变量。
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>指针的定义和使用</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 5</span>    <span class="type">int</span> a = <span class="number">20</span>;      <span class="comment">// 定义整型变量 a</span>
+<span class="line-num"> 6</span>    <span class="type">int</span> *p;          <span class="comment">// 定义整型指针 p</span>
+<span class="line-num"> 7</span>    p = &a;           <span class="comment">// & 是取地址运算符，将 a 的地址赋给 p</span>
+<span class="line-num"> 8</span>
+<span class="line-num"> 9</span>    cout << <span class="string">"a = "</span> << a << endl;       <span class="comment">// 输出：20</span>
+<span class="line-num">10</span>    cout << <span class="string">"&a = "</span> << &a << endl;     <span class="comment">// 输出：a 的内存地址</span>
+<span class="line-num">11</span>    cout << <span class="string">"p = "</span> << p << endl;         <span class="comment">// 输出：p 存储的地址（与 &a 相同）</span>
+<span class="line-num">12</span>    cout << <span class="string">"*p = "</span> << *p << endl;       <span class="comment">// * 是解引用，输出：20</span>
+<span class="line-num">13</span>
+<span class="line-num">14</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">15</span>}</div>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>数组与指针的关系</h3>
+                <p>数组名本身就是一个指针，指向数组的第一个元素。通过数组名可以直接访问数组元素。</p>
+                <div class="example">
+                    <strong>重要特性：</strong><br>
+                    <code style="background:#fff8e1;padding:2px 6px;border-radius:3px;">sizeof(数组名)</code> 可以统计数组在内存中的总长度和占用空间。
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>数组的两种访问方式</h3>
+                <p><strong>方式一：下标法</strong> - 使用数组下标直接访问元素</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++ - 下标法</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 5</span>    <span class="type">int</span> a[<span class="number">10</span>];
+<span class="line-num"> 6</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i <= <span class="number">9</span>; i++) {
+<span class="line-num"> 7</span>        a[i] = i;           <span class="comment">// 使用下标赋值</span>
+<span class="line-num"> 8</span>    }
+<span class="line-num"> 9</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i <= <span class="number">9</span>; i++) {
+<span class="line-num">10</span>        cout << a[i] << <span class="string">" "</span>;  <span class="comment">// 使用下标访问</span>
+<span class="line-num">11</span>    }
+<span class="line-num">12</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">13</span>}</div>
+                </div>
+
+                <p><strong>方式二：指针法</strong> - 使用指针运算访问元素</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++ - 指针法</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 5</span>    <span class="type">int</span> a[<span class="number">10</span>];
+<span class="line-num"> 6</span>    <span class="type">int</span> *p = a;           <span class="comment">// 指针 p 指向数组首元素</span>
+<span class="line-num"> 7</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i <= <span class="number">9</span>; i++) {
+<span class="line-num"> 8</span>        a[i] = i;
+<span class="line-num"> 9</span>    }
+<span class="line-num">10</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i <= <span class="number">9</span>; i++) {
+<span class="line-num">11</span>        cout << *(a + i) << <span class="string">" "</span>;  <span class="comment">// 指针运算访问</span>
+<span class="line-num">12</span>    }
+<span class="line-num">13</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">14</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 迭代器 -->
+        <div id="iterator" class="content">
+            <h2>🔄 容器迭代器</h2>
+            <div class="concept-item">
+                <h3>什么是迭代器？</h3>
+                <p><strong>迭代器(Iterator)</strong>是访问容器的统一接口，它的作用是提供一个遍历容器内部所有元素的接口。设计人员无需关心容器内存分配的实现细节。</p>
+                <div class="example">
+                    <strong>迭代器的特点：</strong>
+                    <ul>
+                        <li>迭代器类似于指针的对象</li>
+                        <li>能够用来遍历C++标准模板库容器中的元素</li>
+                        <li>每个迭代器对象代表容器中的确定地址</li>
+                        <li>将指针封装，自动管理内存</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>vector 常用语法回顾</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;vector&gt;</span>
+<span class="line-num"> 2</span>
+<span class="line-num"> 3</span><span class="comment">// 创建 vector</span>
+<span class="line-num"> 4</span><span class="type">vector</span><<span class="type">int</span>> v;              <span class="comment">// 空 vector</span>
+<span class="line-num"> 5</span><span class="type">vector</span><<span class="type">int</span>> v(n);         <span class="comment">// n 个元素的 vector</span>
+<span class="line-num"> 6</span><span class="type">vector</span><<span class="type">int</span>> v(n, 0);      <span class="comment">// n 个初始值为 0 的元素</span>
+<span class="line-num"> 7</span>
+<span class="line-num"> 8</span><span class="comment">// 常用操作</span>
+<span class="line-num"> 9</span>v.push_back(x);        <span class="comment">// 尾部添加元素</span>
+<span class="line-num">10</span>v.pop_back();          <span class="comment">// 删除尾部元素</span>
+<span class="line-num">11</span>v.insert(it, x);       <span class="comment">// 在迭代器位置插入元素</span>
+<span class="line-num">12</span>v.erase(it);          <span class="comment">// 删除迭代器位置的元素</span>
+<span class="line-num">13</span>v.size();              <span class="comment">// 获取元素个数</span>
+<span class="line-num">14</span>v.empty();             <span class="comment">// 判断是否为空</span>
+<span class="line-num">15</span>v.clear();             <span class="comment">// 清空所有元素</span></div>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>迭代器的类型</h3>
+                <p>C++ STL 提供两种迭代器：</p>
+                <table style="width:100%; border-collapse:collapse; margin:15px 0;">
+                    <tr style="background:#f5f5f5;">
+                        <th style="padding:10px; border:1px solid #ddd;">类型</th>
+                        <th style="padding:10px; border:1px solid #ddd;">说明</th>
+                        <th style="padding:10px; border:1px solid #ddd;">函数</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px; border:1px solid #ddd;"><strong>正向迭代器</strong></td>
+                        <td style="padding:10px; border:1px solid #ddd;">从前往后遍历</td>
+                        <td style="padding:10px; border:1px solid #ddd;">begin(), end()</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px; border:1px solid #ddd;"><strong>反向迭代器</strong></td>
+                        <td style="padding:10px; border:1px solid #ddd;">从后往前遍历</td>
+                        <td style="padding:10px; border:1px solid #ddd;">rbegin(), rend()</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="concept-item">
+                <h3>创建和使用迭代器</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>
+<span class="line-num"> 2</span><span class="include">#include</span> <span class="string">&lt;vector&gt;</span>
+<span class="line-num"> 3</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 4</span>
+<span class="line-num"> 5</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 6</span>    <span class="type">vector</span><<span class="type">int</span>> v;
+<span class="line-num"> 7</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i <= <span class="number">9</span>; i++) {
+<span class="line-num"> 8</span>        v.push_back(i);
+<span class="line-num"> 9</span>    }
+<span class="line-num">10</span>
+<span class="line-num">11</span>    <span class="comment">// 创建正向迭代器</span>
+<span class="line-num">12</span>    <span class="type">vector</span><<span class="type">int</span>>::iterator myit = v.begin();
+<span class="line-num">13</span>
+<span class="line-num">14</span>    <span class="comment">// 使用指针运算访问元素</span>
+<span class="line-num">15</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i <= <span class="number">9</span>; i++) {
+<span class="line-num">16</span>        cout << *(myit + i) << <span class="string">" "</span>;
+<span class="line-num">17</span>    }
+<span class="line-num">18</span>
+<span class="line-num">19</span>    <span class="comment">// 另一种遍历方式</span>
+<span class="line-num">20</span>    <span class="keyword">for</span>(<span class="type">auto</span> it = v.begin(); it != v.end(); it++) {
+<span class="line-num">21</span>        cout << *it << <span class="string">" "</span>;
+<span class="line-num">22</span>    }
+<span class="line-num">23</span>
+<span class="line-num">24</span>    <span class="comment">// 使用反向迭代器</span>
+<span class="line-num">25</span>    <span class="keyword">for</span>(<span class="type">auto</span> it = v.rbegin(); it != v.rend(); it++) {
+<span class="line-num">26</span>        cout << *it << <span class="string">" "</span>;  <span class="comment">// 输出：9 8 7 6 5 4 3 2 1 0</span>
+<span class="line-num">27</span>    }
+<span class="line-num">28</span>
+<span class="line-num">29</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">30</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目一 -->
+        <div id="project1" class="content">
+            <h2>📊 项目一：求和（排除最大值）</h2>
+            <div class="concept-item">
+                <h3>题目描述</h3>
+                <p>输出一个整数数列中不与最大数相同的数字之和</p>
+                <div class="example">
+                    <strong>输入：</strong><br>
+                    输入两行：第一行为 N 为接下来数的个数（ N < 100）<br>
+                    第二行为 N 个整数，数与数之间以一个空格分开，每个整数的范围是 -1,000,000 到 1,000,000<br><br>
+                    <strong>输出：</strong><br>
+                    输出为 N 个数中除去最大数其余数字之和<br><br>
+                    <strong>输入样例：</strong><br>
+                    3<br>
+                    1 2 3<br><br>
+                    <strong>输出样例：</strong><br>
+                    3
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>思路分析</h3>
+                <ul>
+                    <li>遍历数组，找出最大值</li>
+                    <li>再次遍历，将所有不等于最大值的数累加</li>
+                    <li>注意：可能有多个最大值，只排除所有等于最大值的数</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 5</span>    <span class="type">int</span> n;
+<span class="line-num"> 6</span>    cin >> n;
+<span class="line-num"> 7</span>
+<span class="line-num"> 8</span>    <span class="type">vector</span><<span class="type">int</span>> v(n);
+<span class="line-num"> 9</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">10</span>        cin >> v[i];
+<span class="line-num">11</span>    }
+<span class="line-num">12</span>
+<span class="line-num">13</span>    <span class="comment">// 找出最大值</span>
+<span class="line-num">14</span>    <span class="type">int</span> maxVal = v[<span class="number">0</span>];
+<span class="line-num">15</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i < n; i++) {
+<span class="line-num">16</span>        maxVal = max(maxVal, v[i]);
+<span class="line-num">17</span>    }
+<span class="line-num">18</span>
+<span class="line-num">19</span>    <span class="comment">// 累加所有不等于最大值的数</span>
+<span class="line-num">20</span>    <span class="type">long long</span> sum = <span class="number">0</span>;
+<span class="line-num">21</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">22</span>        <span class="keyword">if</span>(v[i] != maxVal) {
+<span class="line-num">23</span>            sum += v[i];
+<span class="line-num">24</span>        }
+<span class="line-num">25</span>    }
+<span class="line-num">26</span>
+<span class="line-num">27</span>    cout << sum << endl;
+<span class="line-num">28</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">29</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目二 -->
+        <div id="project2" class="content">
+            <h2>📊 项目二：序列倒置</h2>
+            <div class="concept-item">
+                <h3>题目描述</h3>
+                <p>给定一个正整数序列，请将这个序列倒置后输出</p>
+                <div class="example">
+                    <strong>输入：</strong><br>
+                    输入包括一行，即给定的正整数序列，正整数之间用空格隔开，总个数不超过 10^4，每个数的范围在 [1, 10^4]<br><br>
+                    <strong>输出：</strong><br>
+                    包括一行，即倒置后的序列<br><br>
+                    <strong>输入样例：</strong><br>
+                    3 7 2 1<br><br>
+                    <strong>输出样例：</strong><br>
+                    1 2 7 3
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>思路分析</h3>
+                <ul>
+                    <li>使用 <code style="background:#fff8e1;padding:2px 6px;border-radius:3px;">reverse()</code> 函数直接翻转</li>
+                    <li>或者使用双指针：从两端向中间交换元素</li>
+                    <li>或者使用反向迭代器遍历</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++ - 使用 reverse</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 5</span>    <span class="type">vector</span><<span class="type">int</span>> v;
+<span class="line-num"> 6</span>    <span class="type">int</span> x;
+<span class="line-num"> 7</span>
+<span class="line-num"> 8</span>    <span class="comment">// 读取输入直到文件结束</span>
+<span class="line-num"> 9</span>    <span class="keyword">while</span>(cin >> x) {
+<span class="line-num">10</span>        v.push_back(x);
+<span class="line-num">11</span>    }
+<span class="line-num">12</span>
+<span class="line-num">13</span>    <span class="comment">// 翻转序列</span>
+<span class="line-num">14</span>    reverse(v.begin(), v.end());
+<span class="line-num">15</span>
+<span class="line-num">16</span>    <span class="comment">// 输出</span>
+<span class="line-num">17</span>    <span class="keyword">for</span>(<span class="type">size_t</span> i = <span class="number">0</span>; i < v.size(); i++) {
+<span class="line-num">18</span>        cout << v[i];
+<span class="line-num">19</span>        <span class="keyword">if</span>(i < v.size() - <span class="number">1</span>) cout << <span class="string">" "</span>;
+<span class="line-num">20</span>    }
+<span class="line-num">21</span>
+<span class="line-num">22</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">23</span>}</div>
+                </div>
+                <div class="tip">
+                    💡 <strong>另一种方法：使用反向迭代器</strong><br>
+                    <code style="background:#fff8e1;padding:2px 6px;border-radius:3px;">for(auto it = v.rbegin(); it != v.rend(); it++)</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目三 -->
+        <div id="project3" class="content">
+            <h2>📊 项目三：高于平均成绩的学生</h2>
+            <div class="concept-item">
+                <h3>题目描述</h3>
+                <p>给定 n 个小朋友的数学成绩，求这 n 个小朋友的平均成绩，以及输出所有高于平均成绩的数学成绩（按输入的顺序输出）</p>
+                <div class="example">
+                    <strong>输入：</strong><br>
+                    第一行一个整数 n，接下来 n 行每行一个小于等于 100 的整数。n <= 1000<br><br>
+                    <strong>输出：</strong><br>
+                    第一行是 n 个成绩的平均值，保留3位小数。接下来若干行输出高于平均分的成绩，每行一个数。<br><br>
+                    <strong>输入样例：</strong><br>
+                    5<br>
+                    10<br>
+                    20<br>
+                    30<br>
+                    40<br>
+                    60<br><br>
+                    <strong>输出样例：</strong><br>
+                    32.000<br>
+                    40<br>
+                    60
+                </div>
+            </div>
+            <div class="concept-item">
+                <h3>思路分析</h3>
+                <ul>
+                    <li>先读取所有成绩到 vector 中</li>
+                    <li>计算总成绩和，求平均值</li>
+                    <li>再次遍历，输出所有大于平均成绩的数</li>
+                    <li>注意：使用 <code style="background:#fff8e1;padding:2px 6px;border-radius:3px;">fixed << setprecision(3)</code> 控制小数位数</li>
+                </ul>
+            </div>
+            <div class="concept-item">
+                <h3>代码实现</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num"> 5</span>    <span class="type">int</span> n;
+<span class="line-num"> 6</span>    cin >> n;
+<span class="line-num"> 7</span>
+<span class="line-num"> 8</span>    <span class="type">vector</span><<span class="type">int</span>> scores(n);
+<span class="line-num"> 9</span>    <span class="type">double</span> sum = <span class="number">0</span>;
+<span class="line-num">10</span>
+<span class="line-num">11</span>    <span class="comment">// 读取成绩并计算总和</span>
+<span class="line-num">12</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">13</span>        cin >> scores[i];
+<span class="line-num">14</span>        sum += scores[i];
+<span class="line-num">15</span>    }
+<span class="line-num">16</span>
+<span class="line-num">17</span>    <span class="comment">// 计算平均值</span>
+<span class="line-num">18</span>    <span class="type">double</span> avg = sum / n;
+<span class="line-num">19</span>
+<span class="line-num">20</span>    <span class="comment">// 输出平均值，保留3位小数</span>
+<span class="line-num">21</span>    cout << fixed << setprecision(<span class="number">3</span>) << avg << endl;
+<span class="line-num">22</span>
+<span class="line-num">23</span>    <span class="comment">// 输出高于平均分的成绩</span>
+<span class="line-num">24</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i < n; i++) {
+<span class="line-num">25</span>        <span class="keyword">if</span>(scores[i] > avg) {
+<span class="line-num">26</span>            cout << scores[i] << endl;
+<span class="line-num">27</span>        }
+<span class="line-num">28</span>    }
+<span class="line-num">29</span>
+<span class="line-num">30</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">31</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 配套练习 -->
+        <div id="practice" class="content">
+            <h2>📝 配套练习</h2>
+            <p>以下是针对本课程内容的配套练习题，点击即可跳转到OJ系统进行练习：</p>
+
+            <div class="concept-item">
+                <h3>Vector 基础练习</h3>
+                <a href="http://8.130.178.205/problem.php?id=1132" class="practice-link" target="_blank">1132 删除元素</a>
+                <a href="http://8.130.178.205/problem.php?id=1133" class="practice-link" target="_blank">1133 插入元素</a>
+                <a href="http://8.130.178.205/problem.php?id=1134" class="practice-link" target="_blank">1134 元素平移</a>
+            </div>
+
+            <div class="concept-item">
+                <h3>数组操作练习</h3>
+                <a href="http://8.130.178.205/problemset.php?search=vector" class="practice-link" target="_blank">查看更多Vector练习</a>
+            </div>
+
+            <div class="tip">
+                💡 <strong>学习建议：</strong>
+                <ul>
+                    <li>先理解指针和数组的关系</li>
+                    <li>掌握迭代器的创建和使用方法</li>
+                    <li>尝试用不同方法完成项目题</li>
+                    <li>多练习 OJ 上的题目巩固知识</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>❤️ 爱心 · 创新 · 匠心 | 程老师 C++ 课程</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+
+        function copyCode(btn) {
+            var codeBlock = btn.closest('.code-block');
+            var code = codeBlock.querySelector('.code').innerText;
+            code = code.replace(/^\d+\s*/gm, '');
+            navigator.clipboard.writeText(code).then(function() {
+                btn.textContent = '✓ 已复制';
+                setTimeout(function() {
+                    btn.textContent = '📋 复制';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>高精度算法 - C++进阶</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #ffe0b2;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #fff8f4;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #e64a19;
+        }
+        .code-block {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3d3d3d;
+        }
+        .code-lang {
+            color: #4ec9b0;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .code-copy {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background 0.3s;
+        }
+        .code-copy:hover {
+            background: #1177bb;
+        }
+        .code {
+            padding: 15px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #d4d4d4;
+            white-space: pre;
+        }
+        .line-num {
+            display: inline-block;
+            width: 35px;
+            color: #858585;
+            text-align: right;
+            padding-right: 15px;
+            user-select: none;
+        }
+        .keyword { color: #569cd6; }
+        .type { color: #4ec9b0; }
+        .function { color: #dcdcaa; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+        .comment { color: #6a9955; }
+        .include { color: #c586c0; }
+        .example {
+            background: #f5f5f5;
+            padding: 15px;
+            border-left: 4px solid #ff6b6b;
+            border-radius: 0 5px 5px 0;
+            margin: 10px 0;
+        }
+        .tip {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #2196f3;
+            border-radius: 0 5px 5px 0;
+            margin: 15px 0;
+        }
+        .practice-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin: 10px 5px 10px 0;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .practice-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(238, 90, 36, 0.4);
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #ff6b6b;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>高精度算法</h1>
+            <p class="subtitle">❤️ 爱心 · 创新 · 匠心 | C++ 进阶课程</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'concept')">💡 概念引入</button>
+            <button class="tab" onclick="openTab(event, 'add')">➕ 高精度加法</button>
+            <button class="tab" onclick="openTab(event, 'sub')">➖ 高精度减法</button>
+            <button class="tab" onclick="openTab(event, 'project')">📊 项目实战</button>
+            <button class="tab" onclick="openTab(event, 'practice')">📝 配套练习</button>
+        </div>
+
+        <!-- 概念引入 -->
+        <div id="concept" class="content active">
+            <h2>💡 概念引入</h2>
+            <div class="concept-item">
+                <h3>什么是高精度运算？</h3>
+                <p><strong>高精度运算</strong>（大整数运算）是指处理超过标准数据类型范围的大整数的运算。在32位系统中，int类型的最大值约为21亿（2^31-1），当需要计算更大的数时，就需要使用高精度算法。</p>
+                <div class="example">
+                    <strong>int 类型的范围：</strong><br>
+                    <ul>
+                        <li>int 类型：4个字节，32位</li>
+                        <li>最大值：2,147,483,647（约21亿）</li>
+                        <li>最小值：-2,147,483,648</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>高精度运算的原理</h3>
+                <p>将大整数用<strong>字符串</strong>输入，然后逐位<strong>拆分</strong>到数组中，按位进行运算，模拟竖式计算的过程。</p>
+                <div class="example">
+                    <strong>例：计算 1234 + 5678</strong><br>
+                    <pre style="background:#f5f5f5;padding:10px;border-radius:5px;">
+       1  2  3  4
+    +  5  6  7  8
+    -------------
+       6  9  1  2
+    (进位 1)</pre>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>高精度运算的基本步骤</h3>
+                <ol>
+                    <li><strong>字符串输入</strong>：用 string 类型读取大整数</li>
+                    <li><strong>逆序存储</strong>：将字符串转换为数组（低位在前，方便进位处理）</li>
+                    <li><strong>按位运算</strong>：逐位进行加/减运算，处理进位/借位</li>
+                    <li><strong>结果输出</strong>：将数组转换为字符串输出（注意处理最高位的进位）</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 高精度加法 -->
+        <div id="add" class="content">
+            <h2>➕ 高精度加法</h2>
+            <div class="concept-item">
+                <h3>算法思路</h3>
+                <ol>
+                    <li>将两个加数逆序存入数组（个位在前）</li>
+                    <li>从低位到高位逐位相加</li>
+                    <li>当前位置结果 = a[i] + b[i] + 进位</li>
+                    <li>进位 = 结果 / 10，结果 = 结果 % 10</li>
+                    <li>处理完所有位后，若最高位有进位则单独处理</li>
+                </ol>
+            </div>
+
+            <div class="concept-item">
+                <h3>核心代码</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++ - 高精度加法核心</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="comment">// 字符串转数组（逆序存储）</span>
+<span class="line-num"> 2</span><span class="type">void</span> <span class="function">getArray</span>(<span class="type">string</span> s, <span class="type">int</span> a[]) {
+<span class="line-num"> 3</span>    <span class="type">int</span> len = s.size();
+<span class="line-num"> 4</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i < len; i++) {
+<span class="line-num"> 5</span>        a[i] = s[len - i - <span class="number">1</span>] - <span class="string">'0'</span>;  <span class="comment">// 逆序存储</span>
+<span class="line-num"> 6</span>    }
+<span class="line-num"> 7</span>}
+<span class="line-num"> 8</span>
+<span class="line-num"> 9</span><span class="comment">// 高精度加法</span>
+<span class="line-num">10</span><span class="type">void</span> <span class="function">bigAdd</span>(<span class="type">string</span> str_a, <span class="type">string</span> str_b, <span class="type">int</span> c[]) {
+<span class="line-num">11</span>    <span class="type">int</span> len_a = str_a.size(), len_b = str_b.size();
+<span class="line-num">12</span>    <span class="type">int</span> a[<span class="number">1000</span>], b[<span class="number">1000</span>];
+<span class="line-num">13</span>
+<span class="line-num">14</span>    <span class="function">getArray</span>(str_a, a);
+<span class="line-num">15</span>    <span class="function">getArray</span>(str_b, b);
+<span class="line-num">16</span>
+<span class="line-num">17</span>    <span class="type">int</span> len = max(len_a, len_b);
+<span class="line-num">18</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i < len; i++) {
+<span class="line-num">19</span>        c[i] += a[i] + b[i];        <span class="comment">// 相加</span>
+<span class="line-num">20</span>        c[i + <span class="number">1</span>] = c[i] / <span class="number">10</span>;    <span class="comment">// 进位</span>
+<span class="line-num">21</span>        c[i] = c[i] % <span class="number">10</span>;          <span class="comment">// 取余</span>
+<span class="line-num">22</span>    }
+<span class="line-num">23</span>
+<span class="line-num">24</span>    <span class="comment">// 处理最高位进位</span>
+<span class="line-num">25</span>    <span class="keyword">if</span>(c[len] != <span class="number">0</span>) len++;
+<span class="line-num">26</span>}</div>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>完整示例</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++ - 高精度加法完整代码</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">void</span> <span class="function">getArray</span>(<span class="type">string</span> s, <span class="type">int</span> a[]) {
+<span class="line-num"> 5</span>    <span class="type">int</span> len = s.size();
+<span class="line-num"> 6</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i < len; i++) {
+<span class="line-num"> 7</span>        a[i] = s[len - i - <span class="number">1</span>] - <span class="string">'0'</span>;
+<span class="line-num"> 8</span>    }
+<span class="line-num"> 9</span>}
+<span class="line-num">10</span>
+<span class="line-num">11</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num">12</span>    <span class="type">string</span> str_a, str_b;
+<span class="line-num">13</span>    cin >> str_a >> str_b;
+<span class="line-num">14</span>
+<span class="line-num">15</span>    <span class="type">int</span> a[<span class="number">1000</span>] = {<span class="number">0</span>}, b[<span class="number">1000</span>] = {<span class="number">0</span>}, c[<span class="number">1001</span>] = {<span class="number">0</span>};
+<span class="line-num">16</span>    <span class="type">int</span> len_a = str_a.size(), len_b = str_b.size();
+<span class="line-num">17</span>
+<span class="line-num">18</span>    <span class="function">getArray</span>(str_a, a);
+<span class="line-num">19</span>    <span class="function">getArray</span>(str_b, b);
+<span class="line-num">20</span>
+<span class="line-num">21</span>    <span class="type">int</span> len = max(len_a, len_b);
+<span class="line-num">22</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i < len; i++) {
+<span class="line-num">23</span>        c[i] += a[i] + b[i];
+<span class="line-num">24</span>        c[i + <span class="number">1</span>] = c[i] / <span class="number">10</span>;
+<span class="line-num">25</span>        c[i] = c[i] % <span class="number">10</span>;
+<span class="line-num">26</span>    }
+<span class="line-num">27</span>
+<span class="line-num">28</span>    <span class="keyword">if</span>(c[len] != <span class="number">0</span>) len++;
+<span class="line-num">29</span>
+<span class="line-num">30</span>    <span class="comment">// 逆序输出</span>
+<span class="line-num">31</span>    <span class="keyword">for</span>(<span class="type">int</span> i = len - <span class="number">1</span>; i >= <span class="number">0</span>; i--) {
+<span class="line-num">32</span>        cout << c[i];
+<span class="line-num">33</span>    }
+<span class="line-num">34</span>    cout << endl;
+<span class="line-num">35</span>
+<span class="line-num">36</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">37</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 高精度减法 -->
+        <div id="sub" class="content">
+            <h2>➖ 高精度减法</h2>
+            <div class="concept-item">
+                <h3>算法思路</h3>
+                <ol>
+                    <li>确保被减数大于减数（否则需要处理负号）</li>
+                    <li>将两个数逆序存入数组</li>
+                    <li>从低位到高位逐位相减</li>
+                    <li>如果当前位不够减，向高位借位</li>
+                    <li>注意处理前导零</li>
+                </ol>
+            </div>
+
+            <div class="concept-item">
+                <h3>核心代码</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++ - 高精度减法核心</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="comment">// 高精度减法</span>
+<span class="line-num"> 2</span><span class="type">void</span> <span class="function">bigSub</span>(<span class="type">string</span> str_a, <span class="type">string</span> str_b, <span class="type">int</span> c[]) {
+<span class="line-num"> 3</span>    <span class="type">int</span> a[<span class="number">1000</span>], b[<span class="number">1000</span>];
+<span class="line-num"> 4</span>    <span class="type">int</span> len_a = str_a.size(), len_b = str_b.size();
+<span class="line-num"> 5</span>
+<span class="line-num"> 6</span>    <span class="function">getArray</span>(str_a, a);
+<span class="line-num"> 7</span>    <span class="function">getArray</span>(str_b, b);
+<span class="line-num"> 8</span>
+<span class="line-num"> 9</span>    <span class="type">int</span> len = max(len_a, len_b);
+<span class="line-num">10</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i < len; i++) {
+<span class="line-num">11</span>        <span class="keyword">if</span>(a[i] < b[i]) {           <span class="comment">// 需要借位</span>
+<span class="line-num">12</span>            a[i + <span class="number">1</span>]--;            <span class="comment">// 向高位借位</span>
+<span class="line-num">13</span>            a[i] += <span class="number">10</span>;            <span class="comment">// 当前位加10</span>
+<span class="line-num">14</span>        }
+<span class="line-num">15</span>        c[i] = a[i] - b[i];        <span class="comment">// 相减</span>
+<span class="line-num">16</span>    }
+<span class="line-num">17</span>
+<span class="line-num">18</span>    <span class="comment">// 去除前导零</span>
+<span class="line-num">19</span>    <span class="keyword">while</span>(len > <span class="number">1</span> && c[len - <span class="number">1</span>] == <span class="number">0</span>) {
+<span class="line-num">20</span>        len--;
+<span class="line-num">21</span>    }
+<span class="line-num">22</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目实战 -->
+        <div id="project" class="content">
+            <h2>📊 项目实战</h2>
+            <div class="concept-item">
+                <h3>题目：高精度减法</h3>
+                <div class="example">
+                    <strong>题目描述：</strong><br>
+                    高精度减法，求 a - b。a, b 都是不超过240位的非负整数。<br><br>
+                    <strong>输入：</strong><br>
+                    两个非负整数，每行一个。<br><br>
+                    <strong>输出：</strong><br>
+                    一个整数，代表两个整数相减之后的结果。<br><br>
+                    <strong>输入样例：</strong><br>
+                    33333333333333333333333333333333333333333<br>
+                    22222222222222222222222222222222222222222<br><br>
+                    <strong>输出样例：</strong><br>
+                    11111111111111111111111111111111111111111
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>参考代码</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="include">#include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>
+<span class="line-num"> 2</span><span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">int</span> a[<span class="number">1000</span>], b[<span class="number">1000</span>], c[<span class="number">1000</span>];
+<span class="line-num"> 5</span>
+<span class="line-num"> 6</span><span class="type">void</span> <span class="function">getArray</span>(<span class="type">string</span> s, <span class="type">int</span> arr[]) {
+<span class="line-num"> 7</span>    <span class="type">int</span> len = s.size();
+<span class="line-num"> 8</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i < len; i++) {
+<span class="line-num"> 9</span>        arr[i] = s[len - i - <span class="number">1</span>] - <span class="string">'0'</span>;
+<span class="line-num">10</span>    }
+<span class="line-num">11</span>}
+<span class="line-num">12</span>
+<span class="line-num">13</span><span class="type">int</span> <span class="function">main</span>() {
+<span class="line-num">14</span>    <span class="type">string</span> str_a, str_b;
+<span class="line-num">15</span>    cin >> str_a >> str_b;
+<span class="line-num">16</span>
+<span class="line-num">17</span>    <span class="comment">// 确保 a >= b</span>
+<span class="line-num">18</span>    <span class="keyword">if</span>(str_a.size() < str_b.size() ||
+<span class="line-num">19</span>       (str_a.size() == str_b.size() && str_a < str_b)) {
+<span class="line-num">20</span>        swap(str_a, str_b);
+<span class="line-num">21</span>    }
+<span class="line-num">22</span>
+<span class="line-num">23</span>    <span class="function">getArray</span>(str_a, a);
+<span class="line-num">24</span>    <span class="function">getArray</span>(str_b, b);
+<span class="line-num">25</span>
+<span class="line-num">26</span>    <span class="type">int</span> len = str_a.size();
+<span class="line-num">27</span>    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i < len; i++) {
+<span class="line-num">28</span>        <span class="keyword">if</span>(a[i] < b[i]) {
+<span class="line-num">29</span>            a[i + <span class="number">1</span>]--;
+<span class="line-num">30</span>            a[i] += <span class="number">10</span>;
+<span class="line-num">31</span>        }
+<span class="line-num">32</span>        c[i] = a[i] - b[i];
+<span class="line-num">33</span>    }
+<span class="line-num">34</span>
+<span class="line-num">35</span>    <span class="comment">// 去除前导零</span>
+<span class="line-num">36</span>    <span class="keyword">while</span>(len > <span class="number">1</span> && c[len - <span class="number">1</span>] == <span class="number">0</span>) {
+<span class="line-num">37</span>        len--;
+<span class="line-num">38</span>    }
+<span class="line-num">39</span>
+<span class="line-num">40</span>    <span class="keyword">for</span>(<span class="type">int</span> i = len - <span class="number">1</span>; i >= <span class="number">0</span>; i--) {
+<span class="line-num">41</span>        cout << c[i];
+<span class="line-num">42</span>    }
+<span class="line-num">43</span>    cout << endl;
+<span class="line-num">44</span>
+<span class="line-num">45</span>    <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num">46</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 配套练习 -->
+        <div id="practice" class="content">
+            <h2>📝 配套练习</h2>
+            <p>以下是针对本课程内容的配套练习题，点击即可跳转到OJ系统进行练习：</p>
+
+            <div class="concept-item">
+                <h3>高精度运算基础</h3>
+                <a href="http://8.130.178.205/problem.php?id=1097" class="practice-link" target="_blank">1097 高精度加法</a>
+                <a href="http://8.130.178.205/problem.php?id=1098" class="practice-link" target="_blank">1098 高精度减法</a>
+            </div>
+
+            <div class="concept-item">
+                <h3>高精度运算进阶</h3>
+                <a href="http://8.130.178.205/problem.php?id=1249" class="practice-link" target="_blank">1249 高精度乘法</a>
+                <a href="http://8.130.178.205/problem.php?id=1250" class="practice-link" target="_blank">1250 高精度减法</a>
+                <a href="http://8.130.178.205/problem.php?id=1259" class="practice-link" target="_blank">1259 高精度阶乘</a>
+            </div>
+
+            <div class="tip">
+                💡 <strong>学习建议：</strong>
+                <ul>
+                    <li>先理解高精度运算的原理：逐位计算 + 进位/借位处理</li>
+                    <li>掌握字符串转数组的逆序存储技巧</li>
+                    <li>注意处理前导零和最高位进位</li>
+                    <li>多练习OJ上的题目巩固知识</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>❤️ 爱心 · 创新 · 匠心 | 程老师 C++ 课程</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+
+        function copyCode(btn) {
+            var codeBlock = btn.closest('.code-block');
+            var code = codeBlock.querySelector('.code').innerText;
+            code = code.replace(/^\d+\s*/gm, '');
+            navigator.clipboard.writeText(code).then(function() {
+                btn.textContent = '✓ 已复制';
+                setTimeout(function() {
+                    btn.textContent = '📋 复制';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

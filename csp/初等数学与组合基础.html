@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>初等数学与组合基础 - CSP强化</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            font-size: 1.0em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background: #d4edda;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background: #f0fff4;
+            border-radius: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content.active {
+            display: block;
+        }
+        .concept-item {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .concept-item h3 {
+            margin-top: 0;
+            color: #11998e;
+        }
+        .code-block {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3d3d3d;
+        }
+        .code-lang {
+            color: #4ec9b0;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .code-copy {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background 0.3s;
+        }
+        .code-copy:hover {
+            background: #1177bb;
+        }
+        .code {
+            padding: 15px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #d4d4d4;
+            white-space: pre;
+        }
+        .line-num {
+            display: inline-block;
+            width: 35px;
+            color: #858585;
+            text-align: right;
+            padding-right: 15px;
+            user-select: none;
+        }
+        .keyword { color: #569cd6; }
+        .type { color: #4ec9b0; }
+        .function { color: #dcdcaa; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+        .comment { color: #6a9955; }
+        .include { color: #c586c0; }
+        .example {
+            background: #f5f5f5;
+            padding: 15px;
+            border-left: 4px solid #11998e;
+            border-radius: 0 5px 5px 0;
+            margin: 10px 0;
+        }
+        .tip {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #2196f3;
+            border-radius: 0 5px 5px 0;
+            margin: 15px 0;
+        }
+        .practice-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin: 10px 5px 10px 0;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .practice-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(56, 239, 125, 0.4);
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #11998e;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>初等数学与组合基础</h1>
+            <p class="subtitle">❤️ 爱心 · 创新 · 匠心 | CSP 强化课程</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'principle')">📐 加法与乘法原理</button>
+            <button class="tab" onclick="openTab(event, 'combinatorics')">🔢 排列与组合</button>
+            <button class="tab" onclick="openTab(event, 'prime')">🔍 质数与筛法</button>
+            <button class="tab" onclick="openTab(event, 'gcd')">📊 GCD与LCM</button>
+            <button class="tab" onclick="openTab(event, 'practice')">📝 配套练习</button>
+        </div>
+
+        <!-- 加法与乘法原理 -->
+        <div id="principle" class="content active">
+            <h2>📐 加法原理与乘法原理</h2>
+            <div class="concept-item">
+                <h3>加法原理</h3>
+                <p><strong>定义：</strong>完成一件事有 n 类互斥的方法，每类方法都能独立完成这件事，则总方法数为各类方法数之和。</p>
+                <div class="example">
+                    <strong>示例：</strong><br>
+                    从北京去上海，可以坐飞机（3班）、高铁（5班）、轮船（2班），共有多少种出行方式？<br>
+                    <strong>解答：</strong>3 + 5 + 2 = 10 种
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>乘法原理</h3>
+                <p><strong>定义：</strong>完成一件事需要 n 个步骤，缺一不可，则总方法数为各步骤方法数之积。</p>
+                <div class="example">
+                    <strong>示例：</strong><br>
+                    从北京去上海需先在南京转机。北京->南京有3种方式，南京->上海有4种方式，共有多少种出行方式？<br>
+                    <strong>解答：</strong>3 × 4 = 12 种
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>经典辨析</h3>
+                <table style="width:100%; border-collapse:collapse; margin:15px 0;">
+                    <tr style="background:#f5f5f5;">
+                        <th style="padding:10px; border:1px solid #ddd;">类型</th>
+                        <th style="padding:10px; border:1px solid #ddd;">说明</th>
+                        <th style="padding:10px; border:1px solid #ddd;">例子</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px; border:1px solid #ddd;"><strong>排列（有序）</strong></td>
+                        <td style="padding:10px; border:1px solid #ddd;">顺序重要</td>
+                        <td style="padding:10px; border:1px solid #ddd;">5人选3人分别担任班长、副班长、学习委员</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px; border:1px solid #ddd;"><strong>组合（无序）</strong></td>
+                        <td style="padding:10px; border:1px solid #ddd;">顺序不重要</td>
+                        <td style="padding:10px; border:1px solid #ddd;">5人选3人去参加劳动</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 排列与组合 -->
+        <div id="combinatorics" class="content">
+            <h2>🔢 排列与组合</h2>
+            <div class="concept-item">
+                <h3>排列 P(n, m)</h3>
+                <p>从 n 个不同元素中取出 m 个元素，排成有序序列的方案数。</p>
+                <div class="example">
+                    <strong>公式：</strong> P(n, m) = n × (n-1) × ... × (n-m+1) = n! / (n-m)!
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>组合 C(n, m)</h3>
+                <p>从 n 个不同元素中取出 m 个元素，组成无序集合的方案数。</p>
+                <div class="example">
+                    <strong>公式：</strong> C(n, m) = n! / (m! × (n-m)!)<br><br>
+                    <strong>性质：</strong>
+                    <ul>
+                        <li>C(n, m) = C(n, n-m)</li>
+                        <li>C(n, 0) = C(n, n) = 1</li>
+                        <li>杨辉三角递推：C(n, m) = C(n-1, m-1) + C(n-1, m)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>计数问题分析</h3>
+                <div class="example">
+                    <strong>问题：</strong>5个人选3个人去参加劳动，有多少种选法？<br>
+                    <strong>解答：</strong>C(5,3) = 10 种<br><br>
+                    <strong>问题：</strong>5个人选3人分别担任班长、副班长、学习委员，有多少种选法？<br>
+                    <strong>解答：</strong>P(5,3) = 5×4×3 = 60 种
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>阅读程序题分析</h3>
+                <div class="example">
+                    <strong>例题：</strong><br>
+                    <pre style="background:#f5f5f5;padding:10px;border-radius:5px;">
+int count = 0;
+for (int i = 1; i <= 5; i++)
+    for (int j = i + 1; j <= 5; j++)
+        count++;
+cout << count;  // 输出什么？</pre>
+                    <strong>分析：</strong>这相当于从5个数中选2个的组合数 C(5,2) = 10<br>
+                    <strong>答案：</strong>10
+                </div>
+            </div>
+        </div>
+
+        <!-- 质数与筛法 -->
+        <div id="prime" class="content">
+            <h2>🔍 质数判断与筛法</h2>
+            <div class="concept-item">
+                <h3>质数的定义</h3>
+                <p>质数（素数）是只能被 1 和自身整除的大于 1 的自然数。</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>质数判断</h3>
+                <p><strong>核心思想：</strong>如果 n 有因子，必然有一个因子 ≤ √n</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++ - 质数判断</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="type">bool</span> <span class="function">isPrime</span>(<span class="type">int</span> n) {
+<span class="line-num"> 2</span>    <span class="keyword">if</span> (n <= <span class="number">1</span>) <span class="keyword">return</span> <span class="keyword">false</span>;  <span class="comment">// 0 和 1 不是质数</span>
+<span class="line-num"> 3</span>    <span class="keyword">if</span> (n == <span class="number">2</span> || n == <span class="number">3</span>) <span class="keyword">return</span> <span class="keyword">true</span>;
+<span class="line-num"> 4</span>    <span class="keyword">if</span> (n % <span class="number">2</span> == <span class="number">0</span> || n % <span class="number">3</span> == <span class="number">0</span>) <span class="keyword">return</span> <span class="keyword">false</span>;
+<span class="line-num"> 5</span>
+<span class="line-num"> 6</span>    <span class="comment">// 从 5 开始，步长为 6 (检查 6k-1 和 6k+1)</span>
+<span class="line-num"> 7</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">5</span>; i * i <= n; i += <span class="number">6</span>) {
+<span class="line-num"> 8</span>        <span class="keyword">if</span> (n % i == <span class="number">0</span> || n % (i + <span class="number">2</span>) == <span class="number">0</span>)
+<span class="line-num"> 9</span>            <span class="keyword">return</span> <span class="keyword">false</span>;
+<span class="line-num">10</span>    }
+<span class="line-num">11</span>    <span class="keyword">return</span> <span class="keyword">true</span>;
+<span class="line-num">12</span>}</div>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>埃氏筛法 (Eratosthenes Sieve)</h3>
+                <p>批量判断质数的高效算法：从2开始，把每个质数的倍数都标记为合数。</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++ - 埃氏筛法</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="keyword">const</span> <span class="type">int</span> MAXN = <span class="number">1000005</span>;
+<span class="line-num"> 2</span><span class="type">bool</span> is_prime[MAXN];  <span class="comment">// true 表示是质数</span>
+<span class="line-num"> 3</span>
+<span class="line-num"> 4</span><span class="type">void</span> <span class="function">sieve</span>(<span class="type">int</span> n) {
+<span class="line-num"> 5</span>    fill(is_prime, is_prime + n + <span class="number">1</span>, <span class="keyword">true</span>);
+<span class="line-num"> 6</span>    is_prime[<span class="number">0</span>] = is_prime[<span class="number">1</span>] = <span class="keyword">false</span>;
+<span class="line-num"> 7</span>
+<span class="line-num"> 8</span>    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i * i <= n; i++) {
+<span class="line-num"> 9</span>        <span class="keyword">if</span> (is_prime[i]) {
+<span class="line-num">10</span>            <span class="keyword">for</span> (<span class="type">int</span> j = i * i; j <= n; j += i)
+<span class="line-num">11</span>                is_prime[j] = <span class="keyword">false</span>;  <span class="comment">// 从 i*i 开始筛</span>
+<span class="line-num">12</span>        }
+<span class="line-num">13</span>    }
+<span class="line-num">14</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GCD与LCM -->
+        <div id="gcd" class="content">
+            <h2>📊 最大公约数与最小公倍数</h2>
+            <div class="concept-item">
+                <h3>辗转相除法（欧几里得算法）</h3>
+                <p><strong>原理：</strong> gcd(a, b) = gcd(b, a % b)</p>
+                <p><strong>终止条件：</strong>当 b = 0 时，gcd(a, 0) = a</p>
+                <p><strong>复杂度：</strong>O(log(min(a, b)))</p>
+            </div>
+
+            <div class="concept-item">
+                <h3>求最大公约数 GCD</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++ - GCD</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="comment">// 递归写法</span>
+<span class="line-num"> 2</span><span class="type">long long</span> <span class="function">gcd</span>(<span class="type">long long</span> a, <span class="type">long long</span> b) {
+<span class="line-num"> 3</span>    <span class="keyword">return</span> b == <span class="number">0</span> ? a : <span class="function">gcd</span>(b, a % b);
+<span class="line-num"> 4</span>}
+<span class="line-num"> 5</span>
+<span class="line-num"> 6</span><span class="comment">// 迭代写法</span>
+<span class="line-num"> 7</span><span class="type">long long</span> <span class="function">gcd</span>(<span class="type">long long</span> a, <span class="type">long long</span> b) {
+<span class="line-num"> 8</span>    <span class="keyword">while</span> (b != <span class="number">0</span>) {
+<span class="line-num"> 9</span>        <span class="type">long long</span> t = a % b;
+<span class="line-num">10</span>        a = b;
+<span class="line-num">11</span>        b = t;
+<span class="line-num">12</span>    }
+<span class="line-num">13</span>    <span class="keyword">return</span> a;
+<span class="line-num">14</span>}</div>
+                </div>
+            </div>
+
+            <div class="concept-item">
+                <h3>求最小公倍数 LCM</h3>
+                <p><strong>公式：</strong> lcm(a, b) = a × b / gcd(a, b)</p>
+                <div class="tip">
+                    ⚠️ <strong>易错点：</strong>直接 a * b 可能会导致溢出！<br>
+                    正确做法：先算 a / gcd(a, b)，再乘以 b
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">C++ - LCM（防溢出）</span>
+                        <button class="code-copy" onclick="copyCode(this)">📋 复制</button>
+                    </div>
+                    <div class="code"><span class="line-num"> 1</span><span class="type">long long</span> <span class="function">lcm</span>(<span class="type">long long</span> a, <span class="type">long long</span> b) {
+<span class="line-num"> 2</span>    <span class="keyword">if</span> (a == <span class="number">0</span> || b == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;
+<span class="line-num"> 3</span>    <span class="keyword">return</span> (a / <span class="function">gcd</span>(a, b)) * b;  <span class="comment">// 先除后乘，防溢出</span>
+<span class="line-num"> 4</span>}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 配套练习 -->
+        <div id="practice" class="content">
+            <h2>📝 配套练习</h2>
+            <p>以下是针对本课程内容的配套练习题，点击即可跳转到OJ系统进行练习：</p>
+
+            <div class="concept-item">
+                <h3>数论基础练习</h3>
+                <a href="http://8.130.178.205/problemset.php?search=质数" class="practice-link" target="_blank">质数相关题目</a>
+                <a href="http://8.130.178.205/problemset.php?search=公约数" class="practice-link" target="_blank">最大公约数练习</a>
+            </div>
+
+            <div class="concept-item">
+                <h3>组合数学练习</h3>
+                <a href="http://8.130.178.205/problemset.php?search=排列" class="practice-link" target="_blank">排列组合练习</a>
+                <a href="http://8.130.178.205/problemset.php?search=组合" class="practice-link" target="_blank">组合练习</a>
+            </div>
+
+            <div class="tip">
+                💡 <strong>学习建议：</strong>
+                <ul>
+                    <li>分清"有序"（排列）和"无序"（组合）</li>
+                    <li>记住 C(n,m) 的递推公式</li>
+                    <li>质数判断只需试除到 √n</li>
+                    <li>算 LCM 时一定要先除后乘防溢出！</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>❤️ 爱心 · 创新 · 匠心 | 程老师 C++ 课程</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+
+        function copyCode(btn) {
+            var codeBlock = btn.closest('.code-block');
+            var code = codeBlock.querySelector('.code').innerText;
+            code = code.replace(/^\d+\s*/gm, '');
+            navigator.clipboard.writeText(code).then(function() {
+                btn.textContent = '✓ 已复制';
+                setTimeout(function() {
+                    btn.textContent = '📋 复制';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
